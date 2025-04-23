@@ -1,0 +1,154 @@
+@startuml
+top to bottom direction
+
+class CMF {
+    - numero : int
+    - nombrePoliclinico : String
+    - nombreDirectorPoliclinico : String
+    - medico : Medico
+    - enfermera : Enfermera
+    - pacientes : ArrayList<Paciente>
+    - hojaCargosDiaria : HojaCargosDiaria
+
+    + CMF(numero: int, nombrePoliclinico: String, nombreDirectorPoliclinico: String, medico: Medico, enfermera: Enfermera)
+    + getNumero() : int
+    + getNombrePoliclinico() : String
+    + getNombreDirectorPoliclinico() : String
+    + getMedico() : Medico
+    + getEnfermera() : Enfermera
+    + getPacientes() : ArrayList<Paciente>
+    + agregarPaciente(paciente: Paciente) : void
+    + removerPaciente(paciente: Paciente) : void
+    + actualizarHojaCargosDiaria(hojaCargosDiaria: HojaCargosDiaria) : void
+    + notificarPacientesEnRiesgo() : void
+}
+
+class Medico {
+    - nombreApellidos : String
+    - numeroRegistroMedico : String
+    - numeroIdentidad : String
+    - fechaInscripcion : Date
+
+    + Medico(nombreApellidos: String, numeroRegistroMedico: String, numeroIdentidad: String, fechaInscripcion: LocalDate)
+    + getNombreApellidos() : String
+    + getNumeroRegistroMedico() : String
+    + getNumeroIdentidad() : String
+    + getFechaInscripcion() : Date
+}
+
+class Enfermera {
+    - nombreApellidos : String
+    - numeroIdentidad : String
+    - tieneLicenciatura : boolean
+    - aniosExperiencia : int
+    - fechaInicioLaboral : Date
+
+    + Enfermera(nombreApellidos: String, numeroIdentidad: String, tieneLicenciatura: boolean, aniosExperiencia: int, fechaInicioLaboral: Date)
+    + getNombreApellidos() : String
+    + getNumeroIdentidad() : String
+    + isTieneLicenciatura() : boolean
+    + getAniosExperiencia() : int
+    + getFechaInicioLaboral() : Date
+    + recogerResultadosAnalisis() : List<ResultadoAnalisis>
+    + actualizarRegistroGeneral(resultados: List<ResultadoAnalisis>) : void
+    + actualizarHistoricoConsultorio(resultados: List<ResultadoAnalisis>) : void
+}
+
+class Paciente {
+    - numeroHistoriaClinica : String
+    - nombreApellidos : String
+    - edad : int
+    - sexo : String
+    - enfermedadesCronicas : ArrayList<String>
+    - vacunacion : ArrayList<String>
+    - fechaUltimaPruebaCitologica : Date
+    - estaEmbarazada : boolean
+    - historiaClinica : HistoriaClinica
+    + Paciente(numeroHistoriaClinica: String, nombreApellidos: String, edad: int, sexo: String, enfermedadesCronicas: ArrayList<String>, vacunacion: List<String>)
+    + getNumeroHistoriaClinica() : String
+    + getNombreApellidos() : String
+    + getEdad() : int
+    + getSexo() : String
+    + getEnfermedadesCronicas() : ArrayList<String>
+    + getVacunacion() : ArrayList<String>
+    + getFechaUltimaPruebaCitologica() : Date
+    + setFechaUltimaPruebaCitologica(fechaUltimaPruebaCitologica: Date) : void
+    + isEstaEmbarazada() : boolean
+    + setEstaEmbarazada(estaEmbarazada: boolean) : void
+    + isEnRiesgo() : boolean
+    + getHistoriaClinica() : HistoriaClinica
+    + setHistoriaClinica(historiaClinica: HistoriaClinica) : void
+}
+
+class HojaCargosDiaria {
+    - fecha : LocalDate
+    - registros : ArrayList<RegistroHojaCargos>
+
+    + HojaCargosDiaria(fecha: Date)
+    + getFecha() : Date
+    + getRegistros() : ArrayList<RegistroHojaCargos>
+    + agregarRegistro(registro: RegistroHojaCargos) : void
+}
+
+class RegistroHojaCargos {
+    - nombreApellidos : String
+    - edad : int
+    - sexo : String
+    - direccion : String
+    - diagnostico : String
+
+    + RegistroHojaCargos(nombreApellidos: String, edad: int, sexo: String, direccion: String, diagnostico: String)
+    + getNombreApellidos() : String
+    + getEdad() : int
+    + getSexo() : String
+    + getDireccion() : String
+    + getDiagnostico() : String
+}
+
+class HistoriaClinica {
+    - numeroHistoriaClinica : String
+    - registrosVisita : List<RegistroVisita>
+
+    + HistoriaClinica(numeroHistoriaClinica: String)
+    + getNumeroHistoriaClinica() : String
+    + getRegistrosVisita() : ArrayList<RegistroVisita>
+    + agregarRegistroVisita(registroVisita: RegistroVisita) : void
+}
+
+class RegistroVisita {
+    - fechaVisita : Date
+    - diagnostico : String
+    - tratamiento : String
+    - indicacionesComplementarios : String
+    - especialidadRemitida : String
+
+    + RegistroVisita(fechaVisita: Date, diagnostico: String, tratamiento: String, indicacionesComplementarios: String, especialidadRemitida: String)
+    + getFechaVisita() : Date
+    + getDiagnostico() : String
+    + getTratamiento() : String
+    + getIndicacionesComplementarios() : String
+    + getEspecialidadRemitida() : String
+}
+
+class ResultadoAnalisis {
+    - paciente : Paciente
+    - numeroHistoriaClinica : String
+    - tipoAnalisis : String
+    - resultados : String
+
+    + ResultadoAnalisis(paciente: Paciente, numeroHistoriaClinica: String, tipoAnalisis: String, resultados: String)
+    + getPaciente() : Paciente
+    + getNumeroHistoriaClinica() : String
+    + getTipoAnalisis() : String
+    + getResultados() : String
+}
+
+CMF "1" *-- "1" Medico : tiene >
+CMF "1" *-- "1" Enfermera : tiene >
+CMF "1" *-- "1...*" Paciente : tiene >
+CMF "1" *-- "1" HojaCargosDiaria : registra >
+HojaCargosDiaria "1" *-- "1...*" RegistroHojaCargos : contiene >
+Paciente "1" -- "1" HistoriaClinica : posee >
+HistoriaClinica "1" *-- "1...*" RegistroVisita : contiene >
+ResultadoAnalisis "1...*" -- "1" Paciente: corresponde a >
+@enduml
