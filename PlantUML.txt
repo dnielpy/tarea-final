@@ -54,30 +54,35 @@ class Enfermera {
     + actualizarHistoricoConsultorio(resultados: List<ResultadoAnalisis>) : void
 }
 
-class Paciente {
+abstract class Paciente {
     - numeroHistoriaClinica : String
     - nombreApellidos : String
     - edad : int
-    - sexo : String
     - enfermedadesCronicas : ArrayList<String>
     - vacunacion : ArrayList<String>
-    - fechaUltimaPruebaCitologica : Date
-    - estaEmbarazada : boolean
     - historiaClinica : HistoriaClinica
-    + Paciente(numeroHistoriaClinica: String, nombreApellidos: String, edad: int, sexo: String, enfermedadesCronicas: ArrayList<String>, vacunacion: List<String>)
+    + Paciente(numeroHistoriaClinica: String, nombreApellidos: String, edad: int, enfermedadesCronicas: ArrayList<String>, vacunacion: List<String>)
     + getNumeroHistoriaClinica() : String
     + getNombreApellidos() : String
     + getEdad() : int
-    + getSexo() : String
     + getEnfermedadesCronicas() : ArrayList<String>
     + getVacunacion() : ArrayList<String>
+    + isEnRiesgo() : boolean
+    + getHistoriaClinica() : HistoriaClinica
+    + setHistoriaClinica(historiaClinica: HistoriaClinica) : void
+}
+
+class Mujer {
+    - fechaUltimaPruebaCitologica : Date
+    - estaEmbarazada : boolean
+    + Mujer(numeroHistoriaClinica: String, nombreApellidos: String, edad: int, enfermedadesCronicas: ArrayList<String>, vacunacion: List<String>, fechaUltimaPruebaCitologica : Date, estaEmbarazada : boolean)
     + getFechaUltimaPruebaCitologica() : Date
     + setFechaUltimaPruebaCitologica(fechaUltimaPruebaCitologica: Date) : void
     + isEstaEmbarazada() : boolean
     + setEstaEmbarazada(estaEmbarazada: boolean) : void
-    + isEnRiesgo() : boolean
-    + getHistoriaClinica() : HistoriaClinica
-    + setHistoriaClinica(historiaClinica: HistoriaClinica) : void
+}
+
+class Hombre {
 }
 
 class HojaCargosDiaria {
@@ -145,6 +150,8 @@ class ResultadoAnalisis {
 
 CMF "1" *-- "1" Medico : tiene >
 CMF "1" *-- "1" Enfermera : tiene >
+Paciente <|-- Mujer
+Paciente <|-- Hombre
 CMF "1" *-- "1...*" Paciente : tiene >
 CMF "1" *-- "1" HojaCargosDiaria : registra >
 HojaCargosDiaria "1" *-- "1...*" RegistroHojaCargos : contiene >
