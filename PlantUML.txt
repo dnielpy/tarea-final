@@ -148,7 +148,7 @@ CMF "1" *-- "1...*" HojaCargosDiaria
 HojaCargosDiaria "1" *-- "1...*" RegistroHojaCargos
 HistoriaClinica "1" o-- "1" Paciente 
 HistoriaClinica "1" *-- "1...*" RegistroVisita
-Enfermera "1...*" *-- "1" ResultadoAnalisis
+Enfermera "1" *-- "1...*" ResultadoAnalisis
 HistoriaClinica "1" o-- "1...*" ResultadoAnalisis
 ResultadoAnalisis "1" -- "1" Paciente
 @enduml
