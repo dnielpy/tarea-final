@@ -1,0 +1,85 @@
+package tarea;
+
+import java.util.ArrayList;
+import java.util.Date;
+
+public class CMF {
+    private int id;
+    private String nombre;
+    private String nombreDirector;
+
+    private ArrayList<HistoriaClinica> historiasClinicas;
+    private ArrayList<HojaCargosDiaria> hojasCargoDiaria;
+    private ArrayList<Paciente> pacientes;
+    private Medico medico;
+    private RegistroGeneral registroGeneral;
+    private RegistroHistorico registroHistorico;
+
+
+    public CMF(int id, String nombre, String nombreDirector) {
+        setId(id);
+        setNombre(nombre);
+        setNombreDirector(nombreDirector);
+        this.historiasClinicas = new ArrayList<>();
+        this.hojasCargoDiaria = new ArrayList<>();
+        this.pacientes = new ArrayList<>();
+    }
+
+
+    //Metodos para agregar
+    public void crearMedico(String nombre, int numRegistro, String ci, Date fecha) {
+        this.medico = new Medico(nombre, numRegistro, ci, fecha);
+    }
+
+    public void crearRegistroGeneral() {
+        this.registroGeneral = new RegistroGeneral();
+    }
+
+    public void crearRegistroHistorico() {
+        this.registroHistorico = new RegistroHistorico();
+    }
+
+    public void agregarPaciente(int historiaClinicaID, String nombre, int edad, ArrayList<String> vacucnacion){
+        Paciente newPaciente = new Paciente(historiaClinicaID, nombre, edad, vacucnacion);
+        this.pacientes.add(newPaciente);
+    }
+
+    public void agregarPaciente(int historiaClinicaID, String nombre, int edad, ArrayList<String> vacucnacion, Date fechaUltimaRevision, boolean embarazada){
+        Mujer newMujer = new Mujer(historiaClinicaID, nombre, edad, vacucnacion, fechaUltimaRevision, embarazada);
+        this.pacientes.add(newMujer);
+    }
+
+    public void agregarHojaCargoDiaria(Date fecha){
+        HojaCargosDiaria hoja = new HojaCargosDiaria(fecha);
+        this.hojasCargoDiaria.add(hoja);
+    }
+
+    public void agregarHistoriaClinica(int id, ArrayList<String> resultadosDeAnalisis, ArrayList<RegistroVisita> registroVisitas){
+        HistoriaClinica historia = new HistoriaClinica(id, resultadosDeAnalisis, registroVisitas);
+        this.historiasClinicas.add(historia);
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getNombreDirector() {
+        return nombreDirector;
+    }
+
+    public void setNombreDirector(String nombreDirector) {
+        this.nombreDirector = nombreDirector;
+    }
+}

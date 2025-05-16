@@ -2,25 +2,20 @@ package tarea;
 
 import java.util.Date;
 
-public class Medico {
-	private String nombre;
+public class Medico extends Persona{
 	private int numRegistro;
-	private String carnet;
+	private String ci;
 	private Date fechaInscripcion;
 
-	Medico(String nombre, int numRegistro, String carnet, Date fecha) {
+	Medico(String nombre, int numRegistro, String ci, Date fecha) {
 		setNombre(nombre);
 		setNumRegistro(numRegistro);
-		setCarnet(carnet);
+		setCarnet(ci);
 		setFechaInscripcion(fecha);
 	}
 
-	public String getNombre() {
-		return nombre;
-	}
-
 	public void setNombre(String nombre) {
-		this.nombre = nombre;
+		super.nombreYApellidos = nombre;
 	}
 
 	public int getNumRegistro() {
@@ -32,11 +27,11 @@ public class Medico {
 	}
 
 	public String getCarnet() {
-		return carnet;
+		return ci;
 	}
 
 	public void setCarnet(String carnet) {
-		this.carnet = carnet;
+		this.ci = carnet;
 	}
 
 	public Date getFechaInscripcion() {

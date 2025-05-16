@@ -2,20 +2,17 @@ package tarea;
 
 import java.util.ArrayList;
 
-public class Paciente {
-    private int historiaClinicaID;
-    private String nombre;
-    private int edad;
-    private boolean sexo;
-    private ArrayList<String> enfermedadesCronicas;
-    private boolean vacunado;
+public class Paciente extends Persona {
+    protected int historiaClinicaID;
+    protected int edad;
+    protected ArrayList<String> enfermedadesCronicas;
+    protected ArrayList<String> vacunacion;
 
-    public Paciente(int historiaClinicaID, String nombre, int edad, boolean sexo, boolean vacunado) {
-        this.historiaClinicaID = historiaClinicaID;
-        this.nombre = nombre;
-        this.edad = edad;
-        this.sexo = sexo;
-        this.vacunado = vacunado;
+    public Paciente(int historiaClinicaID, String nombre, int edad, ArrayList<String> vacucnacion) {
+        setHistoriaClinicaID(historiaClinicaID);
+        setNombre(nombre);
+        super.nombreYApellidos = nombre;
+        this.vacunacion = new ArrayList<>();
     }
 
     public int getHistoriaClinicaID() {
@@ -27,12 +24,10 @@ public class Paciente {
     }
 
     public String getNombre() {
-        return nombre;
+        return super.nombreYApellidos;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
+    public void setNombre(String nombre) { super.nombreYApellidos = nombre;}
 
     public int getEdad() {
         return edad;
@@ -40,14 +35,6 @@ public class Paciente {
 
     public void setEdad(int edad) {
         this.edad = edad;
-    }
-
-    public boolean isSexo() {
-        return sexo;
-    }
-
-    public void setSexo(boolean sexo) {
-        this.sexo = sexo;
     }
 
     public ArrayList<String> getEnfermedadesCronicas() {
@@ -58,11 +45,19 @@ public class Paciente {
         this.enfermedadesCronicas.add(enfermedadesCronicas);
     }
 
-    public boolean isVacunado() {
-        return vacunado;
+    public ArrayList<String> getVacucnacion() {
+        return vacunacion;
     }
 
-    public void setVacunado(boolean vacunado) {
-        this.vacunado = vacunado;
+    public void agregarvacuna(String vacuna) {
+        this.vacunacion.add(vacuna);
+    }
+
+    public boolean estaEnRiesgo(){
+        boolean enRiesgo = false;
+        if (enfermedadesCronicas.size() >= 3){
+            enRiesgo = true;
+        }
+        return enRiesgo;
     }
 }

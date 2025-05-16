@@ -1,13 +1,14 @@
 package tarea;
 
+import java.util.ArrayList;
 import java.util.Date;
 
-public class Enfermera {
-	private String nombre;
+public class Enfermera extends Persona{
 	private int Id;
 	private boolean licenciatura;
 	private int experiencia;
 	private Date fechaInicio;
+	private ArrayList<ResultadoAnalisis> resultadoAnalisis;
 	
 	Enfermera(String nombre, int Id, boolean licenciatura, int experiencia, Date fecha) {
 		setNombre(nombre);
@@ -15,14 +16,11 @@ public class Enfermera {
 		setLicenciatura(licenciatura);
 		setExperiencia(experiencia);
 		setFechaInicio(fecha);
+		this.resultadoAnalisis = new ArrayList<>();
 	}
-	
-	public String getNombre() {
-		return nombre;
-	}
-	
+
 	public void setNombre(String nombre) {
-		this.nombre = nombre;
+		super.nombreYApellidos = nombre;
 	}
 	
 	public int getId() {
