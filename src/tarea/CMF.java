@@ -20,9 +20,9 @@ public class CMF {
         setId(id);
         setNombre(nombre);
         setNombreDirector(nombreDirector);
-        this.historiasClinicas = new ArrayList<>();
-        this.hojasCargoDiaria = new ArrayList<>();
-        this.pacientes = new ArrayList<>();
+        this.historiasClinicas = new ArrayList<HistoriaClinica>();
+        this.hojasCargoDiaria = new ArrayList<HojaCargosDiaria>();
+        this.pacientes = new ArrayList<Paciente>();
     }
 
 

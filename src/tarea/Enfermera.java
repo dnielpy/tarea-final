@@ -16,7 +16,7 @@ public class Enfermera extends Persona{
 		setLicenciatura(licenciatura);
 		setExperiencia(experiencia);
 		setFechaInicio(fecha);
-		this.resultadoAnalisis = new ArrayList<>();
+		this.resultadoAnalisis = new ArrayList<ResultadoAnalisis>();
 	}
 
 	public void setNombre(String nombre) {
