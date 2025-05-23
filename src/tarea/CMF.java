@@ -25,7 +25,6 @@ public class CMF {
         this.pacientes = new ArrayList<Paciente>();
     }
 
-
     //Metodos para agregar
     public void crearMedico(String nombre, int numRegistro, String ci, Date fecha) {
         this.medico = new Medico(nombre, numRegistro, ci, fecha);
@@ -39,13 +38,13 @@ public class CMF {
         this.registroHistorico = new RegistroHistorico();
     }
 
-    public void agregarPaciente(int historiaClinicaID, String nombre, int edad, ArrayList<String> vacucnacion){
-        Paciente newPaciente = new Paciente(historiaClinicaID, nombre, edad, vacucnacion);
+    public void agregarPaciente(int historiaClinicaID, String nombre, int edad, ArrayList<String> vacunacion){
+        Paciente newPaciente = new Paciente(historiaClinicaID, nombre, edad, vacunacion);
         this.pacientes.add(newPaciente);
     }
 
-    public void agregarPaciente(int historiaClinicaID, String nombre, int edad, ArrayList<String> vacucnacion, Date fechaUltimaRevision, boolean embarazada){
-        Mujer newMujer = new Mujer(historiaClinicaID, nombre, edad, vacucnacion, fechaUltimaRevision, embarazada);
+    public void agregarPaciente(int historiaClinicaID, String nombre, int edad, ArrayList<String> vacunacion, Date fechaUltimaRevision, boolean embarazada){
+        Mujer newMujer = new Mujer(historiaClinicaID, nombre, edad, vacunacion, fechaUltimaRevision, embarazada);
         this.pacientes.add(newMujer);
     }
 
