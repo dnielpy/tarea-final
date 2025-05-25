@@ -26,7 +26,6 @@ public class MiVentana extends JFrame {
 
         // Añadir acción al botón
         botonSaludo.addActionListener(new ActionListener() {
-            @Override
             public void actionPerformed(ActionEvent e) {
                 String nombre = campoTexto.getText();
                 JOptionPane.showMessageDialog(
