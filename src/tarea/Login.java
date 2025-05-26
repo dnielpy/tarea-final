@@ -141,10 +141,10 @@ public class Login extends JFrame {
 		campoUsuario.setColumns(10);
 		campoUsuario.setBorder(null);
 		
-		JLabel cartelContrasena = new JLabel("CONTRASE\u00D1A");
-		cartelContrasena.setFont(new Font("Arial", Font.BOLD, 18));
-		cartelContrasena.setBounds(325, 249, 144, 26);
-		panel.add(cartelContrasena);
+		JLabel cartelContrasenna = new JLabel("CONTRASE\u00D1A");
+		cartelContrasenna.setFont(new Font("Arial", Font.BOLD, 18));
+		cartelContrasenna.setBounds(325, 249, 144, 26);
+		panel.add(cartelContrasenna);
 		
 		campoContrasenna = new JPasswordField();
 		campoContrasenna.addFocusListener(new FocusListener() {
@@ -181,10 +181,10 @@ public class Login extends JFrame {
 		separatorUsuario.setBounds(325, 202, 379, 2);
 		panel.add(separatorUsuario);
 		
-		JSeparator separatorContraseña = new JSeparator();
-		separatorContraseña.setBackground(SystemColor.menu);
-		separatorContraseña.setBounds(325, 315, 379, 2);
-		panel.add(separatorContraseña);
+		JSeparator separatorContrasenna = new JSeparator();
+		separatorContrasenna.setBackground(SystemColor.menu);
+		separatorContrasenna.setBounds(325, 315, 379, 2);
+		panel.add(separatorContrasenna);
 		
 		Panel botonAceptar = new Panel();
 		botonAceptar.setBackground(SystemColor.menu);
