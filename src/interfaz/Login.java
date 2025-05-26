@@ -1,4 +1,4 @@
-package tarea;
+package interfaz;
 
 import java.awt.BorderLayout;
 import java.awt.Cursor;
@@ -63,32 +63,56 @@ public class Login extends JFrame {
 	private JPasswordField campoContrasenna;
 
 	public Login() {
+		setBackground(Color.WHITE);
+		setFont(new Font("Arial", Font.PLAIN, 16));
 		contrasenaVisible = false;
 		
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setType(Type.POPUP);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Login.class.getResource("/fotos/hospital-logo-and-symbols-templa.png")));
-		setTitle("Autentificaci\u00F3n");
+		setTitle("Autenticaci\u00F3n");
 		setBounds(100, 100, 800, 510);
 		getContentPane().setLayout(null);
 		
+		
 		JPanel panel = new JPanel();
 		panel.setBackground(Color.WHITE);
-		panel.setBounds(0, 0, 794, 450);
+		panel.setBounds(0, 0, 794, 534);
 		getContentPane().add(panel);
 		panel.setLayout(null);
 		
 		JPanel panelLateral = new JPanel();
-		panelLateral.setBackground(new Color(164, 200, 225));
+		panelLateral.setBackground(new Color(0, 171, 227));
 		panelLateral.setBounds(0, 0, 250, 600);
 		panel.add(panelLateral);
 		panelLateral.setLayout(null);
 		
-		JLabel fotoLateral = new JLabel("New label");
-		fotoLateral.setIcon(new ImageIcon(Login.class.getResource("/fotos/1076688 (1).png")));
-		fotoLateral.setBounds(0, -83, 250, 601);
-		panelLateral.add(fotoLateral);
+		JPanel panelLogo = new JPanel();
+		panelLogo.setBounds(0, 0, 250, 225);
+		panelLateral.add(panelLogo);
+		panelLogo.setBackground(new Color(109, 163, 67));
+		panelLogo.setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("New label");
+		lblNewLabel.setIcon(new ImageIcon(Login.class.getResource("/fotos/Tipografia-Peque.png")));
+		lblNewLabel.setBounds(67, 129, 112, 62);
+		panelLogo.add(lblNewLabel);
+		
+		JLabel cartelLogo = new JLabel("");
+		cartelLogo.setBounds(67, 15, 112, 120);
+		panelLogo.add(cartelLogo);
+		cartelLogo.setIcon(new ImageIcon(Login.class.getResource("/fotos/Logo peque.png")));
+		
+		JPanel panel_1 = new JPanel();
+		panel_1.setBackground(Color.WHITE);
+		panel_1.setBounds(21, 15, 208, 189);
+		panelLogo.add(panel_1);
+		
+		JPanel panelSeparadorLogo = new JPanel();
+		panelSeparadorLogo.setBackground(Color.WHITE);
+		panelSeparadorLogo.setBounds(-30, 224, 280, 10);
+		panelLateral.add(panelSeparadorLogo);
 		
 		final JLabel ojoIcono = new JLabel("");
 		ojoIcono.addMouseListener(new MouseAdapter() {
@@ -186,13 +210,23 @@ public class Login extends JFrame {
 		separatorContrasenna.setBounds(325, 315, 379, 2);
 		panel.add(separatorContrasenna);
 		
-		Panel botonAceptar = new Panel();
+		final Panel botonAceptar = new Panel();
 		botonAceptar.setBackground(SystemColor.menu);
 		botonAceptar.setBounds(325, 361, 115, 43);
 		panel.add(botonAceptar);
 		botonAceptar.setLayout(null);
 		
 		JLabel cartelAceptar = new JLabel("ACEPTAR");
+		cartelAceptar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				botonAceptar.setBackground(Color.LIGHT_GRAY);
+			}
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+				botonAceptar.setBackground(SystemColor.menu);
+			}
+		});
 		cartelAceptar.setHorizontalAlignment(SwingConstants.CENTER);
 		cartelAceptar.setBounds(0, 0, 115, 43);
 		botonAceptar.add(cartelAceptar);

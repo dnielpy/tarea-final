@@ -1,4 +1,4 @@
-package tarea;
+package clases;
 
 public class Analisis {
     private String nombrePaciente;
