@@ -238,9 +238,9 @@ cartelAceptar.addMouseListener(new MouseAdapter() {
         String contrasenna = new String(campoContrasenna.getPassword());
 
 		if(authUser(usuario, contrasenna)){
-			System.out.println("authed");		//Redirigir al main
+			auth = true;
+			dispose();
 		}
-
     }
 });
 		cartelAceptar.setHorizontalAlignment(SwingConstants.CENTER);
@@ -248,7 +248,6 @@ cartelAceptar.addMouseListener(new MouseAdapter() {
 		botonAceptar.add(cartelAceptar);
 		cartelAceptar.setFont(new Font("Arial", Font.BOLD, 18));
 		cartelAceptar.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
 	}
 
 	public boolean authUser(String user, String password) {
