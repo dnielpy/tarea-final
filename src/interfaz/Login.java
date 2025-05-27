@@ -21,6 +21,7 @@ import javax.swing.BoxLayout;
 
 import java.awt.GridLayout;
 
+import javax.swing.JOptionPane;
 import javax.swing.JToolBar;
 import javax.swing.JTabbedPane;
 import javax.swing.JButton;
@@ -54,6 +55,7 @@ import javax.swing.SwingConstants;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.io.IOException;
 
 import javax.swing.JPasswordField;
 
@@ -120,11 +122,11 @@ public class Login extends JFrame {
             public void mouseClicked(MouseEvent e) {
                 if (!contrasenaVisible && !campoContrasenna.getText().equals("\u25CF\u25CF\u25CF\u25CF\u25CF\u25CF\u25CF\u25CF\u25CF")) {
                 	ojoIcono.setIcon(new ImageIcon(Login.class.getResource("/fotos/visible (1).png")));
-            		campoContrasenna.setEchoChar((char) 0);  // Mostrar contrase�a
+            		campoContrasenna.setEchoChar((char) 0);  // Mostrar contrase�a
             		contrasenaVisible = true;
                 } else {
                 	ojoIcono.setIcon(new ImageIcon(Login.class.getResource("/fotos/no visible (1).png")));
-                	campoContrasenna.setEchoChar('�');  // Ocultar contrase�a
+                	campoContrasenna.setEchoChar('*');  // Ocultar contrase�a
                 	contrasenaVisible = false;
                 }
             }
@@ -217,20 +219,59 @@ public class Login extends JFrame {
 		botonAceptar.setLayout(null);
 		
 		JLabel cartelAceptar = new JLabel("ACEPTAR");
-		cartelAceptar.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseEntered(MouseEvent arg0) {
-				botonAceptar.setBackground(Color.LIGHT_GRAY);
-			}
-			@Override
-			public void mouseExited(MouseEvent arg0) {
-				botonAceptar.setBackground(SystemColor.menu);
-			}
-		});
+cartelAceptar.addMouseListener(new MouseAdapter() {
+    @Override
+    public void mouseEntered(MouseEvent arg0) {
+        botonAceptar.setBackground(Color.LIGHT_GRAY);
+    }
+    
+    @Override
+    public void mouseExited(MouseEvent arg0) {
+        botonAceptar.setBackground(SystemColor.menu);
+    }
+    
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        // Obtener usuario y contraseña
+        String usuario = campoUsuario.getText();
+        String contrasenna = new String(campoContrasenna.getPassword());
+        
+        // Verificar si son los valores por defecto
+        if(usuario.equals("Ingrese el nombre de usuario") || 
+           contrasenna.equals("\u25CF\u25CF\u25CF\u25CF\u25CF\u25CF\u25CF\u25CF\u25CF")) {
+            JOptionPane.showMessageDialog(Login.this, 
+                "Por favor ingrese usuario y contraseña", 
+                "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        // Autenticar
+        if(authUser(usuario, contrasenna)) {				
+            JOptionPane.showMessageDialog(Login.this, 
+                "Autenticación exitosa", 
+                "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            // Aquí podrías abrir la siguiente ventana
+        } else {
+            JOptionPane.showMessageDialog(Login.this, 
+                "Usuario o contraseña incorrectos", 
+                "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+});
 		cartelAceptar.setHorizontalAlignment(SwingConstants.CENTER);
 		cartelAceptar.setBounds(0, 0, 115, 43);
 		botonAceptar.add(cartelAceptar);
 		cartelAceptar.setFont(new Font("Arial", Font.BOLD, 18));
 		cartelAceptar.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		
+	}
+
+	public boolean authUser(String user, String password) {
+	    boolean response = false;
+		
+		if(user.equals("admin@cmf.com") && password.equals("safepassword")){
+			response = true;
+		}
+		return response;
 	}
 }
