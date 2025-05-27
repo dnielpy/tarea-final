@@ -55,9 +55,14 @@ import javax.swing.SwingConstants;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.io.File;
 import java.io.IOException;
 
 import javax.swing.JPasswordField;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import database.AuthCredentials;
 
 public class Login extends JFrame {
 	private boolean contrasenaVisible;
@@ -252,10 +257,16 @@ cartelAceptar.addMouseListener(new MouseAdapter() {
 
 	public boolean authUser(String user, String password) {
 	    boolean response = false;
-		if(user.equals("admin@cmf.com") && password.equals("safepassword")){
-			response = true;
-			System.out.println("okok");
-		}
+	 
+	    ObjectMapper mapper = new ObjectMapper();
+	    try {
+            AuthCredentials persona = mapper.readValue(new File("data.json"), AuthCredentials.class);
+            if(user.equals(persona.getUsername()) && password.equals(persona.getPassword())){
+    			response = true;
+    		}
+        } catch (Exception e) {
+            System.out.println("Error al leer el archivo: " + e.getMessage());
+        }
 		return response;
 	}
 

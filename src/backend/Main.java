@@ -9,7 +9,6 @@ public class Main {
 		//login.setUndecorated(true);
 		login.setLocationRelativeTo(null);
 		login.setVisible(true);
-		//login.setSize(1000, 500);		//Comenta esto
 		while (login.isDisplayable()) {
 			try {
 				Thread.sleep(100);
