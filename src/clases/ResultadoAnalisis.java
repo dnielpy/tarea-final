@@ -1,4 +1,4 @@
-package tarea;
+package clases;
 
 public class ResultadoAnalisis {
     private Paciente paciente;
