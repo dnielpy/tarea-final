@@ -63,12 +63,14 @@ public class Login extends JFrame {
 	private boolean contrasenaVisible;
 	private JTextField campoUsuario;
 	private JPasswordField campoContrasenna;
+	private boolean auth ;
 
 	public Login() {
+		this.auth = false;
 		setBackground(Color.WHITE);
 		setFont(new Font("Arial", Font.PLAIN, 16));
 		contrasenaVisible = false;
-		
+
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setType(Type.POPUP);
@@ -76,46 +78,46 @@ public class Login extends JFrame {
 		setTitle("Autenticaci\u00F3n");
 		setBounds(100, 100, 800, 510);
 		getContentPane().setLayout(null);
-		
-		
+
+
 		JPanel panel = new JPanel();
 		panel.setBackground(Color.WHITE);
 		panel.setBounds(0, 0, 794, 534);
 		getContentPane().add(panel);
 		panel.setLayout(null);
-		
+
 		JPanel panelLateral = new JPanel();
 		panelLateral.setBackground(new Color(0, 171, 227));
 		panelLateral.setBounds(0, 0, 250, 600);
 		panel.add(panelLateral);
 		panelLateral.setLayout(null);
-		
+
 		JPanel panelLogo = new JPanel();
 		panelLogo.setBounds(0, 0, 250, 225);
 		panelLateral.add(panelLogo);
 		panelLogo.setBackground(new Color(109, 163, 67));
 		panelLogo.setLayout(null);
-		
+
 		JLabel lblNewLabel = new JLabel("New label");
 		lblNewLabel.setIcon(new ImageIcon(Login.class.getResource("/fotos/Tipografia-Peque.png")));
 		lblNewLabel.setBounds(67, 129, 112, 62);
 		panelLogo.add(lblNewLabel);
-		
+
 		JLabel cartelLogo = new JLabel("");
 		cartelLogo.setBounds(67, 15, 112, 120);
 		panelLogo.add(cartelLogo);
 		cartelLogo.setIcon(new ImageIcon(Login.class.getResource("/fotos/Logo peque.png")));
-		
+
 		JPanel panel_1 = new JPanel();
 		panel_1.setBackground(Color.WHITE);
 		panel_1.setBounds(21, 15, 208, 189);
 		panelLogo.add(panel_1);
-		
+
 		JPanel panelSeparadorLogo = new JPanel();
 		panelSeparadorLogo.setBackground(Color.WHITE);
 		panelSeparadorLogo.setBounds(-30, 224, 280, 10);
 		panelLateral.add(panelSeparadorLogo);
-		
+
 		final JLabel ojoIcono = new JLabel("");
 		ojoIcono.addMouseListener(new MouseAdapter() {
             @Override
@@ -136,12 +138,12 @@ public class Login extends JFrame {
 		ojoIcono.setBounds(671, 281, 33, 32);
 		panel.add(ojoIcono);
 		ojoIcono.setCursor(new Cursor(Cursor.HAND_CURSOR));
-		
+
 		JLabel cartelUsuario = new JLabel("USUARIO");
 		cartelUsuario.setFont(new Font("Arial", Font.BOLD, 18));
 		cartelUsuario.setBounds(325, 139, 92, 26);
 		panel.add(cartelUsuario);
-		
+
 		campoUsuario = new JTextField();
 		campoUsuario.addFocusListener(new FocusListener() {
             public void focusGained(FocusEvent e) {
@@ -166,12 +168,12 @@ public class Login extends JFrame {
 		panel.add(campoUsuario);
 		campoUsuario.setColumns(10);
 		campoUsuario.setBorder(null);
-		
+
 		JLabel cartelContrasenna = new JLabel("CONTRASE\u00D1A");
 		cartelContrasenna.setFont(new Font("Arial", Font.BOLD, 18));
 		cartelContrasenna.setBounds(325, 249, 144, 26);
 		panel.add(cartelContrasenna);
-		
+
 		campoContrasenna = new JPasswordField();
 		campoContrasenna.addFocusListener(new FocusListener() {
             public void focusGained(FocusEvent e) {
@@ -196,66 +198,49 @@ public class Login extends JFrame {
 		panel.add(campoContrasenna);
 		campoContrasenna.setColumns(10);
 		campoContrasenna.setBorder(null);
-		
+
 		JLabel cartelIniciarSesion = new JLabel("INICIAR SESI\u00D3N");
 		cartelIniciarSesion.setFont(new Font("Arial Black", Font.BOLD, 21));
 		cartelIniciarSesion.setBounds(325, 82, 210, 26);
 		panel.add(cartelIniciarSesion);
-		
+
 		JSeparator separatorUsuario = new JSeparator();
 		separatorUsuario.setBackground(SystemColor.menu);
 		separatorUsuario.setBounds(325, 202, 379, 2);
 		panel.add(separatorUsuario);
-		
+
 		JSeparator separatorContrasenna = new JSeparator();
 		separatorContrasenna.setBackground(SystemColor.menu);
 		separatorContrasenna.setBounds(325, 315, 379, 2);
 		panel.add(separatorContrasenna);
-		
+
 		final Panel botonAceptar = new Panel();
 		botonAceptar.setBackground(SystemColor.menu);
 		botonAceptar.setBounds(325, 361, 115, 43);
 		panel.add(botonAceptar);
 		botonAceptar.setLayout(null);
-		
+
 		JLabel cartelAceptar = new JLabel("ACEPTAR");
 cartelAceptar.addMouseListener(new MouseAdapter() {
     @Override
     public void mouseEntered(MouseEvent arg0) {
         botonAceptar.setBackground(Color.LIGHT_GRAY);
     }
-    
+
     @Override
     public void mouseExited(MouseEvent arg0) {
         botonAceptar.setBackground(SystemColor.menu);
     }
-    
+
     @Override
     public void mouseClicked(MouseEvent e) {
-        // Obtener usuario y contraseña
         String usuario = campoUsuario.getText();
         String contrasenna = new String(campoContrasenna.getPassword());
-        
-        // Verificar si son los valores por defecto
-        if(usuario.equals("Ingrese el nombre de usuario") || 
-           contrasenna.equals("\u25CF\u25CF\u25CF\u25CF\u25CF\u25CF\u25CF\u25CF\u25CF")) {
-            JOptionPane.showMessageDialog(Login.this, 
-                "Por favor ingrese usuario y contraseña", 
-                "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        
-        // Autenticar
-        if(authUser(usuario, contrasenna)) {				
-            JOptionPane.showMessageDialog(Login.this, 
-                "Autenticación exitosa", 
-                "Éxito", JOptionPane.INFORMATION_MESSAGE);
-            // Aquí podrías abrir la siguiente ventana
-        } else {
-            JOptionPane.showMessageDialog(Login.this, 
-                "Usuario o contraseña incorrectos", 
-                "Error", JOptionPane.ERROR_MESSAGE);
-        }
+
+		if(authUser(usuario, contrasenna)){
+			System.out.println("authed");		//Redirigir al main
+		}
+
     }
 });
 		cartelAceptar.setHorizontalAlignment(SwingConstants.CENTER);
@@ -263,15 +248,20 @@ cartelAceptar.addMouseListener(new MouseAdapter() {
 		botonAceptar.add(cartelAceptar);
 		cartelAceptar.setFont(new Font("Arial", Font.BOLD, 18));
 		cartelAceptar.setCursor(new Cursor(Cursor.HAND_CURSOR));
-		
+
 	}
 
 	public boolean authUser(String user, String password) {
 	    boolean response = false;
-		
 		if(user.equals("admin@cmf.com") && password.equals("safepassword")){
 			response = true;
+			System.out.println("okok");
 		}
 		return response;
 	}
+
+	public boolean getAuth(){
+		return this.auth;
+	}
 }
+

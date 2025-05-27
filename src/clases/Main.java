@@ -8,5 +8,6 @@ public class Main {
 		//login.setUndecorated(true);
 		login.setLocationRelativeTo(null);
 		login.setVisible(true);
+		login.setSize(1000, 500);
 	}
 }
