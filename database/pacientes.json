@@ -1,0 +1,56 @@
+{
+"pacientes": [
+      {
+        "nombre": "Juan",
+        "apellidos": "Pérez García",
+        "numeroHistorialClinica": 1001,
+        "edad": 45,
+        "genero": "Masculino",
+        "enfermedadesCronicas": ["Hipertensión", "Diabetes"],
+        "vacunacion": ["Covid-19", "Tétanos"],
+        "historiaClinica": {
+          "numeroHistorialClinica": 1001,
+          "registrosVisita": [
+            {
+              "fechaVisita": "2024-01-10",
+              "diagnostico": "Gripe",
+              "tratamiento": "Paracetamol",
+              "indicacionesComplementarias": "Reposo 3 días",
+              "especialidadRemitida": "Medicina General"
+            },
+            {
+              "fechaVisita": "2024-04-15",
+              "diagnostico": "Chequeo general",
+              "tratamiento": "Ninguno",
+              "indicacionesComplementarias": "Pruebas de sangre",
+              "especialidadRemitida": "Análisis clínico"
+            }
+          ]
+        },
+        "resultadosAnalisis": [
+          {
+            "numeroHistorialClinica": "1001",
+            "tipoAnalisis": "Sangre",
+            "resultado": "Normal",
+            "fecha": "2024-04-16"
+          }
+        ]
+      },
+      {
+        "nombre": "Laura",
+        "apellidos": "Martínez Ruiz",
+        "numeroHistorialClinica": 1002,
+        "edad": 30,
+        "genero": "Femenino",
+        "enfermedadesCronicas": [],
+        "vacunacion": ["Covid-19"],
+        "esEmbarazada": true,
+        "fechaUltimaPruebaCitologica": "2023-12-01",
+        "historiaClinica": {
+          "numeroHistorialClinica": 1002,
+          "registrosVisita": []
+        },
+        "resultadosAnalisis": []
+      }
+    ],
+}
