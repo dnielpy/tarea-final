@@ -60,6 +60,9 @@ import java.io.IOException;
 
 import javax.swing.JPasswordField;
 
+import services.DatosDePrueba;
+import services.DatosDePrueba;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import database.AuthCredentials;
@@ -242,7 +245,9 @@ cartelAceptar.addMouseListener(new MouseAdapter() {
         String usuario = campoUsuario.getText();
         String contrasenna = new String(campoContrasenna.getPassword());
 
-		if(authUser(usuario, contrasenna)){
+        DatosDePrueba authService = new DatosDePrueba();
+        
+        if(authService.authUser(usuario, contrasenna)){
 			auth = true;
 			dispose();
 		}
@@ -254,22 +259,7 @@ cartelAceptar.addMouseListener(new MouseAdapter() {
 		cartelAceptar.setFont(new Font("Arial", Font.BOLD, 18));
 		cartelAceptar.setCursor(new Cursor(Cursor.HAND_CURSOR));
 	}
-
-	public boolean authUser(String user, String password) {
-	    boolean response = false;
-	 
-	    ObjectMapper mapper = new ObjectMapper();
-	    try {
-            AuthCredentials persona = mapper.readValue(new File("data.json"), AuthCredentials.class);
-            if(user.equals(persona.getUsername()) && password.equals(persona.getPassword())){
-    			response = true;
-    		}
-        } catch (Exception e) {
-            System.out.println("Error al leer el archivo: " + e.getMessage());
-        }
-		return response;
-	}
-
+	
 	public boolean getAuth(){
 		return this.auth;
 	}

@@ -1,4 +1,4 @@
-package backend;
+package entidades;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -81,4 +81,54 @@ public class CMF {
     public void setNombreDirector(String nombreDirector) {
         this.nombreDirector = nombreDirector;
     }
+    
+    public float obtenerEmbarazadasEnRiesgo(ArrayList<Paciente> pacientes){
+		float embarazadasEnRiesgo = 0;
+
+		for (Paciente paciente: pacientes){
+			if(paciente instanceof Mujer){
+				if( ((Mujer) paciente).isEmbarazada()){
+					if((int) paciente.getEnfermedadesCronicas().size() >= 3){	
+						embarazadasEnRiesgo ++;
+					}
+				}
+				return embarazadasEnRiesgo;
+			}
+		}		
+		return embarazadasEnRiesgo;
+	}
+	
+	public int[] obtenerRangosDeEdad(ArrayList<Paciente> pacientes){
+		 int[] rangoDeEdad = new int[10];	//Contiene la cantidad de pacientes en el rango. posicion 0 = 1 a 10 annos, 2 = 11 a 20 annos etc
+		 for (Paciente paciente: pacientes){
+			 if(paciente.getEdad() < 11){
+				 rangoDeEdad[0]++;
+			 }
+			 else if(paciente.getEdad() < 21){
+				 rangoDeEdad[1]++;	 
+			 }
+			 else if(paciente.getEdad() < 31){
+				 rangoDeEdad[2]++;	 
+			 }
+			 else if(paciente.getEdad() < 41){
+				 rangoDeEdad[3]++;	 
+			 }
+			 else if(paciente.getEdad() < 51){
+				 rangoDeEdad[4]++;	 
+			 }
+			 else if(paciente.getEdad() < 61){
+				 rangoDeEdad[5]++;	 
+			 }
+			 else if(paciente.getEdad() < 71){
+				 rangoDeEdad[6]++;	 
+			 }
+			 else if(paciente.getEdad() < 81){
+				 rangoDeEdad[7]++;	 
+			 }
+			 else if(paciente.getEdad() < 91){
+				 rangoDeEdad[8]++;	 
+			 }
+		 }
+		 return rangoDeEdad;
+	}
 }

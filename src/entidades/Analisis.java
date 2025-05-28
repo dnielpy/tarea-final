@@ -1,4 +1,4 @@
-package backend;
+package entidades;
 
 public class Analisis {
     private String nombrePaciente;

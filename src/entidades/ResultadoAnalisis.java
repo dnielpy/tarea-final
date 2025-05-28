@@ -1,4 +1,4 @@
-package backend;
+package entidades;
 
 public class ResultadoAnalisis {
     private Paciente paciente;
