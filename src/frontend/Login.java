@@ -63,8 +63,6 @@ import javax.swing.JPasswordField;
 import services.DatosDePrueba;
 import services.DatosDePrueba;
 
-import database.AuthCredentials;
-
 public class Login extends JFrame {
 	private boolean contrasenaVisible;
 	private JTextField campoUsuario;
