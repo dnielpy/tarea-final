@@ -8,17 +8,23 @@ import javax.swing.border.EmptyBorder;
 
 import java.awt.Toolkit;
 import java.awt.Color;
+
 import javax.swing.JLabel;
 import javax.swing.ImageIcon;
+
 import java.awt.Font;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+
 import componentesPropios.BotonMenu;
 
 import javax.swing.SwingConstants;
 
-public class Principal extends JFrame implements MouseListener {
+import java.awt.CardLayout;
 
+public class Principal extends JFrame implements MouseListener {
+	
+	private JPanel panelVentanas;
 	private BotonMenu botonActivo;
 	private JPanel contentPane;
 	
@@ -133,26 +139,42 @@ public class Principal extends JFrame implements MouseListener {
 		botonReportes.addMouseListener(this);
 		panelLateral.add(botonReportes);
 		
-		JPanel panelSuperior = new JPanel();
-		panelSuperior.setBounds(305, 0, 874, 51);
-		panelPrincipal.add(panelSuperior);
-		panelSuperior.setBackground(new Color(0, 171, 227));
-		panelSuperior.setLayout(null);
+		panelVentanas = new JPanel();
+		panelVentanas.setBounds(305, 0, 796, 673);
+		panelPrincipal.add(panelVentanas);
+		panelVentanas.setLayout(new CardLayout(0, 0));
 		
-		JLabel cartelPestanna = new JLabel("INICIO");
-		cartelPestanna.setHorizontalAlignment(SwingConstants.CENTER);
-		cartelPestanna.setForeground(Color.WHITE);
-		cartelPestanna.setFont(new Font("Arial", Font.PLAIN, 18));
-		cartelPestanna.setBounds(25, 0, 107, 51);
-		panelSuperior.add(cartelPestanna);
+		VentanaInicio inicio = new VentanaInicio();
+		panelVentanas.add(inicio, "INICIO");
+		inicio.setLayout(null);
 		
+		VentanaPacientes pacientes = new VentanaPacientes();
+		panelVentanas.add(pacientes, "PACIENTES");
+		pacientes.setLayout(null);
+		
+		VentanaVisitas visitas = new VentanaVisitas();
+		panelVentanas.add(visitas, "VISITAS");
+		visitas.setLayout(null);
+		
+		VentanaHojasDeCargo hojaDeCargo = new VentanaHojasDeCargo();
+		panelVentanas.add(hojaDeCargo, "HOJAS DE CARGO");
+		hojaDeCargo.setLayout(null);
+		
+		VentanaReportes reportes = new VentanaReportes();
+		panelVentanas.add(reportes, "REPORTES");
+		reportes.setLayout(null);
 	}
 
 	public void mouseClicked(MouseEvent e) {
-		if (!((BotonMenu)e.getSource()).estaActivo()) {
+		BotonMenu boton = (BotonMenu)e.getSource();
+		if (!boton.estaActivo()) {
 			getBotonActivo().setActivo(false);
-			((BotonMenu)e.getSource()).setActivo(true);
-			setBotonActivo(((BotonMenu)e.getSource()));
+			boton.setActivo(true);
+			setBotonActivo(boton);
+			
+			CardLayout card = (CardLayout)(panelVentanas.getLayout());
+			card.show(panelVentanas, boton.getText());
+		
 		}
 		
 	}
