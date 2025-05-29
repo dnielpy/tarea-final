@@ -6,7 +6,8 @@ import frontend.Principal;
 public class Main {
 	public static void main(String[] args) {
 		Login login = new Login();
-		//login.setUndecorated(true);
+		//login.setUndecorated(true);	
+		//TODO 
 		login.setLocationRelativeTo(null);
 		login.setVisible(true);
 		while (login.isDisplayable()) {

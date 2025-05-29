@@ -2,7 +2,7 @@ package services;
 
 import java.util.ArrayList;
 
-import database.AuthCredentials;
+
 import entidades.CMF;
 import entidades.HistoriaClinica;
 import entidades.Mujer;
@@ -20,7 +20,7 @@ public class DatosDePrueba {
 	public void cargarDatos(){
 		CMF cmf = new CMF(1, "Consultorio El Cotorro", "Herbert San Jacobo");
 		
-		Paciente javier = new Paciente(0, , null, 0, null);
+		//Paciente javier = new Paciente(0, null, 0, null);
 	}
 }
 
