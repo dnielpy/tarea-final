@@ -2,6 +2,7 @@ package entidades;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class CMF {
     private int id;
@@ -130,5 +131,10 @@ public class CMF {
 			 }
 		 }
 		 return rangoDeEdad;
+	}
+
+	public List<Paciente> getPacientes() {
+		// TODO Auto-generated method stub
+		return pacientes;
 	}
 }
