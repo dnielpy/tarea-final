@@ -155,7 +155,7 @@ public class CMF {
 		
 		ArrayList<String> vacunacion2 = new ArrayList<String>();
 		vacunacion.add("Antiplio: 13/4/2020");
-		agregarPaciente(2, "Amanda Lopez Garcia", 25, vacunacion2);
+		agregarPaciente(2, "Amanda Gutierres Garcia", 25, vacunacion2);
 		
 		ArrayList<String> vacunacion3 = new ArrayList<String>();
 		vacunacion.add("Antiplio: 13/4/2019");
