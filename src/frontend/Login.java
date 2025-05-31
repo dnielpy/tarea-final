@@ -60,6 +60,7 @@ import java.io.IOException;
 
 import javax.swing.JPasswordField;
 
+import runner.Auth;
 import services.DatosDePrueba;
 import services.DatosDePrueba;
 
@@ -241,9 +242,9 @@ cartelAceptar.addMouseListener(new MouseAdapter() {
         String usuario = campoUsuario.getText();
         String contrasenna = new String(campoContrasenna.getPassword());
 
-        DatosDePrueba authService = new DatosDePrueba();
+        Auth authManager = new Auth();
         
-        if(authService.authUser(usuario, contrasenna)){
+        if(authManager.authUser(usuario, contrasenna)){
 			auth = true;
 			dispose();
 		}
