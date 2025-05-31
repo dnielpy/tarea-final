@@ -5,9 +5,9 @@ import java.util.Date;
 public class Medico extends Persona{
 	private int numRegistro;
 	private String ci;
-	private Date fechaInscripcion;
+	private String fechaInscripcion;
 
-	Medico(String nombre, int numRegistro, String ci, Date fecha) {
+	Medico(String nombre, int numRegistro, String ci, String fecha) {
 		setNombre(nombre);
 		setNumRegistro(numRegistro);
 		setCarnet(ci);
@@ -34,11 +34,11 @@ public class Medico extends Persona{
 		this.ci = carnet;
 	}
 
-	public Date getFechaInscripcion() {
+	public String getFechaInscripcion() {
 		return fechaInscripcion;
 	}
 
-	public void setFechaInscripcion(Date fecha) {
+	public void setFechaInscripcion(String fecha) {
 		fechaInscripcion = fecha;
 	}
 }

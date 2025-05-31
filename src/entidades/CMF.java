@@ -26,8 +26,41 @@ public class CMF {
         this.pacientes = new ArrayList<Paciente>();
     }
 
+    
+    // Getters
+    public List<Paciente> getPacientes() {
+		return pacientes;
+	}
+    
+    public int getId() {
+        return id;
+    }
+    
+    public String getNombre() {
+    	return nombre;
+    }
+    
+    public String getNombreDirector() {
+        return nombreDirector;
+    }
+    
+    
+    //Setters
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public void setNombreDirector(String nombreDirector) {
+        this.nombreDirector = nombreDirector;
+    }
+    
+    
     //Metodos para agregar
-    public void crearMedico(String nombre, int numRegistro, String ci, Date fecha) {
+    public void crearMedico(String nombre, int numRegistro, String ci, String fecha) {
         this.medico = new Medico(nombre, numRegistro, ci, fecha);
     }
 
@@ -59,30 +92,9 @@ public class CMF {
         this.historiasClinicas.add(historia);
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getNombreDirector() {
-        return nombreDirector;
-    }
-
-    public void setNombreDirector(String nombreDirector) {
-        this.nombreDirector = nombreDirector;
-    }
     
+    
+    // Reportes
     public float obtenerEmbarazadasEnRiesgo(ArrayList<Paciente> pacientes){
 		float embarazadasEnRiesgo = 0;
 
@@ -133,8 +145,22 @@ public class CMF {
 		 return rangoDeEdad;
 	}
 	
-	public List<Paciente> getPacientes() {
-		// TODO Auto-generated method stub
-		return pacientes;
+	public void cargarDatos(){
+		crearMedico("Alfonso Rodriguez Camela", 11321, "98020378176", "12/3/1998");
+		
+		//Creacion de pacientes
+		ArrayList<String> vacunacion = new ArrayList<String>();
+		vacunacion.add("Antiplio: 13/4/2009");
+		agregarPaciente(1, "Armando Lopez Del Toro", 45, vacunacion);
+		
+		ArrayList<String> vacunacion2 = new ArrayList<String>();
+		vacunacion.add("Antiplio: 13/4/2020");
+		agregarPaciente(2, "Amanda Lopez Garcia", 25, vacunacion2);
+		
+		ArrayList<String> vacunacion3 = new ArrayList<String>();
+		vacunacion.add("Antiplio: 13/4/2019");
+		agregarPaciente(3, "Carlos Garces Fernandez", 34, vacunacion3);
+		
 	}
+
 }

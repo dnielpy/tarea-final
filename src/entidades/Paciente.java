@@ -14,6 +14,7 @@ public class Paciente extends Persona {
         setNombre(nombre);
         super.nombreYApellidos = nombre;
         this.vacunacion = new ArrayList<String>();
+        this.historiaClinica = new HistoriaClinica(historiaClinicaID);
     }
 
     public int getHistoriaClinicaID() {
@@ -54,6 +55,7 @@ public class Paciente extends Persona {
         this.vacunacion.add(vacuna);
     }
 
+    
     public boolean estaEnRiesgo(){
         boolean enRiesgo = false;
         if (enfermedadesCronicas.size() >= 3){
