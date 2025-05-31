@@ -133,6 +133,15 @@ public class CMF {
 		 return rangoDeEdad;
 	}
 
+	public boolean authUser(String user, String password) {
+	    boolean response = false;
+	 
+	    if(user.equals("1") && password.equals("1")){
+	    	response = true;
+	    }
+		return response;
+	}
+	
 	public List<Paciente> getPacientes() {
 		// TODO Auto-generated method stub
 		return pacientes;
