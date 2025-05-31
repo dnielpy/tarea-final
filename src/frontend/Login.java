@@ -61,8 +61,6 @@ import java.io.IOException;
 import javax.swing.JPasswordField;
 
 import runner.Auth;
-import services.DatosDePrueba;
-import services.DatosDePrueba;
 
 public class Login extends JFrame {
 	private boolean contrasenaVisible;
