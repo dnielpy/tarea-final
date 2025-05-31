@@ -13,6 +13,9 @@ public class HistoriaClinica {
         setResultadosDeAnalisis(resultadosDeAnalisis);
         setRegistroVisitas(registroVisitas);
     }
+    public HistoriaClinica(int id) {
+        setId(id);
+    }
 
     public ArrayList<RegistroVisita> getRegistroVisitas() {
         return registroVisitas;
