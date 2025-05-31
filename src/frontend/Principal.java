@@ -20,6 +20,8 @@ import componentesPropios.BotonMenu;
 
 import javax.swing.SwingConstants;
 
+import entidades.CMF;
+
 import java.awt.CardLayout;
 
 public class Principal extends JFrame implements MouseListener {
@@ -27,6 +29,7 @@ public class Principal extends JFrame implements MouseListener {
 	private JPanel panelVentanas;
 	private BotonMenu botonActivo;
 	private JPanel contentPane;
+	
 	
 	public BotonMenu getBotonActivo() {
 		return botonActivo;
@@ -50,6 +53,11 @@ public class Principal extends JFrame implements MouseListener {
 	}
 
 	public Principal() {
+		
+		//Inicializacion del CMF
+		CMF cmf = new CMF(1, "Policlinico Alberro Cotorro", "Esteban Marrero Bermudez");
+		cmf.cargarDatos();
+		
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Principal.class.getResource("/fotos/hospital-logo-and-symbols-templa.png")));
 		setTitle("Sistema de gesti\u00F3n del CMF");
 		setResizable(false);
@@ -148,7 +156,7 @@ public class Principal extends JFrame implements MouseListener {
 		panelVentanas.add(inicio, "INICIO");
 		inicio.setLayout(null);
 		
-		VentanaPacientes pacientes = new VentanaPacientes();
+		VentanaPacientes pacientes = new VentanaPacientes(cmf);
 		panelVentanas.add(pacientes, "PACIENTES");
 		pacientes.setLayout(null);
 		

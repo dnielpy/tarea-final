@@ -23,7 +23,7 @@ public class VentanaPacientes extends JPanel {
 
 	private JTable table;
 	
-	public VentanaPacientes() {
+	public VentanaPacientes(CMF cmf) {
 		JPanel panelPrincipal = new JPanel();
 		panelPrincipal.setBackground(Color.WHITE);
 		panelPrincipal.setBounds(0, 0, 832, 689);
@@ -43,10 +43,6 @@ public class VentanaPacientes extends JPanel {
 		cartelPestanna.setBounds(25, 0, 107, 51);
 		panelSuperior.add(cartelPestanna);
 		
-		CMF cmf = new CMF(10, "R", "P");
-		cmf.agregarPaciente(3, "Jason", 14, null);
-		cmf.agregarPaciente(5, "Pepe", 10, null);
-		cmf.agregarPaciente(7, "Juan", 6, null);
 
 		// Crear el modelo de tabla
         PersonaTableModel model = new PersonaTableModel(cmf.getPacientes()) {

@@ -1,5 +1,6 @@
 package runner;
 
+import entidades.CMF;
 import frontend.Login;
 import frontend.Principal;
 
@@ -18,6 +19,7 @@ public class Runner {
 		}
 
 		if (login.getAuth()) {
+			
 			Principal principal = new Principal();
 			principal.setVisible(true);
 		} else {
