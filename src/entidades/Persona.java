@@ -7,4 +7,8 @@ public abstract class Persona {
     public String getNombreYApellidos() {
         return nombreYApellidos;
     }
+
+	public void setNombre(String nombre) {
+		
+	}
 }
