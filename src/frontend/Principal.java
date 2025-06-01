@@ -2,6 +2,7 @@ package frontend;
 
 import java.awt.EventQueue;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -63,6 +64,7 @@ public class Principal extends JFrame implements MouseListener {
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1100, 700);
+		setLocationRelativeTo(null);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -74,33 +76,33 @@ public class Principal extends JFrame implements MouseListener {
 		panelUsuario.setBackground(new Color(109, 163, 67));
 		panelUsuario.setLayout(null);
 		
-		JLabel lblNewLabel = new JLabel("");
-		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setIcon(new ImageIcon(Principal.class.getResource("/fotos/Logo peque.png")));
-		lblNewLabel.setBounds(0, 13, 300, 122);
-		panelUsuario.add(lblNewLabel);
+		JLabel imagenUsuario = new JLabel("");
+		imagenUsuario.setIcon(new ImageIcon(Principal.class.getResource("/fotos/medico.png")));
+		imagenUsuario.setHorizontalAlignment(SwingConstants.CENTER);
+		imagenUsuario.setBounds(0, 27, 300, 122);
+		panelUsuario.add(imagenUsuario);
 		
 		JLabel cartelUsuario = new JLabel("USUARIO");
 		cartelUsuario.setHorizontalAlignment(SwingConstants.CENTER);
 		cartelUsuario.setForeground(Color.WHITE);
-		cartelUsuario.setFont(new Font("Arial Black", Font.BOLD, 18));
-		cartelUsuario.setBounds(31, 133, 237, 26);
+		cartelUsuario.setFont(new Font("Arial", Font.PLAIN, 18));
+		cartelUsuario.setBounds(31, 147, 237, 26);
 		panelUsuario.add(cartelUsuario);
 		
 		JLabel cartelRol = new JLabel("ROL");
 		cartelRol.setHorizontalAlignment(SwingConstants.CENTER);
 		cartelRol.setForeground(Color.WHITE);
 		cartelRol.setFont(new Font("Arial", Font.PLAIN, 16));
-		cartelRol.setBounds(31, 157, 237, 26);
+		cartelRol.setBounds(31, 168, 237, 26);
 		panelUsuario.add(cartelRol);
 		
-		BotonMenu botonCerrarSesion = new BotonMenu();
-		botonCerrarSesion.setForeground(Color.BLACK);
-		botonCerrarSesion.setFont(new Font("Arial", Font.BOLD, 16));
-		botonCerrarSesion.setBackground(Color.WHITE);
-		botonCerrarSesion.setText("CERRAR SESI\u00D3N");
-		botonCerrarSesion.setBounds(59, 196, 173, 29);
-		panelUsuario.add(botonCerrarSesion);
+		JButton botonIniciarSesion = new JButton();
+		botonIniciarSesion.setText("CERRAR SESI\u00D3N");
+		botonIniciarSesion.setForeground(Color.BLACK);
+		botonIniciarSesion.setFont(new Font("Arial", Font.PLAIN, 16));
+		botonIniciarSesion.setBackground(Color.WHITE);
+		botonIniciarSesion.setBounds(61, 195, 173, 29);
+		panelUsuario.add(botonIniciarSesion);
 		
 		JPanel panelPrincipal = new JPanel();
 		panelPrincipal.setBackground(Color.WHITE);
@@ -116,7 +118,7 @@ public class Principal extends JFrame implements MouseListener {
 		
 		BotonMenu botonInicio = new BotonMenu((String) null);
 		botonInicio.setText("INICIO");
-		botonInicio.setBounds(0, 13, 300, 75);
+		botonInicio.setBounds(0, 16, 300, 75);
 		botonInicio.addMouseListener(this);
 		botonInicio.setActivo(true);
 		panelLateral.add(botonInicio);
@@ -124,26 +126,30 @@ public class Principal extends JFrame implements MouseListener {
 		setBotonActivo(botonInicio);
 		
 		BotonMenu botonPacientes = new BotonMenu((String) null);
+		botonPacientes.setActivo(false);
 		botonPacientes.setText("PACIENTES");
-		botonPacientes.setBounds(0, 87, 300, 75);
+		botonPacientes.setBounds(0, 90, 300, 75);
 		botonPacientes.addMouseListener(this);
 		panelLateral.add(botonPacientes);
 		
 		BotonMenu botonHojaCargo = new BotonMenu((String) null);
+		botonHojaCargo.setActivo(false);
 		botonHojaCargo.setText("HOJAS DE CARGO");
-		botonHojaCargo.setBounds(0, 161, 300, 75);
+		botonHojaCargo.setBounds(0, 164, 300, 75);
 		botonHojaCargo.addMouseListener(this);
 		panelLateral.add(botonHojaCargo);
 		
 		BotonMenu botonVisitas = new BotonMenu((String) null);
+		botonVisitas.setActivo(false);
 		botonVisitas.setText("VISITAS");
-		botonVisitas.setBounds(0, 234, 300, 75);
+		botonVisitas.setBounds(0, 237, 300, 75);
 		botonVisitas.addMouseListener(this);
 		panelLateral.add(botonVisitas);
 		
 		BotonMenu botonReportes = new BotonMenu((String) null);
+		botonReportes.setActivo(false);
 		botonReportes.setText("REPORTES");
-		botonReportes.setBounds(0, 308, 300, 75);
+		botonReportes.setBounds(0, 311, 300, 75);
 		botonReportes.addMouseListener(this);
 		panelLateral.add(botonReportes);
 		

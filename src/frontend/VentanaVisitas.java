@@ -10,15 +10,13 @@ import javax.swing.SwingConstants;
 public class VentanaVisitas extends JPanel {
 
 	public VentanaVisitas() {
-		JPanel panelPrincipal = new JPanel();
-		panelPrincipal.setBackground(Color.WHITE);
-		panelPrincipal.setBounds(0, 0, 832, 689);
-		add(panelPrincipal);
-		panelPrincipal.setLayout(null);
+		setBackground(Color.WHITE);
+		setLayout(null);
+		setBounds(305, 0, 796, 673);
 		
 		JPanel panelSuperior = new JPanel();
 		panelSuperior.setBounds(0, 0, 874, 51);
-		panelPrincipal.add(panelSuperior);
+		add(panelSuperior);
 		panelSuperior.setBackground(new Color(0, 171, 227));
 		panelSuperior.setLayout(null);
 		

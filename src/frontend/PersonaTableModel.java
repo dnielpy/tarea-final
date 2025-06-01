@@ -8,8 +8,8 @@ import entidades.Persona;
 import java.util.List;
 
 public class PersonaTableModel extends AbstractTableModel {
-    private final List<Paciente> pacientes;
-    private final String[] columnNames = {"Nombre", "Historio Clinica", "Edad"};
+    private List<Paciente> pacientes;
+    private String[] columnNames = {"Nombre", "Historia Clinica", "Edad"};
 
     public PersonaTableModel(List<Paciente> pacientes) {
         this.pacientes = pacientes;

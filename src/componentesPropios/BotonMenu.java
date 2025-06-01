@@ -3,9 +3,14 @@ package componentesPropios;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
 import javax.swing.JButton;
 
-public class BotonMenu extends JButton{
+public class BotonMenu extends JButton {
 	
 	private boolean esActivo;
 	
