@@ -1,11 +1,14 @@
 package frontend;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
@@ -19,20 +22,23 @@ import javax.swing.table.TableRowSorter;
 
 import entidades.CMF;
 
-public class VentanaPacientes extends JPanel {
+import javax.swing.JButton;
+import java.awt.SystemColor;
+import javax.swing.border.EmptyBorder;
+import javax.swing.ImageIcon;
+
+public class VentanaPacientes extends JPanel implements MouseListener{
 
 	private JTable table;
 	
 	public VentanaPacientes(CMF cmf) {
-		JPanel panelPrincipal = new JPanel();
-		panelPrincipal.setBackground(Color.WHITE);
-		panelPrincipal.setBounds(0, 0, 832, 689);
-		add(panelPrincipal);
-		panelPrincipal.setLayout(null);
+		setBackground(Color.WHITE);
+		setLayout(null);
+		setBounds(305, 0, 796, 673);
 		
 		JPanel panelSuperior = new JPanel();
 		panelSuperior.setBounds(0, 0, 874, 51);
-		panelPrincipal.add(panelSuperior);
+		add(panelSuperior);
 		panelSuperior.setBackground(new Color(0, 171, 227));
 		panelSuperior.setLayout(null);
 		
@@ -61,14 +67,15 @@ public class VentanaPacientes extends JPanel {
         
         // Agregar la tabla a un JScrollPane
         JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setBounds(0, 30, 322, 200);
+        scrollPane.setBounds(0, 30, 600, 406);
         
         // Configurar el tamaño preferido de la tabla
         table.setPreferredScrollableViewportSize(new Dimension(350, 150));
         
         // Campo de texto para filtrar
         final JTextField filterText = new JTextField();
-        filterText.setBounds(0, 0, 322, 22);
+        filterText.setFont(new Font("Arial", Font.PLAIN, 16));
+        filterText.setBounds(0, 0, 600, 22);
         filterText.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
@@ -82,17 +89,35 @@ public class VentanaPacientes extends JPanel {
         });
         
         // Panel para el filtro y la tabla
-        JPanel panel = new JPanel();
-        panel.setBounds(188, 130, 322, 200);
-        panel.setLayout(null);
-        panel.add(filterText);
-        panel.add(scrollPane);
+        JPanel panelTabla = new JPanel();
+        panelTabla.setBackground(Color.WHITE);
+        panelTabla.setBounds(100, 130, 600, 439);
+        panelTabla.setLayout(null);
+        panelTabla.add(filterText);
+        panelTabla.add(scrollPane);
         
         // Personalización de la tabla
         customizeTable(table);
         
         // Agregar el panel al marco
-        add(panel);
+        add(panelTabla);
+        
+        JButton btnNewButton = new JButton("AGREGAR PACIENTE");
+        btnNewButton.setForeground(Color.BLACK);
+        btnNewButton.setFont(new Font("Arial", Font.PLAIN, 16));
+        btnNewButton.setBackground(SystemColor.menu);
+        btnNewButton.setBounds(497, 585, 203, 33);
+        add(btnNewButton);
+        
+        JLabel lblNewLabel = new JLabel("Listado de pacientes:");
+        lblNewLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        lblNewLabel.setBounds(100, 104, 203, 20);
+        add(lblNewLabel);
+        
+        JLabel lblNewLabel_1 = new JLabel("");
+        lblNewLabel_1.setIcon(new ImageIcon(VentanaPacientes.class.getResource("/fotos/trash.png")));
+        lblNewLabel_1.setBounds(449, 585, 33, 33);
+        add(lblNewLabel_1);
 		
 	}
 	
@@ -100,20 +125,20 @@ public class VentanaPacientes extends JPanel {
         // Cambiar color y fuente de las celdas
         table.setBackground(Color.WHITE);
         table.setForeground(Color.BLACK);
-        table.setFont(new Font("Arial", Font.PLAIN, 14));
+        table.setFont(new Font("Arial", Font.PLAIN, 16));
 
         // Cambiar color y fuente de los encabezados
         JTableHeader header = table.getTableHeader();
         header.setBackground(Color.WHITE);
         header.setForeground(Color.BLACK);
-        header.setFont(new Font("Arial", Font.BOLD, 14));
+        header.setFont(new Font("Arial", Font.BOLD, 16));
 
         // Cambiar color de las líneas de la tabla
-        table.setGridColor(Color.LIGHT_GRAY);
+        table.setGridColor(SystemColor.controlHighlight);
         
         // Establecer el borde de las celdas (opcional)
         DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
-        renderer.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+        renderer.setBorder(BorderFactory.createLineBorder(SystemColor.controlHighlight));
         table.setDefaultRenderer(Object.class, renderer);
 
         // Cambiar altura de las filas
@@ -122,4 +147,34 @@ public class VentanaPacientes extends JPanel {
         // Alternar filas de colores (opcional)
         table.setFillsViewportHeight(true);
     }
+
+	@Override
+	public void mouseClicked(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
 }
