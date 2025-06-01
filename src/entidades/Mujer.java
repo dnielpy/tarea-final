@@ -1,25 +1,50 @@
 package entidades;
 
 import java.util.ArrayList;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
 
-public class Mujer extends Paciente{
-    private Date fechaUltimaRevision;
+public class Mujer extends Paciente {
+    private String fechaUltimaRevision;
     private boolean embarazada;
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
-    public Mujer(int historiaClinicaID, String nombre, int edad, ArrayList<String> vacucnacion, Date fechaUltimaRevision, boolean embarazada) {
-        super(historiaClinicaID, nombre, edad, vacucnacion);
+    public Mujer(int historiaClinicaID, String nombre, int edad, ArrayList<String> vacunacion, String fechaUltimaRevision, boolean embarazada) {
+        super(historiaClinicaID, nombre, edad, vacunacion);
         setFechaUltimaRevision(fechaUltimaRevision);
         setEmbarazada(embarazada);
     }
 
-    public Date getFechaUltimaRevision() {
+    public String getFechaUltimaRevision() {
         return fechaUltimaRevision;
     }
 
-    public void setFechaUltimaRevision(Date fechaUltimaRevision) {
-        this.fechaUltimaRevision = fechaUltimaRevision;
+    public void setFechaUltimaRevision(String fechaUltimaRevision) {
+        if (fechaUltimaRevision != null && !fechaUltimaRevision.isEmpty()) {
+            try {
+                Date fecha = dateFormat.parse(fechaUltimaRevision);
+                
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(fecha);
+                if (cal.get(Calendar.YEAR) < 1900) {
+                    throw new IllegalArgumentException("Fecha de revisión no puede ser anterior a 1900");
+                }
+                
+                Calendar hoy = Calendar.getInstance();
+                if (fecha.after(hoy.getTime())) {
+                    throw new IllegalArgumentException("Fecha de revisión no puede ser futura");
+                }
+                
+                this.fechaUltimaRevision = fechaUltimaRevision;
+            } catch (ParseException e) {
+                throw new IllegalArgumentException("Formato de fecha inválido. Use dd/MM/yyyy");
+            }
+        } else {
+            this.fechaUltimaRevision = null;
+        }
     }
 
     public boolean isEmbarazada() {
@@ -27,23 +52,56 @@ public class Mujer extends Paciente{
     }
 
     public void setEmbarazada(boolean embarazada) {
+        if (this.getEdad() < 12 && embarazada) {
+            throw new IllegalArgumentException("Paciente menor de 12 años no puede estar embarazada");
+        }
+        if (this.getEdad() > 55 && embarazada) {
+            throw new IllegalArgumentException("Paciente mayor de 55 años no puede estar embarazada");
+        }
         this.embarazada = embarazada;
     }
 
     public boolean estaEnRiesgo() {
         boolean riesgo = false;
-        if (fechaUltimaRevision == null) {
+        
+        if (fechaUltimaRevision == null || fechaUltimaRevision.isEmpty()) {
             riesgo = true;
-        }
-        Calendar fechaRevision = Calendar.getInstance();
-        fechaRevision.setTime(fechaUltimaRevision);
+        } else {
+            try {
+                Date fecha = dateFormat.parse(fechaUltimaRevision);
+                Calendar fechaRevision = Calendar.getInstance();
+                fechaRevision.setTime(fecha);
+                fechaRevision.add(Calendar.MONTH, 3);
 
-        Calendar hoy = Calendar.getInstance();
-        fechaRevision.add(Calendar.MONTH, 3);
-
-        if(hoy.after(fechaRevision)){
-            riesgo = true;
+                Calendar hoy = Calendar.getInstance();
+                if (hoy.after(fechaRevision)) {
+                    riesgo = true;
+                }
+            } catch (ParseException e) {
+                riesgo = true;
+            }
         }
+        
         return riesgo;
+    }
+
+    @Override
+    public void setEdad(int edad) {
+        if (edad < 0) {
+            throw new IllegalArgumentException("La edad no puede ser negativa");
+        }
+        if (edad > 120) {
+            throw new IllegalArgumentException("Edad no puede ser mayor a 120 años");
+        }
+        super.setEdad(edad);
+    }
+
+    @Override
+    public void setNombre(String nombre) {
+        Objects.requireNonNull(nombre, "El nombre no puede ser nulo");
+        if (nombre.trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre no puede estar vacío");
+        }
+        super.setNombre(nombre.trim());
     }
 }

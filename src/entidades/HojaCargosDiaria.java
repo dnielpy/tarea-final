@@ -1,22 +1,32 @@
 package entidades;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
+import java.util.Objects;
 
 public class HojaCargosDiaria {
-    private Date fecha;
+    private String fecha;
     private ArrayList<RegistroHojaCargos> registros;
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
-    public HojaCargosDiaria(Date fecha) {
-        this.fecha = fecha;
+    public HojaCargosDiaria(String fecha) {
+        setFecha(fecha);
+        this.registros = new ArrayList<>();
     }
 
-    public Date getFecha() {
+    public String getFecha() {
         return fecha;
     }
 
-    public void setFecha(Date fecha) {
-        this.fecha = fecha;
+    public void setFecha(String fecha) {
+        Objects.requireNonNull(fecha);
+        try {
+            dateFormat.parse(fecha);
+            this.fecha = fecha;
+        } catch (ParseException e) {
+            throw new IllegalArgumentException("Formato de fecha inválido, use dd/MM/yyyy");
+        }
     }
 
     public ArrayList<RegistroHojaCargos> getRegistros() {
@@ -24,6 +34,7 @@ public class HojaCargosDiaria {
     }
 
     public void agregarRegistro(RegistroHojaCargos registro) {
+        Objects.requireNonNull(registro);
         this.registros.add(registro);
     }
 }

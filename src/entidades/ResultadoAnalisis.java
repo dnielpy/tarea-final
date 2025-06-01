@@ -16,6 +16,9 @@ public class ResultadoAnalisis {
     }
 
     public void setPaciente(Paciente paciente) {
+        if (paciente == null) {
+            throw new IllegalArgumentException("Paciente no puede ser nulo");
+        }
         this.paciente = paciente;
     }
 
@@ -24,6 +27,9 @@ public class ResultadoAnalisis {
     }
 
     public void setNumeroHistClinica(int numeroHistClinica) {
+        if (numeroHistClinica <= 0) {
+            throw new IllegalArgumentException("Número de historia clínica debe ser positivo");
+        }
         this.numeroHistClinica = numeroHistClinica;
     }
 
@@ -32,6 +38,9 @@ public class ResultadoAnalisis {
     }
 
     public void setResultados(String resultados) {
+        if (resultados == null || resultados.trim().isEmpty()) {
+            throw new IllegalArgumentException("Resultados no pueden ser nulos o vacíos");
+        }
         this.resultados = resultados;
     }
 }

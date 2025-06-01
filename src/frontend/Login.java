@@ -224,30 +224,30 @@ public class Login extends JFrame {
 		botonAceptar.setLayout(null);
 
 		JLabel cartelAceptar = new JLabel("ACEPTAR");
-cartelAceptar.addMouseListener(new MouseAdapter() {
-    @Override
-    public void mouseEntered(MouseEvent arg0) {
-        botonAceptar.setBackground(Color.LIGHT_GRAY);
-    }
-
-    @Override
-    public void mouseExited(MouseEvent arg0) {
-        botonAceptar.setBackground(SystemColor.menu);
-    }
-
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        String usuario = campoUsuario.getText();
-        String contrasenna = new String(campoContrasenna.getPassword());
-
-        Auth authManager = new Auth();
-        
-        if(authManager.authUser(usuario, contrasenna)){
-			auth = true;
-			dispose();
-		}
-    }
-});
+		cartelAceptar.addMouseListener(new MouseAdapter() {
+	    @Override
+	    public void mouseEntered(MouseEvent arg0) {
+	        botonAceptar.setBackground(Color.LIGHT_GRAY);
+	    }
+	
+	    @Override
+	    public void mouseExited(MouseEvent arg0) {
+	        botonAceptar.setBackground(SystemColor.menu);
+	    }
+	
+	    @Override
+	    public void mouseClicked(MouseEvent e) {
+	        String usuario = campoUsuario.getText();
+	        String contrasenna = new String(campoContrasenna.getPassword());
+	
+	        Auth authManager = new Auth();
+	        
+	        if(authManager.authUser(usuario, contrasenna)){
+				auth = true;
+				dispose();
+			}
+	    }
+	});
 		cartelAceptar.setHorizontalAlignment(SwingConstants.CENTER);
 		cartelAceptar.setBounds(0, 0, 115, 43);
 		botonAceptar.add(cartelAceptar);
