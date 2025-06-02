@@ -1,12 +1,22 @@
 package runner;
 
 public class Auth {
-	public boolean authUser(String user, String password) {
+	private static String email = "1";
+	private static String password = "1";
+	
+	
+	
+	public boolean authUser(String userEmail, String userPassword) {
 	    boolean response = false;
 	 
-	    if(user.equals("1") && password.equals("1")){
+	    if(userEmail.equals(email) && userPassword.equals(password)){
 	    	response = true;
 	    }
+	    
+	    Usuario.setEmail(email);
+	    Usuario.setPassword(password);
+	    Usuario.setRole("ADMIN");
+	    
 		return response;
 	}
 }
