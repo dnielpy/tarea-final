@@ -2,28 +2,28 @@ package entidades;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class CMF {
     private int id;
     private String nombre;
     private String nombreDirector;
-    private ArrayList<HistoriaClinica> historiasClinicas;
     private ArrayList<HojaCargosDiaria> hojasCargoDiaria;
     private ArrayList<Paciente> pacientes;
     private Medico medico;
     private RegistroGeneral registroGeneral;
     private RegistroHistorico registroHistorico;
+    private Enfermera enfermera;
 
     public CMF(int id, String nombre, String nombreDirector) {
         setId(id);
         setNombre(nombre);
         setNombreDirector(nombreDirector);
-        this.historiasClinicas = new ArrayList<>();
         this.hojasCargoDiaria = new ArrayList<>();
         this.pacientes = new ArrayList<>();
     }
 
-    public List<Paciente> getPacientes() {
+    public ArrayList<Paciente> getPacientes() {
         return new ArrayList<>(pacientes);
     }
 
@@ -37,6 +37,14 @@ public class CMF {
 
     public String getNombreDirector() {
         return nombreDirector;
+    }
+    
+    public Enfermera getEnfermera(){
+    	return this.enfermera;
+    }
+    
+    public Medico getMedico(){
+    	return this.medico;
     }
 
     public void setId(int id) {
@@ -77,18 +85,31 @@ public class CMF {
         Mujer newMujer = new Mujer(historiaClinicaID, nombre, edad, vacunacion, fechaUltimaRevision, embarazada);
         this.pacientes.add(newMujer);
     }
+    
+    public void crearEnfermera(String nombre, int id, boolean licenciatura, int experiencia, String fecha) {
+        Objects.requireNonNull(nombre, "El nombre no puede ser nulo");
+        if (this.enfermera != null) {
+            throw new IllegalStateException("Ya existe una enfermera asignada a este CMF");
+        }
+        this.enfermera = new Enfermera(nombre, id, licenciatura, experiencia, fecha);
+    }
 
     public void agregarHojaCargoDiaria(String fecha) {
         HojaCargosDiaria hoja = new HojaCargosDiaria(fecha);
         this.hojasCargoDiaria.add(hoja);
     }
 
-    public void agregarHistoriaClinica(int id, ArrayList<String> resultadosDeAnalisis, ArrayList<RegistroVisita> registroVisitas) {
-        HistoriaClinica historia = new HistoriaClinica(id, resultadosDeAnalisis, registroVisitas);
-        this.historiasClinicas.add(historia);
+    public void actualizarEnfermera(String nombre, boolean licenciatura, int experiencia, String fecha) {
+        if (this.enfermera == null) {
+            throw new IllegalStateException("No hay enfermera asignada para actualizar");
+        }
+        this.enfermera.setNombre(nombre);
+        this.enfermera.setLicenciatura(licenciatura);
+        this.enfermera.setExperiencia(experiencia);
+        this.enfermera.setFechaInicio(fecha);
     }
-
-    public float obtenerEmbarazadasEnRiesgo(List<Paciente> pacientes) {
+    
+    public float obtenerPorcientoEmbarazadasEnRiesgo() {
         if (pacientes == null) throw new IllegalArgumentException("Lista de pacientes no puede ser nula");
         float embarazadasEnRiesgo = 0;
         for (Paciente paciente : pacientes) {
@@ -99,7 +120,7 @@ public class CMF {
         return embarazadasEnRiesgo;
     }
 
-    public int[] obtenerRangosDeEdad(List<Paciente> pacientes) {
+    public int[] obtenerRangosDeEdad() {
         if (pacientes == null) throw new IllegalArgumentException("Lista de pacientes no puede ser nula");
         int[] rangoDeEdad = new int[10];
         for (Paciente paciente : pacientes) {
