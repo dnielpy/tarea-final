@@ -239,14 +239,19 @@ public class Login extends JFrame {
 	    public void mouseClicked(MouseEvent e) {
 	        String usuario = campoUsuario.getText();
 	        String contrasenna = new String(campoContrasenna.getPassword());
-	
+
 	        Auth authManager = new Auth();
-	        
-	        if(authManager.authUser(usuario, contrasenna)){
-				auth = true;
-				dispose();
-			}
+
+	        try {
+	            if (authManager.authUser(usuario, contrasenna)) {
+	                auth = true;
+	                dispose(); 
+	            }
+	        } catch (Auth.AuthenticationException ex) {
+	            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error de autenticación", JOptionPane.ERROR_MESSAGE);
+	        }
 	    }
+
 	});
 		cartelAceptar.setHorizontalAlignment(SwingConstants.CENTER);
 		cartelAceptar.setBounds(0, 0, 115, 43);
