@@ -9,7 +9,7 @@ import java.util.List;
 
 public class PersonaTableModel extends AbstractTableModel {
     private List<Paciente> pacientes;
-    private String[] columnNames = {"Nombre", "Historia Clinica", "Edad"};
+    private String[] columnNames = {"Nombre", "Género", "CI", "H. Clínica", "Edad"};
 
     public PersonaTableModel(List<Paciente> pacientes) {
         this.pacientes = pacientes;
@@ -27,11 +27,15 @@ public class PersonaTableModel extends AbstractTableModel {
         Persona paciente = pacientes.get(rowIndex);
         switch (columnIndex) {
             case 0:
-                return ((Persona) paciente).getNombreYApellidos();
+                return paciente.getNombreYApellidos();
             case 1:
-                return ((Paciente) paciente).getHistoriaClinicaID();
+                return ((Paciente)paciente).getGenero();
             case 2:
-                return ((Paciente) paciente).getEdad();
+                return ((Paciente)paciente).getCi();
+            case 3:
+                return ((Paciente)paciente).getHistoriaClinicaID();
+            case 4:
+                return ((Paciente)paciente).getEdad();
             default:
                 return null;
         }
