@@ -31,6 +31,6 @@ public abstract class Persona {
         if (apellido.length() > 100) {
             throw new IllegalArgumentException("El apellido no puede exceder 100 caracteres");
         }
-        this.apellidos = apellidos.trim();
+        this.apellidos = apellido.trim();
 	}
 }
