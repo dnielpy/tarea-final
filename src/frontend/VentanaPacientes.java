@@ -27,7 +27,7 @@ import java.awt.SystemColor;
 import javax.swing.border.EmptyBorder;
 import javax.swing.ImageIcon;
 
-public class VentanaPacientes extends JPanel implements MouseListener{
+public class VentanaPacientes extends JPanel{
 
 	private JTable table;
 	
@@ -60,6 +60,11 @@ public class VentanaPacientes extends JPanel implements MouseListener{
         
         // Crear la tabla
         table = new JTable(model);
+        table.getColumnModel().getColumn(0).setPreferredWidth(200);
+        table.getColumnModel().getColumn(1).setPreferredWidth(30);
+        table.getColumnModel().getColumn(2).setPreferredWidth(70);
+        table.getColumnModel().getColumn(3).setPreferredWidth(30);
+        table.getColumnModel().getColumn(4).setPreferredWidth(10); 
         
         // Habilitar el ordenamiento por columnas
         final TableRowSorter<PersonaTableModel> sorter = new TableRowSorter<PersonaTableModel>(model);
@@ -67,7 +72,7 @@ public class VentanaPacientes extends JPanel implements MouseListener{
         
         // Agregar la tabla a un JScrollPane
         JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setBounds(0, 30, 600, 406);
+        scrollPane.setBounds(0, 30, 630, 406);
         
         // Configurar el tamaño preferido de la tabla
         table.setPreferredScrollableViewportSize(new Dimension(350, 150));
@@ -75,7 +80,7 @@ public class VentanaPacientes extends JPanel implements MouseListener{
         // Campo de texto para filtrar
         final JTextField filterText = new JTextField();
         filterText.setFont(new Font("Arial", Font.PLAIN, 16));
-        filterText.setBounds(0, 0, 600, 22);
+        filterText.setBounds(0, 0, 630, 22);
         filterText.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
@@ -91,7 +96,7 @@ public class VentanaPacientes extends JPanel implements MouseListener{
         // Panel para el filtro y la tabla
         JPanel panelTabla = new JPanel();
         panelTabla.setBackground(Color.WHITE);
-        panelTabla.setBounds(100, 130, 600, 439);
+        panelTabla.setBounds(80, 130, 630, 439);
         panelTabla.setLayout(null);
         panelTabla.add(filterText);
         panelTabla.add(scrollPane);
@@ -102,22 +107,22 @@ public class VentanaPacientes extends JPanel implements MouseListener{
         // Agregar el panel al marco
         add(panelTabla);
         
-        JButton btnNewButton = new JButton("AGREGAR PACIENTE");
-        btnNewButton.setForeground(Color.BLACK);
-        btnNewButton.setFont(new Font("Arial", Font.PLAIN, 16));
-        btnNewButton.setBackground(SystemColor.menu);
-        btnNewButton.setBounds(497, 585, 203, 33);
-        add(btnNewButton);
+        JButton botonAgregarPaciente = new JButton("AGREGAR PACIENTE");
+        botonAgregarPaciente.setForeground(Color.BLACK);
+        botonAgregarPaciente.setFont(new Font("Arial", Font.PLAIN, 16));
+        botonAgregarPaciente.setBackground(SystemColor.menu);
+        botonAgregarPaciente.setBounds(507, 585, 203, 33);
+        add(botonAgregarPaciente);
         
-        JLabel lblNewLabel = new JLabel("Listado de pacientes:");
-        lblNewLabel.setFont(new Font("Arial", Font.BOLD, 18));
-        lblNewLabel.setBounds(100, 104, 203, 20);
-        add(lblNewLabel);
+        JLabel cartelListadoPacientes = new JLabel("Listado de pacientes:");
+        cartelListadoPacientes.setFont(new Font("Arial", Font.BOLD, 18));
+        cartelListadoPacientes.setBounds(80, 104, 203, 20);
+        add(cartelListadoPacientes);
         
-        JLabel lblNewLabel_1 = new JLabel("");
-        lblNewLabel_1.setIcon(new ImageIcon(VentanaPacientes.class.getResource("/fotos/trash.png")));
-        lblNewLabel_1.setBounds(449, 585, 33, 33);
-        add(lblNewLabel_1);
+        JLabel botonEliminar = new JLabel("");
+        botonEliminar.setIcon(new ImageIcon(VentanaPacientes.class.getResource("/fotos/trash.png")));
+        botonEliminar.setBounds(462, 585, 33, 33);
+        add(botonEliminar);
 		
 	}
 	
@@ -148,33 +153,4 @@ public class VentanaPacientes extends JPanel implements MouseListener{
         table.setFillsViewportHeight(true);
     }
 
-	@Override
-	public void mouseClicked(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseExited(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mousePressed(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
 }
