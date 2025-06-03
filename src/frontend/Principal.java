@@ -158,7 +158,7 @@ public class Principal extends JFrame implements MouseListener {
 		panelPrincipal.add(panelVentanas);
 		panelVentanas.setLayout(new CardLayout(0, 0));
 
-		VentanaInicio inicio = new VentanaInicio();
+		VentanaInicio inicio = new VentanaInicio(cmf);
 		panelVentanas.add(inicio, "INICIO");
 		inicio.setLayout(null);
 

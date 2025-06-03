@@ -2,15 +2,18 @@ package frontend;
 
 import java.awt.Color;
 import java.awt.Font;
+
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.ImageIcon;
 import javax.swing.JProgressBar;
 
+import entidades.CMF;
+
 public class VentanaInicio extends JPanel {
 	
-	public VentanaInicio() {
+	public VentanaInicio(CMF cmf) {
 		setBackground(Color.WHITE);
 		setLayout(null);
 		setBounds(305, 0, 796, 673);
@@ -43,7 +46,7 @@ public class VentanaInicio extends JPanel {
 		imagenPaciente.setBounds(159, 35, 135, 135);
 		panelCantidadPacientes.add(imagenPaciente);
 		
-		JLabel cantidadPacientes = new JLabel("134");
+		JLabel cantidadPacientes = new JLabel(String.valueOf(cmf.obtenerTotalPacientes()));
 		cantidadPacientes.setFont(new Font("Arial", Font.PLAIN, 18));
 		cantidadPacientes.setBounds(15, 150, 112, 20);
 		panelCantidadPacientes.add(cantidadPacientes);
@@ -58,7 +61,7 @@ public class VentanaInicio extends JPanel {
 		imagenVisitas.setBounds(159, 35, 135, 135);
 		panelCantidadVisitasDelDia.add(imagenVisitas);
 		
-		JLabel cantidadVisitas = new JLabel("134");
+		JLabel cantidadVisitas = new JLabel("No implementado");
 		cantidadVisitas.setFont(new Font("Arial", Font.PLAIN, 18));
 		cantidadVisitas.setBounds(15, 150, 129, 20);
 		panelCantidadVisitasDelDia.add(cantidadVisitas);
@@ -83,20 +86,23 @@ public class VentanaInicio extends JPanel {
 		cartelPacientesEnRiesgo.setBounds(15, 16, 142, 20);
 		panelCantidadEnRiesgo.add(cartelPacientesEnRiesgo);
 		
-		JLabel cantidadEnRiesgo = new JLabel("134 de 140");
+		JLabel cantidadEnRiesgo = new JLabel(String.valueOf(cmf.obtenerPacientesEnRiesgo()));
 		cantidadEnRiesgo.setFont(new Font("Arial", Font.PLAIN, 18));
 		cantidadEnRiesgo.setBounds(15, 141, 129, 20);
 		panelCantidadEnRiesgo.add(cantidadEnRiesgo);
 		
-		JProgressBar porcientoEnRiesgo = new JProgressBar();
-		porcientoEnRiesgo.setValue(60);
-		porcientoEnRiesgo.setStringPainted(true);
-		porcientoEnRiesgo.setForeground(new Color(0, 171, 227));
-		porcientoEnRiesgo.setFont(new Font("Arial", Font.BOLD, 16));
-		porcientoEnRiesgo.setBorder(null);
-		porcientoEnRiesgo.setBackground(Color.WHITE);
-		porcientoEnRiesgo.setBounds(15, 170, 279, 18);
-		panelCantidadEnRiesgo.add(porcientoEnRiesgo);
+		double pacientesEnRiesgo = cmf.obtenerPacientesEnRiesgo();
+		if (pacientesEnRiesgo > 0) {
+			JProgressBar porcientoEnRiesgo = new JProgressBar();
+			porcientoEnRiesgo.setString(String.valueOf(pacientesEnRiesgo) + "%");
+			porcientoEnRiesgo.setStringPainted(true);
+			porcientoEnRiesgo.setForeground(new Color(0, 171, 227));
+			porcientoEnRiesgo.setFont(new Font("Arial", Font.BOLD, 16));
+			porcientoEnRiesgo.setBorder(null);
+			porcientoEnRiesgo.setBackground(Color.WHITE);
+			porcientoEnRiesgo.setBounds(15, 170, 279, 18);
+			panelCantidadEnRiesgo.add(porcientoEnRiesgo);
+		}
 		
 		JPanel panelCantidadEmbarazadas = new JPanel();
 		panelCantidadEmbarazadas.setBounds(46, 380, 309, 204);
@@ -108,7 +114,9 @@ public class VentanaInicio extends JPanel {
 		cartelEmbarazadas.setBounds(15, 16, 142, 20);
 		panelCantidadEmbarazadas.add(cartelEmbarazadas);
 		
-		JLabel cantidadEmbarazadas = new JLabel("134 de 140");
+		JLabel cantidadEmbarazadas = new JLabel
+				(String.valueOf(cmf.obtenerCantidadDeEmbarazadas() + 
+				" de " + String.valueOf(cmf.obtenerCantidadMujeres())));
 		cantidadEmbarazadas.setFont(new Font("Arial", Font.PLAIN, 18));
 		cantidadEmbarazadas.setBounds(15, 141, 129, 20);
 		panelCantidadEmbarazadas.add(cantidadEmbarazadas);
@@ -118,15 +126,19 @@ public class VentanaInicio extends JPanel {
 		imagenEmbarazadas.setBounds(159, 26, 135, 135);
 		panelCantidadEmbarazadas.add(imagenEmbarazadas);
 		
-		JProgressBar porcientoEmbarazadas = new JProgressBar();
-		porcientoEmbarazadas.setBackground(Color.WHITE);
-		porcientoEmbarazadas.setForeground(new Color(0, 171, 227));
-		porcientoEmbarazadas.setStringPainted(true);
-		porcientoEmbarazadas.setFont(new Font("Arial", Font.BOLD, 16));
-		porcientoEmbarazadas.setBounds(15, 170, 279, 18);
-		panelCantidadEmbarazadas.add(porcientoEmbarazadas);
-		porcientoEmbarazadas.setValue(20);
-		porcientoEmbarazadas.setBorder(null);
+		double embarazadas = cmf.obtenerPorcentajeEmbarazadasRespectoAMujeres();
+		if (embarazadas > 0) {
+			JProgressBar porcientoEmbarazadas = new JProgressBar();
+			porcientoEmbarazadas.setBackground(Color.WHITE);
+			porcientoEmbarazadas.setForeground(new Color(0, 171, 227));
+			porcientoEmbarazadas.setStringPainted(true);
+			porcientoEmbarazadas.setFont(new Font("Arial", Font.BOLD, 16));
+			porcientoEmbarazadas.setBounds(15, 170, 279, 18);
+			panelCantidadEmbarazadas.add(porcientoEmbarazadas);
+			porcientoEmbarazadas.setString(String.valueOf(embarazadas) + "%");
+			porcientoEmbarazadas.setBorder(null);
+		}
+		
 		
 		
 	}
