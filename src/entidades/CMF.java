@@ -88,6 +88,17 @@ public class CMF {
 		this.pacientes.add(newMujer);
 	}
 
+	public boolean eliminarPaciente(int id){
+		boolean response = false;
+		for(Paciente paciente: pacientes){
+			if(paciente.getHistoriaClinicaID() == id){
+				pacientes.remove(paciente);
+				response = true;
+			}
+		}
+		return response;
+	}
+	
 	public void crearEnfermera(String nombre, int id, boolean licenciatura, int experiencia, String fecha) {
 		Objects.requireNonNull(nombre, "El nombre no puede ser nulo");
 		if (this.enfermera != null) {
