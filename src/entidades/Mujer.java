@@ -12,8 +12,8 @@ public class Mujer extends Paciente {
     private boolean embarazada;
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
-    public Mujer(int historiaClinicaID, String nombre, int edad, ArrayList<String> vacunacion, String fechaUltimaRevision, boolean embarazada) {
-        super(historiaClinicaID, nombre, edad, vacunacion);
+    public Mujer(int historiaClinicaID, String nombre, String apellido, String id, String fechaUltimaRevision, boolean embarazada) {
+        super(historiaClinicaID, nombre, apellido, id);
         setFechaUltimaRevision(fechaUltimaRevision);
         setEmbarazada(embarazada);
     }
@@ -83,17 +83,6 @@ public class Mujer extends Paciente {
         }
         
         return riesgo;
-    }
-
-    @Override
-    public void setEdad(int edad) {
-        if (edad < 0) {
-            throw new IllegalArgumentException("La edad no puede ser negativa");
-        }
-        if (edad > 120) {
-            throw new IllegalArgumentException("Edad no puede ser mayor a 120 años");
-        }
-        super.setEdad(edad);
     }
 
     @Override

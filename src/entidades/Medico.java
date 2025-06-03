@@ -10,23 +10,12 @@ public class Medico extends Persona {
     private String fechaInscripcion;
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
-    public Medico(String nombre, int numRegistro, String ci, String fecha) {
+    public Medico(String nombre, String apellidos, int numRegistro, String ci, String fecha) {
         setNombre(nombre);
+        setApellidos(apellidos);
         setNumRegistro(numRegistro);
         setCarnet(ci);
         setFechaInscripcion(fecha);
-    }
-
-    @Override
-    public void setNombre(String nombre) {
-        Objects.requireNonNull(nombre, "El nombre no puede ser nulo");
-        if (nombre.trim().isEmpty()) {
-            throw new IllegalArgumentException("El nombre no puede estar vacío");
-        }
-        if (nombre.length() > 100) {
-            throw new IllegalArgumentException("El nombre no puede exceder 100 caracteres");
-        }
-        super.nombreYApellidos = nombre.trim();
     }
 
     public int getNumRegistro() {

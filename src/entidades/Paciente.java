@@ -1,20 +1,26 @@
 package entidades;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Objects;
 
 public class Paciente extends Persona {
     protected int historiaClinicaID;
-    protected int edad;
     protected ArrayList<String> enfermedadesCronicas;
     protected ArrayList<String> vacunacion;
     protected HistoriaClinica historiaClinica;
+    protected String ci;
 
-    public Paciente(int historiaClinicaID, String nombre, int edad, ArrayList<String> vacunacion) {
+    public Paciente(int historiaClinicaID, String nombre, String apellidos, String ci) {
         setHistoriaClinicaID(historiaClinicaID);
         setNombre(nombre);
-        setEdad(edad);
-        setVacunacion(vacunacion);
+        setApellidos(apellidos);
+        setCI(ci);
+        this.vacunacion = new ArrayList<>();
         this.enfermedadesCronicas = new ArrayList<>();
         this.historiaClinica = new HistoriaClinica(historiaClinicaID);
     }
@@ -30,35 +36,52 @@ public class Paciente extends Persona {
         this.historiaClinicaID = historiaClinicaID;
     }
 
-    @Override
-    public String getNombreYApellidos() {
-        return super.nombreYApellidos;
+    public String getCi() {
+        return ci;
     }
 
-    @Override
-    public void setNombre(String nombre) {
-        Objects.requireNonNull(nombre, "El nombre no puede ser nulo");
-        if (nombre.trim().isEmpty()) {
-            throw new IllegalArgumentException("El nombre no puede estar vacío");
+    public void setCI(String carnet) {
+        Objects.requireNonNull(carnet, "El CI no puede ser nulo");
+        String ciTrimmed = carnet.trim();
+        
+        if (!ciTrimmed.matches("^[0-9]{11}$")) {
+            throw new IllegalArgumentException("El CI debe contener exactamente 11 dígitos numéricos");
         }
-        if (nombre.length() > 100) {
-            throw new IllegalArgumentException("El nombre no puede exceder 100 caracteres");
+        
+        String fechaNacimientoStr = ciTrimmed.substring(0, 6);
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyMMdd");
+            sdf.setLenient(false);
+            sdf.parse(fechaNacimientoStr);
+        } catch (ParseException e) {
+            throw new IllegalArgumentException("Los primeros 6 dígitos del CI deben ser una fecha válida (AAMMDD)");
         }
-        super.nombreYApellidos = nombre.trim();
+        
+        char digitoSiglo = ciTrimmed.charAt(6);
+        if (digitoSiglo != '9' && (digitoSiglo < '0' || digitoSiglo > '8')) {
+            throw new IllegalArgumentException("Dígito de siglo en CI inválido (debe ser 0-9)");
+        }
+        
+        int digitoSexo = Integer.parseInt(ciTrimmed.substring(9));
+        
+        this.ci = ciTrimmed;
     }
 
     public int getEdad() {
-        return edad;
+        String fechaStr = ci.substring(0, 6);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyMMdd");
+        LocalDate fechaNacimiento = LocalDate.parse(fechaStr, formatter);
+
+        if (fechaNacimiento.isAfter(LocalDate.now())) {
+            fechaNacimiento = fechaNacimiento.minusYears(100);
+        }
+
+        return Period.between(fechaNacimiento, LocalDate.now()).getYears();
     }
 
-    public void setEdad(int edad) {
-        if (edad < 0) {
-            throw new IllegalArgumentException("La edad no puede ser negativa");
-        }
-        if (edad > 120) {
-            throw new IllegalArgumentException("La edad no puede ser mayor a 120 años");
-        }
-        this.edad = edad;
+    public String getGenero() {
+        int septimoDigito = Character.getNumericValue(ci.charAt(6));
+        return (septimoDigito % 2 == 0) ? "Femenino" : "Masculino";
     }
 
     public ArrayList<String> getEnfermedadesCronicas() {
@@ -100,10 +123,6 @@ public class Paciente extends Persona {
     }
 
     public boolean estaEnRiesgo() {
-        boolean enRiesgo = false;
-        if (enfermedadesCronicas != null && enfermedadesCronicas.size() >= 3) {
-            enRiesgo = true;
-        }
-        return enRiesgo;
+        return enfermedadesCronicas != null && enfermedadesCronicas.size() >= 3;
     }
 }

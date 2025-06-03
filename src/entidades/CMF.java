@@ -66,8 +66,8 @@ public class CMF {
 		this.nombreDirector = nombreDirector.trim();
 	}
 
-	public void crearMedico(String nombre, int numRegistro, String ci, String fecha) {
-		this.medico = new Medico(nombre, numRegistro, ci, fecha);
+	public void crearMedico(String nombre, String apellidos, int numRegistro, String ci, String fecha) {
+		this.medico = new Medico(nombre, apellidos, numRegistro, ci, fecha);
 	}
 
 	public void crearRegistroGeneral() {
@@ -78,22 +78,36 @@ public class CMF {
 		this.registroHistorico = new RegistroHistorico();
 	}
 
-	public void agregarPaciente(int historiaClinicaID, String nombre, int edad, ArrayList<String> vacunacion) {
-		Paciente newPaciente = new Paciente(historiaClinicaID, nombre, edad, vacunacion);
+	public Paciente agregarPaciente(int historiaClinicaID, String nombre, String apellido, String id) {
+		Paciente newPaciente = new Paciente(historiaClinicaID, nombre, apellido, id);
 		this.pacientes.add(newPaciente);
+		return newPaciente;
 	}
 
-	public void agregarPaciente(int historiaClinicaID, String nombre, int edad, ArrayList<String> vacunacion, String fechaUltimaRevision, boolean embarazada) {
-		Mujer newMujer = new Mujer(historiaClinicaID, nombre, edad, vacunacion, fechaUltimaRevision, embarazada);
+	public Mujer agregarPaciente(int historiaClinicaID, String nombre, String apellido, String ci, String fechaUltimaRevision, boolean embarazada) {
+		Mujer newMujer = new Mujer(historiaClinicaID, nombre, apellido, ci, fechaUltimaRevision, embarazada);
 		this.pacientes.add(newMujer);
+		return newMujer;
 	}
 
-	public void crearEnfermera(String nombre, int id, boolean licenciatura, int experiencia, String fecha) {
+
+	public boolean eliminarPaciente(int id){
+		boolean response = false;
+		for(Paciente paciente: pacientes){
+			if(paciente.getHistoriaClinicaID() == id){
+				pacientes.remove(paciente);
+				response = true;
+			}
+		}
+		return response;
+	}
+	
+	public void crearEnfermera(String nombre, String apellidos, int id, boolean licenciatura, int experiencia, String fecha) {
 		Objects.requireNonNull(nombre, "El nombre no puede ser nulo");
 		if (this.enfermera != null) {
 			throw new IllegalStateException("Ya existe una enfermera asignada a este CMF");
 		}
-		this.enfermera = new Enfermera(nombre, id, licenciatura, experiencia, fecha);
+		this.enfermera = new Enfermera(nombre, apellidos, id, licenciatura, experiencia, fecha);
 	}
 
 	public void agregarHojaCargoDiaria(String fecha) {
@@ -141,53 +155,58 @@ public class CMF {
 	}
 
 	public void cargarDatos() {
-	    crearMedico("Alfonso Rodriguez Camela", 11321, "98020378176", "12/3/1998");
+	    crearMedico("Alfonso", "Rodriguez Camela", 11321, "98020378176", "12/3/1998");
 
-	    ArrayList<String> vacunacion = new ArrayList<String>();
-	    vacunacion.add("Antiplio: 13/4/2009");
-	    agregarPaciente(1, "Armando Lopez Del Toro", 45, vacunacion);
+	    Paciente p1 = agregarPaciente(1, "Armando", "Lopez Del Toro", "78041312345");
+	    p1.agregarVacuna("Antiplio: 13/4/2009");
 
-	    ArrayList<String> vacunacion2 = new ArrayList<String>();
-	    vacunacion2.add("Antiplio: 13/4/2020");
-	    agregarPaciente(2, "Amanda Lopez Garcia", 25, vacunacion2);
+	    Paciente p2 = agregarPaciente(2, "Amanda", "Lopez Garcia", "00041322345");
+	    p2.agregarVacuna("Antiplio: 13/4/2020");
 
-	    ArrayList<String> vacunacion3 = new ArrayList<String>();
-	    vacunacion3.add("Antiplio: 13/4/2019");
-	    agregarPaciente(3, "Carlos Garces Fernandez", 34, vacunacion3);
+	    Paciente p3 = agregarPaciente(3, "Carlos", "Garces Fernandez", "89041312345");
+	    p3.agregarVacuna("Antiplio: 13/4/2019");
 
-	    ArrayList<String> vacunacion4 = new ArrayList<String>();
-	    vacunacion4.add("Antiplio: 10/1/2022");
-	    vacunacion4.add("Antitetánica: 5/3/2023");
-	    agregarPaciente(4, "Daniela Suarez Molina", 29, vacunacion4);
+	    Paciente p4 = agregarPaciente(4, "Daniela", "Suarez Molina", "95011022345");
+	    p4.agregarVacuna("Antiplio: 10/1/2022");
+	    p4.agregarVacuna("Antitetánica: 5/3/2023");
 
-	    ArrayList<String> vacunacion5 = new ArrayList<String>();
-	    vacunacion5.add("Antiplio: 15/5/2021");
-	    vacunacion5.add("Antigripal: 20/10/2022");
-	    agregarPaciente(5, "Esteban Pérez López", 52, vacunacion5);
+	    Paciente p5 = agregarPaciente(5, "Esteban", "Pérez López", "72051512345");
+	    p5.agregarVacuna("Antiplio: 15/5/2021");
+	    p5.agregarVacuna("Antigripal: 20/10/2022");
 
-	    agregarPaciente(6, "Fernando Gómez Rivas", 40, new ArrayList<>(java.util.Arrays.asList("Antigripal: 12/9/2022")));
-	    agregarPaciente(7, "Gabriela Torres Martínez", 31, new ArrayList<>(java.util.Arrays.asList("Antitetánica: 3/4/2021")));
-	    agregarPaciente(8, "Héctor Sánchez López", 28, new ArrayList<>(java.util.Arrays.asList("Antiplio: 15/2/2018")));
-	    agregarPaciente(9, "Isabel Fernández Cruz", 37, new ArrayList<>(java.util.Arrays.asList("Antigripal: 11/11/2020", "Antitetánica: 20/7/2022")));
-	    agregarPaciente(10, "Javier Morales Castillo", 50, new ArrayList<>(java.util.Arrays.asList("Antiplio: 2/6/2015")));
-	    agregarPaciente(11, "Karla Ruiz Domínguez", 26, new ArrayList<>(java.util.Arrays.asList("Antigripal: 8/10/2019")));
-	    agregarPaciente(12, "Luis Herrera Pérez", 33, new ArrayList<>(java.util.Arrays.asList("Antitetánica: 14/1/2020")));
-	    agregarPaciente(13, "María José Salazar", 45, new ArrayList<>(java.util.Arrays.asList("Antigripal: 17/3/2021")));
-	    agregarPaciente(14, "Nicolás Vega Ortega", 39, new ArrayList<>(java.util.Arrays.asList("Antiplio: 5/12/2017")));
-	    agregarPaciente(15, "Olga Díaz García", 41, new ArrayList<>(java.util.Arrays.asList("Antigripal: 22/8/2020")));
-	    agregarPaciente(16, "Pablo Martínez Sánchez", 34, new ArrayList<>(java.util.Arrays.asList("Antitetánica: 19/5/2019")));
-	    agregarPaciente(17, "Quetzal Rojas Castillo", 29, new ArrayList<>(java.util.Arrays.asList("Antigripal: 13/7/2021")));
-	    agregarPaciente(18, "Raúl López Fernández", 43, new ArrayList<>(java.util.Arrays.asList("Antiplio: 30/3/2016")));
-	    agregarPaciente(19, "Sofía Medina Ramos", 27, new ArrayList<>(java.util.Arrays.asList("Antigripal: 9/9/2022")));
-	    agregarPaciente(20, "Tomás Aguilar Herrera", 38, new ArrayList<>(java.util.Arrays.asList("Antitetánica: 1/2/2020")));
-	    agregarPaciente(21, "Úrsula Vargas Delgado", 32, new ArrayList<>(java.util.Arrays.asList("Antiplio: 23/11/2018")));
-	    agregarPaciente(22, "Víctor Salinas Mora", 47, new ArrayList<>(java.util.Arrays.asList("Antigripal: 29/6/2019")));
-	    agregarPaciente(23, "Wendy Cruz López", 35, new ArrayList<>(java.util.Arrays.asList("Antitetánica: 7/8/2021")));
-	    agregarPaciente(24, "Ximena Flores Castillo", 30, new ArrayList<>(java.util.Arrays.asList("Antigripal: 14/4/2022")));
-	    agregarPaciente(25, "Yahir Castillo Gómez", 44, new ArrayList<>(java.util.Arrays.asList("Antiplio: 6/10/2014")));
-	    agregarPaciente(26, "Zulema Navarro Ruiz", 36, new ArrayList<>(java.util.Arrays.asList("Antigripal: 18/1/2020")));
+	    Paciente p6 = agregarPaciente(6, "Fernando", "Gómez Rivas", "85091212345");
+	    p6.agregarVacuna("Antigripal: 12/9/2022");
+
+	    Paciente p7 = agregarPaciente(7, "Gabriela", "Torres Martínez", "94040322345");
+	    p7.agregarVacuna("Antitetánica: 3/4/2021");
+
+	    Paciente p8 = agregarPaciente(8, "Héctor", "Sánchez López", "96021512345");
+	    p8.agregarVacuna("Antiplio: 15/2/2018");
+
+	    Paciente p9 = agregarPaciente(9, "Isabel", "Fernández Cruz", "87050322345");
+	    p9.agregarVacuna("Antigripal: 11/11/2020");
+	    p9.agregarVacuna("Antitetánica: 20/7/2022");
+
+	    agregarPaciente(10, "Javier", "Morales Castillo", "75060212345");
+	    agregarPaciente(11, "Karla", "Ruiz Domínguez", "98062122345");
+	    agregarPaciente(12, "Luis", "Herrera Pérez", "92011412345");
+	    agregarPaciente(13, "María José", "Salazar", "80031722345");
+	    agregarPaciente(14, "Nicolás", "Vega Ortega", "84120512345");
+	    agregarPaciente(15, "Olga", "Díaz García", "82082222345");
+	    agregarPaciente(16, "Pablo", "Martínez Sánchez", "91051912345");
+	    agregarPaciente(17, "Quetzal", "Rojas Castillo", "95071312345");
+	    agregarPaciente(18, "Raúl", "López Fernández", "81033012345");
+	    agregarPaciente(19, "Sofía", "Medina Ramos", "97090922345");
+	    agregarPaciente(20, "Tomás", "Aguilar Herrera", "87020112345");
+	    agregarPaciente(21, "Úrsula", "Vargas Delgado", "92112322345");
+	    agregarPaciente(22, "Víctor", "Salinas Mora", "77062912345");
+	    agregarPaciente(23, "Wendy", "Cruz López", "89080722345");
+	    agregarPaciente(24, "Ximena", "Flores Castillo", "95041422345");
+	    agregarPaciente(25, "Yahir", "Castillo Gómez", "80100612345");
+	    agregarPaciente(26, "Zulema", "Navarro Ruiz", "88101822345");
+
+
 	}
-
 	public int obtenerTotalPacientes(){
 		return this.pacientes.size();
 	}
