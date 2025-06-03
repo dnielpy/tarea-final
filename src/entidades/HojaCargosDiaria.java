@@ -38,17 +38,17 @@
 	        this.registros.add(registro);
 	    }
 	    
-	    public int obtenerCantidadPacientesPorFecha(String fecha) {
-	    	if (fecha == null || fecha.trim().isEmpty()) {
-	    		throw new IllegalArgumentException("La fecha no puede ser nula o vacía");
-	    	}
-
-	    	for (HojaCargosDiaria hoja : hojasCargoDiaria) {
-	    		if (hoja.getFecha().equals(fecha)) {
-	    			return hoja.getRegistros().size();
-	    		}
-	    	}
-
-	    	return 0;
-	    }
+//	    public int obtenerCantidadPacientesPorFecha(String fecha) {
+//	    	if (fecha == null || fecha.trim().isEmpty()) {
+//	    		throw new IllegalArgumentException("La fecha no puede ser nula o vacía");
+//	    	}
+//
+//	    	for (HojaCargosDiaria hoja : hojasCargoDiaria) {
+//	    		if (hoja.getFecha().equals(fecha)) {
+//	    			return hoja.getRegistros().size();
+//	    		}
+//	    	}
+//
+//	    	return 0;
+//	    }
 	}

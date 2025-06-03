@@ -14,24 +14,14 @@ public class Enfermera extends Persona {
     private ArrayList<ResultadoAnalisis> resultadoAnalisis;
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     
-    public Enfermera(String nombre, int id, boolean licenciatura, int experiencia, String fecha) {
+    public Enfermera(String nombre, String apellidos, int id, boolean licenciatura, int experiencia, String fecha) {
         setNombre(nombre);
+        setApellidos(apellidos);
         setId(id);
         setLicenciatura(licenciatura);
         setExperiencia(experiencia);
         setFechaInicio(fecha);
         this.resultadoAnalisis = new ArrayList<ResultadoAnalisis>();
-    }
-
-    @Override
-    public void setNombre(String nombre) {
-        if (nombre == null || nombre.trim().isEmpty()) {
-            throw new IllegalArgumentException("El nombre no puede estar vacío");
-        }
-        if (nombre.length() > 100) {
-            throw new IllegalArgumentException("El nombre no puede exceder los 100 caracteres");
-        }
-        super.nombreYApellidos = nombre.trim();
     }
     
     public int getId() {
