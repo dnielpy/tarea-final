@@ -135,21 +135,23 @@ public class CMF {
 		}
 		return embarazadasEnRiesgo;
 	}
+	
 
 	public int[] obtenerRangosDeEdad() {
 		if (pacientes == null) throw new IllegalArgumentException("Lista de pacientes no puede ser nula");
 		int[] rangoDeEdad = new int[10];
 		for (Paciente paciente : pacientes) {
 			int edad = paciente.getEdad();
-			if (edad < 11) rangoDeEdad[0]++;
-			else if (edad < 21) rangoDeEdad[1]++;
-			else if (edad < 31) rangoDeEdad[2]++;
-			else if (edad < 41) rangoDeEdad[3]++;
-			else if (edad < 51) rangoDeEdad[4]++;
-			else if (edad < 61) rangoDeEdad[5]++;
-			else if (edad < 71) rangoDeEdad[6]++;
-			else if (edad < 81) rangoDeEdad[7]++;
-			else if (edad < 91) rangoDeEdad[8]++;
+			if (edad > 10) rangoDeEdad[0]++;
+			else if (edad > 20) rangoDeEdad[1]++;
+			else if (edad > 30) rangoDeEdad[2]++;
+			else if (edad > 40) rangoDeEdad[3]++;
+			else if (edad > 50) rangoDeEdad[4]++;
+			else if (edad > 60) rangoDeEdad[5]++;
+			else if (edad > 70) rangoDeEdad[6]++;
+			else if (edad > 80) rangoDeEdad[7]++;
+			else if (edad > 90) rangoDeEdad[8]++;
+			else if (edad > 110) rangoDeEdad[9]++;
 		}
 		return rangoDeEdad;
 	}
@@ -238,7 +240,14 @@ public class CMF {
 	}
 
 	public double obtenerPorcentajeEmbarazadasRespectoAMujeres(){
-		return (obtenerCantidadDeEmbarazadas() * 100)/ obtenerCantidadMujeres();
+		double valor = 0;
+		int cantidadDeEmbarazadas = obtenerCantidadDeEmbarazadas();
+		int cantidadMujeres = obtenerCantidadMujeres();
+		
+		if (cantidadMujeres > 0 && cantidadMujeres > 0) {
+			valor = cantidadDeEmbarazadas * 100.0 / cantidadMujeres;
+		}
+		return valor;
 	}
 
 	public int obtenerPacientesEnRiesgo(){
