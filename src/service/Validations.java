@@ -69,15 +69,15 @@ public class Validations {
         return age;
     }
 
-    public static String getGenderFromCI(String ci) {
+    public static boolean isFemale(String ci) {
         boolean isValid = isValidCI(ci);
-        String gender = "Desconocido";
+        boolean isFemale = false;
 
         if (isValid) {
             int genderDigit = Character.getNumericValue(ci.charAt(6));
-            gender = (genderDigit % 2 == 0) ? "Femenino" : "Masculino";
+            isFemale = (genderDigit % 2 == 0) ? true : false;
         }
 
-        return gender;
+        return isFemale;
     }
 }
