@@ -53,6 +53,7 @@ public class Mujer extends Paciente {
 
     public void setEmbarazada(boolean embarazada) {
         if (this.getEdad() < 12 && embarazada) {
+            System.out.println(this.getEdad());
             throw new IllegalArgumentException("Paciente menor de 12 a�os no puede estar embarazada");
         }
         if (this.getEdad() > 55 && embarazada) {

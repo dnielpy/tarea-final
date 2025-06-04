@@ -188,7 +188,7 @@ public class CMF {
 		return rangoDeEdad;
 	}
 
-		public void cargarDatos() {
+	public void cargarDatos() {
 		crearMedico("Alfonso", "Rodriguez", "Camela", 11321, "75060212345", "12/3/1998");
 	
 		ArrayList<String> enfermedades1 = new ArrayList<>();
@@ -241,7 +241,7 @@ public class CMF {
 		ArrayList<String> vacunas9 = new ArrayList<>();
 		vacunas9.add("Antigripal: 11/11/2020");
 		vacunas9.add("Antitetánica: 20/7/2022");
-		agregarPaciente(9, "Isabel", "Fernández", "Cruz", enfermedades9, vacunas9, "87050322345", true, "15/04/2023");
+		agregarPaciente(9, "Isabel", "Fernández", "Cruz", enfermedades9, vacunas9, "03050322345", true, "15/04/2023");
 	
 		ArrayList<String> enfermedades10 = new ArrayList<>();
 		ArrayList<String> vacunas10 = new ArrayList<>();

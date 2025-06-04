@@ -53,16 +53,8 @@ public class Paciente extends Persona {
         }
     }
 
-    public int setEdad() {
-        String fechaStr = ci.substring(0, 6);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyMMdd");
-        LocalDate fechaNacimiento = LocalDate.parse(fechaStr, formatter);
-
-        if (fechaNacimiento.isAfter(LocalDate.now())) {
-            fechaNacimiento = fechaNacimiento.minusYears(100);
-        }
-
-        return Period.between(fechaNacimiento, LocalDate.now()).getYears();
+    public void setEdad() {
+        this.edad = Validations.getAgeFromCI(ci);
     }
 
     public int getEdad() {

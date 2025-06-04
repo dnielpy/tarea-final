@@ -58,14 +58,37 @@ public class Validations {
     public static int getAgeFromCI(String ci) {
         boolean isValid = isValidCI(ci);
         int age = -1;
-
+        
         if (isValid) {
-            String birthDateStr = ci.substring(0, 6);
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyMMdd");
-            LocalDate birthDate = LocalDate.parse(birthDateStr, formatter);
-            age = Period.between(birthDate, LocalDate.now()).getYears();
+            try {
+                String yearStr = ci.substring(0, 2);
+                String monthStr = ci.substring(2, 4);
+                String dayStr = ci.substring(4, 6);
+        
+                int year = Integer.parseInt(yearStr);
+                int month = Integer.parseInt(monthStr);
+                int day = Integer.parseInt(dayStr);
+        
+                int currentYear = LocalDate.now().getYear();
+                int currentCentury = (currentYear / 100) * 100;
+                if (year > currentYear % 100) {
+                    year += currentCentury - 100; // Siglo anterior
+                } else {
+                    year += currentCentury; // Siglo actual
+                }
+        
+                int currentMonth = LocalDate.now().getMonthValue();
+                int currentDay = LocalDate.now().getDayOfMonth();
+                age = currentYear - year;
+        
+                if (currentMonth < month || (currentMonth == month && currentDay < day)) {
+                    age--;
+                }
+            } catch (Exception e) {
+                System.err.println("Error al calcular la edad desde el CI: " + e.getMessage());
+            }
         }
-
+        
         return age;
     }
 
