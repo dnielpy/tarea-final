@@ -1,6 +1,5 @@
 package runner;
 
-import entidades.CMF;
 import frontend.Login;
 import frontend.Principal;
 
@@ -8,7 +7,6 @@ public class Runner {
 	
 	public void run(){
 		Login login = new Login();
-		login.setLocationRelativeTo(null);
 		login.setVisible(true);
 		while (login.isDisplayable()) {
 			try {
