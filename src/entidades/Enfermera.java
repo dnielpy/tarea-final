@@ -14,9 +14,10 @@ public class Enfermera extends Persona {
     private ArrayList<ResultadoAnalisis> resultadoAnalisis;
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     
-    public Enfermera(String nombre, String apellidos, int id, boolean licenciatura, int experiencia, String fecha) {
+    public Enfermera(String nombre, String primerApellido, String segundoApellido, int id, boolean licenciatura, int experiencia, String fecha) {
         setNombre(nombre);
-        setApellidos(apellidos);
+        setPrimerApellido(primerApellido);
+        setSegundoApellido(segundoApellido);
         setId(id);
         setLicenciatura(licenciatura);
         setExperiencia(experiencia);
@@ -30,7 +31,7 @@ public class Enfermera extends Persona {
     
     public void setId(int id) {
         if (id <= 0) {
-            throw new IllegalArgumentException("El ID debe ser un número positivo");
+            throw new IllegalArgumentException("El ID debe ser un nï¿½mero positivo");
         }
         this.id = id;
     }
@@ -52,7 +53,7 @@ public class Enfermera extends Persona {
             throw new IllegalArgumentException("La experiencia no puede ser negativa");
         }
         if (experiencia > 50) {
-            throw new IllegalArgumentException("La experiencia no puede ser mayor a 50 años");
+            throw new IllegalArgumentException("La experiencia no puede ser mayor a 50 aï¿½os");
         }
         this.experiencia = experiencia;
     }
@@ -73,7 +74,7 @@ public class Enfermera extends Persona {
             }
             this.fechaInicio = fecha;
         } catch (DateTimeParseException e) {
-            throw new IllegalArgumentException("Formato de fecha inválido. Use dd/MM/yyyy");
+            throw new IllegalArgumentException("Formato de fecha invï¿½lido. Use dd/MM/yyyy");
         }
     }
     
@@ -82,7 +83,7 @@ public class Enfermera extends Persona {
     }
     
     public void agregarResultadoAnalisis(ResultadoAnalisis resultado) {
-        Objects.requireNonNull(resultado, "El resultado de análisis no puede ser nulo");
+        Objects.requireNonNull(resultado, "El resultado de anï¿½lisis no puede ser nulo");
         this.resultadoAnalisis.add(resultado);
     }
 }
