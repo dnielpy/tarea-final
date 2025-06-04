@@ -8,6 +8,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import service.Validations;
+
 public class Paciente extends Persona {
     protected int historiaClinicaID;
     protected ArrayList<String> enfermedadesCronicas;
@@ -15,10 +17,11 @@ public class Paciente extends Persona {
     protected HistoriaClinica historiaClinica;
     protected String ci;
 
-    public Paciente(int historiaClinicaID, String nombre, String apellidos, String ci) {
+    public Paciente(int historiaClinicaID, String nombre, String primerApellido, String segundoApellido, String ci) {
         setHistoriaClinicaID(historiaClinicaID);
         setNombre(nombre);
-        setApellidos(apellidos);
+        setPrimerApellido(primerApellido);
+        setSegundoApellido(segundoApellido);
         setCI(ci);
         this.vacunacion = new ArrayList<>();
         this.enfermedadesCronicas = new ArrayList<>();
@@ -31,7 +34,7 @@ public class Paciente extends Persona {
 
     public void setHistoriaClinicaID(int historiaClinicaID) {
         if (historiaClinicaID <= 0) {
-            throw new IllegalArgumentException("ID de historia clínica debe ser positivo");
+            throw new IllegalArgumentException("ID de historia clï¿½nica debe ser positivo");
         }
         this.historiaClinicaID = historiaClinicaID;
     }
@@ -41,30 +44,11 @@ public class Paciente extends Persona {
     }
 
     public void setCI(String carnet) {
-        Objects.requireNonNull(carnet, "El CI no puede ser nulo");
-        String ciTrimmed = carnet.trim();
-        
-        if (!ciTrimmed.matches("^[0-9]{11}$")) {
-            throw new IllegalArgumentException("El CI debe contener exactamente 11 dígitos numéricos");
+        if(Validations.isValidCI(carnet.trim())) {
+            this.ci = carnet.trim();
+        } else {
+            throw new IllegalArgumentException("Carnet de identidad invï¿½lido" + carnet);
         }
-        
-        String fechaNacimientoStr = ciTrimmed.substring(0, 6);
-        try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyMMdd");
-            sdf.setLenient(false);
-            sdf.parse(fechaNacimientoStr);
-        } catch (ParseException e) {
-            throw new IllegalArgumentException("Los primeros 6 dígitos del CI deben ser una fecha válida (AAMMDD)");
-        }
-        
-        char digitoSiglo = ciTrimmed.charAt(6);
-        if (digitoSiglo != '9' && (digitoSiglo < '0' || digitoSiglo > '8')) {
-            throw new IllegalArgumentException("Dígito de siglo en CI inválido (debe ser 0-9)");
-        }
-        
-        int digitoSexo = Integer.parseInt(ciTrimmed.substring(9));
-        
-        this.ci = ciTrimmed;
     }
 
     public int getEdad() {
@@ -91,7 +75,7 @@ public class Paciente extends Persona {
     public void agregarEnfermedadCronica(String enfermedad) {
         Objects.requireNonNull(enfermedad, "La enfermedad no puede ser nula");
         if (enfermedad.trim().isEmpty()) {
-            throw new IllegalArgumentException("La enfermedad no puede estar vacía");
+            throw new IllegalArgumentException("La enfermedad no puede estar vacï¿½a");
         }
         if (enfermedad.length() > 200) {
             throw new IllegalArgumentException("El nombre de la enfermedad no puede exceder 200 caracteres");
@@ -104,7 +88,7 @@ public class Paciente extends Persona {
     }
 
     public void setVacunacion(ArrayList<String> vacunacion) {
-        Objects.requireNonNull(vacunacion, "La lista de vacunación no puede ser nula");
+        Objects.requireNonNull(vacunacion, "La lista de vacunaciï¿½n no puede ser nula");
         this.vacunacion = new ArrayList<>();
         for (String vacuna : vacunacion) {
             agregarVacuna(vacuna);
@@ -114,7 +98,7 @@ public class Paciente extends Persona {
     public void agregarVacuna(String vacuna) {
         Objects.requireNonNull(vacuna, "La vacuna no puede ser nula");
         if (vacuna.trim().isEmpty()) {
-            throw new IllegalArgumentException("La vacuna no puede estar vacía");
+            throw new IllegalArgumentException("La vacuna no puede estar vacï¿½a");
         }
         if (vacuna.length() > 100) {
             throw new IllegalArgumentException("El nombre de la vacuna no puede exceder 100 caracteres");

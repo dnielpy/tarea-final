@@ -1,36 +1,39 @@
 package entidades;
 
-import java.util.Objects;
+import service.Validations;
 
 public abstract class Persona {
 
-    protected String nombre;
-    
-    protected String apellidos;
-    
-    public String getNombreYApellidos() {
-        return nombre + " " + apellidos;
-    }
+	protected String nombre;
+	protected String primerApellido;
+	protected String segundoApellido;
+
+	public String getNombreYApellidos() {
+		return nombre + " " + primerApellido + " " + segundoApellido;
+	}
 
 	public void setNombre(String nombre) {
-		Objects.requireNonNull(nombre, "El nombre no puede ser nulo");
-        if (nombre.trim().isEmpty()) {
-            throw new IllegalArgumentException("El nombre no puede estar vacÌo");
+		if(Validations.validateName(nombre)){
+		    this.nombre = nombre.trim();
+        } 
+        else{
+            throw new IllegalArgumentException("Nombre invÔøΩlido");
         }
-        if (nombre.length() > 100) {
-            throw new IllegalArgumentException("El nombre no puede exceder 100 caracteres");
-        }
-        this.nombre = nombre.trim();
+	}
+
+	public void setPrimerApellido(String primerApellido) {
+		if (Validations.validateName(primerApellido)) {
+			this.primerApellido = primerApellido.trim();
+		} else {
+			throw new IllegalArgumentException("Apellido inv√°lido: " + (primerApellido == null ? "null" : primerApellido));
+		}
 	}
 	
-	public void setApellidos(String apellido) {
-		Objects.requireNonNull(nombre, "El apellido no puede ser nulo");
-        if (apellido.trim().isEmpty()) {
-            throw new IllegalArgumentException("El apellido no puede estar vacÌo");
-        }
-        if (apellido.length() > 100) {
-            throw new IllegalArgumentException("El apellido no puede exceder 100 caracteres");
-        }
-        this.apellidos = apellido.trim();
+	public void setSegundoApellido(String segundoApellido) {
+		if (Validations.validateName(segundoApellido)) {
+			this.segundoApellido = segundoApellido.trim();
+		} else {
+			throw new IllegalArgumentException("Apellido inv√°lido: " + (segundoApellido == null ? "null" : segundoApellido));
+		}
 	}
 }
