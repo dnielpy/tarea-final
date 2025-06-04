@@ -16,6 +16,7 @@ public class Paciente extends Persona {
     protected ArrayList<String> vacunacion;
     protected HistoriaClinica historiaClinica;
     protected String ci;
+    protected int edad;
 
     public Paciente(int historiaClinicaID, String nombre, String primerApellido, String segundoApellido, String ci) {
         setHistoriaClinicaID(historiaClinicaID);
@@ -23,6 +24,7 @@ public class Paciente extends Persona {
         setPrimerApellido(primerApellido);
         setSegundoApellido(segundoApellido);
         setCI(ci);
+        setEdad();
         this.vacunacion = new ArrayList<>();
         this.enfermedadesCronicas = new ArrayList<>();
         this.historiaClinica = new HistoriaClinica(historiaClinicaID);
@@ -51,7 +53,7 @@ public class Paciente extends Persona {
         }
     }
 
-    public int getEdad() {
+    public int setEdad() {
         String fechaStr = ci.substring(0, 6);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyMMdd");
         LocalDate fechaNacimiento = LocalDate.parse(fechaStr, formatter);
@@ -61,6 +63,10 @@ public class Paciente extends Persona {
         }
 
         return Period.between(fechaNacimiento, LocalDate.now()).getYears();
+    }
+
+    public int getEdad() {
+        return this.edad;
     }
 
     public String getGenero() {
