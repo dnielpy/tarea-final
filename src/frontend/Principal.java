@@ -24,6 +24,8 @@ import javax.swing.SwingConstants;
 import entidades.CMF;
 
 import java.awt.CardLayout;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class Principal extends JFrame implements MouseListener {
 
@@ -97,6 +99,11 @@ public class Principal extends JFrame implements MouseListener {
 		panelUsuario.add(cartelRol);
 
 		JButton botonIniciarSesion = new JButton();
+		botonIniciarSesion.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cerrarSesion();
+			}
+		});
 		botonIniciarSesion.setText("CERRAR SESI\u00D3N");
 		botonIniciarSesion.setForeground(Color.BLACK);
 		botonIniciarSesion.setFont(new Font("Arial", Font.PLAIN, 16));
@@ -176,6 +183,13 @@ public class Principal extends JFrame implements MouseListener {
 
 		VentanaReportes reportes = new VentanaReportes();
 		panelVentanas.add(reportes, "REPORTES");
+	}
+	
+	public void cerrarSesion() {
+		 // Cerrar el formulario actual
+        dispose();
+        // Abrir el segundo formulario
+        new Login().setVisible(true);
 	}
 
 	public void mouseClicked(MouseEvent e) {
