@@ -1,4 +1,6 @@
 package frontend;
+import javafx.scene.Cursor;
+
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
 
@@ -12,6 +14,7 @@ import java.awt.event.MouseListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -23,15 +26,24 @@ import javax.swing.table.TableRowSorter;
 import entidades.CMF;
 
 import javax.swing.JButton;
+
 import java.awt.SystemColor;
+
 import javax.swing.border.EmptyBorder;
 import javax.swing.ImageIcon;
 
+import componentesPropios.CustomDialog;
+
+import java.awt.event.MouseAdapter;
+
 public class VentanaPacientes extends JPanel{
 
+	private CMF cmf;
 	private JTable table;
+	private PersonaTableModel model;
 	
 	public VentanaPacientes(CMF cmf) {
+		this.cmf = cmf;
 		setBackground(Color.WHITE);
 		setLayout(null);
 		setBounds(305, 0, 796, 673);
@@ -51,7 +63,7 @@ public class VentanaPacientes extends JPanel{
 		
 
 		// Crear el modelo de tabla
-        PersonaTableModel model = new PersonaTableModel(cmf.getPacientes()) {
+        model = new PersonaTableModel(this.cmf.getPacientes()) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false; // Hacer la tabla no editable
@@ -120,8 +132,16 @@ public class VentanaPacientes extends JPanel{
         add(cartelListadoPacientes);
         
         JLabel botonEliminar = new JLabel("");
+        botonEliminar.addMouseListener(new MouseAdapter() {
+        	@Override
+        	public void mouseClicked(MouseEvent e) {
+        		borrarSeleccion();
+        	}
+        });
+        botonEliminar.setToolTipText("Eliminar selecci\u00F3n");
         botonEliminar.setIcon(new ImageIcon(VentanaPacientes.class.getResource("/fotos/trash.png")));
         botonEliminar.setBounds(462, 585, 33, 33);
+        botonEliminar.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.HAND_CURSOR));
         add(botonEliminar);
 		
 	}
@@ -152,5 +172,50 @@ public class VentanaPacientes extends JPanel{
         // Alternar filas de colores (opcional)
         table.setFillsViewportHeight(true);
     }
+	
+	public void borrarSeleccion() {
+	    int[] selectedRows = table.getSelectedRows();
+
+	    if (selectedRows.length > 0) {
+	        // Confirmación personalizada
+	        CustomDialog confirmDialog = new CustomDialog(
+	            null,
+	            "Confirmar eliminación",
+	            "¿Está seguro de que desea eliminar la(s) fila(s) seleccionada(s)?",
+	            true
+	        );
+	        confirmDialog.setVisible(true);
+
+	        if (confirmDialog.esConfirmado()) {
+	            for (int i = selectedRows.length - 1; i >= 0; i--) {
+	                int row = selectedRows[i];
+	                int id = (int) model.getValueAt(row, 3);
+	                model.eliminarPacientePorId(id);
+	            }
+	            
+	            new CustomDialog(
+	                null,
+	                "Eliminación exitosa",
+	                "La selección fue eliminada correctamente.",
+	                false
+	            ).setVisible(true);
+	        } else {
+	            new CustomDialog(
+	                null,
+	                "Cancelado",
+	                "La eliminación fue cancelada.",
+	                false
+	            ).setVisible(true);
+	        }
+	    } else {
+	        new CustomDialog(
+	            null,
+	            "Advertencia",
+	            "No se ha seleccionado ninguna fila.",
+	            false
+	        ).setVisible(true);
+	    }
+	}
+
 
 }

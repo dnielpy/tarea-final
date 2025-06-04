@@ -93,9 +93,9 @@ public class CMF {
 
 	public boolean eliminarPaciente(int id){
 		boolean response = false;
-		for(Paciente paciente: pacientes){
-			if(paciente.getHistoriaClinicaID() == id){
-				pacientes.remove(paciente);
+		for(int i = 0; i < obtenerTotalPacientes() && !response; i++){
+			if(getPacientes().get(i).getHistoriaClinicaID() == id){
+				pacientes.remove(i);
 				response = true;
 			}
 		}
