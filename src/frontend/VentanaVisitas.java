@@ -1,11 +1,14 @@
 package frontend;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+
+import componentesPropios.CustomTextField;
 
 public class VentanaVisitas extends JPanel {
 
@@ -27,5 +30,4 @@ public class VentanaVisitas extends JPanel {
 		cartelPestanna.setBounds(25, 0, 107, 51);
 		panelSuperior.add(cartelPestanna);
 	}
-
 }
