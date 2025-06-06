@@ -2,8 +2,6 @@ package componentesPropios;
 
 import javax.swing.*;
 
-import frontend.Principal;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -21,9 +19,9 @@ public class CustomDialog extends JDialog {
         setLocationRelativeTo(getParent());
         setLayout(new BorderLayout(10, 10));
         setResizable(false);
-        getContentPane().setBackground(Color.WHITE); // fondo blanco
+        getContentPane().setBackground(Color.WHITE);
 
-        JLabel mensaje = new JLabel(mensajeTexto);
+        JLabel mensaje = new JLabel("<html><div style='text-align: center;'>" + mensajeTexto.replaceAll("\n", "<br>") + "</div></html>");
         mensaje.setFont(new Font("Arial", Font.PLAIN, 16));
         mensaje.setForeground(Color.BLACK);
         mensaje.setHorizontalAlignment(SwingConstants.CENTER);

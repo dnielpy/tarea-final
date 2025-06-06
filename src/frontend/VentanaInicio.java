@@ -18,6 +18,8 @@ public class VentanaInicio extends JPanel {
 		setLayout(null);
 		setBounds(305, 0, 796, 673);
 		
+		// Barra superior
+		
 		JPanel panelSuperior = new JPanel();
 		panelSuperior.setBounds(0, 0, 874, 51);
 		add(panelSuperior);
@@ -30,6 +32,8 @@ public class VentanaInicio extends JPanel {
 		cartelPestanna.setFont(new Font("Arial", Font.PLAIN, 18));
 		cartelPestanna.setBounds(25, 0, 107, 51);
 		panelSuperior.add(cartelPestanna);
+		
+		// Cuadro de cantidad de pacientes
 		
 		JPanel panelCantidadPacientes = new JPanel();
 		panelCantidadPacientes.setBounds(46, 116, 309, 204);
@@ -51,6 +55,8 @@ public class VentanaInicio extends JPanel {
 		cantidadPacientes.setBounds(15, 150, 112, 20);
 		panelCantidadPacientes.add(cantidadPacientes);
 		
+		// Cuadro de cantidad de visitas del día
+		
 		JPanel panelCantidadVisitasDelDia = new JPanel();
 		panelCantidadVisitasDelDia.setBounds(420, 116, 309, 204);
 		add(panelCantidadVisitasDelDia);
@@ -70,6 +76,8 @@ public class VentanaInicio extends JPanel {
 		cartelVisitas.setFont(new Font("Arial", Font.PLAIN, 18));
 		cartelVisitas.setBounds(15, 16, 150, 20);
 		panelCantidadVisitasDelDia.add(cartelVisitas);
+		
+		// Cuadro de cantidad de pacientes en riesgo
 		
 		JPanel panelCantidadEnRiesgo = new JPanel();
 		panelCantidadEnRiesgo.setBounds(420, 380, 309, 204);
@@ -91,10 +99,11 @@ public class VentanaInicio extends JPanel {
 		cantidadEnRiesgo.setBounds(15, 141, 129, 20);
 		panelCantidadEnRiesgo.add(cantidadEnRiesgo);
 		
-		double pacientesEnRiesgo = cmf.obtenerPacientesEnRiesgo();
+		double pacientesEnRiesgo = cmf.porcentajeEnRiesgoDelTotal();
 		if (pacientesEnRiesgo > 0) {
 			JProgressBar porcientoEnRiesgo = new JProgressBar();
 			porcientoEnRiesgo.setString(String.valueOf(pacientesEnRiesgo) + "%");
+			porcientoEnRiesgo.setValue((int) pacientesEnRiesgo);
 			porcientoEnRiesgo.setStringPainted(true);
 			porcientoEnRiesgo.setForeground(new Color(0, 171, 227));
 			porcientoEnRiesgo.setFont(new Font("Arial", Font.BOLD, 16));
@@ -103,6 +112,8 @@ public class VentanaInicio extends JPanel {
 			porcientoEnRiesgo.setBounds(15, 170, 279, 18);
 			panelCantidadEnRiesgo.add(porcientoEnRiesgo);
 		}
+		
+		// Cuadro de cantidad de embarazadas
 		
 		JPanel panelCantidadEmbarazadas = new JPanel();
 		panelCantidadEmbarazadas.setBounds(46, 380, 309, 204);
@@ -126,7 +137,7 @@ public class VentanaInicio extends JPanel {
 		imagenEmbarazadas.setBounds(159, 26, 135, 135);
 		panelCantidadEmbarazadas.add(imagenEmbarazadas);
 		
-		double embarazadas = cmf.obtenerPorcentajeEmbarazadasRespectoAMujeres();
+		double embarazadas = cmf.porcentajeEmbarazadasRespectoAMujeres();
 		if (embarazadas > 0) {
 			JProgressBar porcientoEmbarazadas = new JProgressBar();
 			porcientoEmbarazadas.setBackground(Color.WHITE);
@@ -136,6 +147,7 @@ public class VentanaInicio extends JPanel {
 			porcientoEmbarazadas.setBounds(15, 170, 279, 18);
 			panelCantidadEmbarazadas.add(porcientoEmbarazadas);
 			porcientoEmbarazadas.setString(String.valueOf(embarazadas) + "%");
+			porcientoEmbarazadas.setValue((int) embarazadas);
 			porcientoEmbarazadas.setBorder(null);
 		}
 		
