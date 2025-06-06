@@ -1,5 +1,7 @@
 package runner;
 
+import componentesPropios.CustomDialog;
+
 import frontend.Login;
 import frontend.Principal;
 
@@ -14,14 +16,6 @@ public class Runner {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-		}
-
-		if (login.getAuth()) {
-			
-			Principal principal = new Principal();
-			principal.setVisible(true);
-		} else {
-			System.exit(0);
 		}
 	}
 }

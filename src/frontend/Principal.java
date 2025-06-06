@@ -16,8 +16,11 @@ import javax.swing.ImageIcon;
 import java.awt.Font;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import componentesPropios.BotonMenu;
+import componentesPropios.CustomDialog;
 
 import javax.swing.SwingConstants;
 
@@ -32,7 +35,6 @@ public class Principal extends JFrame implements MouseListener {
 	private JPanel panelVentanas;
 	private BotonMenu botonActivo;
 	private JPanel contentPane;
-
 
 	public BotonMenu getBotonActivo() {
 		return botonActivo;
@@ -58,7 +60,7 @@ public class Principal extends JFrame implements MouseListener {
 	public Principal() {
 
 		//Inicializacion del CMF
-		CMF cmf = new CMF(1, "Policlinico Alberro Cotorro", "Esteban Marrero Bermudez");
+		CMF cmf = new CMF(1, "Policlínico Alberro Cotorro", "Esteban Marrero Bermudez");
 		cmf.cargarDatos();
 
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Principal.class.getResource("/fotos/hospital-logo-and-symbols-templa.png")));
@@ -183,13 +185,43 @@ public class Principal extends JFrame implements MouseListener {
 
 		VentanaReportes reportes = new VentanaReportes();
 		panelVentanas.add(reportes, "REPORTES");
-	}
+		
+		 // Escuchar el evento de cierre de ventana
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                mostrarConfirmacionSalida();
+            }
+        });
+	};
 	
+	private void mostrarConfirmacionSalida() {
+		CustomDialog dialogo = new CustomDialog(
+				this,
+				"Confirmar salida",
+				"¿Seguro que desea salir?\nSe perderán todos los progresos al salir de la aplicación.",
+				true);
+		
+		dialogo.setVisible(true);
+
+		if (dialogo.esConfirmado()) {
+			dispose();      // Cierra la ventana
+			System.exit(0); // Finaliza la app
+		}
+	}
+
 	public void cerrarSesion() {
-		 // Cerrar el formulario actual
-        dispose();
-        // Abrir el segundo formulario
-        new Login().setVisible(true);
+		CustomDialog dialogo = new CustomDialog(
+				this,
+				"Confirmar cierre de sesión",
+				"¿Seguro que desea cerrar su sesión?",
+				true);
+		dialogo.setVisible(true);
+		
+		if (dialogo.esConfirmado()) {
+			dispose();      // Cierra la ventana
+			new Login().setVisible(true);
+		}   
 	}
 
 	public void mouseClicked(MouseEvent e) {

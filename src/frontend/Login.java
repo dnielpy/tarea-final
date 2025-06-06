@@ -7,7 +7,6 @@ import javax.swing.JPanel;
 
 import java.awt.Color;
 
-import javax.swing.JOptionPane;
 import javax.swing.JLabel;
 
 import java.awt.Toolkit;
@@ -28,10 +27,13 @@ import java.awt.event.MouseEvent;
 import javax.swing.JPasswordField;
 
 import componentesPropios.BotonBlanco;
-
+import componentesPropios.CustomDialog;
 import runner.Auth;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
+import javax.swing.SwingConstants;
 
 public class Login extends JFrame {
 	private boolean contrasenaVisible;
@@ -73,12 +75,14 @@ public class Login extends JFrame {
 		panelLogo.setLayout(null);
 
 		JLabel imagenTipografia = new JLabel();
+		imagenTipografia.setHorizontalAlignment(SwingConstants.CENTER);
 		imagenTipografia.setIcon(new ImageIcon(Login.class.getResource("/fotos/Tipografia-Peque.png")));
-		imagenTipografia.setBounds(67, 129, 112, 62);
+		imagenTipografia.setBounds(0, 129, 250, 62);
 		panelLogo.add(imagenTipografia);
 
 		JLabel cartelLogo = new JLabel("");
-		cartelLogo.setBounds(67, 15, 112, 120);
+		cartelLogo.setHorizontalAlignment(SwingConstants.CENTER);
+		cartelLogo.setBounds(0, 15, 250, 120);
 		panelLogo.add(cartelLogo);
 		cartelLogo.setIcon(new ImageIcon(Login.class.getResource("/fotos/Logo peque.png")));
 
@@ -93,6 +97,7 @@ public class Login extends JFrame {
 		panelLateral.add(panelSeparadorLogo);
 
 		final JLabel ojoIcono = new JLabel("");
+		ojoIcono.setToolTipText("Ocultar o desocultar contrase\u00F1a");
 		ojoIcono.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -190,22 +195,10 @@ public class Login extends JFrame {
 		separatorContrasenna.setBounds(325, 315, 379, 2);
 		panelPrincipal.add(separatorContrasenna);
 
-		final BotonBlanco botonAceptar = new BotonBlanco("ACEPTAR");
+		BotonBlanco botonAceptar = new BotonBlanco("ACEPTAR");
 		botonAceptar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String usuario = campoUsuario.getText();
-		    	String contrasenna = new String(campoContrasenna.getPassword());
-
-		    	Auth authManager = new Auth();
-
-		    	try {
-		    		if (authManager.authUser(usuario, contrasenna)) {
-		    			auth = true;
-		    			dispose(); 
-		    		}
-		    	} catch (Auth.AuthenticationException ex) {
-		    		JOptionPane.showMessageDialog(null, ex.getMessage(), "Error de autenticación", JOptionPane.ERROR_MESSAGE);
-		    	}
+				autenticar();
 			}
 		});
 		botonAceptar.setForeground(new Color(0, 0, 0));
@@ -214,6 +207,39 @@ public class Login extends JFrame {
 		panelPrincipal.add(botonAceptar);
 		botonAceptar.setLayout(null);
 
+	}
+	
+	public void autenticar() {
+		String usuario = campoUsuario.getText();
+    	String contrasenna = new String(campoContrasenna.getPassword());
+
+    	Auth authManager = new Auth();
+
+    	try {
+    		if (authManager.authUser(usuario, contrasenna)) {
+    			auth = true;
+    			iniciarSesion();
+    		}
+    	} catch (Auth.AuthenticationException ex) {
+    		CustomDialog dialogo = new CustomDialog(
+    				null,
+    				"Error de autenticación",
+    				ex.getMessage(),
+    				false);
+    		dialogo.setVisible(true);
+    	}
+	}
+	
+	public void iniciarSesion() {
+		CustomDialog dialogo = new CustomDialog(
+				null,
+				"Inicio de sesión",
+				"Inicio de sesión exitoso",
+				false);
+		dialogo.setVisible(true);
+		dispose(); 
+		Principal principal = new Principal();
+		principal.setVisible(true);
 	}
 	
 	public boolean getAuth(){
