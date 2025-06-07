@@ -24,6 +24,7 @@ import componentesPropios.CustomDialog;
 
 import javax.swing.SwingConstants;
 
+import runner.Usuario;
 import entidades.CMF;
 
 import java.awt.CardLayout;
@@ -58,9 +59,9 @@ public class Principal extends JFrame implements MouseListener {
 	}
 
 	public Principal() {
-
+		System.out.println(Usuario.getRole());		//Asi accedes al rol loggeado
 		//Inicializacion del CMF
-		CMF cmf = new CMF(1, "Policlínico Alberro Cotorro", "Esteban Marrero Bermudez");
+		CMF cmf = new CMF(1, "Policlï¿½nico Alberro Cotorro", "Esteban Marrero Bermudez");
 		cmf.cargarDatos();
 
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Principal.class.getResource("/fotos/Logo peque.png")));
@@ -199,7 +200,7 @@ public class Principal extends JFrame implements MouseListener {
 		CustomDialog dialogo = new CustomDialog(
 				this,
 				"Confirmar salida",
-				"¿Seguro que desea salir?\nSe perderán todos los progresos al salir de la aplicación.",
+				"ï¿½Seguro que desea salir?\nSe perderï¿½n todos los progresos al salir de la aplicaciï¿½n.",
 				true);
 		
 		dialogo.setVisible(true);
@@ -213,8 +214,8 @@ public class Principal extends JFrame implements MouseListener {
 	public void cerrarSesion() {
 		CustomDialog dialogo = new CustomDialog(
 				this,
-				"Confirmar cierre de sesión",
-				"¿Seguro que desea cerrar su sesión?",
+				"Confirmar cierre de sesiï¿½n",
+				"ï¿½Seguro que desea cerrar su sesiï¿½n?",
 				true);
 		dialogo.setVisible(true);
 		

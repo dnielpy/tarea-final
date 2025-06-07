@@ -1,45 +1,46 @@
 package runner;
 
 public class Auth {
-    private static final String DEFAULT_EMAIL = "admin@system.com";
-    private static final String DEFAULT_PASSWORD = "12345678";
+    private static final String DEFAULT_DOCTOR_EMAIL = "jose@medicoscmf.com";
+    private static final String DEFAULT_DOCTOR_PASSWORD = "12345678";
+
+    private static final String DEFAULT_ENF_EMAIL = "yamila@enfermerascmf.com";
+    private static final String DEFAULT_ENF_PASSWORD = "12345678";
 
     public boolean authUser(String userEmail, String userPassword) throws AuthenticationException {
         if (userEmail == null || userEmail.trim().isEmpty()) {
-            throw new AuthenticationException("El email no puede estar vacÌo");
+            throw new AuthenticationException("El email no puede estar vac√≠o");
         }
 
         if (userPassword == null || userPassword.trim().isEmpty()) {
-            throw new AuthenticationException("La contraseÒa no puede estar vacÌa");
+            throw new AuthenticationException("La contrase√±a no puede estar vac√≠a");
         }
 
         if (!isValidEmail(userEmail)) {
-            throw new AuthenticationException("Formato de email inv·lido");
+            throw new AuthenticationException("Formato de email inv√°lido");
         }
 
         if (userPassword.length() < 8) {
-            throw new AuthenticationException("La contraseÒa debe tener al menos 8 caracteres");
+            throw new AuthenticationException("La contrase√±a debe tener al menos 8 caracteres");
         }
 
-        boolean credentialsMatch = userEmail.equals(DEFAULT_EMAIL) && 
-                                   userPassword.equals(DEFAULT_PASSWORD);
-
-        if (!credentialsMatch) {
+        if (userEmail.equals(DEFAULT_DOCTOR_EMAIL) && userPassword.equals(DEFAULT_DOCTOR_PASSWORD)) {
+            Usuario.setEmail(DEFAULT_DOCTOR_EMAIL);
+            Usuario.setPassword("");
+            Usuario.setRole("MEDICO");
+        } else if (userEmail.equals(DEFAULT_ENF_EMAIL) && userPassword.equals(DEFAULT_ENF_PASSWORD)) {
+            Usuario.setEmail(DEFAULT_ENF_EMAIL);
+            Usuario.setPassword("");
+            Usuario.setRole("ENFERMERA");
+        } else {
             throw new AuthenticationException("Credenciales incorrectas");
         }
-
-        Usuario.setEmail(DEFAULT_EMAIL);
-        Usuario.setPassword("");
-        Usuario.setRole("ADMIN");
-
         return true;
     }
-
 
     private boolean isValidEmail(String email) {
         return email.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$");
     }
-
 
     public static class AuthenticationException extends Exception {
         public AuthenticationException(String message) {
