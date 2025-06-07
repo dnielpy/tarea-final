@@ -4,12 +4,10 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
 import java.awt.Color;
 
-import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -21,7 +19,6 @@ import java.awt.Font;
 import java.util.Date;
 
 import javax.swing.border.LineBorder;
-import javax.swing.border.EtchedBorder;
 import javax.swing.JRadioButton;
 import javax.swing.JCheckBox;
 
@@ -30,6 +27,7 @@ import com.toedter.calendar.JDateChooser;
 import javax.swing.JScrollPane;
 
 import componentesPropios.BotonBlanco;
+import entidades.Paciente;
 
 import javax.swing.JList;
 
@@ -81,8 +79,6 @@ public class FormularioPaciente extends JDialog {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
-		Border borde = BorderFactory.createLineBorder(Color.BLACK, 1);
 		
 		JPanel panelAgrupador1 = new JPanel();
 		panelAgrupador1.setBackground(Color.WHITE);
@@ -194,21 +190,21 @@ public class FormularioPaciente extends JDialog {
 		contentPane.add(panelAgrupador3);
 		panelAgrupador3.setLayout(null);
 		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(31, 50, 217, 122);
-		panelAgrupador3.add(scrollPane);
+		JScrollPane scrollPaneEnfermedades = new JScrollPane();
+		scrollPaneEnfermedades.setBounds(31, 50, 217, 122);
+		panelAgrupador3.add(scrollPaneEnfermedades);
 		
-		JList<?> list = new JList<Object>();
-		list.setFont(new Font("Arial", Font.PLAIN, 16));
-		scrollPane.setViewportView(list);
+		JList<String> listaEnfermedades = new JList<String>();
+		listaEnfermedades.setFont(new Font("Arial", Font.PLAIN, 16));
+		scrollPaneEnfermedades.setViewportView(listaEnfermedades);
 		
-		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(278, 50, 215, 122);
-		panelAgrupador3.add(scrollPane_1);
+		JScrollPane scrollPaneVacunas = new JScrollPane();
+		scrollPaneVacunas.setBounds(278, 50, 215, 122);
+		panelAgrupador3.add(scrollPaneVacunas);
 		
-		JList<?> list_1 = new JList<Object>();
-		list_1.setFont(new Font("Arial", Font.PLAIN, 16));
-		scrollPane_1.setViewportView(list_1);
+		JList<String> listaVacunas = new JList<String>();
+		listaVacunas.setFont(new Font("Arial", Font.PLAIN, 16));
+		scrollPaneVacunas.setViewportView(listaVacunas);
 		
 		JLabel cartelEnfermedadesCronicas = new JLabel("Enfermedades cr\u00F3nicas:");
 		cartelEnfermedadesCronicas.setBounds(31, 23, 217, 22);
@@ -220,30 +216,34 @@ public class FormularioPaciente extends JDialog {
 		cartelVacunas.setFont(new Font("Arial", Font.PLAIN, 18));
 		panelAgrupador3.add(cartelVacunas);
 		
-		JLabel lblNewLabel = new JLabel("");
-		lblNewLabel.setIcon(new ImageIcon(FormularioPaciente.class.getResource("/fotos/trash-22x22.png")));
-		lblNewLabel.setBounds(226, 185, 22, 22);
-		panelAgrupador3.add(lblNewLabel);
+		JLabel botonEliminarEnfermedad = new JLabel("");
+		botonEliminarEnfermedad.setToolTipText("Clic para borrar los elemento(s) selecionado(s) lista");
+		botonEliminarEnfermedad.setIcon(new ImageIcon(FormularioPaciente.class.getResource("/fotos/trash-22x22.png")));
+		botonEliminarEnfermedad.setBounds(226, 185, 22, 22);
+		panelAgrupador3.add(botonEliminarEnfermedad);
 		
-		JLabel label = new JLabel("");
-		label.setIcon(new ImageIcon(FormularioPaciente.class.getResource("/fotos/trash-22x22.png")));
-		label.setBounds(471, 185, 22, 22);
-		panelAgrupador3.add(label);
+		JLabel botonEliminarVacuna = new JLabel("");
+		botonEliminarVacuna.setToolTipText("Clic para borrar los elemento(s) selecionado(s) lista");
+		botonEliminarVacuna.setIcon(new ImageIcon(FormularioPaciente.class.getResource("/fotos/trash-22x22.png")));
+		botonEliminarVacuna.setBounds(471, 185, 22, 22);
+		panelAgrupador3.add(botonEliminarVacuna);
 		
-		JLabel label_1 = new JLabel("");
-		label_1.setIcon(new ImageIcon(FormularioPaciente.class.getResource("/fotos/agregar-22x22.png")));
-		label_1.setBounds(194, 185, 22, 22);
-		panelAgrupador3.add(label_1);
+		JLabel botonAgregarEnfermedad = new JLabel("");
+		botonAgregarEnfermedad.setToolTipText("Clic para agregar nuevo elemento a la lista");
+		botonAgregarEnfermedad.setIcon(new ImageIcon(FormularioPaciente.class.getResource("/fotos/agregar-22x22.png")));
+		botonAgregarEnfermedad.setBounds(194, 185, 22, 22);
+		panelAgrupador3.add(botonAgregarEnfermedad);
 		
-		JLabel label_2 = new JLabel("");
-		label_2.setIcon(new ImageIcon(FormularioPaciente.class.getResource("/fotos/agregar-22x22.png")));
-		label_2.setBounds(440, 185, 22, 22);
-		panelAgrupador3.add(label_2);
+		JLabel botonAgregarVacuna = new JLabel("");
+		botonAgregarVacuna.setToolTipText("Clic para agregar nuevo elemento a la lista");
+		botonAgregarVacuna.setIcon(new ImageIcon(FormularioPaciente.class.getResource("/fotos/agregar-22x22.png")));
+		botonAgregarVacuna.setBounds(440, 185, 22, 22);
+		panelAgrupador3.add(botonAgregarVacuna);
 		
 		BotonBlanco botonAceptar = new BotonBlanco((String) null);
 		botonAceptar.setToolTipText("Cick para guardar los datos actuales");
 		botonAceptar.setText("ACEPTAR");
-		botonAceptar.setBounds(229, 605, 129, 29);
+		botonAceptar.setBounds(229, 605, 129, 30);
 		contentPane.add(botonAceptar);
 		
 		imagenFondo = new JLabel("");

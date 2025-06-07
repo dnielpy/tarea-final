@@ -97,7 +97,7 @@ public class Login extends JFrame {
 		panelLateral.add(panelSeparadorLogo);
 
 		final JLabel ojoIcono = new JLabel("");
-		ojoIcono.setToolTipText("Ocultar o desocultar contrase\u00F1a");
+		ojoIcono.setToolTipText("Clic para ver u ocultar contrase\u00F1a");
 		ojoIcono.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -114,7 +114,7 @@ public class Login extends JFrame {
         });
 		ojoIcono.setBackground(SystemColor.menu);
 		ojoIcono.setIcon(new ImageIcon(Login.class.getResource("/fotos/no visible (1).png")));
-		ojoIcono.setBounds(671, 281, 33, 32);
+		ojoIcono.setBounds(671, 281, 33, 33);
 		panelPrincipal.add(ojoIcono);
 		ojoIcono.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
