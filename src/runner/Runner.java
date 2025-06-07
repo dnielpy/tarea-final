@@ -1,9 +1,6 @@
 package runner;
 
-import componentesPropios.CustomDialog;
-
 import frontend.Login;
-import frontend.Principal;
 
 public class Runner {
 	

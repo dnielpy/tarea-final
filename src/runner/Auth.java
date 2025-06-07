@@ -9,25 +9,25 @@ public class Auth {
 
     public boolean authUser(String userEmail, String userPassword) throws AuthenticationException {
         if (userEmail == null || userEmail.trim().isEmpty()) {
-            throw new AuthenticationException("El email no puede estar vacío");
+            throw new AuthenticationException("El email no puede estar vac\u00EDo");
         }
 
         if (userPassword == null || userPassword.trim().isEmpty()) {
-            throw new AuthenticationException("La contraseña no puede estar vacía");
+            throw new AuthenticationException("La contrase\u00F1a no puede estar vac\u00EDa");
         }
 
         if (!isValidEmail(userEmail)) {
-            throw new AuthenticationException("Formato de email inválido");
+            throw new AuthenticationException("Formato de email inv\u00E1lido");
         }
 
         if (userPassword.length() < 8) {
-            throw new AuthenticationException("La contraseña debe tener al menos 8 caracteres");
+            throw new AuthenticationException("La contrase\u00F1a debe tener al menos 8 caracteres");
         }
 
         if (userEmail.equals(DEFAULT_DOCTOR_EMAIL) && userPassword.equals(DEFAULT_DOCTOR_PASSWORD)) {
             Usuario.setEmail(DEFAULT_DOCTOR_EMAIL);
             Usuario.setPassword("");
-            Usuario.setRole("MEDICO");
+            Usuario.setRole("M\u00C9DICO");
         } else if (userEmail.equals(DEFAULT_ENF_EMAIL) && userPassword.equals(DEFAULT_ENF_PASSWORD)) {
             Usuario.setEmail(DEFAULT_ENF_EMAIL);
             Usuario.setPassword("");

@@ -59,9 +59,8 @@ public class Principal extends JFrame implements MouseListener {
 	}
 
 	public Principal() {
-		System.out.println(Usuario.getRole());		//Asi accedes al rol loggeado
 		//Inicializacion del CMF
-		CMF cmf = new CMF(1, "Policl�nico Alberro Cotorro", "Esteban Marrero Bermudez");
+		CMF cmf = new CMF(1, "Policl\u00EDnico Alberro Cotorro", "Esteban Marrero Bermudez");
 		cmf.cargarDatos();
 
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Principal.class.getResource("/fotos/Logo peque.png")));
@@ -82,7 +81,8 @@ public class Principal extends JFrame implements MouseListener {
 		panelUsuario.setLayout(null);
 
 		JLabel imagenUsuario = new JLabel("");
-		imagenUsuario.setIcon(new ImageIcon(Principal.class.getResource("/fotos/medico.png")));
+		imagenUsuario.setIcon(new ImageIcon(Principal.class.getResource("/fotos/Logo peque.png")));
+		
 		imagenUsuario.setHorizontalAlignment(SwingConstants.CENTER);
 		imagenUsuario.setBounds(0, 27, 300, 122);
 		panelUsuario.add(imagenUsuario);
@@ -127,6 +127,7 @@ public class Principal extends JFrame implements MouseListener {
 		panelLateral.setLayout(null);
 
 		BotonMenu botonInicio = new BotonMenu((String) null);
+		botonInicio.setToolTipText("Clic para ver datos generales del consultorio");
 		botonInicio.setText("INICIO");
 		botonInicio.setBounds(0, 16, 300, 75);
 		botonInicio.addMouseListener(this);
@@ -149,12 +150,11 @@ public class Principal extends JFrame implements MouseListener {
 		botonHojaCargo.addMouseListener(this);
 		panelLateral.add(botonHojaCargo);
 
-		BotonMenu botonVisitas = new BotonMenu((String) null);
-		botonVisitas.setActivo(false);
-		botonVisitas.setText("VISITAS");
-		botonVisitas.setBounds(0, 237, 300, 75);
-		botonVisitas.addMouseListener(this);
-		panelLateral.add(botonVisitas);
+		BotonMenu botonVisitasOAnalisis = new BotonMenu((String) null);
+		botonVisitasOAnalisis.setActivo(false);
+		botonVisitasOAnalisis.setBounds(0, 237, 300, 75);
+		botonVisitasOAnalisis.addMouseListener(this);
+		panelLateral.add(botonVisitasOAnalisis);
 
 		BotonMenu botonReportes = new BotonMenu((String) null);
 		botonReportes.setActivo(false);
@@ -176,16 +176,12 @@ public class Principal extends JFrame implements MouseListener {
 		panelVentanas.add(pacientes, "PACIENTES");
 		pacientes.setLayout(null);
 
-		VentanaVisitas visitas = new VentanaVisitas();
-		panelVentanas.add(visitas, "VISITAS");
-		visitas.setLayout(null);
-
 		VentanaHojasDeCargo hojaDeCargo = new VentanaHojasDeCargo();
 		panelVentanas.add(hojaDeCargo, "HOJAS DE CARGO");
 		hojaDeCargo.setLayout(null);
 
 		VentanaReportes reportes = new VentanaReportes();
-		panelVentanas.add(reportes, "REPORTES");
+		panelVentanas.add(reportes, "REPORTES");	
 		
 		 // Escuchar el evento de cierre de ventana
         addWindowListener(new WindowAdapter() {
@@ -194,13 +190,26 @@ public class Principal extends JFrame implements MouseListener {
                 mostrarConfirmacionSalida();
             }
         });
+        
+        if (Usuario.getRole() == "M\u00C9DICO") {
+			imagenUsuario.setIcon(new ImageIcon(Principal.class.getResource("/fotos/medico.png")));
+			botonVisitasOAnalisis.setText("VISITAS");
+			VentanaVisitas visitas = new VentanaVisitas();
+			panelVentanas.add(visitas, "VISITAS");
+			visitas.setLayout(null);
+		} else if (Usuario.getRole() == "ENFERMERA") {
+			imagenUsuario.setIcon(new ImageIcon(Principal.class.getResource("/fotos/enfermera.png")));
+			botonVisitasOAnalisis.setText("AN\u00C1LISIS");
+			VentanaAnalisis analisis = new VentanaAnalisis();
+			panelVentanas.add(analisis, "AN\u00C1LISIS");
+		}
 	};
 	
 	private void mostrarConfirmacionSalida() {
 		CustomDialog dialogo = new CustomDialog(
 				this,
 				"Confirmar salida",
-				"�Seguro que desea salir?\nSe perder�n todos los progresos al salir de la aplicaci�n.",
+				"\u00BFSeguro que desea salir?\nSe perder\u00E1n todos los progresos al salir de la aplicaci\u00F3n.",
 				true);
 		
 		dialogo.setVisible(true);
@@ -214,8 +223,8 @@ public class Principal extends JFrame implements MouseListener {
 	public void cerrarSesion() {
 		CustomDialog dialogo = new CustomDialog(
 				this,
-				"Confirmar cierre de sesi�n",
-				"�Seguro que desea cerrar su sesi�n?",
+				"Confirmar cierre de sesi\u00F3n",
+				"\u00BFSeguro que desea cerrar su sesi\u00F3n?",
 				true);
 		dialogo.setVisible(true);
 		
