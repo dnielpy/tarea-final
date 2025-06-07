@@ -63,7 +63,7 @@ public class Principal extends JFrame implements MouseListener {
 		CMF cmf = new CMF(1, "Policlínico Alberro Cotorro", "Esteban Marrero Bermudez");
 		cmf.cargarDatos();
 
-		setIconImage(Toolkit.getDefaultToolkit().getImage(Principal.class.getResource("/fotos/hospital-logo-and-symbols-templa.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(Principal.class.getResource("/fotos/Logo peque.png")));
 		setTitle("Sistema de gesti\u00F3n del CMF");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
