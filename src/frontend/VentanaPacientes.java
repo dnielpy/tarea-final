@@ -1,26 +1,25 @@
 package frontend;
-import javafx.scene.Cursor;
-
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
 
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Window;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
 import javax.swing.BorderFactory;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.RowFilter;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.table.TableRowSorter;
 
 import entidades.CMF;
@@ -29,18 +28,20 @@ import javax.swing.JButton;
 
 import java.awt.SystemColor;
 
-import javax.swing.border.EmptyBorder;
 import javax.swing.ImageIcon;
 
 import componentesPropios.CustomDialog;
 
 import java.awt.event.MouseAdapter;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class VentanaPacientes extends JPanel{
 
 	private CMF cmf;
 	private JTable table;
 	private PersonaTableModel model;
+	private FormularioPaciente formularioPaciente;
 	
 	public VentanaPacientes(CMF cmf) {
 		this.cmf = cmf;
@@ -120,6 +121,11 @@ public class VentanaPacientes extends JPanel{
         add(panelTabla);
         
         JButton botonAgregarPaciente = new JButton("AGREGAR PACIENTE");
+        botonAgregarPaciente.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent arg0) {
+        		abrirFormulario();
+        	}
+        });
         botonAgregarPaciente.setForeground(Color.BLACK);
         botonAgregarPaciente.setFont(new Font("Arial", Font.PLAIN, 16));
         botonAgregarPaciente.setBackground(SystemColor.menu);
@@ -217,5 +223,17 @@ public class VentanaPacientes extends JPanel{
 	    }
 	}
 
+	private void abrirFormulario() {
+        // Crear un nuevo JFrame para el formulario
+		Window ventanaPrincipal = SwingUtilities.getWindowAncestor(this);
+		
+        formularioPaciente = new FormularioPaciente(ventanaPrincipal);
+        formularioPaciente.setLocationRelativeTo(ventanaPrincipal);
+
+        // Deshabilitar la ventana principal
+        setEnabled(false);
+
+        formularioPaciente.setVisible(true); // Muestra el formulario
+    }
 
 }

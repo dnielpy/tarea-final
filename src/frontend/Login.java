@@ -50,7 +50,7 @@ public class Login extends JFrame {
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setType(Type.POPUP);
-		setIconImage(Toolkit.getDefaultToolkit().getImage(Login.class.getResource("/fotos/hospital-logo-and-symbols-templa.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(Login.class.getResource("/fotos/Logo peque.png")));
 		setTitle("Autenticaci\u00F3n");
 		setBounds(100, 100, 800, 510);
 		getContentPane().setLayout(null);
