@@ -26,6 +26,7 @@ public class VentanaAnalisis extends JPanel {
 		cartelPestanna.setFont(new Font("Arial", Font.PLAIN, 18));
 		cartelPestanna.setBounds(25, 0, 107, 51);
 		panelSuperior.add(cartelPestanna);
+		
 	}
 
 }
