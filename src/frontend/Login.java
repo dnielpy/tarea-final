@@ -27,7 +27,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.JPasswordField;
 
 import componentesPropios.BotonBlanco;
-import componentesPropios.CustomDialog;
+import componentesPropios.InfoDialog;
 import runner.Auth;
 
 import java.awt.event.ActionListener;
@@ -221,21 +221,21 @@ public class Login extends JFrame {
     			iniciarSesion();
     		}
     	} catch (Auth.AuthenticationException ex) {
-    		CustomDialog dialogo = new CustomDialog(
+    		InfoDialog dialogo = new InfoDialog(
     				null,
     				"Error de autenticación",
-    				ex.getMessage(),
-    				false);
+    				ex.getMessage()
+    		);
     		dialogo.setVisible(true);
     	}
 	}
 	
 	public void iniciarSesion() {
-		CustomDialog dialogo = new CustomDialog(
+		InfoDialog dialogo = new InfoDialog(
 				null,
 				"Inicio de sesión",
-				"Inicio de sesión exitoso",
-				false);
+				"Inicio de sesión exitoso"
+		);
 		dialogo.setVisible(true);
 		dispose(); 
 		Principal principal = new Principal();

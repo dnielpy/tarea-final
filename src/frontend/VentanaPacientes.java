@@ -11,7 +11,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 import javax.swing.BorderFactory;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -30,7 +29,8 @@ import java.awt.SystemColor;
 
 import javax.swing.ImageIcon;
 
-import componentesPropios.CustomDialog;
+import componentesPropios.InfoDialog;
+import componentesPropios.QuestionDialog;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.ActionListener;
@@ -184,43 +184,42 @@ public class VentanaPacientes extends JPanel{
 
 	    if (selectedRows.length > 0) {
 	        // Confirmación personalizada
-	        CustomDialog confirmDialog = new CustomDialog(
+	        QuestionDialog confirmDialog = new QuestionDialog(
 	            null,
 	            "Confirmar eliminación",
-	            "¿Está seguro de que desea eliminar la(s) fila(s) seleccionada(s)?",
-	            true
+	            "¿Está seguro de que desea eliminar la(s) fila(s) seleccionada(s)?"
 	        );
 	        confirmDialog.setVisible(true);
 
 	        if (confirmDialog.esConfirmado()) {
 	            for (int i = selectedRows.length - 1; i >= 0; i--) {
-	                int row = selectedRows[i];
-	                int id = (int) model.getValueAt(row, 3);
-	                model.eliminarPacientePorId(id);
+	            	int viewRow = selectedRows[i];
+	                int modelRow = table.convertRowIndexToModel(viewRow);
+
+	                int id = (int) model.getValueAt(modelRow, model.findColumn("H. Clínica"));
+
+	                model.eliminarPacientePorId(id, modelRow); // o solo con el id si no necesitas el índice
 	            }
 	            
-	            new CustomDialog(
+	            new InfoDialog(
 	                null,
 	                "Eliminación exitosa",
-	                "La selección fue eliminada correctamente.",
-	                false
+	                "La selección fue eliminada correctamente."
 	            ).setVisible(true);
 	        } else {
-	            new CustomDialog(
+	            new InfoDialog(
 	                null,
 	                "Cancelado",
-	                "La eliminación fue cancelada.",
-	                false
+	                "La eliminación fue cancelada."
 	            ).setVisible(true);
 	        }
 	    } else {
-	        new CustomDialog(
+	        new InfoDialog(
 	            null,
 	            "Advertencia",
-	            "No se ha seleccionado ninguna fila.",
-	            false
+	            "No se ha seleccionado ninguna fila."
 	        ).setVisible(true);
-	    }
+	    } 
 	}
 
 	private void abrirFormulario() {

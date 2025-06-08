@@ -20,7 +20,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 import componentesPropios.BotonMenu;
-import componentesPropios.CustomDialog;
+import componentesPropios.QuestionDialog;
 
 import javax.swing.SwingConstants;
 
@@ -109,9 +109,9 @@ public class Principal extends JFrame implements MouseListener {
 		});
 		botonIniciarSesion.setText("CERRAR SESI\u00D3N");
 		botonIniciarSesion.setForeground(Color.BLACK);
-		botonIniciarSesion.setFont(new Font("Arial", Font.PLAIN, 16));
+		botonIniciarSesion.setFont(new Font("Arial", Font.PLAIN, 18));
 		botonIniciarSesion.setBackground(Color.WHITE);
-		botonIniciarSesion.setBounds(61, 195, 173, 29);
+		botonIniciarSesion.setBounds(55, 200, 185, 30);
 		panelUsuario.add(botonIniciarSesion);
 
 		JPanel panelPrincipal = new JPanel();
@@ -206,26 +206,25 @@ public class Principal extends JFrame implements MouseListener {
 	};
 	
 	private void mostrarConfirmacionSalida() {
-		CustomDialog dialogo = new CustomDialog(
+		QuestionDialog dialogo = new QuestionDialog(
 				this,
 				"Confirmar salida",
-				"\u00BFSeguro que desea salir?\nSe perder\u00E1n todos los progresos al salir de la aplicaci\u00F3n.",
-				true);
-		
+				"\u00BFSeguro que desea salir?\nSe perder\u00E1n todos los progresos al salir de la aplicaci\u00F3n."
+		);
 		dialogo.setVisible(true);
 
 		if (dialogo.esConfirmado()) {
 			dispose();      // Cierra la ventana
-			System.exit(0); // Finaliza la app
+			System.exit(0); // Finaliza la app 
 		}
 	}
 
 	public void cerrarSesion() {
-		CustomDialog dialogo = new CustomDialog(
+		QuestionDialog dialogo = new QuestionDialog(
 				this,
 				"Confirmar cierre de sesi\u00F3n",
-				"\u00BFSeguro que desea cerrar su sesi\u00F3n?",
-				true);
+				"\u00BFSeguro que desea cerrar su sesi\u00F3n?"
+		);
 		dialogo.setVisible(true);
 		
 		if (dialogo.esConfirmado()) {
