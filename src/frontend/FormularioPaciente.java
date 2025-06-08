@@ -325,10 +325,10 @@ public class FormularioPaciente extends JDialog {
 
 				try {
 					// Obtener datos del formulario
-					String nombre = campoNombre.getText().trim();
-					String primerApellido = campoPrimerApellido.getText().trim();
-					String segundoApellido = campoSegundoApellido.getText().trim();
-					String ci = campoCI.getText().trim();
+					String nombre = Validations.capitalize(campoNombre.getText().trim());
+        			String primerApellido = Validations.capitalize(campoPrimerApellido.getText().trim());
+        			String segundoApellido = Validations.capitalize(campoSegundoApellido.getText().trim());
+        			String ci = campoCI.getText().trim();
 					String direccion = campoDireccion.getText().trim();
 					boolean esFemenino = radioFemenino.isSelected();
 					boolean estaEmbarazada = checkEmbarazada.isSelected();
@@ -352,6 +352,10 @@ public class FormularioPaciente extends JDialog {
 					String fechaUltimaPruebaStr = null;
 					if (fechaUltimaPruebaSeleccionada != null) {
 						fechaUltimaPruebaStr = new SimpleDateFormat("dd/MM/yyyy").format(fechaUltimaPruebaSeleccionada);
+					}
+
+					if(cmf.isCiRepited(ci)) {
+						throw new IllegalArgumentException("El CI proporcionado ya está registrado.");
 					}
 
 					// Obtener listas de enfermedades crónicas y vacunas

@@ -196,6 +196,20 @@ public class CMF {
         return rangoDeEdad;
     }
 
+    public boolean isCiRepited(String ci) {
+        boolean response = false;
+        
+        if (ci == null || ci.trim().isEmpty()) {
+            throw new IllegalArgumentException("El CI no puede ser nulo o vacío");
+        }
+        for (Paciente paciente : pacientes) {
+            if (paciente.getCi().equals(ci)) {
+                response = true;
+            }
+        }
+        return response;
+    }
+
     public void cargarDatos() {
 		crearMedico("Alfonso", "Rodriguez", "Camela", 11321, "75060212345", "12/3/1998");
 	
