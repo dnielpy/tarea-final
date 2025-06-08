@@ -170,7 +170,7 @@ public class Principal extends JFrame implements MouseListener {
         panelVentanas.add(inicio, "INICIO");
         inicio.setLayout(null);
 
-        VentanaPacientes pacientes = new VentanaPacientes(cmf); // Pasar CMF
+        VentanaPacientes pacientes = new VentanaPacientes(); 
 		panelVentanas.add(pacientes, "PACIENTES");
 		pacientes.setLayout(null);
 
