@@ -25,7 +25,7 @@ public class EntradaVisitas {
         Objects.requireNonNull(nombre, "El nombre no puede ser nulo");
         String nombreTrimmed = nombre.trim();
         if (nombreTrimmed.isEmpty()) {
-            throw new IllegalArgumentException("El nombre no puede estar vac韔");
+            throw new IllegalArgumentException("El nombre no puede estar vac铆o");
         }
         if (nombreTrimmed.length() > 100) {
             throw new IllegalArgumentException("El nombre no puede exceder los 100 caracteres");
@@ -45,7 +45,7 @@ public class EntradaVisitas {
             throw new IllegalArgumentException("La edad no puede ser negativa");
         }
         if (edad > 120) {
-            throw new IllegalArgumentException("La edad no puede ser mayor a 120 a駉s");
+            throw new IllegalArgumentException("La edad no puede ser mayor a 120 a帽os");
         }
         this.edad = edad;
     }
@@ -63,13 +63,13 @@ public class EntradaVisitas {
     }
 
     public void setDireccion(String direccion) {
-        Objects.requireNonNull(direccion, "La direcci髇 no puede ser nula");
+        Objects.requireNonNull(direccion, "La direcci贸n no puede ser nula");
         String dirTrimmed = direccion.trim();
         if (dirTrimmed.isEmpty()) {
-            throw new IllegalArgumentException("La direcci髇 no puede estar vac韆");
+            throw new IllegalArgumentException("La direcci贸n no puede estar vac铆a");
         }
         if (dirTrimmed.length() > 200) {
-            throw new IllegalArgumentException("La direcci髇 no puede exceder los 200 caracteres");
+            throw new IllegalArgumentException("La direcci贸n no puede exceder los 200 caracteres");
         }
         this.direccion = dirTrimmed;
     }
@@ -79,13 +79,13 @@ public class EntradaVisitas {
     }
 
     public void setDiagnostico(String diagnostico) {
-        Objects.requireNonNull(diagnostico, "El diagn髎tico no puede ser nulo");
+        Objects.requireNonNull(diagnostico, "El diagn贸stico no puede ser nulo");
         String diagTrimmed = diagnostico.trim();
         if (diagTrimmed.isEmpty()) {
-            throw new IllegalArgumentException("El diagn髎tico no puede estar vac韔");
+            throw new IllegalArgumentException("El diagn贸stico no puede estar vac铆o");
         }
         if (diagTrimmed.length() > 500) {
-            throw new IllegalArgumentException("El diagn髎tico no puede exceder los 500 caracteres");
+            throw new IllegalArgumentException("El diagn贸stico no puede exceder los 500 caracteres");
         }
         this.diagnostico = diagTrimmed;
     }

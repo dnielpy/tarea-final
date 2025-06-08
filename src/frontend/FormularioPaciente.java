@@ -38,6 +38,8 @@ import entidades.Paciente;
 
 import javax.swing.JList;
 
+import service.Validations;
+
 import java.awt.Cursor;
 import java.awt.Toolkit;
 import java.awt.Window;
@@ -323,10 +325,10 @@ public class FormularioPaciente extends JDialog {
 
 				try {
 					// Obtener datos del formulario
-					String nombre = campoNombre.getText().trim();
-					String primerApellido = campoPrimerApellido.getText().trim();
-					String segundoApellido = campoSegundoApellido.getText().trim();
-					String ci = campoCI.getText().trim();
+					String nombre = Validations.capitalize(campoNombre.getText().trim());
+        			String primerApellido = Validations.capitalize(campoPrimerApellido.getText().trim());
+        			String segundoApellido = Validations.capitalize(campoSegundoApellido.getText().trim());
+        			String ci = campoCI.getText().trim();
 					String direccion = campoDireccion.getText().trim();
 					boolean esFemenino = radioFemenino.isSelected();
 					boolean estaEmbarazada = checkEmbarazada.isSelected();
@@ -337,10 +339,23 @@ public class FormularioPaciente extends JDialog {
 						throw new IllegalArgumentException("Los campos Nombre, Primer Apellido y CI son obligatorios.");
 					}
 
+					// Validar género y embarazo basado en el CI
+					boolean ciEsFemenino = Validations.isFemale(ci);
+					if (ciEsFemenino != esFemenino) {
+						throw new IllegalArgumentException("El género seleccionado no coincide con el CI proporcionado.");
+					}
+					if (!ciEsFemenino && estaEmbarazada) {
+						throw new IllegalArgumentException("Un paciente masculino no puede estar embarazado.");
+					}
+
 					// Validar que la fecha no sea nula antes de formatearla
 					String fechaUltimaPruebaStr = null;
 					if (fechaUltimaPruebaSeleccionada != null) {
 						fechaUltimaPruebaStr = new SimpleDateFormat("dd/MM/yyyy").format(fechaUltimaPruebaSeleccionada);
+					}
+
+					if(cmf.isCiRepited(ci)) {
+						throw new IllegalArgumentException("El CI proporcionado ya está registrado.");
 					}
 
 					// Obtener listas de enfermedades crónicas y vacunas
@@ -378,7 +393,6 @@ public class FormularioPaciente extends JDialog {
 				} catch (Exception ex) {
 					JOptionPane.showMessageDialog(contentPane, "Ocurrió un error inesperado: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
-
 			}
 		});
 
@@ -389,7 +403,7 @@ public class FormularioPaciente extends JDialog {
 	}
 
 	protected void agregarEnfermedadCronica() {
-		TextDialog dialogo = new TextDialog((JDialog)this, "Agregar enfermedad cr�nica", "Introduzca una enfermedad cr�nica para agregar");
+		TextDialog dialogo = new TextDialog((JDialog)this, "Agregar enfermedad crónica", "Introduzca una enfermedad crónica para agregar");
 		dialogo.setVisible(true);
 
 		if (dialogo.isConfirmado()) {
@@ -414,7 +428,6 @@ public class FormularioPaciente extends JDialog {
 
 	private void eliminarEnfermedadesSeleccionadas() {
 		int[] indices = listaEnfermedades.getSelectedIndices();
-		// Elimina desde el �ltimo al primero para no desordenar los �ndices
 		for (int i = indices.length - 1; i >= 0; i--) {
 			listModelEnfermedades.remove(indices[i]);
 		}
@@ -422,7 +435,6 @@ public class FormularioPaciente extends JDialog {
 
 	private void eliminarVacunasSeleccionadas() {
 		int[] indices = listaVacunas.getSelectedIndices();
-		// Elimina desde el �ltimo al primero para no desordenar los �ndices
 		for (int i = indices.length - 1; i >= 0; i--) {
 			listModelVacunas.remove(indices[i]);
 		}

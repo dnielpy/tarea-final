@@ -30,17 +30,17 @@ public class Mujer extends Paciente {
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(fecha);
                 if (cal.get(Calendar.YEAR) < 1900) {
-                    throw new IllegalArgumentException("Fecha de revisi�n no puede ser anterior a 1900");
+                    throw new IllegalArgumentException("Fecha de revisión no puede ser anterior a 1900");
                 }
                 
                 Calendar hoy = Calendar.getInstance();
                 if (fecha.after(hoy.getTime())) {
-                    throw new IllegalArgumentException("Fecha de revisi�n no puede ser futura");
+                    throw new IllegalArgumentException("Fecha de revisión no puede ser futura");
                 }
                 
                 this.fechaUltimaRevision = fechaUltimaRevision;
             } catch (ParseException e) {
-                throw new IllegalArgumentException("Formato de fecha inv�lido. Use dd/MM/yyyy");
+                throw new IllegalArgumentException("Formato de fecha inválido. Use dd/MM/yyyy");
             }
         } else {
             this.fechaUltimaRevision = null;
@@ -54,10 +54,10 @@ public class Mujer extends Paciente {
     public void setEmbarazada(boolean embarazada) {
         if (this.getEdad() < 12 && embarazada) {
             System.out.println(this.getEdad());
-            throw new IllegalArgumentException("Paciente menor de 12 a�os no puede estar embarazada");
+            throw new IllegalArgumentException("Paciente menor de 12 años no puede estar embarazada");
         }
         if (this.getEdad() > 55 && embarazada) {
-            throw new IllegalArgumentException("Paciente mayor de 55 a�os no puede estar embarazada");
+            throw new IllegalArgumentException("Paciente mayor de 55 años no puede estar embarazada");
         }
         this.embarazada = embarazada;
     }
