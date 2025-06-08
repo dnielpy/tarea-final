@@ -66,7 +66,7 @@ public class Principal extends JFrame implements MouseListener {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Principal.class.getResource("/fotos/Logo peque.png")));
 		setTitle("Sistema de gesti\u00F3n del CMF");
 		setResizable(false);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setBounds(100, 100, 1100, 700);
 		setLocationRelativeTo(null);
 		contentPane = new JPanel();
