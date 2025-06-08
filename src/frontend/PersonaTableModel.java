@@ -47,12 +47,12 @@ public class PersonaTableModel extends AbstractTableModel {
     }
     
     // MÉTODO PERSONALIZADO PARA ELIMINAR FILAS
-    public void eliminarPacientePorId(int id) {
+    public void eliminarPacientePorId(int id, int indice) {
     	boolean ciclar = true;
         for (int i = 0; i < pacientes.size() && ciclar; i++) {
             if (pacientes.get(i).getHistoriaClinicaID() == id) {
                 pacientes.remove(i);
-                fireTableRowsDeleted(i, i);  // Notificar a la tabla que una fila fue eliminada
+                fireTableRowsDeleted(indice, indice);  // Notificar a la tabla que una fila fue eliminada
                 ciclar = false;
             }
         }
