@@ -38,6 +38,8 @@ import entidades.Paciente;
 
 import javax.swing.JList;
 
+import service.Validations;
+
 import java.awt.Cursor;
 import java.awt.Toolkit;
 import java.awt.Window;
@@ -337,6 +339,15 @@ public class FormularioPaciente extends JDialog {
 						throw new IllegalArgumentException("Los campos Nombre, Primer Apellido y CI son obligatorios.");
 					}
 
+					// Validar género y embarazo basado en el CI
+					boolean ciEsFemenino = Validations.isFemale(ci);
+					if (ciEsFemenino != esFemenino) {
+						throw new IllegalArgumentException("El género seleccionado no coincide con el CI proporcionado.");
+					}
+					if (!ciEsFemenino && estaEmbarazada) {
+						throw new IllegalArgumentException("Un paciente masculino no puede estar embarazado.");
+					}
+
 					// Validar que la fecha no sea nula antes de formatearla
 					String fechaUltimaPruebaStr = null;
 					if (fechaUltimaPruebaSeleccionada != null) {
@@ -378,7 +389,6 @@ public class FormularioPaciente extends JDialog {
 				} catch (Exception ex) {
 					JOptionPane.showMessageDialog(contentPane, "Ocurrió un error inesperado: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
-
 			}
 		});
 
