@@ -17,6 +17,7 @@ public class Paciente extends Persona {
     protected HistoriaClinica historiaClinica;
     protected String ci;
     protected int edad;
+    protected String direccion;
 
     public Paciente(int historiaClinicaID, String nombre, String primerApellido, String segundoApellido, String ci) {
         setHistoriaClinicaID(historiaClinicaID);
@@ -39,6 +40,21 @@ public class Paciente extends Persona {
             throw new IllegalArgumentException("ID de historia clínica debe ser positivo");
         }
         this.historiaClinicaID = historiaClinicaID;
+    }
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        Objects.requireNonNull(direccion, "La dirección no puede ser nula");
+        if (direccion.trim().isEmpty()) {
+            throw new IllegalArgumentException("La dirección no puede estar vacía");
+        }
+        if (direccion.length() > 300) {
+            throw new IllegalArgumentException("La dirección no puede exceder 300 caracteres");
+        }
+        this.direccion = direccion.trim();
     }
 
     public String getCi() {
