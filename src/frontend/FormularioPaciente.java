@@ -35,6 +35,7 @@ import componentesPropios.BotonBlanco;
 import componentesPropios.TextDialog;
 import entidades.CMF;
 import entidades.Paciente;
+import entidades.Mujer;
 
 import javax.swing.JList;
 
@@ -68,6 +69,11 @@ public class FormularioPaciente extends JDialog {
 	private JList<String> listaEnfermedades;
 	private JList<String> listaVacunas;
 
+	private JRadioButton radioFemenino; // Declare as a class-level variable
+	private JRadioButton radioMasculino; // Declare as a class-level variable
+	private JCheckBox checkEmbarazada; // Declare as a class-level variable
+	private JDateChooser fechaUltimaPrueba; // Declare as a class-level variable
+
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -81,10 +87,11 @@ public class FormularioPaciente extends JDialog {
 		});
 	}
 
-	public FormularioPaciente(Window ancestro) {
+	// New constructor for editing users
+	public FormularioPaciente(Window ancestro, Paciente paciente) {
 		super(ancestro, ModalityType.APPLICATION_MODAL);
 		setResizable(false);
-		setTitle("Agregar paciente");
+		setTitle(paciente == null ? "Agregar paciente" : "Editar paciente");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(FormularioPaciente.class.getResource("/fotos/Logo peque.png")));
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 650, 700);
@@ -93,6 +100,30 @@ public class FormularioPaciente extends JDialog {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+
+		// Populate fields based on the provided Paciente object
+		String nombre = paciente != null ? paciente.getNombre() : "";
+		String primerApellido = paciente != null ? paciente.getPrimerApellido() : "";
+		String segundoApellido = paciente != null ? paciente.getSegundoApellido() : "";
+		String ci = paciente != null ? paciente.getCi() : "";
+		String direccion = paciente != null ? paciente.getDireccion() : "";
+		// Adapt logic for esFemenino and Mujer-specific fields
+		boolean esFemenino = paciente != null && Validations.isFemale(paciente.getCi());
+		boolean estaEmbarazada = false;
+		Date fechaUltimaPruebaSeleccionada = null;
+
+		if (esFemenino && paciente instanceof Mujer) {
+			Mujer mujer = (Mujer) paciente;
+			estaEmbarazada = mujer.isEmbarazada();
+			String fechaRevisionStr = mujer.getFechaUltimaRevision();
+			if (fechaRevisionStr != null && !fechaRevisionStr.isEmpty()) {
+				try {
+					fechaUltimaPruebaSeleccionada = new SimpleDateFormat("dd/MM/yyyy").parse(fechaRevisionStr);
+				} catch (Exception e) {
+					System.err.println("Error parsing fechaUltimaRevision: " + e.getMessage());
+				}
+			}
+		}
 
 		JLabel cartelInformacionMedica = new JLabel("Informaci\u00F3n m\u00E9dica:");
 		cartelInformacionMedica.setHorizontalAlignment(SwingConstants.CENTER);
@@ -186,19 +217,21 @@ public class FormularioPaciente extends JDialog {
 		cartelGenero.setBounds(40, 219, 69, 16);
 		panelAgrupador1.add(cartelGenero);
 
-		JRadioButton radioMasculino = new JRadioButton("Masculino");
+		// Initialize radio buttons
+		radioMasculino = new JRadioButton("Masculino");
 		radioMasculino.setFont(new Font("Arial", Font.PLAIN, 16));
 		radioMasculino.setBackground(Color.WHITE);
 		radioMasculino.setBounds(126, 219, 99, 16);
 		panelAgrupador1.add(radioMasculino);
 
-		final JRadioButton radioFemenino = new JRadioButton("Femenino");
+		radioFemenino = new JRadioButton("Femenino");
 		radioFemenino.setFont(new Font("Arial", Font.PLAIN, 16));
 		radioFemenino.setBackground(Color.WHITE);
 		radioFemenino.setBounds(249, 219, 99, 16);
 		panelAgrupador1.add(radioFemenino);
 
-		final JCheckBox checkEmbarazada = new JCheckBox("Embarazada");
+		// Initialize checkbox
+		checkEmbarazada = new JCheckBox("Embarazada");
 		checkEmbarazada.setHorizontalAlignment(SwingConstants.LEFT);
 		checkEmbarazada.setFont(new Font("Arial", Font.PLAIN, 16));
 		checkEmbarazada.setBackground(Color.WHITE);
@@ -303,7 +336,7 @@ public class FormularioPaciente extends JDialog {
 		cartelUltimaPrueba.setBounds(40, 29, 240, 22);
 		panelAgrupador2.add(cartelUltimaPrueba);
 
-		final JDateChooser fechaUltimaPrueba = new JDateChooser();
+		fechaUltimaPrueba = new JDateChooser();
 		fechaUltimaPrueba.setToolTipText("Introduzca la fecha o elijala por el calendario");
 		fechaUltimaPrueba.setFont(new Font("Arial", Font.PLAIN, 16));
 		fechaUltimaPrueba.setDateFormatString("d/MMM/yyyy");
@@ -317,6 +350,33 @@ public class FormularioPaciente extends JDialog {
 		botonAceptar.setBounds(260, 620, 130, 30);
 		contentPane.add(botonAceptar);
 
+
+		// Set field values
+		campoNombre.setText(nombre);
+		campoPrimerApellido.setText(primerApellido);
+		campoSegundoApellido.setText(segundoApellido);
+		campoCI.setText(ci);
+		campoDireccion.setText(direccion);
+		radioFemenino.setSelected(esFemenino);
+		radioMasculino.setSelected(!esFemenino);
+		checkEmbarazada.setSelected(estaEmbarazada);
+		fechaUltimaPrueba.setDate(fechaUltimaPruebaSeleccionada);
+
+		// Populate lists
+		listModelEnfermedades.clear();
+		if (paciente != null && paciente.getEnfermedadesCronicas() != null) {
+			for (String enfermedad : paciente.getEnfermedadesCronicas()) {
+				listModelEnfermedades.addElement(enfermedad);
+			}
+		}
+
+		listModelVacunas.clear();
+		if (paciente != null && paciente.getVacunacion() != null) {
+			for (String vacuna : paciente.getVacunacion()) {
+				listModelVacunas.addElement(vacuna);
+			}
+		}
+
 		botonAceptar.addActionListener(new ActionListener() {
 
 			@Override
@@ -326,23 +386,23 @@ public class FormularioPaciente extends JDialog {
 				try {
 					// Obtener datos del formulario
 					String nombre = Validations.capitalize(campoNombre.getText().trim());
-        			String primerApellido = Validations.capitalize(campoPrimerApellido.getText().trim());
-        			String segundoApellido = Validations.capitalize(campoSegundoApellido.getText().trim());
-        			String ci = campoCI.getText().trim();
+					String primerApellido = Validations.capitalize(campoPrimerApellido.getText().trim());
+					String segundoApellido = Validations.capitalize(campoSegundoApellido.getText().trim());
+					String ci = campoCI.getText().trim();
 					String direccion = campoDireccion.getText().trim();
 					boolean esFemenino = radioFemenino.isSelected();
 					boolean estaEmbarazada = checkEmbarazada.isSelected();
 					Date fechaUltimaPruebaSeleccionada = fechaUltimaPrueba.getDate(); // Obtener la fecha seleccionada del JDateChooser
 
-					// Validar que los campos obligatorios no est√©n vac√≠os
+					// Validar que los campos obligatorios no estÈn vacÌos
 					if (nombre.isEmpty() || primerApellido.isEmpty() || ci.isEmpty()) {
 						throw new IllegalArgumentException("Los campos Nombre, Primer Apellido y CI son obligatorios.");
 					}
 
-					// Validar g√©nero y embarazo basado en el CI
+					// Validar gÈnero y embarazo basado en el CI
 					boolean ciEsFemenino = Validations.isFemale(ci);
 					if (ciEsFemenino != esFemenino) {
-						throw new IllegalArgumentException("El g√©nero seleccionado no coincide con el CI proporcionado.");
+						throw new IllegalArgumentException("El gÈnero seleccionado no coincide con el CI proporcionado.");
 					}
 					if (!ciEsFemenino && estaEmbarazada) {
 						throw new IllegalArgumentException("Un paciente masculino no puede estar embarazado.");
@@ -355,10 +415,10 @@ public class FormularioPaciente extends JDialog {
 					}
 
 					if(cmf.isCiRepited(ci)) {
-						throw new IllegalArgumentException("El CI proporcionado ya est√° registrado.");
+						throw new IllegalArgumentException("El CI proporcionado ya est· registrado.");
 					}
 
-					// Obtener listas de enfermedades cr√≥nicas y vacunas
+					// Obtener listas de enfermedades crÛnicas y vacunas
 					ArrayList<String> enfermedadesCronicas = new ArrayList<>(listModelEnfermedades.size());
 					for (int i = 0; i < listModelEnfermedades.size(); i++) {
 						enfermedadesCronicas.add(listModelEnfermedades.getElementAt(i));
@@ -369,9 +429,9 @@ public class FormularioPaciente extends JDialog {
 						vacunas.add(listModelVacunas.getElementAt(i));
 					}
 
-					// Llamar al m√©todo agregarPaciente
+					// Llamar al mÈtodo agregarPaciente
 					boolean pacienteAgregado = cmf.agregarPaciente(
-							cmf.obtenerTotalPacientes() + 1, // Generar ID √∫nico
+							cmf.obtenerTotalPacientes() + 1, // Generar ID ˙nico
 							nombre,
 							primerApellido,
 							segundoApellido,
@@ -383,7 +443,7 @@ public class FormularioPaciente extends JDialog {
 							);
 
 					if (pacienteAgregado) {
-						JOptionPane.showMessageDialog(contentPane, "Paciente agregado exitosamente.", "√âxito", JOptionPane.INFORMATION_MESSAGE);
+						JOptionPane.showMessageDialog(contentPane, "Paciente agregado exitosamente.", "…xito", JOptionPane.INFORMATION_MESSAGE);
 						dispose(); // Cerrar el formulario
 					} else {
 						JOptionPane.showMessageDialog(contentPane, "No se pudo agregar el paciente.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -391,7 +451,7 @@ public class FormularioPaciente extends JDialog {
 				} catch (IllegalArgumentException ex) {
 					JOptionPane.showMessageDialog(contentPane, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				} catch (Exception ex) {
-					JOptionPane.showMessageDialog(contentPane, "Ocurri√≥ un error inesperado: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(contentPane, "OcurriÛ un error inesperado: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
@@ -402,8 +462,13 @@ public class FormularioPaciente extends JDialog {
 		contentPane.add(imagenFondo);
 	}
 
+	// Modify the existing constructor to call the new one with null
+	public FormularioPaciente(Window ancestro) {
+		this(ancestro, null); // Default to adding a new patient
+	}
+
 	protected void agregarEnfermedadCronica() {
-		TextDialog dialogo = new TextDialog((JDialog)this, "Agregar enfermedad cr√≥nica", "Introduzca una enfermedad cr√≥nica para agregar");
+		TextDialog dialogo = new TextDialog((JDialog)this, "Agregar enfermedad crÛnica", "Introduzca una enfermedad crÛnica para agregar");
 		dialogo.setVisible(true);
 
 		if (dialogo.isConfirmado()) {

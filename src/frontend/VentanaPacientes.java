@@ -2,6 +2,7 @@ package frontend;
 
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -9,6 +10,7 @@ import java.awt.Window;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -19,12 +21,19 @@ import javax.swing.RowFilter;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.table.TableRowSorter;
+
 import entidades.CMF;
+import entidades.Paciente;
+
 import javax.swing.JButton;
+
 import java.awt.SystemColor;
+
 import javax.swing.ImageIcon;
+
 import componentesPropios.InfoDialog;
 import componentesPropios.QuestionDialog;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -63,8 +72,8 @@ public class VentanaPacientes extends JPanel {
         if (selectedRows.length > 0) {
             QuestionDialog confirmDialog = new QuestionDialog(
                     null,
-                    "Confirmar eliminación",
-                    "¿Está seguro de que desea eliminar la(s) fila(s) seleccionada(s)?"
+                    "Confirmar eliminaciÃ³n",
+                    "Â¿EstÃ¡ seguro de que desea eliminar la(s) fila(s) seleccionada(s)?"
             );
             confirmDialog.setVisible(true);
 
@@ -72,20 +81,20 @@ public class VentanaPacientes extends JPanel {
                 for (int i = selectedRows.length - 1; i >= 0; i--) {
                     int viewRow = selectedRows[i];
                     int modelRow = table.convertRowIndexToModel(viewRow);
-                    int id = (int) model.getValueAt(modelRow, model.findColumn("H. Clínica"));
+                    int id = (int) model.getValueAt(modelRow, model.findColumn("H. ClÃ­nica"));
                     model.eliminarPacientePorId(id, modelRow);
                 }
 
                 new InfoDialog(
                         null,
-                        "Eliminación exitosa",
-                        "La selección fue eliminada correctamente."
+                        "EliminaciÃ³n exitosa",
+                        "La selecciÃ³n fue eliminada correctamente."
                 ).setVisible(true);
             } else {
                 new InfoDialog(
                         null,
                         "Cancelado",
-                        "La eliminación fue cancelada."
+                        "La eliminaciÃ³n fue cancelada."
                 ).setVisible(true);
             }
         } else {
@@ -97,9 +106,9 @@ public class VentanaPacientes extends JPanel {
         }
     }
 
-    private void abrirFormulario() {
+    private void abrirFormulario(Paciente paciente) {
         Window ventanaPrincipal = SwingUtilities.getWindowAncestor(this);
-        formularioPaciente = new FormularioPaciente(ventanaPrincipal);
+        formularioPaciente = new FormularioPaciente(ventanaPrincipal, paciente); // Pass patient data
         formularioPaciente.setLocationRelativeTo(ventanaPrincipal);
         setEnabled(false);
 
@@ -167,7 +176,7 @@ public class VentanaPacientes extends JPanel {
         JButton botonAgregarPaciente = new JButton("AGREGAR PACIENTE");
         botonAgregarPaciente.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
-                abrirFormulario();
+                abrirFormulario(null);
             }
         });
         botonAgregarPaciente.setForeground(Color.BLACK);
@@ -188,10 +197,25 @@ public class VentanaPacientes extends JPanel {
                 borrarSeleccion();
             }
         });
-        botonEliminar.setToolTipText("Eliminar selección");
+        botonEliminar.setToolTipText("Eliminar selecciÃ³n");
         botonEliminar.setIcon(new ImageIcon(VentanaPacientes.class.getResource("/fotos/trash.png")));
         botonEliminar.setBounds(462, 585, 33, 33);
         botonEliminar.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.HAND_CURSOR));
         add(botonEliminar);
+
+        table.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) { // Double-click detected
+                    int viewRow = table.getSelectedRow();
+                    if (viewRow != -1) {
+                        int modelRow = table.convertRowIndexToModel(viewRow);
+                        int id = (int) model.getValueAt(modelRow, model.findColumn("H. Clínica"));
+                        Paciente paciente = cmf.getPacientePorId(id); // Fetch patient data by ID
+                        abrirFormulario(paciente); // Open form with patient data
+                    }
+                }
+            }
+        });
     }
 }

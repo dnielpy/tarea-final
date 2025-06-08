@@ -8,6 +8,18 @@ public abstract class Persona {
 	protected String primerApellido;
 	protected String segundoApellido;
 
+	public String getNombre() {
+		return nombre;
+	}
+
+	public String getPrimerApellido() {
+		return primerApellido;
+	}
+
+	public String getSegundoApellido() {
+		return segundoApellido;
+	}
+
 	public String getNombreYApellidos() {
 		return nombre + " " + primerApellido + " " + segundoApellido;
 	}
