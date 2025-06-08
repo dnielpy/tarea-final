@@ -9,6 +9,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.Color;
 
 import javax.swing.ButtonGroup;
+import javax.swing.DefaultListModel;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.ImageIcon;
@@ -19,6 +20,7 @@ import java.awt.Font;
 import java.util.Date;
 
 import javax.swing.border.LineBorder;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.JRadioButton;
 import javax.swing.JCheckBox;
 
@@ -27,6 +29,7 @@ import com.toedter.calendar.JDateChooser;
 import javax.swing.JScrollPane;
 
 import componentesPropios.BotonBlanco;
+import componentesPropios.TextDialog;
 import entidades.Paciente;
 
 import javax.swing.JList;
@@ -52,6 +55,10 @@ public class FormularioPaciente extends JDialog {
 	private JLabel cartelCI;
 	private JLabel imagenFondo;
 	private JTextField campoDireccion;
+	private DefaultListModel<String> listModelEnfermedades;
+	private DefaultListModel<String> listModelVacunas;
+	private JList<String> listaEnfermedades;
+	private JList<String> listaVacunas;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -88,14 +95,14 @@ public class FormularioPaciente extends JDialog {
 		cartelInformacionMedica.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		contentPane.add(cartelInformacionMedica);
 		
-		JLabel cartelInformacinPersonal = new JLabel("Informaci\u00F3n personal:");
-		cartelInformacinPersonal.setBounds(55, 18, 232, 26);
-		contentPane.add(cartelInformacinPersonal);
-		cartelInformacinPersonal.setOpaque(true);
-		cartelInformacinPersonal.setHorizontalAlignment(SwingConstants.CENTER);
-		cartelInformacinPersonal.setFont(new Font("Arial", Font.BOLD, 18));
-		cartelInformacinPersonal.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
-		cartelInformacinPersonal.setBackground(Color.WHITE);
+		JLabel cartelInformacionPersonal = new JLabel("Informaci\u00F3n personal:");
+		cartelInformacionPersonal.setBounds(55, 18, 232, 26);
+		contentPane.add(cartelInformacionPersonal);
+		cartelInformacionPersonal.setOpaque(true);
+		cartelInformacionPersonal.setHorizontalAlignment(SwingConstants.CENTER);
+		cartelInformacionPersonal.setFont(new Font("Arial", Font.BOLD, 18));
+		cartelInformacionPersonal.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
+		cartelInformacionPersonal.setBackground(Color.WHITE);
 		
 		JPanel panelAgrupador1 = new JPanel();
 		panelAgrupador1.setBackground(Color.WHITE);
@@ -205,7 +212,9 @@ public class FormularioPaciente extends JDialog {
 		scrollPaneEnfermedades.setBounds(40, 91, 240, 122);
 		panelAgrupador2.add(scrollPaneEnfermedades);
 		
-		JList<String> listaEnfermedades = new JList<String>();
+		listModelEnfermedades = new DefaultListModel<>();
+		
+		listaEnfermedades = new JList<>(listModelEnfermedades);
 		listaEnfermedades.setFont(new Font("Arial", Font.PLAIN, 16));
 		scrollPaneEnfermedades.setViewportView(listaEnfermedades);
 		
@@ -213,7 +222,9 @@ public class FormularioPaciente extends JDialog {
 		scrollPaneVacunas.setBounds(308, 91, 240, 122);
 		panelAgrupador2.add(scrollPaneVacunas);
 		
-		JList<String> listaVacunas = new JList<String>();
+		listModelVacunas = new DefaultListModel<>();
+		
+		listaVacunas = new JList<>(listModelVacunas);
 		listaVacunas.setFont(new Font("Arial", Font.PLAIN, 16));
 		scrollPaneVacunas.setViewportView(listaVacunas);
 		
@@ -228,6 +239,12 @@ public class FormularioPaciente extends JDialog {
 		panelAgrupador2.add(cartelVacunas);
 		
 		JLabel botonEliminarEnfermedad = new JLabel("");
+		botonEliminarEnfermedad.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				eliminarEnfermedadesSeleccionadas();
+			}
+		});
 		botonEliminarEnfermedad.setToolTipText("Clic para borrar los elemento(s) selecionado(s) lista");
 		botonEliminarEnfermedad.setIcon(new ImageIcon(FormularioPaciente.class.getResource("/fotos/trash-22x22.png")));
 		botonEliminarEnfermedad.setBounds(258, 64, 22, 22);
@@ -235,6 +252,12 @@ public class FormularioPaciente extends JDialog {
 		panelAgrupador2.add(botonEliminarEnfermedad);
 		
 		JLabel botonEliminarVacuna = new JLabel("");
+		botonEliminarVacuna.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				eliminarVacunasSeleccionadas();
+			}
+		});
 		botonEliminarVacuna.setToolTipText("Clic para borrar los elemento(s) selecionado(s) lista");
 		botonEliminarVacuna.setIcon(new ImageIcon(FormularioPaciente.class.getResource("/fotos/trash-22x22.png")));
 		botonEliminarVacuna.setBounds(526, 64, 22, 22);
@@ -245,7 +268,7 @@ public class FormularioPaciente extends JDialog {
 		botonAgregarEnfermedad.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				
+				agregarEnfermedadCronica();
 			}
 		});
 		botonAgregarEnfermedad.setToolTipText("Clic para agregar nuevo elemento a la lista");
@@ -255,6 +278,12 @@ public class FormularioPaciente extends JDialog {
 		panelAgrupador2.add(botonAgregarEnfermedad);
 		
 		JLabel botonAgregarVacuna = new JLabel("");
+		botonAgregarVacuna.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				agregarVacuna();
+			}
+		});
 		botonAgregarVacuna.setToolTipText("Clic para agregar nuevo elemento a la lista");
 		botonAgregarVacuna.setIcon(new ImageIcon(FormularioPaciente.class.getResource("/fotos/agregar-22x22.png")));
 		botonAgregarVacuna.setBounds(502, 64, 22, 22);
@@ -285,4 +314,45 @@ public class FormularioPaciente extends JDialog {
 		imagenFondo.setBounds(0, 0, 650, 700);
 		contentPane.add(imagenFondo);
 	}
+
+	protected void agregarEnfermedadCronica() {
+		TextDialog dialogo = new TextDialog((JDialog)this, "Agregar enfermedad crónica", "Introduzca una enfermedad crónica para agregar");
+		dialogo.setVisible(true);
+		
+		if (dialogo.isConfirmado()) {
+	        String texto = dialogo.getTextoIngresado();
+	        if (!texto.isEmpty()) {
+	            listModelEnfermedades.addElement(texto);
+	        }
+	    }
+	}
+	
+	protected void agregarVacuna() {
+		TextDialog dialogo = new TextDialog((JDialog)this, "Agregar vacuna aplicada", "Introduzca una vacuna aplicada para agregar");
+		dialogo.setVisible(true);
+		
+		if (dialogo.isConfirmado()) {
+	        String texto = dialogo.getTextoIngresado();
+	        if (!texto.isEmpty()) {
+	            listModelVacunas.addElement(texto);
+	        }
+	    }
+	}
+	
+	private void eliminarEnfermedadesSeleccionadas() {
+	    int[] indices = listaEnfermedades.getSelectedIndices();
+	    // Elimina desde el último al primero para no desordenar los índices
+	    for (int i = indices.length - 1; i >= 0; i--) {
+	        listModelEnfermedades.remove(indices[i]);
+	    }
+	}
+	
+	private void eliminarVacunasSeleccionadas() {
+	    int[] indices = listaVacunas.getSelectedIndices();
+	    // Elimina desde el último al primero para no desordenar los índices
+	    for (int i = indices.length - 1; i >= 0; i--) {
+	        listModelVacunas.remove(indices[i]);
+	    }
+	}
+		
 }

@@ -101,9 +101,30 @@ public class VentanaPacientes extends JPanel{
                 if (text.trim().length() == 0) {
                     sorter.setRowFilter(null); // Sin filtro
                 } else {
-                    sorter.setRowFilter(RowFilter.regexFilter("(?i)" + text)); // Filtro con expresión regular (case insensitive)
+                	String regex = text.replaceAll("a", "[aáÁ]")
+                            .replaceAll("e", "[eéÉ]")
+                            .replaceAll("i", "[iíÍ]")
+                            .replaceAll("o", "[oóÓ]")
+                            .replaceAll("u", "[uúÚ]");
+                	sorter.setRowFilter(RowFilter.regexFilter("(?i)" + regex));
                 }
             }
+        	@Override
+        	public void keyTyped(KeyEvent e) {
+        		 char c = e.getKeyChar();
+        	        String texto = filterText.getText();
+
+        	        boolean esLetraConTilde = "áéíóúÁÉÍÓÚ".indexOf(c) >= 0;
+        	        boolean esLetraODigito = Character.isLetterOrDigit(c);
+        	        boolean esEspacio = c == ' ';
+
+        	        boolean valido = 
+        	            (esLetraODigito || esLetraConTilde || esEspacio) &&
+        	            !(texto.isEmpty() && esEspacio) &&
+        	            !(esEspacio && texto.endsWith(" "));
+
+        	        if (!valido) e.consume();
+        	}
         });
         
         // Panel para el filtro y la tabla
@@ -198,7 +219,7 @@ public class VentanaPacientes extends JPanel{
 
 	                int id = (int) model.getValueAt(modelRow, model.findColumn("H. Clínica"));
 
-	                model.eliminarPacientePorId(id, modelRow); // o solo con el id si no necesitas el índice
+	                model.eliminarPacientePorId(id, modelRow);
 	            }
 	            
 	            new InfoDialog(
