@@ -87,7 +87,7 @@ public class VentanaPacientes extends JPanel{
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setBounds(0, 30, 630, 406);
         
-        // Configurar el tamaño preferido de la tabla
+        // Configurar el tamaï¿½o preferido de la tabla
         table.setPreferredScrollableViewportSize(new Dimension(350, 150));
         
         // Campo de texto para filtrar
@@ -101,11 +101,11 @@ public class VentanaPacientes extends JPanel{
                 if (text.trim().length() == 0) {
                     sorter.setRowFilter(null); // Sin filtro
                 } else {
-                	String regex = text.replaceAll("a", "[aáÁ]")
-                            .replaceAll("e", "[eéÉ]")
-                            .replaceAll("i", "[iíÍ]")
-                            .replaceAll("o", "[oóÓ]")
-                            .replaceAll("u", "[uúÚ]");
+                	String regex = text.replaceAll("a", "[aï¿½ï¿½]")
+                            .replaceAll("e", "[eï¿½ï¿½]")
+                            .replaceAll("i", "[iï¿½ï¿½]")
+                            .replaceAll("o", "[oï¿½ï¿½]")
+                            .replaceAll("u", "[uï¿½ï¿½]");
                 	sorter.setRowFilter(RowFilter.regexFilter("(?i)" + regex));
                 }
             }
@@ -114,7 +114,7 @@ public class VentanaPacientes extends JPanel{
         		 char c = e.getKeyChar();
         	        String texto = filterText.getText();
 
-        	        boolean esLetraConTilde = "áéíóúÁÉÍÓÚ".indexOf(c) >= 0;
+        	        boolean esLetraConTilde = "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½".indexOf(c) >= 0;
         	        boolean esLetraODigito = Character.isLetterOrDigit(c);
         	        boolean esEspacio = c == ' ';
 
@@ -135,7 +135,7 @@ public class VentanaPacientes extends JPanel{
         panelTabla.add(filterText);
         panelTabla.add(scrollPane);
         
-        // Personalización de la tabla
+        // Personalizaciï¿½n de la tabla
         customizeTable(table);
         
         // Agregar el panel al marco
@@ -185,7 +185,7 @@ public class VentanaPacientes extends JPanel{
         header.setForeground(Color.BLACK);
         header.setFont(new Font("Arial", Font.BOLD, 16));
 
-        // Cambiar color de las líneas de la tabla
+        // Cambiar color de las lï¿½neas de la tabla
         table.setGridColor(SystemColor.controlHighlight);
         
         // Establecer el borde de las celdas (opcional)
@@ -204,11 +204,11 @@ public class VentanaPacientes extends JPanel{
 	    int[] selectedRows = table.getSelectedRows();
 
 	    if (selectedRows.length > 0) {
-	        // Confirmación personalizada
+	        // Confirmaciï¿½n personalizada
 	        QuestionDialog confirmDialog = new QuestionDialog(
 	            null,
-	            "Confirmar eliminación",
-	            "¿Está seguro de que desea eliminar la(s) fila(s) seleccionada(s)?"
+	            "Confirmar eliminaciï¿½n",
+	            "ï¿½Estï¿½ seguro de que desea eliminar la(s) fila(s) seleccionada(s)?"
 	        );
 	        confirmDialog.setVisible(true);
 
@@ -217,21 +217,21 @@ public class VentanaPacientes extends JPanel{
 	            	int viewRow = selectedRows[i];
 	                int modelRow = table.convertRowIndexToModel(viewRow);
 
-	                int id = (int) model.getValueAt(modelRow, model.findColumn("H. Clínica"));
+	                int id = (int) model.getValueAt(modelRow, model.findColumn("H. Clï¿½nica"));
 
 	                model.eliminarPacientePorId(id, modelRow);
 	            }
 	            
 	            new InfoDialog(
 	                null,
-	                "Eliminación exitosa",
-	                "La selección fue eliminada correctamente."
+	                "Eliminaciï¿½n exitosa",
+	                "La selecciï¿½n fue eliminada correctamente."
 	            ).setVisible(true);
 	        } else {
 	            new InfoDialog(
 	                null,
 	                "Cancelado",
-	                "La eliminación fue cancelada."
+	                "La eliminaciï¿½n fue cancelada."
 	            ).setVisible(true);
 	        }
 	    } else {
@@ -244,16 +244,11 @@ public class VentanaPacientes extends JPanel{
 	}
 
 	private void abrirFormulario() {
-        // Crear un nuevo JFrame para el formulario
-		Window ventanaPrincipal = SwingUtilities.getWindowAncestor(this);
-		
-        formularioPaciente = new FormularioPaciente(ventanaPrincipal);
+        Window ventanaPrincipal = SwingUtilities.getWindowAncestor(this);
+        formularioPaciente = new FormularioPaciente(ventanaPrincipal); // Pasar CMF
         formularioPaciente.setLocationRelativeTo(ventanaPrincipal);
-
-        // Deshabilitar la ventana principal
         setEnabled(false);
-
-        formularioPaciente.setVisible(true); // Muestra el formulario
+        formularioPaciente.setVisible(true);
     }
 
 }

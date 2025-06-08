@@ -30,6 +30,7 @@ import javax.swing.JScrollPane;
 
 import componentesPropios.BotonBlanco;
 import componentesPropios.TextDialog;
+import entidades.CMF;
 import entidades.Paciente;
 
 import javax.swing.JList;
@@ -85,6 +86,9 @@ public class FormularioPaciente extends JDialog {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+
+		CMF cmf = CMF.getInstance();
+        System.out.println("NÃºmero de pacientes: " + cmf.getPacientes().size());
 		
 		JLabel cartelInformacionMedica = new JLabel("Informaci\u00F3n m\u00E9dica:");
 		cartelInformacionMedica.setHorizontalAlignment(SwingConstants.CENTER);
@@ -316,7 +320,7 @@ public class FormularioPaciente extends JDialog {
 	}
 
 	protected void agregarEnfermedadCronica() {
-		TextDialog dialogo = new TextDialog((JDialog)this, "Agregar enfermedad crónica", "Introduzca una enfermedad crónica para agregar");
+		TextDialog dialogo = new TextDialog((JDialog)this, "Agregar enfermedad crï¿½nica", "Introduzca una enfermedad crï¿½nica para agregar");
 		dialogo.setVisible(true);
 		
 		if (dialogo.isConfirmado()) {
@@ -341,7 +345,7 @@ public class FormularioPaciente extends JDialog {
 	
 	private void eliminarEnfermedadesSeleccionadas() {
 	    int[] indices = listaEnfermedades.getSelectedIndices();
-	    // Elimina desde el último al primero para no desordenar los índices
+	    // Elimina desde el ï¿½ltimo al primero para no desordenar los ï¿½ndices
 	    for (int i = indices.length - 1; i >= 0; i--) {
 	        listModelEnfermedades.remove(indices[i]);
 	    }
@@ -349,7 +353,7 @@ public class FormularioPaciente extends JDialog {
 	
 	private void eliminarVacunasSeleccionadas() {
 	    int[] indices = listaVacunas.getSelectedIndices();
-	    // Elimina desde el último al primero para no desordenar los índices
+	    // Elimina desde el ï¿½ltimo al primero para no desordenar los ï¿½ndices
 	    for (int i = indices.length - 1; i >= 0; i--) {
 	        listModelVacunas.remove(indices[i]);
 	    }
