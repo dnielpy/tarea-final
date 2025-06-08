@@ -27,7 +27,7 @@ public class Medico extends Persona {
 
     public void setNumRegistro(int numRegistro) {
         if (numRegistro <= 0) {
-            throw new IllegalArgumentException("N�mero de registro debe ser positivo");
+            throw new IllegalArgumentException("Número de registro debe ser positivo");
         }
         this.numRegistro = numRegistro;
     }
@@ -41,7 +41,7 @@ public class Medico extends Persona {
             this.ci = carnet;
         }
         else{
-            throw new IllegalArgumentException("Carnet de identidad inv�lido");
+            throw new IllegalArgumentException("Carnet de identidad inválido");
         }
     }
 
@@ -55,7 +55,7 @@ public class Medico extends Persona {
             dateFormat.parse(fecha);
             this.fechaInscripcion = fecha;
         } catch (ParseException e) {
-            throw new IllegalArgumentException("Formato de fecha inv�lido, use dd/MM/yyyy");
+            throw new IllegalArgumentException("Formato de fecha inválido, use dd/MM/yyyy");
         }
     }
 }

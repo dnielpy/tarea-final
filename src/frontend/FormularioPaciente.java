@@ -403,7 +403,7 @@ public class FormularioPaciente extends JDialog {
 	}
 
 	protected void agregarEnfermedadCronica() {
-		TextDialog dialogo = new TextDialog((JDialog)this, "Agregar enfermedad cr�nica", "Introduzca una enfermedad cr�nica para agregar");
+		TextDialog dialogo = new TextDialog((JDialog)this, "Agregar enfermedad crónica", "Introduzca una enfermedad crónica para agregar");
 		dialogo.setVisible(true);
 
 		if (dialogo.isConfirmado()) {
@@ -428,7 +428,6 @@ public class FormularioPaciente extends JDialog {
 
 	private void eliminarEnfermedadesSeleccionadas() {
 		int[] indices = listaEnfermedades.getSelectedIndices();
-		// Elimina desde el �ltimo al primero para no desordenar los �ndices
 		for (int i = indices.length - 1; i >= 0; i--) {
 			listModelEnfermedades.remove(indices[i]);
 		}
@@ -436,7 +435,6 @@ public class FormularioPaciente extends JDialog {
 
 	private void eliminarVacunasSeleccionadas() {
 		int[] indices = listaVacunas.getSelectedIndices();
-		// Elimina desde el �ltimo al primero para no desordenar los �ndices
 		for (int i = indices.length - 1; i >= 0; i--) {
 			listModelVacunas.remove(indices[i]);
 		}

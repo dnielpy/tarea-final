@@ -17,7 +17,7 @@ public abstract class Persona {
 		    this.nombre = nombre.trim();
         } 
         else{
-            throw new IllegalArgumentException("Nombre inv�lido");
+            throw new IllegalArgumentException("Nombre inválido");
         }
 	}
 

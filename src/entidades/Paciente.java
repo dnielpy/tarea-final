@@ -36,7 +36,7 @@ public class Paciente extends Persona {
 
     public void setHistoriaClinicaID(int historiaClinicaID) {
         if (historiaClinicaID <= 0) {
-            throw new IllegalArgumentException("ID de historia cl�nica debe ser positivo");
+            throw new IllegalArgumentException("ID de historia clínica debe ser positivo");
         }
         this.historiaClinicaID = historiaClinicaID;
     }
@@ -49,7 +49,7 @@ public class Paciente extends Persona {
         if(Validations.isValidCI(carnet.trim())) {
             this.ci = carnet.trim();
         } else {
-            throw new IllegalArgumentException("Carnet de identidad inv�lido" + carnet);
+            throw new IllegalArgumentException("Carnet de identidad inválido" + carnet);
         }
     }
 
@@ -73,7 +73,7 @@ public class Paciente extends Persona {
     public void agregarEnfermedadCronica(String enfermedad) {
         Objects.requireNonNull(enfermedad, "La enfermedad no puede ser nula");
         if (enfermedad.trim().isEmpty()) {
-            throw new IllegalArgumentException("La enfermedad no puede estar vac�a");
+            throw new IllegalArgumentException("La enfermedad no puede estar vacía");
         }
         if (enfermedad.length() > 200) {
             throw new IllegalArgumentException("El nombre de la enfermedad no puede exceder 200 caracteres");
@@ -86,7 +86,7 @@ public class Paciente extends Persona {
     }
 
     public void setVacunacion(ArrayList<String> vacunacion) {
-        Objects.requireNonNull(vacunacion, "La lista de vacunaci�n no puede ser nula");
+        Objects.requireNonNull(vacunacion, "La lista de vacunación no puede ser nula");
         this.vacunacion = new ArrayList<>();
         for (String vacuna : vacunacion) {
             agregarVacuna(vacuna);
@@ -96,7 +96,7 @@ public class Paciente extends Persona {
     public void agregarVacuna(String vacuna) {
         Objects.requireNonNull(vacuna, "La vacuna no puede ser nula");
         if (vacuna.trim().isEmpty()) {
-            throw new IllegalArgumentException("La vacuna no puede estar vac�a");
+            throw new IllegalArgumentException("La vacuna no puede estar vacía");
         }
         if (vacuna.length() > 100) {
             throw new IllegalArgumentException("El nombre de la vacuna no puede exceder 100 caracteres");
