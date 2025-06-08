@@ -2,7 +2,9 @@ package frontend;
 
 import java.awt.*;
 import java.awt.event.*;
+
 import javax.swing.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -110,4 +112,5 @@ public class VentanaReportes extends JPanel {
         panel.add(new JLabel("Vista de pacientes en riesgo"));
         return panel;
     }
+    
 }
