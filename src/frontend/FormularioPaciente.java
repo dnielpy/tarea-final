@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import javax.swing.border.LineBorder;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.JRadioButton;
 import javax.swing.JCheckBox;
 
@@ -73,6 +72,7 @@ public class FormularioPaciente extends JDialog {
 	private JRadioButton radioMasculino; // Declare as a class-level variable
 	private JCheckBox checkEmbarazada; // Declare as a class-level variable
 	private JDateChooser fechaUltimaPrueba; // Declare as a class-level variable
+	private JTextField textField;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -88,6 +88,9 @@ public class FormularioPaciente extends JDialog {
 	}
 
 	// New constructor for editing users
+	/**
+	 * @wbp.parser.constructor
+	 */
 	public FormularioPaciente(Window ancestro, Paciente paciente) {
 		super(ancestro, ModalityType.APPLICATION_MODAL);
 		setResizable(false);
@@ -221,13 +224,13 @@ public class FormularioPaciente extends JDialog {
 		radioMasculino = new JRadioButton("Masculino");
 		radioMasculino.setFont(new Font("Arial", Font.PLAIN, 16));
 		radioMasculino.setBackground(Color.WHITE);
-		radioMasculino.setBounds(126, 219, 99, 16);
+		radioMasculino.setBounds(100, 219, 99, 16);
 		panelAgrupador1.add(radioMasculino);
 
 		radioFemenino = new JRadioButton("Femenino");
 		radioFemenino.setFont(new Font("Arial", Font.PLAIN, 16));
 		radioFemenino.setBackground(Color.WHITE);
-		radioFemenino.setBounds(249, 219, 99, 16);
+		radioFemenino.setBounds(203, 219, 99, 16);
 		panelAgrupador1.add(radioFemenino);
 
 		// Initialize checkbox
@@ -235,7 +238,7 @@ public class FormularioPaciente extends JDialog {
 		checkEmbarazada.setHorizontalAlignment(SwingConstants.LEFT);
 		checkEmbarazada.setFont(new Font("Arial", Font.PLAIN, 16));
 		checkEmbarazada.setBackground(Color.WHITE);
-		checkEmbarazada.setBounds(372, 219, 129, 16);
+		checkEmbarazada.setBounds(302, 219, 119, 16);
 		panelAgrupador1.add(checkEmbarazada);
 
 		ButtonGroup genero = new ButtonGroup();
@@ -341,6 +344,7 @@ public class FormularioPaciente extends JDialog {
 		fechaUltimaPrueba.setFont(new Font("Arial", Font.PLAIN, 16));
 		fechaUltimaPrueba.setDateFormatString("d/MMM/yyyy");
 		fechaUltimaPrueba.setBounds(308, 29, 238, 22);
+		fechaUltimaPrueba.setMaxSelectableDate(new Date());
 		panelAgrupador2.add(fechaUltimaPrueba);
 
 		BotonBlanco botonAceptar = new BotonBlanco((String) null);
@@ -360,6 +364,18 @@ public class FormularioPaciente extends JDialog {
 		radioFemenino.setSelected(esFemenino);
 		radioMasculino.setSelected(!esFemenino);
 		checkEmbarazada.setSelected(estaEmbarazada);
+		
+		JLabel lblEdad = new JLabel("Edad:");
+		lblEdad.setFont(new Font("Arial", Font.PLAIN, 16));
+		lblEdad.setBounds(429, 218, 47, 19);
+		panelAgrupador1.add(lblEdad);
+		
+		textField = new JTextField();
+		textField.setText("");
+		textField.setFont(new Font("Arial", Font.PLAIN, 16));
+		textField.setColumns(10);
+		textField.setBounds(478, 216, 69, 22);
+		panelAgrupador1.add(textField);
 		fechaUltimaPrueba.setDate(fechaUltimaPruebaSeleccionada);
 
 		// Populate lists
@@ -504,5 +520,4 @@ public class FormularioPaciente extends JDialog {
 			listModelVacunas.remove(indices[i]);
 		}
 	}
-
 }
