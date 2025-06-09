@@ -8,7 +8,7 @@ import java.util.Objects;
 import service.Validations;
 
 public class CMF {
-	private static CMF instance; // Instancia √∫nica de CMF
+	private static CMF instance; // Instancia ˙nica de CMF
 
 	private int id;
 	private String nombre;
@@ -20,7 +20,7 @@ public class CMF {
 	private RegistroHistorico registroHistorico;
 	private Enfermera enfermera;
 
-	// Constructor privado para evitar instanciaci√≥n directa
+	// Constructor privado para evitar instanciaciÛn directa
 	private CMF(int id, String nombre, String nombreDirector) {
 		setId(id);
 		setNombre(nombre);
@@ -31,7 +31,7 @@ public class CMF {
 
 	public static CMF getInstance() {
 		if (instance == null) {
-			instance = new CMF(1, "Policl√≠nico Alberro Cotorro", "Esteban Marrero Berm√∫dez");
+			instance = new CMF(1, "PoliclÌnico Alberro Cotorro", "Esteban Marrero Berm˙dez");
 			instance.cargarDatos(); 
 		}
 		return instance;
@@ -67,13 +67,13 @@ public class CMF {
 	}
 
 	public void setNombre(String nombre) {
-		if (nombre == null || nombre.trim().isEmpty()) throw new IllegalArgumentException("Nombre no puede ser nulo o vac√≠o");
+		if (nombre == null || nombre.trim().isEmpty()) throw new IllegalArgumentException("Nombre no puede ser nulo o vacÌo");
 		if (nombre.length() > 100) throw new IllegalArgumentException("Nombre no puede exceder 100 caracteres");
 		this.nombre = nombre.trim();
 	}
 
 	public void setNombreDirector(String nombreDirector) {
-		if (nombreDirector == null || nombreDirector.trim().isEmpty()) throw new IllegalArgumentException("Nombre del director no puede ser nulo o vac√≠o");
+		if (nombreDirector == null || nombreDirector.trim().isEmpty()) throw new IllegalArgumentException("Nombre del director no puede ser nulo o vacÌo");
 		if (nombreDirector.length() > 100) throw new IllegalArgumentException("Nombre del director no puede exceder 100 caracteres");
 		this.nombreDirector = nombreDirector.trim();
 	}
@@ -92,7 +92,7 @@ public class CMF {
 
 	public boolean agregarPaciente(int historiaClinicaID, String nombre, String primerApellido, String segundoApellido, ArrayList<String> enfermedadesCronicas, ArrayList<String> vacunacion, String CI, boolean estaEmbarazada, String fechaUltimaRevision) {
 		if (!Validations.isValidCI(CI)) {
-			throw new IllegalArgumentException("CI inv√°lido: " + CI);
+			throw new IllegalArgumentException("CI inv·lido: " + CI);
 		}
 
 		boolean esMujer = Validations.isFemale(CI);
@@ -170,7 +170,7 @@ public class CMF {
 		boolean response = false;
 
 		if (ci == null || ci.trim().isEmpty()) {
-			throw new IllegalArgumentException("El CI no puede ser nulo o vac√≠o");
+			throw new IllegalArgumentException("El CI no puede ser nulo o vacÌo");
 		}
 		for (Paciente paciente : pacientes) {
 			if (paciente.getCi().equals(ci)) {
@@ -243,59 +243,59 @@ public class CMF {
 	// Datos cableados
 	
 	public void cargarDatos() {
-		crearMedico("Alfonso", "Rodr√≠guez", "Camela", 11321, "75060212345", "12/3/1998");
+		crearMedico("Alfonso", "RodrÌguez", "Camela", 11321, "75060212345", "12/3/1998");
 
 		ArrayList<String> enfermedades1 = new ArrayList<>();
 		enfermedades1.add("Diabetes");
 		ArrayList<String> vacunas1 = new ArrayList<>();
 		vacunas1.add("Antipolio: 13/4/2009");
-		agregarPaciente(1, "Armando", "L√≥pez", "Toro", enfermedades1, vacunas1, "78041312345", false, null);
+		agregarPaciente(1, "Armando", "LÛpez", "Toro", enfermedades1, vacunas1, "78041312345", false, null);
 
 		ArrayList<String> enfermedades2 = new ArrayList<>();
-		enfermedades2.add("Hipertensi√≥n");
+		enfermedades2.add("HipertensiÛn");
 		ArrayList<String> vacunas2 = new ArrayList<>();
 		vacunas2.add("Antipolio: 13/4/2020");
-		agregarPaciente(2, "Amanda", "L√≥pez", "Garc√≠a", enfermedades2, vacunas2, "03021178187", false, "15/03/2023");
+		agregarPaciente(2, "Amanda", "LÛpez", "GarcÌa", enfermedades2, vacunas2, "03021178187", false, "15/03/2023");
 
 		ArrayList<String> enfermedades3 = new ArrayList<>();
 		enfermedades3.add("Asma");
 		ArrayList<String> vacunas3 = new ArrayList<>();
 		vacunas3.add("Antipolio: 13/4/2019");
-		agregarPaciente(3, "Carlos", "Garces", "Fern√°ndez", enfermedades3, vacunas3, "89041312345", false, null);
+		agregarPaciente(3, "Carlos", "Garces", "Fern·ndez", enfermedades3, vacunas3, "89041312345", false, null);
 
 		ArrayList<String> enfermedades4 = new ArrayList<>();
 		enfermedades4.add("Obesidad");
 		ArrayList<String> vacunas4 = new ArrayList<>();
 		vacunas4.add("Antipolio: 10/1/2022");
-		vacunas4.add("Antitet√°nica: 5/3/2023");
-		agregarPaciente(4, "Daniela", "Su√°rez", "Molina", enfermedades4, vacunas4, "95011022345", false, "20/03/2023");
+		vacunas4.add("Antitet·nica: 5/3/2023");
+		agregarPaciente(4, "Daniela", "Su·rez", "Molina", enfermedades4, vacunas4, "95011022345", false, "20/03/2023");
 
 		ArrayList<String> enfermedades5 = new ArrayList<>();
 		ArrayList<String> vacunas5 = new ArrayList<>();
 		vacunas5.add("Antipolio: 15/5/2021");
 		vacunas5.add("Antigripal: 20/10/2022");
-		agregarPaciente(5, "Esteban", "P√©rez", "L√≥pez", enfermedades5, vacunas5, "72051512345", false, null);
+		agregarPaciente(5, "Esteban", "PÈrez", "LÛpez", enfermedades5, vacunas5, "72051512345", false, null);
 
 		ArrayList<String> enfermedades6 = new ArrayList<>();
 		ArrayList<String> vacunas6 = new ArrayList<>();
 		vacunas6.add("Antigripal: 12/9/2022");
-		agregarPaciente(6, "Fernando", "G√≥mez", "Rivas", enfermedades6, vacunas6, "85091212345", false, null);
+		agregarPaciente(6, "Fernando", "GÛmez", "Rivas", enfermedades6, vacunas6, "85091212345", false, null);
 
 		ArrayList<String> enfermedades7 = new ArrayList<>();
 		ArrayList<String> vacunas7 = new ArrayList<>();
-		vacunas7.add("Antitet√°nica: 3/4/2021");
-		agregarPaciente(7, "Gabriela", "Torres", "Mart√≠nez", enfermedades7, vacunas7, "94040322345", false, "05/04/2023");
+		vacunas7.add("Antitet·nica: 3/4/2021");
+		agregarPaciente(7, "Gabriela", "Torres", "MartÌnez", enfermedades7, vacunas7, "94040322345", false, "05/04/2023");
 
 		ArrayList<String> enfermedades8 = new ArrayList<>();
 		ArrayList<String> vacunas8 = new ArrayList<>();
 		vacunas8.add("Antipolio: 15/2/2018");
-		agregarPaciente(8, "H√©ctor", "S√°nchez", "L√≥pez", enfermedades8, vacunas8, "96021512345", false, null);
+		agregarPaciente(8, "HÈctor", "S·nchez", "LÛpez", enfermedades8, vacunas8, "96021512345", false, null);
 
 		ArrayList<String> enfermedades9 = new ArrayList<>();
 		ArrayList<String> vacunas9 = new ArrayList<>();
 		vacunas9.add("Antigripal: 11/11/2020");
-		vacunas9.add("Antitet√°nica: 20/7/2022");
-		agregarPaciente(9, "Isabel", "Fern√°ndez", "Cruz", enfermedades9, vacunas9, "03050322345", true, "15/04/2023");
+		vacunas9.add("Antitet·nica: 20/7/2022");
+		agregarPaciente(9, "Isabel", "Fern·ndez", "Cruz", enfermedades9, vacunas9, "03050322345", true, "15/04/2023");
 
 		ArrayList<String> enfermedades10 = new ArrayList<>();
 		ArrayList<String> vacunas10 = new ArrayList<>();
@@ -303,27 +303,27 @@ public class CMF {
 
 		ArrayList<String> enfermedades11 = new ArrayList<>();
 		ArrayList<String> vacunas11 = new ArrayList<>();
-		agregarPaciente(11, "Karla", "Ruiz", "Dom√≠nguez", enfermedades11, vacunas11, "98062122345", true, "25/04/2023");
+		agregarPaciente(11, "Karla", "Ruiz", "DomÌnguez", enfermedades11, vacunas11, "98062122345", true, "25/04/2023");
 
 		ArrayList<String> enfermedades12 = new ArrayList<>();
 		ArrayList<String> vacunas12 = new ArrayList<>();
-		agregarPaciente(12, "Luis", "Herrera", "P√©rez", enfermedades12, vacunas12, "92011412345", false, null);
+		agregarPaciente(12, "Luis", "Herrera", "PÈrez", enfermedades12, vacunas12, "92011412345", false, null);
 
 		ArrayList<String> enfermedades13 = new ArrayList<>();
 		ArrayList<String> vacunas13 = new ArrayList<>();
-		agregarPaciente(13, "Mar√≠a Jos√©", "Salazar", "Garc√≠a", enfermedades13, vacunas13, "80031722345", true, "05/05/2023");
+		agregarPaciente(13, "MarÌa JosÈ", "Salazar", "GarcÌa", enfermedades13, vacunas13, "80031722345", true, "05/05/2023");
 
 		ArrayList<String> enfermedades14 = new ArrayList<>();
 		ArrayList<String> vacunas14 = new ArrayList<>();
-		agregarPaciente(14, "Nicol√°s", "Vega", "Ortega", enfermedades14, vacunas14, "84120512345", false, null);
+		agregarPaciente(14, "Nicol·s", "Vega", "Ortega", enfermedades14, vacunas14, "84120512345", false, null);
 
 		ArrayList<String> enfermedades15 = new ArrayList<>();
 		ArrayList<String> vacunas15 = new ArrayList<>();
-		agregarPaciente(15, "Olga", "D√≠az", "Garc√≠a", enfermedades15, vacunas15, "82082222345", false, "15/05/2023");
+		agregarPaciente(15, "Olga", "DÌaz", "GarcÌa", enfermedades15, vacunas15, "82082222345", false, "15/05/2023");
 
 		ArrayList<String> enfermedades16 = new ArrayList<>();
 		ArrayList<String> vacunas16 = new ArrayList<>();
-		agregarPaciente(16, "Pablo", "Mart√≠nez", "S√°nchez", enfermedades16, vacunas16, "91051912345", false, null);
+		agregarPaciente(16, "Pablo", "MartÌnez", "S·nchez", enfermedades16, vacunas16, "91051912345", false, null);
 
 		ArrayList<String> enfermedades17 = new ArrayList<>();
 		ArrayList<String> vacunas17 = new ArrayList<>();
@@ -331,27 +331,27 @@ public class CMF {
 
 		ArrayList<String> enfermedades18 = new ArrayList<>();
 		ArrayList<String> vacunas18 = new ArrayList<>();
-		agregarPaciente(18, "Ra√∫l", "L√≥pez", "Fern√°ndez", enfermedades18, vacunas18, "81033012345", false, null);
+		agregarPaciente(18, "Ra˙l", "LÛpez", "Fern·ndez", enfermedades18, vacunas18, "81033012345", false, null);
 
 		ArrayList<String> enfermedades19 = new ArrayList<>();
 		ArrayList<String> vacunas19 = new ArrayList<>();
-		agregarPaciente(19, "Sof√≠a", "Medina", "Ramos", enfermedades19, vacunas19, "97090922345", false, "05/06/2023");
+		agregarPaciente(19, "SofÌa", "Medina", "Ramos", enfermedades19, vacunas19, "97090922345", false, "05/06/2023");
 
 		ArrayList<String> enfermedades20 = new ArrayList<>();
 		ArrayList<String> vacunas20 = new ArrayList<>();
-		agregarPaciente(20, "Tom√°s", "Aguilar", "Herrera", enfermedades20, vacunas20, "87020112345", false, null);
+		agregarPaciente(20, "Tom·s", "Aguilar", "Herrera", enfermedades20, vacunas20, "87020112345", false, null);
 
 		ArrayList<String> enfermedades21 = new ArrayList<>();
 		ArrayList<String> vacunas21 = new ArrayList<>();
-		agregarPaciente(21, "√örsula", "Vargas", "Delgado", enfermedades21, vacunas21, "92112322345", true, "15/06/2023");
+		agregarPaciente(21, "⁄rsula", "Vargas", "Delgado", enfermedades21, vacunas21, "92112322345", true, "15/06/2023");
 
 		ArrayList<String> enfermedades22 = new ArrayList<>();
 		ArrayList<String> vacunas22 = new ArrayList<>();
-		agregarPaciente(22, "V√≠ctor", "Salinas", "Mora", enfermedades22, vacunas22, "77062912345", false, null);
+		agregarPaciente(22, "VÌctor", "Salinas", "Mora", enfermedades22, vacunas22, "77062912345", false, null);
 
 		ArrayList<String> enfermedades23 = new ArrayList<>();
 		ArrayList<String> vacunas23 = new ArrayList<>();
-		agregarPaciente(23, "Wendy", "Cruz", "L√≥pez", enfermedades23, vacunas23, "89080722345", true, "25/06/2023");
+		agregarPaciente(23, "Wendy", "Cruz", "LÛpez", enfermedades23, vacunas23, "89080722345", true, "25/06/2023");
 
 		ArrayList<String> enfermedades24 = new ArrayList<>();
 		ArrayList<String> vacunas24 = new ArrayList<>();
@@ -359,7 +359,7 @@ public class CMF {
 
 		ArrayList<String> enfermedades25 = new ArrayList<>();
 		ArrayList<String> vacunas25 = new ArrayList<>();
-		agregarPaciente(25, "Yahir", "Castillo", "G√≥mez", enfermedades25, vacunas25, "80100612345", false, null);
+		agregarPaciente(25, "Yahir", "Castillo", "GÛmez", enfermedades25, vacunas25, "80100612345", false, null);
 
 		ArrayList<String> enfermedades26 = new ArrayList<>();
 		ArrayList<String> vacunas26 = new ArrayList<>();
@@ -426,7 +426,7 @@ public class CMF {
 
 	public int obtenerCantidadPacientesPorFecha(String fecha) {
 		if (fecha == null || fecha.trim().isEmpty()) {
-			throw new IllegalArgumentException("La fecha no puede ser nula o vac√≠a");
+			throw new IllegalArgumentException("La fecha no puede ser nula o vacÌa");
 		}
 
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -435,7 +435,7 @@ public class CMF {
 		try {
 			dateFormat.parse(fecha);
 		} catch (ParseException e) {
-			throw new IllegalArgumentException("Formato de fecha inv√°lido. Use dd/MM/yyyy");
+			throw new IllegalArgumentException("Formato de fecha inv·lido. Use dd/MM/yyyy");
 		}
 
 		for (HojaCargosDiaria hoja : hojasCargoDiaria) {
