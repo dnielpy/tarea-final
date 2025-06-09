@@ -171,7 +171,7 @@ public class VentanaInicio extends JPanel {
 			porcientoEmbarazadas.setString(String.valueOf(embarazadas) + "%");
 			porcientoEmbarazadas.setValue((int) embarazadas);
 		} else {
-			porcientoEnRiesgo.setVisible(false);
+			porcientoEmbarazadas.setVisible(false);
 		}
 	}
 	

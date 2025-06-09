@@ -102,50 +102,10 @@ public class VentanaReportes extends JPanel implements MouseListener{
 		panelReportesGenerales.add(panel_8);
 		panel_8.setLayout(null);
 		
-		JPanel panelGraficoRangoEdades = new JPanel();
-		panelGraficoRangoEdades.setBackground(Color.WHITE);
+		ReporteRangoEdades panelGraficoRangoEdades = new ReporteRangoEdades();	
 		panelContenedor.add(panelGraficoRangoEdades, "RANGO DE EDADES");
 
-		DefaultCategoryDataset dataset = crearDataset(CMF.getInstance().obtenerRangosDeEdad());
-
-		JFreeChart graficoBarras = ChartFactory.createBarChart(
-				"Distribuci\u00F3n por Rango de Edad",
-				"Rango de Edad",
-				"Cantidad de Pacientes",
-				dataset
-		);
-		panelGraficoRangoEdades.setLayout(null);
 		
-		// Acceder al plot
-		CategoryPlot plot = graficoBarras.getCategoryPlot();
-		plot.setBackgroundPaint(SystemColor.menu); // fondo claro
-		plot.setDomainGridlinePaint(SystemColor.controlShadow);           
-		plot.setRangeGridlinePaint(SystemColor.controlShadow);            
-		plot.setOutlineVisible(false); // Quitar bordes interiores
-
-		// Personalizar las barras
-		BarRenderer renderer = (BarRenderer) plot.getRenderer();
-		renderer.setSeriesPaint(0, new Color(0, 171, 227)); // color plano azul
-		renderer.setDrawBarOutline(false);
-		renderer.setBarPainter(new StandardBarPainter()); // eliminar sombreado, dejarlo plano
-
-		// Mostrar los valores encima de las barras
-		renderer.setBaseItemLabelsVisible(true);
-		renderer.setBaseItemLabelPaint(Color.BLACK);
-		renderer.setBaseItemLabelFont(new Font("Arial", Font.PLAIN, 16));
-
-		// Ejes
-		CategoryAxis domainAxis = plot.getDomainAxis();
-		domainAxis.setTickLabelFont(new Font("Arial", Font.PLAIN, 16));
-		domainAxis.setLabelFont(new Font("Arial", Font.BOLD, 18));
-
-		NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
-		rangeAxis.setTickLabelFont(new Font("Arial", Font.PLAIN, 16));
-		rangeAxis.setLabelFont(new Font("Arial", Font.BOLD, 18));
-
-		ChartPanel panelGrafica = new ChartPanel(graficoBarras);
-		panelGrafica.setBounds(58, 43, 680, 473);
-		panelGraficoRangoEdades.add(panelGrafica);
 		
 		JPanel panelEmbarazadasEnRiesgo = new JPanel();
 		panelEmbarazadasEnRiesgo.setBackground(Color.WHITE);
@@ -258,22 +218,6 @@ public class VentanaReportes extends JPanel implements MouseListener{
 		panelEncabezado.add(cartelEncabezado);
     }
     
-    private DefaultCategoryDataset crearDataset(int[] edades) {
-		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-		String serie = "Pacientes";
-
-		String[] etiquetas = {
-				"0-10", "11-20", "21-30", "31-40", "41-50",
-				"51-60", "61-70", "71-80", "81-90", ">91"
-		};
-
-		for (int i = 0; i < edades.length && i < etiquetas.length; i++) {
-			dataset.addValue(edades[i], serie, etiquetas[i]);
-		}
-
-		return dataset;
-	}
-    
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		BotonReporte botonTocado = (BotonReporte)e.getSource();
@@ -306,5 +250,13 @@ public class VentanaReportes extends JPanel implements MouseListener{
 	public void mouseReleased(MouseEvent arg0) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	@Override
+	public void show() {
+		super.show();
+		CardLayout card = (CardLayout)(panelContenedor.getLayout());
+		card.show(panelContenedor, "GENERAL");
+		panelEncabezado.setVisible(false);
 	}
 }
