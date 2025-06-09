@@ -6,23 +6,14 @@ import java.text.DecimalFormat;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
-import javax.swing.table.TableRowSorter;
-
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.axis.CategoryAxis;
-import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
-import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PiePlot;
-import org.jfree.chart.renderer.category.BarRenderer;
-import org.jfree.chart.renderer.category.StandardBarPainter;
-import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
 
 import componentesPropios.BotonReporte;
-import componentesPropios.TablaPersonalizada;
 import entidades.CMF;
 
 public class VentanaReportes extends JPanel implements MouseListener{
@@ -30,8 +21,6 @@ public class VentanaReportes extends JPanel implements MouseListener{
 	private JPanel panelContenedor;
 	private JPanel panelEncabezado;
 	private CMF cmf;
-	private JTable table;
-	private PersonaTableModel model;
 	private JLabel cartelEncabezado;
 
     public VentanaReportes() {
@@ -104,85 +93,12 @@ public class VentanaReportes extends JPanel implements MouseListener{
 		
 		ReporteRangoEdades panelGraficoRangoEdades = new ReporteRangoEdades();	
 		panelContenedor.add(panelGraficoRangoEdades, "RANGO DE EDADES");
-
 		
-		
-		JPanel panelEmbarazadasEnRiesgo = new JPanel();
-		panelEmbarazadasEnRiesgo.setBackground(Color.WHITE);
+		ReporteEmbarazadasEnRiesgo panelEmbarazadasEnRiesgo = new ReporteEmbarazadasEnRiesgo();
 		panelContenedor.add(panelEmbarazadasEnRiesgo, "EMBARAZADAS EN RIESGO");
-		panelEmbarazadasEnRiesgo.setLayout(null);
-
-		model = new PersonaTableModel(cmf.obtenerEmbarazadasEnRiesgo()) {
-			@Override
-			public boolean isCellEditable(int row, int column) {
-				return false;
-			}
-		};
-
-		table = TablaPersonalizada.crearTablaPersonalizada(model);
-
-		// Configuración de columnas (si quieres hacerla personalizada por tabla)
-		table.getColumnModel().getColumn(0).setPreferredWidth(200);
-		table.getColumnModel().getColumn(1).setPreferredWidth(30);
-		table.getColumnModel().getColumn(2).setPreferredWidth(70);
-		table.getColumnModel().getColumn(3).setPreferredWidth(30);
-		table.getColumnModel().getColumn(4).setPreferredWidth(10);
-
-		// Filtro (si aplica)
-		final TableRowSorter<PersonaTableModel> sorter = new TableRowSorter<>(model);
-		table.setRowSorter(sorter);
-
-		// ScrollPane con tabla
-		JScrollPane scrollPane = TablaPersonalizada.envolverEnScroll(table, 0, 30, 630, 406);
-
-		// Panel contenedor
-		JPanel panelTabla = new JPanel();
-		panelTabla.setBounds(79, 60, 630, 437);
-		panelEmbarazadasEnRiesgo.add(panelTabla);
-		panelTabla.setBackground(Color.WHITE);
-		panelTabla.setLayout(null);
-		panelTabla.add(scrollPane);
 		
-		JPanel panelPorcientoMujeres = new JPanel();
-		panelPorcientoMujeres.setBackground(Color.WHITE);
+		ReportePorcentajeGenero panelPorcientoMujeres = new ReportePorcentajeGenero();
 		panelContenedor.add(panelPorcientoMujeres, "PORCENTAJE DE GÉNEROS");
-		
-		 // Crear dataset
-        DefaultPieDataset datasetPorcientoGenero = new DefaultPieDataset();
-        double valor = cmf.porcentajeMujeresRespectoAHombres();
-        datasetPorcientoGenero.setValue("Hombres", 100 - valor);
-        datasetPorcientoGenero.setValue("Mujeres", valor); 
-
-        // Crear gráfico
-        JFreeChart chart = ChartFactory.createPieChart(
-                "Porcentaje de Hombres y Mujeres",
-                datasetPorcientoGenero,
-                true, // leyenda
-                true,
-                false
-        );
-        
-        // Personalizar el gráfico
-        PiePlot plotPorcentajeGenero = (PiePlot) chart.getPlot();
-        plotPorcentajeGenero.setLabelGenerator(new StandardPieSectionLabelGenerator("{2}", new DecimalFormat("0"), new DecimalFormat("0.0%")));
-        plotPorcentajeGenero.setSimpleLabels(true); // los pone dentro
-        plotPorcentajeGenero.setLabelPaint(Color.WHITE); // color de texto
-        plotPorcentajeGenero.setLabelFont(new Font("Arial", Font.BOLD, 16)); // fuente
-        plotPorcentajeGenero.setLabelBackgroundPaint(null);
-        plotPorcentajeGenero.setLabelOutlinePaint(null);
-        plotPorcentajeGenero.setLabelShadowPaint(null);
-        plotPorcentajeGenero.setSectionPaint("Hombres", new Color(100, 149, 237)); // Azul
-        plotPorcentajeGenero.setSectionPaint("Mujeres", new Color(255, 105, 180)); // Rosa
-        plotPorcentajeGenero.setBackgroundPaint(Color.WHITE);
-        plotPorcentajeGenero.setLabelFont(new Font("Arial Black", Font.BOLD, 18));
-        plotPorcentajeGenero.setCircular(true);
-        plotPorcentajeGenero.setLabelGap(0.02);
-        panelPorcientoMujeres.setLayout(null);
-        
-        // Agregar gráfico a un panel
-        ChartPanel chartPanel = new ChartPanel(chart);
-        chartPanel.setBounds(57, 33, 680, 485);
-        panelPorcientoMujeres.add(chartPanel);
 		
 		panelEncabezado = new JPanel();
 		panelEncabezado.setBackground(Color.WHITE);

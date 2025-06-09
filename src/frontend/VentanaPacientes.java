@@ -42,7 +42,7 @@ public class VentanaPacientes extends JPanel {
 
     private CMF cmf;
     private JTable table;
-    private PersonaTableModel model;
+    private PacienteTableModel model;
     private FormularioPaciente formularioPaciente;
 
     public VentanaPacientes() {
@@ -144,7 +144,7 @@ public class VentanaPacientes extends JPanel {
         cartelPestanna.setBounds(25, 0, 107, 51);
         panelSuperior.add(cartelPestanna);
 
-        model = new PersonaTableModel(this.cmf.getPacientes()) {
+        model = new PacienteTableModel(this.cmf.getPacientes()) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
@@ -158,7 +158,7 @@ public class VentanaPacientes extends JPanel {
         table.getColumnModel().getColumn(3).setPreferredWidth(30);
         table.getColumnModel().getColumn(4).setPreferredWidth(10);
 
-        final TableRowSorter<PersonaTableModel> sorter = new TableRowSorter<>(model);
+        final TableRowSorter<PacienteTableModel> sorter = new TableRowSorter<>(model);
         table.setRowSorter(sorter);
 
         JScrollPane scrollPane = new JScrollPane(table);

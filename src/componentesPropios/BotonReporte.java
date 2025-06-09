@@ -1,25 +1,23 @@
 package componentesPropios;
 
-import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.SystemColor;
+import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
-import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 
-public class BotonReporte extends JPanel {
+public class BotonReporte extends JPanel implements MouseListener {
 
 	private String titulo;
 	
 	public BotonReporte(String titulo, String texto) {
+		addMouseListener(this);
 		setTitulo(titulo);
 		
 		setBorder(new LineBorder(SystemColor.controlShadow, 1, true));
@@ -54,6 +52,33 @@ public class BotonReporte extends JPanel {
 
 	public void setTitulo(String titulo) {
 		this.titulo = titulo;
+	}
+	
+	@Override
+	public void mouseClicked(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent arg0) {
+		setBackground(SystemColor.controlHighlight);		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent arg0) {
+		setBackground(SystemColor.menu);
+	}
+
+	@Override
+	public void mousePressed(MouseEvent arg0) {
+		setBackground(SystemColor.LIGHT_GRAY);
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

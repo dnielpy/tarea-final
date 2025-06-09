@@ -36,7 +36,7 @@ public class CMF {
 		}
 		return instance;
 	}
-
+	
 	public ArrayList<Paciente> getPacientes() {
 		return pacientes;
 	}
@@ -61,6 +61,17 @@ public class CMF {
 		return this.medico;
 	}
 
+	public Paciente getPacientePorId(int id) {
+		Paciente pac = null;
+		
+		for (Paciente paciente : pacientes) {
+			if (paciente.getHistoriaClinicaID() == id) {
+				pac = paciente;
+			}
+		}
+		return pac; // Return null if no patient is found with the given ID
+	}
+	
 	public void setId(int id) {
 		if (id <= 0) throw new IllegalArgumentException("ID debe ser positivo");
 		this.id = id;
@@ -179,7 +190,37 @@ public class CMF {
 		}
 		return response;
 	}
+	
+	// Cantidades
+	
+	public int obtenerTotalPacientes() {
+		return this.pacientes.size();
+	}
 
+	public int obtenerCantidadMujeres() {
+		int contador = 0;
+		for (Paciente paciente : this.pacientes) {
+			if (paciente instanceof Mujer) {
+				contador++;
+			}
+		}
+		return contador;
+	}
+
+	public int obtenerCantidadDeEmbarazadas() {
+		int contador = 0;
+		for (Paciente paciente : this.pacientes) {
+			if (paciente instanceof Mujer) {
+				if (((Mujer) paciente).isEmbarazada()) {
+					contador++;
+				}
+			}
+		}
+		return contador;
+	}
+
+	// Porcentajes
+	
 	public double porcentajeMujeresRespectoAHombres() {
 		double valor = 0;
 		int cantidadMujeres = obtenerCantidadMujeres();
@@ -190,8 +231,6 @@ public class CMF {
 		return Math.round(valor * 10.0) / 10.0;
 	}
 	
-	
-	
 	public float obtenerPorcientoEmbarazadasEnRiesgo() {
 		if (pacientes == null) throw new IllegalArgumentException("Lista de pacientes no puede ser nula");
 		float embarazadasEnRiesgo = 0;
@@ -201,6 +240,28 @@ public class CMF {
 			}
 		}
 		return embarazadasEnRiesgo;
+	}
+	
+	public double porcentajeEmbarazadasRespectoAMujeres() {
+		double valor = 0;
+		int cantidadDeEmbarazadas = obtenerCantidadDeEmbarazadas();
+		int cantidadMujeres = obtenerCantidadMujeres();
+
+		if (cantidadDeEmbarazadas > 0 && cantidadMujeres > 0) {
+			valor = cantidadDeEmbarazadas * 100.0 / cantidadMujeres;
+		}
+		return Math.round(valor * 10.0) / 10.0;
+	}
+	
+	public double porcentajeEnRiesgoDelTotal() {
+		double valor = 0;
+		int cantidadEnRiesgo = obtenerPacientesEnRiesgo();
+		int cantidadPacientes = obtenerTotalPacientes();
+
+		if (cantidadEnRiesgo > 0 && cantidadPacientes > 0) {
+			valor = cantidadEnRiesgo * 100.0 / cantidadPacientes;
+		}
+		return Math.round(valor * 10.0) / 10.0;
 	}
 	
 	// Reportes
@@ -219,8 +280,6 @@ public class CMF {
 	    return embarazadasEnRiesgo;
 	}
 	
-	
-	
 	public int[] obtenerRangosDeEdad() {
 		if (pacientes == null) throw new IllegalArgumentException("Lista de pacientes no puede ser nula");
 		int[] rangoDeEdad = new int[10];
@@ -238,6 +297,38 @@ public class CMF {
             else rangoDeEdad[9]++;
 		}
 		return rangoDeEdad;
+	}
+
+	public int obtenerPacientesEnRiesgo() {
+		int pacientesEnRiesgo = 0;
+		for (Paciente paciente : this.pacientes) {
+			if (paciente.estaEnRiesgo()) {
+				pacientesEnRiesgo++;
+			}
+		}
+		return pacientesEnRiesgo;
+	}
+
+	public int obtenerCantidadPacientesPorFecha(String fecha) {
+		if (fecha == null || fecha.trim().isEmpty()) {
+			throw new IllegalArgumentException("La fecha no puede ser nula o vacía");
+		}
+
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		dateFormat.setLenient(false); // Desactiva la tolerancia a errores como 32/01/2025
+
+		try {
+			dateFormat.parse(fecha);
+		} catch (ParseException e) {
+			throw new IllegalArgumentException("Formato de fecha inválido. Use dd/MM/yyyy");
+		}
+
+		for (HojaCargosDiaria hoja : hojasCargoDiaria) {
+			if (hoja.getFecha().equals(fecha)) {
+				return hoja.getRegistros().size();
+			}
+		}
+		return 0;
 	}
 	
 	// Datos cableados
@@ -364,96 +455,5 @@ public class CMF {
 		ArrayList<String> enfermedades26 = new ArrayList<>();
 		ArrayList<String> vacunas26 = new ArrayList<>();
 		agregarPaciente(26, "Zulema", "Navarro", "Ruiz", enfermedades26, vacunas26, "88101822345", true, "10/07/2023");
-	}
-
-	public int obtenerTotalPacientes() {
-		return this.pacientes.size();
-	}
-
-	public int obtenerCantidadMujeres() {
-		int contador = 0;
-		for (Paciente paciente : this.pacientes) {
-			if (paciente instanceof Mujer) {
-				contador++;
-			}
-		}
-		return contador;
-	}
-
-	public int obtenerCantidadDeEmbarazadas() {
-		int contador = 0;
-		for (Paciente paciente : this.pacientes) {
-			if (paciente instanceof Mujer) {
-				if (((Mujer) paciente).isEmbarazada()) {
-					contador++;
-				}
-			}
-		}
-		return contador;
-	}
-
-	public double porcentajeEmbarazadasRespectoAMujeres() {
-		double valor = 0;
-		int cantidadDeEmbarazadas = obtenerCantidadDeEmbarazadas();
-		int cantidadMujeres = obtenerCantidadMujeres();
-
-		if (cantidadDeEmbarazadas > 0 && cantidadMujeres > 0) {
-			valor = cantidadDeEmbarazadas * 100.0 / cantidadMujeres;
-		}
-		return Math.round(valor * 10.0) / 10.0;
-	}
-
-	public int obtenerPacientesEnRiesgo() {
-		int pacientesEnRiesgo = 0;
-		for (Paciente paciente : this.pacientes) {
-			if (paciente.estaEnRiesgo()) {
-				pacientesEnRiesgo++;
-			}
-		}
-		return pacientesEnRiesgo;
-	}
-
-	public double porcentajeEnRiesgoDelTotal() {
-		double valor = 0;
-		int cantidadEnRiesgo = obtenerPacientesEnRiesgo();
-		int cantidadPacientes = obtenerTotalPacientes();
-
-		if (cantidadEnRiesgo > 0 && cantidadPacientes > 0) {
-			valor = cantidadEnRiesgo * 100.0 / cantidadPacientes;
-		}
-		return Math.round(valor * 10.0) / 10.0;
-	}
-
-	public int obtenerCantidadPacientesPorFecha(String fecha) {
-		if (fecha == null || fecha.trim().isEmpty()) {
-			throw new IllegalArgumentException("La fecha no puede ser nula o vacía");
-		}
-
-		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-		dateFormat.setLenient(false); // Desactiva la tolerancia a errores como 32/01/2025
-
-		try {
-			dateFormat.parse(fecha);
-		} catch (ParseException e) {
-			throw new IllegalArgumentException("Formato de fecha inválido. Use dd/MM/yyyy");
-		}
-
-		for (HojaCargosDiaria hoja : hojasCargoDiaria) {
-			if (hoja.getFecha().equals(fecha)) {
-				return hoja.getRegistros().size();
-			}
-		}
-		return 0;
-	}
-	
-	public Paciente getPacientePorId(int id) {
-		Paciente pac = null;
-		
-		for (Paciente paciente : pacientes) {
-			if (paciente.getHistoriaClinicaID() == id) {
-				pac = paciente;
-			}
-		}
-		return pac; // Return null if no patient is found with the given ID
 	}
 }
