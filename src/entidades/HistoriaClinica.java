@@ -5,17 +5,18 @@ import java.util.Objects;
 
 public class HistoriaClinica {
     private int id;
-    private ArrayList<String> resultadosDeAnalisis;
+    private ArrayList<ResultadoAnalisis> resultadosDeAnalisis;
     private ArrayList<RegistroVisita> registroVisitas;
 
-    public HistoriaClinica(int id, ArrayList<String> resultadosDeAnalisis, ArrayList<RegistroVisita> registroVisitas) {
+    public HistoriaClinica(int id, ArrayList<ResultadoAnalisis> resultadosDeAnalisis, ArrayList<RegistroVisita> registroVisitas) {
         setId(id);
-        setResultadosDeAnalisis(resultadosDeAnalisis);
         setRegistroVisitas(registroVisitas);
     }
 
     public HistoriaClinica(int id) {
        setId(id);
+       resultadosDeAnalisis = new ArrayList<ResultadoAnalisis>();
+       registroVisitas = new ArrayList<RegistroVisita>();
     }
 
     public ArrayList<RegistroVisita> getRegistroVisitas() {
@@ -26,13 +27,13 @@ public class HistoriaClinica {
         return id;
     }
 
-    public ArrayList<String> getResultadosDeAnalisis() {
+    public ArrayList<ResultadoAnalisis> getResultadosDeAnalisis() {
         return resultadosDeAnalisis;
     }
 
     public void setId(int id) {
         if (id <= 0) {
-            throw new IllegalArgumentException("El ID debe ser un número positivo");
+            throw new IllegalArgumentException("El ID debe ser un n�mero positivo");
         }
         this.id = id;
     }
@@ -47,34 +48,13 @@ public class HistoriaClinica {
         this.registroVisitas = registroVisitas;
     }
 
-    public void setResultadosDeAnalisis(ArrayList<String> resultadosDeAnalisis) {
-        Objects.requireNonNull(resultadosDeAnalisis, "La lista de resultados no puede ser nula");
-        
-        for (String resultado : resultadosDeAnalisis) {
-            if (resultado == null || resultado.trim().isEmpty()) {
-                throw new IllegalArgumentException("Los resultados no pueden ser nulos o vacíos");
-            }
-            if (resultado.length() > 1000) {
-                throw new IllegalArgumentException("Cada resultado no puede exceder los 1000 caracteres");
-            }
-        }
-        
-        this.resultadosDeAnalisis = resultadosDeAnalisis;
-    }
-
-    public void agregarResultadoAnalisis(String resultado) {
+    public void agregarResultadoAnalisis(ResultadoAnalisis resultado) {
         Objects.requireNonNull(resultado, "El resultado no puede ser nulo");
-        if (resultado.trim().isEmpty()) {
-            throw new IllegalArgumentException("El resultado no puede estar vacío");
-        }
-        if (resultado.length() > 1000) {
-            throw new IllegalArgumentException("El resultado no puede exceder los 1000 caracteres");
-        }
-        this.resultadosDeAnalisis.add(resultado);
+        resultadosDeAnalisis.add(resultado);
     }
 
     public void agregarRegistroVisita(RegistroVisita registro) {
         Objects.requireNonNull(registro, "El registro de visita no puede ser nulo");
-        this.registroVisitas.add(registro);
+        registroVisitas.add(registro);
     }
 }

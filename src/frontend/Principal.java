@@ -59,7 +59,6 @@ public class Principal extends JFrame implements MouseListener {
     }
 
     public Principal() {
-        CMF cmf = CMF.getInstance();
 
         setIconImage(Toolkit.getDefaultToolkit().getImage(Principal.class.getResource("/fotos/Logo peque.png")));
         setTitle("Sistema de gesti\u00F3n del CMF");
@@ -195,11 +194,13 @@ public class Principal extends JFrame implements MouseListener {
             VentanaVisitas visitas = new VentanaVisitas();
             panelVentanas.add(visitas, "VISITAS");
             visitas.setLayout(null);
+            cartelRol.setText("M\u00C9DICO");
         } else if (Usuario.getRole() == "ENFERMERA") {
             imagenUsuario.setIcon(new ImageIcon(Principal.class.getResource("/fotos/enfermera.png")));
             botonVisitasOAnalisis.setText("AN\u00C1LISIS");
             VentanaAnalisis analisis = new VentanaAnalisis();
             panelVentanas.add(analisis, "AN\u00C1LISIS");
+            cartelRol.setText("ENFERMERA");
         }
     };
     
