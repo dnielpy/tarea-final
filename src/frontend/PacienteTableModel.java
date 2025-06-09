@@ -7,11 +7,15 @@ import entidades.Persona;
 
 import java.util.List;
 
-public class PersonaTableModel extends AbstractTableModel {
+public class PacienteTableModel extends AbstractTableModel {
     private List<Paciente> pacientes;
     private String[] columnNames = {"Nombre", "Género", "CI", "H. Clínica", "Edad"};
 
-    public PersonaTableModel(List<Paciente> pacientes) {
+    public PacienteTableModel(List<Paciente> pacientes) {
+        this.pacientes = pacientes;
+    }
+    
+    public void setPacientes(List<Paciente> pacientes) {
         this.pacientes = pacientes;
     }
 

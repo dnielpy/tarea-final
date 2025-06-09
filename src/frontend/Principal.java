@@ -19,6 +19,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import componentesPropios.BotonBlanco;
 import componentesPropios.BotonMenu;
 import componentesPropios.QuestionDialog;
 
@@ -98,16 +99,12 @@ public class Principal extends JFrame implements MouseListener {
         cartelRol.setBounds(31, 168, 237, 26);
         panelUsuario.add(cartelRol);
 
-        JButton botonIniciarSesion = new JButton();
+        BotonBlanco botonIniciarSesion = new BotonBlanco("CERRAR SESI\u00D3N");
         botonIniciarSesion.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 cerrarSesion();
             }
         });
-        botonIniciarSesion.setText("CERRAR SESI\u00D3N");
-        botonIniciarSesion.setForeground(Color.BLACK);
-        botonIniciarSesion.setFont(new Font("Arial", Font.PLAIN, 18));
-        botonIniciarSesion.setBackground(Color.WHITE);
         botonIniciarSesion.setBounds(55, 200, 185, 30);
         panelUsuario.add(botonIniciarSesion);
 
