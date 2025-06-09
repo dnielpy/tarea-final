@@ -72,8 +72,8 @@ public class VentanaPacientes extends JPanel {
         if (selectedRows.length > 0) {
             QuestionDialog confirmDialog = new QuestionDialog(
                     null,
-                    "Confirmar eliminaciÃ³n",
-                    "Â¿EstÃ¡ seguro de que desea eliminar la(s) fila(s) seleccionada(s)?"
+                    "Confirmar eliminación",
+                    "¿Está seguro de que desea eliminar la(s) fila(s) seleccionada(s)?"
             );
             confirmDialog.setVisible(true);
 
@@ -81,20 +81,20 @@ public class VentanaPacientes extends JPanel {
                 for (int i = selectedRows.length - 1; i >= 0; i--) {
                     int viewRow = selectedRows[i];
                     int modelRow = table.convertRowIndexToModel(viewRow);
-                    int id = (int) model.getValueAt(modelRow, model.findColumn("H. ClÃ­nica"));
+                    int id = (int) model.getValueAt(modelRow, model.findColumn("H. Clínica"));
                     model.eliminarPacientePorId(id, modelRow);
                 }
 
                 new InfoDialog(
                         null,
-                        "EliminaciÃ³n exitosa",
-                        "La selecciÃ³n fue eliminada correctamente."
+                        "Eliminación exitosa",
+                        "La selección fue eliminada correctamente."
                 ).setVisible(true);
             } else {
                 new InfoDialog(
                         null,
                         "Cancelado",
-                        "La eliminaciÃ³n fue cancelada."
+                        "La eliminación fue cancelada."
                 ).setVisible(true);
             }
         } else {
@@ -197,7 +197,7 @@ public class VentanaPacientes extends JPanel {
                 borrarSeleccion();
             }
         });
-        botonEliminar.setToolTipText("Eliminar selecciÃ³n");
+        botonEliminar.setToolTipText("Eliminar selección");
         botonEliminar.setIcon(new ImageIcon(VentanaPacientes.class.getResource("/fotos/trash.png")));
         botonEliminar.setBounds(462, 585, 33, 33);
         botonEliminar.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.HAND_CURSOR));
