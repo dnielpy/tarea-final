@@ -31,7 +31,8 @@ public class VentanaHojasDeCargo extends JPanel {
 		cartelPestanna.setFont(new Font("Arial", Font.PLAIN, 18));
 		cartelPestanna.setBounds(25, 0, 200, 51);
 		panelSuperior.add(cartelPestanna);
+		
+		
 
 	}
-
 }
