@@ -6,13 +6,16 @@ import java.awt.Font;
 import java.awt.SystemColor;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 
-public class BotonReporte extends JPanel implements MouseListener {
+import frontend.ConstantesFrontend;
+
+public class BotonReporte extends JPanel implements MouseListener, ConstantesFrontend {
 
 	private String titulo;
 	
@@ -20,8 +23,8 @@ public class BotonReporte extends JPanel implements MouseListener {
 		addMouseListener(this);
 		setTitulo(titulo);
 		
-		setBorder(new LineBorder(SystemColor.controlShadow, 1, true));
-		setBackground(SystemColor.menu);
+		setBorder(BORDE_COMPONENTE);
+		setBackground(COLOR_GRIS_CLARO);
 		setLayout(null);
 		setCursor(new Cursor(Cursor.HAND_CURSOR));
 
@@ -36,7 +39,7 @@ public class BotonReporte extends JPanel implements MouseListener {
 		JSeparator separator = new JSeparator();
 		separator.setBounds(12, 38, 268, 3);
 		add(separator);
-		separator.setForeground(SystemColor.controlShadow);
+		separator.setForeground(COLOR_GRIS);
 		separator.setPreferredSize(new Dimension(1, 3));
 
 		JLabel cartelTitulo = new JLabel(titulo);
@@ -62,17 +65,17 @@ public class BotonReporte extends JPanel implements MouseListener {
 
 	@Override
 	public void mouseEntered(MouseEvent arg0) {
-		setBackground(SystemColor.controlHighlight);		
+		setBackground(COLOR_GRIS_CURSOR);		
 	}
 
 	@Override
 	public void mouseExited(MouseEvent arg0) {
-		setBackground(SystemColor.menu);
+		setBackground(COLOR_GRIS_CLARO);
 	}
 
 	@Override
 	public void mousePressed(MouseEvent arg0) {
-		setBackground(SystemColor.LIGHT_GRAY);
+		setBackground(COLOR_PRESIONADO);
 	}
 
 	@Override

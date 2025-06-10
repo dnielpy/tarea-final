@@ -7,7 +7,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-public class VentanaAnalisis extends JPanel {
+public class VentanaAnalisis extends JPanel implements ConstantesFrontend {
 
 	public VentanaAnalisis() {
 		setBackground(Color.WHITE);
@@ -17,7 +17,7 @@ public class VentanaAnalisis extends JPanel {
 		JPanel panelSuperior = new JPanel();
 		panelSuperior.setBounds(0, 0, 874, 51);
 		add(panelSuperior);
-		panelSuperior.setBackground(new Color(0, 171, 227));
+		panelSuperior.setBackground(COLOR_AZUL);
 		panelSuperior.setLayout(null);
 		
 		JLabel cartelPestanna = new JLabel("AN\u00C1LISIS");

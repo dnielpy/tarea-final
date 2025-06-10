@@ -2,29 +2,18 @@ package frontend;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.text.DecimalFormat;
-
 import javax.swing.*;
 import javax.swing.border.LineBorder;
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
-import org.jfree.chart.plot.PiePlot;
-import org.jfree.data.general.DefaultPieDataset;
-
 import componentesPropios.BotonReporte;
 import entidades.CMF;
 
-public class VentanaReportes extends JPanel implements MouseListener{
+public class VentanaReportes extends JPanel implements MouseListener, ConstantesFrontend {
 
 	private JPanel panelContenedor;
 	private JPanel panelEncabezado;
-	private CMF cmf;
 	private JLabel cartelEncabezado;
 
     public VentanaReportes() {
-    	cmf = CMF.getInstance();
     	setBackground(Color.WHITE);
 		setBounds(305, 0, 796, 673);
 		setLayout(null);
@@ -32,7 +21,7 @@ public class VentanaReportes extends JPanel implements MouseListener{
 		JPanel panelSuperior = new JPanel();
 		panelSuperior.setBounds(0, 0, 874, 51);
 		add(panelSuperior);
-		panelSuperior.setBackground(new Color(0, 171, 227));
+		panelSuperior.setBackground(COLOR_AZUL);
 		panelSuperior.setLayout(null);
 		
 		JLabel cartelPestanna = new JLabel("REPORTES");
@@ -124,7 +113,7 @@ public class VentanaReportes extends JPanel implements MouseListener{
 		
 		JSeparator separadorEncabezado = new JSeparator();
 		separadorEncabezado.setPreferredSize(new Dimension(1, 3));
-		separadorEncabezado.setForeground(SystemColor.controlShadow);
+		separadorEncabezado.setForeground(COLOR_GRIS);
 		separadorEncabezado.setBounds(44, 42, 700, 3);
 		panelEncabezado.add(separadorEncabezado);
 		

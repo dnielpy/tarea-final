@@ -3,9 +3,11 @@ package componentesPropios;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 
+import frontend.ConstantesFrontend;
+
 import java.awt.*;
 
-public class PanelResumen extends JPanel {
+public class PanelResumen extends JPanel implements ConstantesFrontend {
 
     private JLabel cartelCantidad;
     private JProgressBar barraProgreso;
@@ -18,7 +20,7 @@ public class PanelResumen extends JPanel {
     public PanelResumen(String titulo, boolean porcentaje, ImageIcon imagen) {
     	this.porcentaje = porcentaje;
     	
-        setBorder(new LineBorder(SystemColor.controlShadow, 1, true));
+        setBorder(BORDE_COMPONENTE);
         setBackground(SystemColor.menu);
         setBounds(0, 0, 309, 204);
         setLayout(null); 
@@ -47,7 +49,7 @@ public class PanelResumen extends JPanel {
         if (this.porcentaje) {
         	crearBarraProgreso();
         }
-
+        
         actualizarPanel(); 
     }
     
@@ -55,7 +57,7 @@ public class PanelResumen extends JPanel {
     	 barraProgreso = new JProgressBar();
          barraProgreso.setStringPainted(true);
          barraProgreso.setBounds(15, 175, 279, 18);
-         barraProgreso.setForeground(new Color(0, 171, 227));
+         barraProgreso.setForeground(COLOR_AZUL);
          barraProgreso.setFont(new Font("Arial", Font.BOLD, 16));
          barraProgreso.setBorder(null);
          barraProgreso.setBackground(Color.WHITE);
@@ -88,7 +90,6 @@ public class PanelResumen extends JPanel {
             	barraProgreso.setValue((int)this.valorProgreso);
             	barraProgreso.setString(String.valueOf(valorProgreso) + "%");
             	barraProgreso.setVisible(true);
-
             } else {
             	barraProgreso.setVisible(false);
             }

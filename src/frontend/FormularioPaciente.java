@@ -22,7 +22,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-import javax.swing.border.LineBorder;
 import javax.swing.JRadioButton;
 import javax.swing.JCheckBox;
 
@@ -43,13 +42,12 @@ import service.Validations;
 import java.awt.Cursor;
 import java.awt.Toolkit;
 import java.awt.Window;
-import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class FormularioPaciente extends JDialog {
+public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 
 	private JPanel contentPane;
 	private JLabel imagenPaciente;
@@ -134,7 +132,7 @@ public class FormularioPaciente extends JDialog {
 		cartelInformacionMedica.setFont(new Font("Arial", Font.BOLD, 18));
 		cartelInformacionMedica.setBounds(55, 313, 219, 26);
 		cartelInformacionMedica.setOpaque(true);
-		cartelInformacionMedica.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
+		cartelInformacionMedica.setBorder(BORDE_COMPONENTE);
 		contentPane.add(cartelInformacionMedica);
 
 		JLabel cartelInformacionPersonal = new JLabel("Informaci\u00F3n personal:");
@@ -143,13 +141,13 @@ public class FormularioPaciente extends JDialog {
 		cartelInformacionPersonal.setOpaque(true);
 		cartelInformacionPersonal.setHorizontalAlignment(SwingConstants.CENTER);
 		cartelInformacionPersonal.setFont(new Font("Arial", Font.BOLD, 18));
-		cartelInformacionPersonal.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
+		cartelInformacionPersonal.setBorder(BORDE_COMPONENTE);
 		cartelInformacionPersonal.setBackground(Color.WHITE);
 
 		JPanel panelAgrupador1 = new JPanel();
 		panelAgrupador1.setBackground(Color.WHITE);
 		panelAgrupador1.setBounds(28, 31, 589, 269);
-		panelAgrupador1.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
+		panelAgrupador1.setBorder(BORDE_COMPONENTE);
 		contentPane.add(panelAgrupador1);
 		panelAgrupador1.setLayout(null);
 
@@ -157,7 +155,7 @@ public class FormularioPaciente extends JDialog {
 		imagenPaciente.setIcon(new ImageIcon(FormularioPaciente.class.getResource("/fotos/Logo peque.png")));
 		imagenPaciente.setHorizontalAlignment(SwingConstants.CENTER);
 		imagenPaciente.setBounds(40, 36, 110, 110);
-		imagenPaciente.setBorder(new LineBorder(SystemColor.scrollbar, 1, true));
+		imagenPaciente.setBorder(BORDE_COMPONENTE);
 		panelAgrupador1.add(imagenPaciente);
 
 		cartelNombre = new JLabel("Nombre:");
@@ -217,7 +215,7 @@ public class FormularioPaciente extends JDialog {
 
 		JLabel cartelGenero = new JLabel("G\u00E9nero:");
 		cartelGenero.setFont(new Font("Arial", Font.PLAIN, 16));
-		cartelGenero.setBounds(40, 219, 69, 16);
+		cartelGenero.setBounds(40, 219, 61, 16);
 		panelAgrupador1.add(cartelGenero);
 
 		// Initialize radio buttons
@@ -255,11 +253,13 @@ public class FormularioPaciente extends JDialog {
 		ButtonGroup genero = new ButtonGroup();
 		genero.add(radioFemenino);
 		genero.add(radioMasculino);
+		
+		genero.clearSelection();
 
 		JPanel panelAgrupador2 = new JPanel();
 		panelAgrupador2.setBackground(Color.WHITE);
 		panelAgrupador2.setBounds(28, 326, 589, 272);
-		panelAgrupador2.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
+		panelAgrupador2.setBorder(BORDE_COMPONENTE);
 		contentPane.add(panelAgrupador2);
 		panelAgrupador2.setLayout(null);
 
@@ -372,14 +372,12 @@ public class FormularioPaciente extends JDialog {
 		campoSegundoApellido.setText(segundoApellido);
 		campoCI.setText(ci);
 		campoDireccion.setText(direccion);
-		radioFemenino.setSelected(esFemenino);
-		radioMasculino.setSelected(!esFemenino);
 		checkEmbarazada.setSelected(estaEmbarazada);
 		
-		JLabel lblEdad = new JLabel("Edad:");
-		lblEdad.setFont(new Font("Arial", Font.PLAIN, 16));
-		lblEdad.setBounds(429, 218, 47, 19);
-		panelAgrupador1.add(lblEdad);
+		JLabel cartelEdad = new JLabel("Edad:");
+		cartelEdad.setFont(new Font("Arial", Font.PLAIN, 16));
+		cartelEdad.setBounds(429, 218, 47, 19);
+		panelAgrupador1.add(cartelEdad);
 		
 		textField = new JTextField();
 		textField.setText("");

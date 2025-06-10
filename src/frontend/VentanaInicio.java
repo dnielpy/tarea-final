@@ -10,10 +10,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JProgressBar;
 
 import componentesPropios.PanelResumen;
-
 import entidades.CMF;
 
-public class VentanaInicio extends JPanel {
+public class VentanaInicio extends JPanel implements ConstantesFrontend {
 	
 	private CMF cmf;
 	private PanelResumen panelResumenPacientes;
@@ -33,7 +32,7 @@ public class VentanaInicio extends JPanel {
 		JPanel panelSuperior = new JPanel();
 		panelSuperior.setBounds(0, 0, 874, 51);
 		add(panelSuperior);
-		panelSuperior.setBackground(new Color(0, 171, 227));
+		panelSuperior.setBackground(COLOR_AZUL);
 		panelSuperior.setLayout(null);
 		
 		JLabel cartelPestanna = new JLabel("INICIO");
