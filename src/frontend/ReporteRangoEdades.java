@@ -18,7 +18,7 @@ import org.jfree.data.category.DefaultCategoryDataset;
 
 import entidades.CMF;
 
-public class ReporteRangoEdades extends JPanel {
+public class ReporteRangoEdades extends JPanel implements ConstantesFrontend {
 
 	private CMF cmf;
 	private DefaultCategoryDataset dataset;
@@ -48,7 +48,7 @@ public class ReporteRangoEdades extends JPanel {
 
 		// Personalizar las barras
 		BarRenderer renderer = (BarRenderer) plot.getRenderer();
-		renderer.setSeriesPaint(0, new Color(0, 171, 227)); // color plano azul
+		renderer.setSeriesPaint(0, COLOR_AZUL); // color plano azul
 		renderer.setDrawBarOutline(false);
 		renderer.setBarPainter(new StandardBarPainter()); // eliminar sombreado, dejarlo plano
 

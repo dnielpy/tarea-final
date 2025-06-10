@@ -12,7 +12,7 @@ import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.category.DefaultCategoryDataset;
 
-public class VentanaHojasDeCargo extends JPanel {
+public class VentanaHojasDeCargo extends JPanel implements ConstantesFrontend {
 
 	public VentanaHojasDeCargo() {
 		setBackground(Color.WHITE);
@@ -22,7 +22,7 @@ public class VentanaHojasDeCargo extends JPanel {
 		JPanel panelSuperior = new JPanel();
 		panelSuperior.setBounds(0, 0, 796, 51); // ajustado al ancho del panel principal
 		add(panelSuperior);
-		panelSuperior.setBackground(new Color(0, 171, 227));
+		panelSuperior.setBackground(COLOR_AZUL);
 		panelSuperior.setLayout(null);
 
 		JLabel cartelPestanna = new JLabel("HOJAS DE CARGO");

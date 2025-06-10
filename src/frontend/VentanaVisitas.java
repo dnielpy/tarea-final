@@ -10,7 +10,7 @@ import javax.swing.SwingConstants;
 
 import componentesPropios.CustomTextField;
 
-public class VentanaVisitas extends JPanel {
+public class VentanaVisitas extends JPanel implements ConstantesFrontend {
 
 	public VentanaVisitas() {
 		setBackground(Color.WHITE);
@@ -20,7 +20,7 @@ public class VentanaVisitas extends JPanel {
 		JPanel panelSuperior = new JPanel();
 		panelSuperior.setBounds(0, 0, 874, 51);
 		add(panelSuperior);
-		panelSuperior.setBackground(new Color(0, 171, 227));
+		panelSuperior.setBackground(COLOR_AZUL);
 		panelSuperior.setLayout(null);
 		
 		JLabel cartelPestanna = new JLabel("VISITAS");

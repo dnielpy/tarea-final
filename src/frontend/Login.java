@@ -34,8 +34,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 import javax.swing.SwingConstants;
+import javax.swing.border.LineBorder;
 
-public class Login extends JFrame {
+public class Login extends JFrame implements ConstantesFrontend{
 	private boolean contrasenaVisible;
 	private JTextField campoUsuario;
 	private JPasswordField campoContrasenna;
@@ -63,38 +64,10 @@ public class Login extends JFrame {
 		panelPrincipal.setLayout(null);
 
 		JPanel panelLateral = new JPanel();
-		panelLateral.setBackground(new Color(0, 171, 227));
-		panelLateral.setBounds(0, 0, 250, 600);
+		panelLateral.setBackground(COLOR_AZUL);
+		panelLateral.setBounds(0, 232, 250, 289);
 		panelPrincipal.add(panelLateral);
 		panelLateral.setLayout(null);
-
-		JPanel panelLogo = new JPanel();
-		panelLogo.setBounds(0, 0, 250, 225);
-		panelLateral.add(panelLogo);
-		panelLogo.setBackground(new Color(109, 163, 67));
-		panelLogo.setLayout(null);
-
-		JLabel imagenTipografia = new JLabel();
-		imagenTipografia.setHorizontalAlignment(SwingConstants.CENTER);
-		imagenTipografia.setIcon(new ImageIcon(Login.class.getResource("/fotos/Tipografia-Peque.png")));
-		imagenTipografia.setBounds(0, 129, 250, 62);
-		panelLogo.add(imagenTipografia);
-
-		JLabel cartelLogo = new JLabel("");
-		cartelLogo.setHorizontalAlignment(SwingConstants.CENTER);
-		cartelLogo.setBounds(0, 15, 250, 120);
-		panelLogo.add(cartelLogo);
-		cartelLogo.setIcon(new ImageIcon(Login.class.getResource("/fotos/Logo peque.png")));
-
-		JPanel panelBlancoLogo = new JPanel();
-		panelBlancoLogo.setBackground(Color.WHITE);
-		panelBlancoLogo.setBounds(21, 15, 208, 189);
-		panelLogo.add(panelBlancoLogo);
-
-		JPanel panelSeparadorLogo = new JPanel();
-		panelSeparadorLogo.setBackground(Color.WHITE);
-		panelSeparadorLogo.setBounds(-30, 224, 280, 10);
-		panelLateral.add(panelSeparadorLogo);
 
 		final JLabel ojoIcono = new JLabel("");
 		ojoIcono.setToolTipText("Clic para ver u ocultar contrase\u00F1a");
@@ -206,6 +179,30 @@ public class Login extends JFrame {
 		botonAceptar.setBounds(325, 361, 129, 43);
 		panelPrincipal.add(botonAceptar);
 		botonAceptar.setLayout(null);
+		
+		JPanel panel = new JPanel();
+		panel.setLayout(null);
+		panel.setBackground(new Color(109, 163, 67));
+		panel.setBounds(0, 0, 250, 225);
+		panelPrincipal.add(panel);
+		
+		JLabel label = new JLabel();
+		label.setIcon(new ImageIcon(Login.class.getResource("/fotos/Tipografia-Peque.png")));
+		label.setHorizontalAlignment(SwingConstants.CENTER);
+		label.setBounds(0, 129, 250, 62);
+		panel.add(label);
+		
+		JLabel label_1 = new JLabel("");
+		label_1.setIcon(new ImageIcon(Login.class.getResource("/fotos/Logo peque.png")));
+		label_1.setHorizontalAlignment(SwingConstants.CENTER);
+		label_1.setBounds(0, 15, 250, 120);
+		panel.add(label_1);
+		
+		JPanel panel_1 = new JPanel();
+		panel_1.setBorder(new LineBorder(Color.WHITE, 1, true));
+		panel_1.setBackground(Color.WHITE);
+		panel_1.setBounds(21, 15, 208, 189);
+		panel.add(panel_1);
 
 	}
 	

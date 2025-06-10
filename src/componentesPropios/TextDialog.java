@@ -8,11 +8,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
+
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
@@ -22,7 +24,7 @@ public class TextDialog extends JDialog {
 	private JTextArea textArea;
 	private boolean confirmado;
 
-	public TextDialog(Frame parent, String titulo, String mensaje) {
+	public TextDialog(JFrame parent, String titulo, String mensaje) {
         super(parent, titulo, true);
         initUI(mensaje);
     }

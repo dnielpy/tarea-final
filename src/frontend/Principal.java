@@ -29,7 +29,7 @@ import java.awt.CardLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class Principal extends JFrame implements MouseListener {
+public class Principal extends JFrame implements MouseListener, ConstantesFrontend {
 
     private JPanel panelVentanas;
     private BotonMenu botonActivo;
@@ -72,7 +72,7 @@ public class Principal extends JFrame implements MouseListener {
         JPanel panelUsuario = new JPanel();
         panelUsuario.setBounds(0, 0, 300, 254);
         contentPane.add(panelUsuario);
-        panelUsuario.setBackground(new Color(109, 163, 67));
+        panelUsuario.setBackground(COLOR_VERDE);
         panelUsuario.setLayout(null);
 
         JLabel imagenUsuario = new JLabel("");
@@ -114,7 +114,7 @@ public class Principal extends JFrame implements MouseListener {
         JPanel panelLateral = new JPanel();
         panelLateral.setBounds(0, 262, 300, 491);
         panelPrincipal.add(panelLateral);
-        panelLateral.setBackground(new Color(0, 171, 227));
+        panelLateral.setBackground(COLOR_AZUL);
         panelLateral.setLayout(null);
 
         BotonMenu botonInicio = new BotonMenu((String) null);

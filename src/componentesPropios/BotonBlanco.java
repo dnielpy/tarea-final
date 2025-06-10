@@ -9,12 +9,16 @@ import java.awt.event.MouseListener;
 
 import javax.swing.JButton;
 
-public class BotonBlanco extends JButton implements MouseListener{
+import frontend.ConstantesFrontend;
+
+public class BotonBlanco extends JButton implements MouseListener, ConstantesFrontend {
+	
 	public BotonBlanco(String texto) {
         super(texto);
         setCursor(new Cursor(Cursor.HAND_CURSOR));
+        // setBorder(BORDE_COMPONENTE);
         setForeground(Color.BLACK);
-        setBackground(SystemColor.menu);
+        setBackground(COLOR_GRIS_CLARO);
     	setFont(new Font("Arial", Font.PLAIN, 18));
         setFocusPainted(false); // Quitar el marco de foco
     }
@@ -27,12 +31,12 @@ public class BotonBlanco extends JButton implements MouseListener{
 
 	@Override
     public void mouseEntered(MouseEvent arg0) {
-        setBackground(SystemColor.controlHighlight);
+        setBackground(COLOR_GRIS);
     }
 
     @Override
     public void mouseExited(MouseEvent arg0) {
-        setBackground(SystemColor.menu);
+        setBackground(COLOR_GRIS_CLARO);
     }
 
 	@Override
