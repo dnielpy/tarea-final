@@ -2,7 +2,6 @@ package frontend;
 
 import java.awt.EventQueue;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -26,8 +25,6 @@ import componentesPropios.QuestionDialog;
 import javax.swing.SwingConstants;
 
 import runner.Usuario;
-import entidades.CMF;
-
 import java.awt.CardLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;

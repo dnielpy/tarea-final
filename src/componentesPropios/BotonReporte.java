@@ -25,13 +25,13 @@ public class BotonReporte extends JPanel implements MouseListener {
 		setLayout(null);
 		setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-		JLabel cartelRangoEdades = new JLabel("<html><div style='width:" + "px;'>" + texto + "</div></html>");
-		cartelRangoEdades.setFont(new Font("Arial", Font.PLAIN, 16));
-		cartelRangoEdades.setBounds(12, 49, 268, 87);
-		cartelRangoEdades.setBorder(null); 
-		cartelRangoEdades.setVerticalAlignment(SwingConstants.TOP);     // Alineación vertical arriba
-		cartelRangoEdades.setHorizontalAlignment(SwingConstants.LEFT);   // Alineación horizontal izquierda
-		add(cartelRangoEdades);
+		JLabel cartelTexto = new JLabel("<html><div style='width:" + "px;'>" + texto + "</div></html>");
+		cartelTexto.setFont(new Font("Arial", Font.PLAIN, 16));
+		cartelTexto.setBounds(12, 49, 268, 87);
+		cartelTexto.setBorder(null); 
+		cartelTexto.setVerticalAlignment(SwingConstants.TOP);     // Alineación vertical arriba
+		cartelTexto.setHorizontalAlignment(SwingConstants.LEFT);   // Alineación horizontal izquierda
+		add(cartelTexto);
 
 		JSeparator separator = new JSeparator();
 		separator.setBounds(12, 38, 268, 3);
