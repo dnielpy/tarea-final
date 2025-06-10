@@ -222,12 +222,23 @@ public class FormularioPaciente extends JDialog {
 
 		// Initialize radio buttons
 		radioMasculino = new JRadioButton("Masculino");
+		radioMasculino.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				  checkEmbarazada.setSelected(false);
+				  checkEmbarazada.setEnabled(false);
+			}
+		});
 		radioMasculino.setFont(new Font("Arial", Font.PLAIN, 16));
 		radioMasculino.setBackground(Color.WHITE);
 		radioMasculino.setBounds(100, 219, 99, 16);
 		panelAgrupador1.add(radioMasculino);
 
 		radioFemenino = new JRadioButton("Femenino");
+		radioFemenino.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				checkEmbarazada.setEnabled(true);
+			}
+		});
 		radioFemenino.setFont(new Font("Arial", Font.PLAIN, 16));
 		radioFemenino.setBackground(Color.WHITE);
 		radioFemenino.setBounds(203, 219, 99, 16);
@@ -447,7 +458,6 @@ public class FormularioPaciente extends JDialog {
 
 					// Llamar al método agregarPaciente
 					boolean pacienteAgregado = cmf.agregarPaciente(
-							cmf.obtenerTotalPacientes() + 1, // Generar ID único
 							nombre,
 							primerApellido,
 							segundoApellido,

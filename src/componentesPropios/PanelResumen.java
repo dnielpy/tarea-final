@@ -11,8 +11,8 @@ public class PanelResumen extends JPanel {
     private JProgressBar barraProgreso;
     private JLabel cartelTitulo;
     private JLabel cartelImagen;
-    private double valorProgreso; // Valor para la barra de progreso
-    private String cantidadTexto; // Texto para la etiqueta de cantidad
+    private double valorProgreso; 
+    private String cantidadTexto; 
     private boolean porcentaje;
 
     public PanelResumen(String titulo, boolean porcentaje, ImageIcon imagen) {
@@ -21,7 +21,7 @@ public class PanelResumen extends JPanel {
         setBorder(new LineBorder(SystemColor.controlShadow, 1, true));
         setBackground(SystemColor.menu);
         setBounds(0, 0, 309, 204);
-        setLayout(null); // Usaremos null layout para posicionamiento manual
+        setLayout(null); 
 
         cartelTitulo = new JLabel(titulo);
         cartelTitulo.setFont(new Font("Arial", Font.PLAIN, 18));
@@ -48,7 +48,7 @@ public class PanelResumen extends JPanel {
         	crearBarraProgreso();
         }
 
-        actualizarPanel(); // Aplicar la configuración inicial
+        actualizarPanel(); 
     }
     
     public void crearBarraProgreso() {
@@ -60,11 +60,9 @@ public class PanelResumen extends JPanel {
          barraProgreso.setBorder(null);
          barraProgreso.setBackground(Color.WHITE);
 
-         // Inicialmente no mostramos la barra
          barraProgreso.setVisible(false);
          add(barraProgreso);
-
-         // Valores iniciales.  Deben ser inicializados para que no sean null
+       
          this.valorProgreso = 0;
          this.cantidadTexto = "";
     }
@@ -83,10 +81,8 @@ public class PanelResumen extends JPanel {
     }
 
     private void actualizarPanel() {
-        //1. Seteamos el texto de la etiqueta cantidad
         cartelCantidad.setText(this.cantidadTexto);
 
-        //2. Configuramos la barra de progreso
         if (porcentaje) {    	 
             if (this.valorProgreso > 0) {
             	barraProgreso.setValue((int)this.valorProgreso);
@@ -97,9 +93,5 @@ public class PanelResumen extends JPanel {
             	barraProgreso.setVisible(false);
             }
         }
-        
-        // Es importante revalidar y repintar para que los cambios se vean
-        //revalidate();
-        //repaint();
     }
 }
