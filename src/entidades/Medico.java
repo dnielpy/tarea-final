@@ -6,13 +6,18 @@ import java.util.Objects;
 
 import service.Validations;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Objects;
+
 public class Medico extends Persona {
     private int numRegistro;
     private String ci;
-    private String fechaInscripcion;
+    private Date fechaInscripcion;
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
-    public Medico(String nombre, String primerApellido, String segundoApellido, int numRegistro, String ci, String fecha) {
+    public Medico(String nombre, String primerApellido, String segundoApellido, int numRegistro, String ci, Date fecha) {
         setNombre(nombre);
         setPrimerApellido(primerApellido);
         setSegundoApellido(segundoApellido);
@@ -27,7 +32,7 @@ public class Medico extends Persona {
 
     public void setNumRegistro(int numRegistro) {
         if (numRegistro <= 0) {
-            throw new IllegalArgumentException("NÃºmero de registro debe ser positivo");
+            throw new IllegalArgumentException("Número de registro debe ser positivo");
         }
         this.numRegistro = numRegistro;
     }
@@ -37,25 +42,26 @@ public class Medico extends Persona {
     }
 
     public void setCarnet(String carnet) {
-        if(Validations.isValidCI(carnet)){
+        if (Validations.isValidCI(carnet)) {
             this.ci = carnet;
-        }
-        else{
-            throw new IllegalArgumentException("Carnet de identidad invÃ¡lido");
+        } else {
+            throw new IllegalArgumentException("Carnet de identidad inválido");
         }
     }
 
-    public String getFechaInscripcion() {
+    // Getter que devuelve el objeto Date
+    public Date getFechaInscripcion() {
         return fechaInscripcion;
     }
 
-    public void setFechaInscripcion(String fecha) {
-        Objects.requireNonNull(fecha, "La fecha no puede ser nula");
-        try {
-            dateFormat.parse(fecha);
-            this.fechaInscripcion = fecha;
-        } catch (ParseException e) {
-            throw new IllegalArgumentException("Formato de fecha invÃ¡lido, use dd/MM/yyyy");
-        }
+    // Getter que devuelve la fecha formateada como String
+    public String getFechaInscripcionFormateada() {
+        if (fechaInscripcion == null) return null;
+        return dateFormat.format(fechaInscripcion);
+    }
+
+    // Setter que recibe directamente un Date (opcional)
+    public void setFechaInscripcion(Date fecha) {
+        this.fechaInscripcion = fecha;
     }
 }

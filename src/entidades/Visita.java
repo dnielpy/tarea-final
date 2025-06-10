@@ -1,27 +1,35 @@
 package entidades;
 
-public class RegistroVisita {
-    private String fecha;
+import java.util.Date;
+import java.util.Objects;
+
+public class Visita {
+    private Date fecha;
     private String diagnostico;
+    private String direccion;
     private String tratamiento;
     private String indicacionesComplementarias;
     private String especialidadRemitida;
 
-    public RegistroVisita(String fecha, String diagnostico, String tratamiento, String indicacionesComplementarias, String especialidadRemitida) {
+    public Visita(Date fecha, String diagnostico, String tratamiento, String indicacionesComplementarias, String especialidadRemitida, String direccion) {
         setFecha(fecha);
         setDiagnostico(diagnostico);
         setTratamiento(tratamiento);
         setIndicacionesComplementarias(indicacionesComplementarias);
         setEspecialidadRemitida(especialidadRemitida);
+        setDireccion(direccion);
     }
 
-    public String getFecha() {
+    public Date getFecha() {
         return fecha;
     }
 
-    public void setFecha(String fecha) {
-        if (fecha == null || fecha.trim().isEmpty()) {
-            throw new IllegalArgumentException("Fecha no puede ser nula o vacía");
+    public void setFecha(Date fecha) {
+        Objects.requireNonNull(fecha, "Fecha no puede ser nula");
+
+        Date hoy = new Date();
+        if (fecha.after(hoy)) {
+            throw new IllegalArgumentException("Fecha no puede ser futura");
         }
         this.fecha = fecha;
     }
@@ -32,9 +40,20 @@ public class RegistroVisita {
 
     public void setDiagnostico(String diagnostico) {
         if (diagnostico == null || diagnostico.trim().isEmpty()) {
-            throw new IllegalArgumentException("Diagnóstico no puede ser nulo o vacío");
+            throw new IllegalArgumentException("Diagn\u00F3stico no puede ser nulo o vac\u00EDo");
         }
         this.diagnostico = diagnostico;
+    }
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        if (direccion == null || direccion.trim().isEmpty()) {
+            throw new IllegalArgumentException("Direcci\u00F3n no puede ser nula o vac\u00EDa");
+        }
+        this.direccion = direccion;
     }
 
     public String getTratamiento() {
@@ -43,7 +62,7 @@ public class RegistroVisita {
 
     public void setTratamiento(String tratamiento) {
         if (tratamiento == null || tratamiento.trim().isEmpty()) {
-            throw new IllegalArgumentException("Tratamiento no puede ser nulo o vacío");
+            throw new IllegalArgumentException("Tratamiento no puede ser nulo o vac\u00EDo");
         }
         this.tratamiento = tratamiento;
     }
@@ -62,7 +81,7 @@ public class RegistroVisita {
 
     public void setEspecialidadRemitida(String especialidadRemitida) {
         if (especialidadRemitida != null && especialidadRemitida.trim().isEmpty()) {
-            throw new IllegalArgumentException("Especialidad remitida no puede ser vacía");
+            throw new IllegalArgumentException("Especialidad remitida no puede ser vac\u00EDa");
         }
         this.especialidadRemitida = especialidadRemitida;
     }

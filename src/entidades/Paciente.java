@@ -6,7 +6,6 @@ import java.util.Objects;
 import service.Validations;
 
 public class Paciente extends Persona {
-    protected int historiaClinicaID;
     protected ArrayList<String> enfermedadesCronicas;
     protected ArrayList<String> vacunacion;
     protected HistoriaClinica historiaClinica;
@@ -15,7 +14,7 @@ public class Paciente extends Persona {
     protected String direccion;
 
     public Paciente(int historiaClinicaID, String nombre, String primerApellido, String segundoApellido, String ci) {
-        setHistoriaClinicaID(historiaClinicaID);
+    	historiaClinica = new HistoriaClinica(historiaClinicaID);
         setNombre(nombre);
         setPrimerApellido(primerApellido);
         setSegundoApellido(segundoApellido);
@@ -26,15 +25,8 @@ public class Paciente extends Persona {
         this.historiaClinica = new HistoriaClinica(historiaClinicaID);
     }
 
-    public int getHistoriaClinicaID() {
-        return historiaClinicaID;
-    }
-
-    public void setHistoriaClinicaID(int historiaClinicaID) {
-        if (historiaClinicaID <= 0) {
-            throw new IllegalArgumentException("ID de historia clínica debe ser positivo");
-        }
-        this.historiaClinicaID = historiaClinicaID;
+    public HistoriaClinica getHistoriaClinica() {
+    	return historiaClinica;
     }
 
     public String getDireccion() {

@@ -37,7 +37,7 @@ public class PacienteTableModel extends AbstractTableModel {
             case 2:
                 return ((Paciente)paciente).getCi();
             case 3:
-                return ((Paciente)paciente).getHistoriaClinicaID();
+                return ((Paciente)paciente).getHistoriaClinica().getId();
             case 4:
                 return ((Paciente)paciente).getEdad();
             default:
@@ -54,7 +54,7 @@ public class PacienteTableModel extends AbstractTableModel {
     public void eliminarPacientePorId(int id, int indice) {
     	boolean ciclar = true;
         for (int i = 0; i < pacientes.size() && ciclar; i++) {
-            if (pacientes.get(i).getHistoriaClinicaID() == id) {
+            if (pacientes.get(i).getHistoriaClinica().getId() == id) {
                 pacientes.remove(i);
                 fireTableRowsDeleted(indice, indice);  // Notificar a la tabla que una fila fue eliminada
                 ciclar = false;

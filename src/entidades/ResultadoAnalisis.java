@@ -25,7 +25,7 @@ public class ResultadoAnalisis {
 
 	public void setTipoAnalisis(String tipoAnalisis) {
 		if (tipoAnalisis == null || tipoAnalisis.trim().isEmpty()) {
-            throw new IllegalArgumentException("El tipo de análisis no pueden ser nulos o vacíos");
+            throw new IllegalArgumentException("El tipo de análisis no puede ser nulo o vacío");
         }
 		this.tipoAnalisis = tipoAnalisis;
 	}
