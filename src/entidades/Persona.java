@@ -29,7 +29,7 @@ public abstract class Persona {
 		    this.nombre = nombre.trim();
         } 
         else{
-            throw new IllegalArgumentException("Nombre inválido");
+            throw new IllegalArgumentException("Nombre inv\u00E1lido");
         }
 	}
 
@@ -37,7 +37,7 @@ public abstract class Persona {
 		if (Validations.validateName(primerApellido)) {
 			this.primerApellido = primerApellido.trim();
 		} else {
-			throw new IllegalArgumentException("Apellido inválido: " + (primerApellido == null ? "null" : primerApellido));
+			throw new IllegalArgumentException("Apellido inv\u00E1lido: " + (primerApellido == null ? "null" : primerApellido));
 		}
 	}
 	
@@ -45,7 +45,7 @@ public abstract class Persona {
 		if (Validations.validateName(segundoApellido)) {
 			this.segundoApellido = segundoApellido.trim();
 		} else {
-			throw new IllegalArgumentException("Apellido inválido: " + (segundoApellido == null ? "null" : segundoApellido));
+			throw new IllegalArgumentException("Apellido inv\u00E1lido: " + (segundoApellido == null ? "null" : segundoApellido));
 		}
 	}
 }

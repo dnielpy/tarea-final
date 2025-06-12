@@ -4,11 +4,9 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
 
 import java.awt.Color;
-import java.awt.Dimension;
+import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Window;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 import javax.swing.BorderFactory;
@@ -16,8 +14,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.RowFilter;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.table.TableRowSorter;
@@ -43,7 +39,6 @@ public class VentanaPacientes extends JPanel implements ConstantesFrontend {
     private CMF cmf;
     private JTable table;
     private PacienteTableModel model;
-    private FormularioPaciente formularioPaciente;
 
     public VentanaPacientes() {
         this.cmf = CMF.getInstance();
@@ -60,7 +55,7 @@ public class VentanaPacientes extends JPanel implements ConstantesFrontend {
         header.setFont(new Font("Arial", Font.BOLD, 16));
         table.setGridColor(SystemColor.controlHighlight);
         DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
-        renderer.setBorder(BorderFactory.createLineBorder(SystemColor.controlHighlight));
+        renderer.setBorder(BORDE_COMPONENTE);
         table.setDefaultRenderer(Object.class, renderer);
         table.setRowHeight(30);
         table.setFillsViewportHeight(true);
@@ -108,21 +103,15 @@ public class VentanaPacientes extends JPanel implements ConstantesFrontend {
 
     private void abrirFormulario(Paciente paciente) {
         Window ventanaPrincipal = SwingUtilities.getWindowAncestor(this);
-        formularioPaciente = new FormularioPaciente(ventanaPrincipal, paciente); // Pass patient data
+        FormularioPaciente formularioPaciente = new FormularioPaciente(ventanaPrincipal, paciente, false);
         formularioPaciente.setLocationRelativeTo(ventanaPrincipal);
-        setEnabled(false);
-
-        formularioPaciente.addWindowListener(new java.awt.event.WindowAdapter() {
-            @Override
-            public void windowClosed(java.awt.event.WindowEvent e) {
-                setEnabled(true);
-                removeAll();
-                initComponents();
-                revalidate();
-                repaint();
-            }
-        });
-
+        formularioPaciente.setVisible(true);
+    }
+    
+    private void abrirFormulario() {
+        Window ventanaPrincipal = SwingUtilities.getWindowAncestor(this);
+        FormularioPaciente formularioPaciente = new FormularioPaciente(ventanaPrincipal);
+        formularioPaciente.setLocationRelativeTo(ventanaPrincipal);
         formularioPaciente.setVisible(true);
     }
 
@@ -144,7 +133,7 @@ public class VentanaPacientes extends JPanel implements ConstantesFrontend {
         cartelPestanna.setBounds(25, 0, 107, 51);
         panelSuperior.add(cartelPestanna);
 
-        model = new PacienteTableModel(this.cmf.getPacientes()) {
+        model = new PacienteTableModel(cmf.getPacientes()) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
@@ -158,7 +147,7 @@ public class VentanaPacientes extends JPanel implements ConstantesFrontend {
         table.getColumnModel().getColumn(3).setPreferredWidth(30);
         table.getColumnModel().getColumn(4).setPreferredWidth(10);
 
-        final TableRowSorter<PacienteTableModel> sorter = new TableRowSorter<>(model);
+        TableRowSorter<PacienteTableModel> sorter = new TableRowSorter<>(model);
         table.setRowSorter(sorter);
 
         JScrollPane scrollPane = new JScrollPane(table);
@@ -176,7 +165,7 @@ public class VentanaPacientes extends JPanel implements ConstantesFrontend {
         JButton botonAgregarPaciente = new JButton("AGREGAR PACIENTE");
         botonAgregarPaciente.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
-                abrirFormulario(null);
+                abrirFormulario();
             }
         });
         botonAgregarPaciente.setForeground(Color.BLACK);
@@ -200,7 +189,7 @@ public class VentanaPacientes extends JPanel implements ConstantesFrontend {
         botonEliminar.setToolTipText("Eliminar selección");
         botonEliminar.setIcon(new ImageIcon(VentanaPacientes.class.getResource("/fotos/trash.png")));
         botonEliminar.setBounds(462, 585, 33, 33);
-        botonEliminar.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.HAND_CURSOR));
+        botonEliminar.setCursor(new Cursor(Cursor.HAND_CURSOR));
         add(botonEliminar);
 
         table.addMouseListener(new MouseAdapter() {

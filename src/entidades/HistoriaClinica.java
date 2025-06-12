@@ -9,6 +9,8 @@ public class HistoriaClinica {
     private List<ResultadoAnalisis> resultadosDeAnalisis;
     private List<Visita> visitas;
 
+    // Constructores
+    
     public HistoriaClinica(int id, List<ResultadoAnalisis> resultadosDeAnalisis, List<Visita> visitas) {
     	setId(id);
     	setResultadosDeAnalisis(resultadosDeAnalisis);
@@ -21,18 +23,12 @@ public class HistoriaClinica {
        visitas = new ArrayList<Visita>();
     }
     
-    public List<Visita> getRegistroVisitas() {
-        return visitas;
-    }
+    // Id
 
     public int getId() {
         return id;
     }
-
-    public List<ResultadoAnalisis> getResultadosDeAnalisis() {
-        return resultadosDeAnalisis;
-    }
-
+    
     public void setId(int id) {
         if (id <= 0) {
             throw new IllegalArgumentException("El ID debe ser un número positivo");
@@ -40,14 +36,10 @@ public class HistoriaClinica {
         this.id = id;
     }
 
-    public void setVisitas(List<Visita> visitas) {
-        Objects.requireNonNull(visitas, "La lista de registros no puede ser nula");
-        
-        for (Visita visita : visitas) {
-            Objects.requireNonNull(visita, "Los registros de visita no pueden ser nulos");
-        }
-        
-        this.visitas = visitas;
+    // Análisis
+    
+    public List<ResultadoAnalisis> getResultadosDeAnalisis() {
+        return resultadosDeAnalisis;
     }
     
     public void setResultadosDeAnalisis(List<ResultadoAnalisis> resultados) {
@@ -59,11 +51,26 @@ public class HistoriaClinica {
         
         this.resultadosDeAnalisis = resultados;
     }
-
-
+    
     public void agregarResultadoAnalisis(ResultadoAnalisis resultado) {
         Objects.requireNonNull(resultado, "El resultado no puede ser nulo");
         resultadosDeAnalisis.add(resultado);
+    }
+    
+    // Visita
+    
+    public List<Visita> getRegistroVisitas() {
+        return visitas;
+    }
+
+    public void setVisitas(List<Visita> visitas) {
+        Objects.requireNonNull(visitas, "La lista de registros no puede ser nula");
+        
+        for (Visita visita : visitas) {
+            Objects.requireNonNull(visita, "Los registros de visita no pueden ser nulos");
+        }
+        
+        this.visitas = visitas;
     }
 
     public void agregarRegistroVisita(Visita visita) {
