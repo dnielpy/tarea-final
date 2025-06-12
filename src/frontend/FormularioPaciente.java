@@ -30,6 +30,7 @@ import com.toedter.calendar.JDateChooser;
 import javax.swing.JScrollPane;
 
 import componentesPropios.BotonBlanco;
+import componentesPropios.PlaceholderTextField;
 import componentesPropios.TextDialog;
 import entidades.CMF;
 import entidades.Paciente;
@@ -66,11 +67,20 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 	private JList<String> listaEnfermedades;
 	private JList<String> listaVacunas;
 
-	private JRadioButton radioFemenino; // Declare as a class-level variable
-	private JRadioButton radioMasculino; // Declare as a class-level variable
-	private JCheckBox checkEmbarazada; // Declare as a class-level variable
-	private JDateChooser fechaUltimaPrueba; // Declare as a class-level variable
-	private JTextField textField;
+	private JRadioButton radioFemenino; 
+	private JRadioButton radioMasculino;
+	private JCheckBox checkEmbarazada;
+	private JDateChooser fechaUltimaPrueba;
+	private JTextField campoEdad;
+	
+	private JPanel panelAgrupador2;
+	
+	private JLabel botonEliminarEnfermedad;
+	private JLabel botonAgregarVacuna;
+	private JLabel botonEliminarVacuna;
+	private JLabel botonAgregarEnfermedad;
+	
+	private boolean editable;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -85,14 +95,35 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 		});
 	}
 
-	// New constructor for editing users
+	
 	/**
 	 * @wbp.parser.constructor
 	 */
-	public FormularioPaciente(Window ancestro, Paciente paciente) {
+	public FormularioPaciente(Window ancestro) {
 		super(ancestro, ModalityType.APPLICATION_MODAL);
+		inicializarFormulario();
+		setTitle("Agregar paciente");
+	}
+
+	
+	public FormularioPaciente(Window ancestro, Paciente paciente, boolean editable) {	
+		super(ancestro, ModalityType.APPLICATION_MODAL);
+		inicializarFormulario();
+		setTitle("Información del paciente");
+		this.editable = editable;
+		mostrarInformacionPaciente(paciente);	
+		activarEdicion(editable);
+		
+		JLabel cartelHistoriaClinica = new JLabel
+				("Número de Historia Clínica:" + String.valueOf(paciente.getHistoriaClinica().getId()));
+		cartelHistoriaClinica.setFont(new Font("Arial", Font.PLAIN, 16));
+		cartelHistoriaClinica.setBounds(40, 226, 250, 22);
+		panelAgrupador2.add(cartelHistoriaClinica);
+		
+	}
+	
+	public void inicializarFormulario() {
 		setResizable(false);
-		setTitle(paciente == null ? "Agregar paciente" : "Editar paciente");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(FormularioPaciente.class.getResource("/fotos/Logo peque.png")));
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 650, 700);
@@ -101,31 +132,7 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-
-		// Populate fields based on the provided Paciente object
-		String nombre = paciente != null ? paciente.getNombre() : "";
-		String primerApellido = paciente != null ? paciente.getPrimerApellido() : "";
-		String segundoApellido = paciente != null ? paciente.getSegundoApellido() : "";
-		String ci = paciente != null ? paciente.getCi() : "";
-		String direccion = paciente != null ? paciente.getDireccion() : "";
-		// Adapt logic for esFemenino and Mujer-specific fields
-		boolean esFemenino = paciente != null && Validations.isFemale(paciente.getCi());
-		boolean estaEmbarazada = false;
-		Date fechaUltimaPruebaSeleccionada = null;
-
-		if (esFemenino && paciente instanceof Mujer) {
-			Mujer mujer = (Mujer) paciente;
-			estaEmbarazada = mujer.isEmbarazada();
-			String fechaRevisionStr = mujer.getFechaUltimaRevision();
-			if (fechaRevisionStr != null && !fechaRevisionStr.isEmpty()) {
-				try {
-					fechaUltimaPruebaSeleccionada = new SimpleDateFormat("dd/MM/yyyy").parse(fechaRevisionStr);
-				} catch (Exception e) {
-					System.err.println("Error parsing fechaUltimaRevision: " + e.getMessage());
-				}
-			}
-		}
-
+		
 		JLabel cartelInformacionMedica = new JLabel("Informaci\u00F3n m\u00E9dica:");
 		cartelInformacionMedica.setHorizontalAlignment(SwingConstants.CENTER);
 		cartelInformacionMedica.setBackground(Color.WHITE);
@@ -160,52 +167,52 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 
 		cartelNombre = new JLabel("Nombre:");
 		cartelNombre.setFont(new Font("Arial", Font.PLAIN, 16));
-		cartelNombre.setBounds(173, 36, 175, 16);
+		cartelNombre.setBounds(173, 36, 69, 19);
 		panelAgrupador1.add(cartelNombre);
 
-		campoNombre = new JTextField();
+		campoNombre = new PlaceholderTextField();
 		campoNombre.setFont(new Font("Arial", Font.PLAIN, 16));
 		campoNombre.setColumns(10);
-		campoNombre.setBounds(173, 55, 175, 22);
+		campoNombre.setBounds(240, 34, 310, 22);
 		panelAgrupador1.add(campoNombre);
 
 		cartelPrimerApellido = new JLabel("Primer apellido:");
 		cartelPrimerApellido.setFont(new Font("Arial", Font.PLAIN, 16));
-		cartelPrimerApellido.setBounds(173, 101, 175, 22);
+		cartelPrimerApellido.setBounds(173, 65, 119, 22);
 		panelAgrupador1.add(cartelPrimerApellido);
 
-		campoPrimerApellido = new JTextField();
+		campoPrimerApellido = new PlaceholderTextField();
 		campoPrimerApellido.setFont(new Font("Arial", Font.PLAIN, 16));
 		campoPrimerApellido.setColumns(10);
-		campoPrimerApellido.setBounds(173, 124, 175, 22);
+		campoPrimerApellido.setBounds(293, 65, 257, 22);
 		panelAgrupador1.add(campoPrimerApellido);
 
-		campoSegundoApellido = new JTextField();
+		campoSegundoApellido = new PlaceholderTextField();
 		campoSegundoApellido.setFont(new Font("Arial", Font.PLAIN, 16));
 		campoSegundoApellido.setColumns(10);
-		campoSegundoApellido.setBounds(372, 124, 175, 22);
+		campoSegundoApellido.setBounds(311, 95, 236, 22);
 		panelAgrupador1.add(campoSegundoApellido);
 
 		cartelSegundoApellido = new JLabel("Segundo apellido:");
 		cartelSegundoApellido.setFont(new Font("Arial", Font.PLAIN, 16));
-		cartelSegundoApellido.setBounds(372, 101, 173, 22);
+		cartelSegundoApellido.setBounds(173, 95, 135, 22);
 		panelAgrupador1.add(cartelSegundoApellido);
 
-		campoCI = new JTextField();
+		campoCI = new PlaceholderTextField();
 		campoCI.setFont(new Font("Arial", Font.PLAIN, 16));
 		campoCI.setColumns(10);
-		campoCI.setBounds(372, 55, 175, 22);
+		campoCI.setBounds(321, 124, 226, 22);
 		panelAgrupador1.add(campoCI);
 
 		cartelCI = new JLabel("Carn\u00E9 de identidad:");
 		cartelCI.setFont(new Font("Arial", Font.PLAIN, 16));
-		cartelCI.setBounds(372, 36, 173, 16);
+		cartelCI.setBounds(173, 124, 143, 22);
 		panelAgrupador1.add(cartelCI);
 
-		campoDireccion = new JTextField();
+		campoDireccion = new PlaceholderTextField();
 		campoDireccion.setFont(new Font("Arial", Font.PLAIN, 16));
 		campoDireccion.setColumns(10);
-		campoDireccion.setBounds(126, 173, 421, 22);
+		campoDireccion.setBounds(117, 172, 433, 22);
 		panelAgrupador1.add(campoDireccion);
 
 		JLabel cartelDireccion = new JLabel("Direcci\u00F3n:");
@@ -252,11 +259,22 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 
 		ButtonGroup genero = new ButtonGroup();
 		genero.add(radioFemenino);
-		genero.add(radioMasculino);
-		
+		genero.add(radioMasculino);		
 		genero.clearSelection();
+		
+		JLabel cartelEdad = new JLabel("Edad:");
+		cartelEdad.setFont(new Font("Arial", Font.PLAIN, 16));
+		cartelEdad.setBounds(429, 218, 47, 19);
+		panelAgrupador1.add(cartelEdad);
+		
+		campoEdad = new PlaceholderTextField();
+		campoEdad.setText("");
+		campoEdad.setFont(new Font("Arial", Font.PLAIN, 16));
+		campoEdad.setColumns(10);
+		campoEdad.setBounds(478, 216, 69, 22);
+		panelAgrupador1.add(campoEdad);
 
-		JPanel panelAgrupador2 = new JPanel();
+		panelAgrupador2 = new JPanel();
 		panelAgrupador2.setBackground(Color.WHITE);
 		panelAgrupador2.setBounds(28, 326, 589, 272);
 		panelAgrupador2.setBorder(BORDE_COMPONENTE);
@@ -293,20 +311,20 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 		cartelVacunas.setFont(new Font("Arial", Font.PLAIN, 16));
 		panelAgrupador2.add(cartelVacunas);
 
-		JLabel botonEliminarEnfermedad = new JLabel("");
+		botonEliminarEnfermedad = new JLabel("");
 		botonEliminarEnfermedad.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				eliminarEnfermedadesSeleccionadas();
 			}
 		});
-		botonEliminarEnfermedad.setToolTipText("Clic para borrar los elemento(s) selecionado(s) lista");
+		botonEliminarEnfermedad.setToolTipText("Clic para borrar los elemento(s) selecionado(s) de la lista");
 		botonEliminarEnfermedad.setIcon(new ImageIcon(FormularioPaciente.class.getResource("/fotos/trash-22x22.png")));
 		botonEliminarEnfermedad.setBounds(258, 64, 22, 22);
 		botonEliminarEnfermedad.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		panelAgrupador2.add(botonEliminarEnfermedad);
 
-		JLabel botonEliminarVacuna = new JLabel("");
+		botonEliminarVacuna = new JLabel("");
 		botonEliminarVacuna.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -319,7 +337,7 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 		botonEliminarVacuna.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		panelAgrupador2.add(botonEliminarVacuna);
 
-		JLabel botonAgregarEnfermedad = new JLabel("");
+		botonAgregarEnfermedad = new JLabel("");
 		botonAgregarEnfermedad.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -332,7 +350,7 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 		botonAgregarEnfermedad.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		panelAgrupador2.add(botonAgregarEnfermedad);
 
-		JLabel botonAgregarVacuna = new JLabel("");
+		botonAgregarVacuna = new JLabel("");
 		botonAgregarVacuna.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -364,119 +382,11 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 		botonAceptar.setText("ACEPTAR");
 		botonAceptar.setBounds(260, 620, 130, 30);
 		contentPane.add(botonAceptar);
-
-
-		// Set field values
-		campoNombre.setText(nombre);
-		campoPrimerApellido.setText(primerApellido);
-		campoSegundoApellido.setText(segundoApellido);
-		campoCI.setText(ci);
-		campoDireccion.setText(direccion);
-		checkEmbarazada.setSelected(estaEmbarazada);
-		
-		JLabel cartelEdad = new JLabel("Edad:");
-		cartelEdad.setFont(new Font("Arial", Font.PLAIN, 16));
-		cartelEdad.setBounds(429, 218, 47, 19);
-		panelAgrupador1.add(cartelEdad);
-		
-		textField = new JTextField();
-		textField.setText("");
-		textField.setFont(new Font("Arial", Font.PLAIN, 16));
-		textField.setColumns(10);
-		textField.setBounds(478, 216, 69, 22);
-		panelAgrupador1.add(textField);
-		fechaUltimaPrueba.setDate(fechaUltimaPruebaSeleccionada);
-
-		// Populate lists
-		listModelEnfermedades.clear();
-		if (paciente != null && paciente.getEnfermedadesCronicas() != null) {
-			for (String enfermedad : paciente.getEnfermedadesCronicas()) {
-				listModelEnfermedades.addElement(enfermedad);
-			}
-		}
-
-		listModelVacunas.clear();
-		if (paciente != null && paciente.getVacunacion() != null) {
-			for (String vacuna : paciente.getVacunacion()) {
-				listModelVacunas.addElement(vacuna);
-			}
-		}
-
 		botonAceptar.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				CMF cmf = CMF.getInstance();
-
-				try {
-					// Obtener datos del formulario
-					String nombre = Validations.capitalize(campoNombre.getText().trim());
-					String primerApellido = Validations.capitalize(campoPrimerApellido.getText().trim());
-					String segundoApellido = Validations.capitalize(campoSegundoApellido.getText().trim());
-					String ci = campoCI.getText().trim();
-					String direccion = campoDireccion.getText().trim();
-					boolean esFemenino = radioFemenino.isSelected();
-					boolean estaEmbarazada = checkEmbarazada.isSelected();
-					Date fechaUltimaPruebaSeleccionada = fechaUltimaPrueba.getDate(); // Obtener la fecha seleccionada del JDateChooser
-
-					// Validar que los campos obligatorios no estén vacíos
-					if (nombre.isEmpty() || primerApellido.isEmpty() || ci.isEmpty()) {
-						throw new IllegalArgumentException("Los campos Nombre, Primer Apellido y CI son obligatorios.");
-					}
-
-					// Validar género y embarazo basado en el CI
-					boolean ciEsFemenino = Validations.isFemale(ci);
-					if (ciEsFemenino != esFemenino) {
-						throw new IllegalArgumentException("El género seleccionado no coincide con el CI proporcionado.");
-					}
-					if (!ciEsFemenino && estaEmbarazada) {
-						throw new IllegalArgumentException("Un paciente masculino no puede estar embarazado.");
-					}
-
-					// Validar que la fecha no sea nula antes de formatearla
-					String fechaUltimaPruebaStr = null;
-					if (fechaUltimaPruebaSeleccionada != null) {
-						fechaUltimaPruebaStr = new SimpleDateFormat("dd/MM/yyyy").format(fechaUltimaPruebaSeleccionada);
-					}
-
-					if(cmf.isCiRepited(ci)) {
-						throw new IllegalArgumentException("El CI proporcionado ya está registrado.");
-					}
-
-					// Obtener listas de enfermedades crónicas y vacunas
-					ArrayList<String> enfermedadesCronicas = new ArrayList<>(listModelEnfermedades.size());
-					for (int i = 0; i < listModelEnfermedades.size(); i++) {
-						enfermedadesCronicas.add(listModelEnfermedades.getElementAt(i));
-					}
-
-					ArrayList<String> vacunas = new ArrayList<>(listModelVacunas.size());
-					for (int i = 0; i < listModelVacunas.size(); i++) {
-						vacunas.add(listModelVacunas.getElementAt(i));
-					}
-
-					// Llamar al método agregarPaciente
-					boolean pacienteAgregado = cmf.agregarPaciente(
-							nombre,
-							primerApellido,
-							segundoApellido,
-							enfermedadesCronicas,
-							vacunas,
-							ci,
-							estaEmbarazada,
-							fechaUltimaPruebaStr
-							);
-
-					if (pacienteAgregado) {
-						JOptionPane.showMessageDialog(contentPane, "Paciente agregado exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-						dispose(); // Cerrar el formulario
-					} else {
-						JOptionPane.showMessageDialog(contentPane, "No se pudo agregar el paciente.", "Error", JOptionPane.ERROR_MESSAGE);
-					}
-				} catch (IllegalArgumentException ex) {
-					JOptionPane.showMessageDialog(contentPane, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-				} catch (Exception ex) {
-					JOptionPane.showMessageDialog(contentPane, "Ocurrió un error inesperado: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-				}
+				agregarPaciente();
 			}
 		});
 
@@ -486,11 +396,37 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 		contentPane.add(imagenFondo);
 	}
 
-	// Modify the existing constructor to call the new one with null
-	public FormularioPaciente(Window ancestro) {
-		this(ancestro, null); // Default to adding a new patient
-	}
+	public void mostrarInformacionPaciente(Paciente paciente) {
+		campoNombre.setText(paciente.getNombre());
+		campoPrimerApellido.setText(paciente.getPrimerApellido());
+		campoSegundoApellido.setText(paciente.getSegundoApellido());
+		campoCI.setText(paciente.getCi());
+		campoDireccion.setText(paciente.getDireccion());
+		campoEdad.setText(String.valueOf(paciente.getEdad()));
+		
+		if (paciente instanceof Mujer) {
+			radioFemenino.setSelected(true);
+			checkEmbarazada.setSelected(((Mujer) paciente).isEmbarazada());
+			fechaUltimaPrueba.setDate(((Mujer) paciente).getFechaUltimaRevision());
+		} else {
+			radioMasculino.setSelected(true);
+		}
 
+		
+		if (paciente.getEnfermedadesCronicas() != null) {
+			for (String enfermedad : paciente.getEnfermedadesCronicas()) {
+				listModelEnfermedades.addElement(enfermedad);
+			}
+		}
+
+		if (paciente.getVacunacion() != null) {
+			for (String vacuna : paciente.getVacunacion()) {
+				listModelVacunas.addElement(vacuna);
+			}
+		}
+
+	}
+	
 	protected void agregarEnfermedadCronica() {
 		TextDialog dialogo = new TextDialog((JDialog)this, "Agregar enfermedad crónica", "Introduzca una enfermedad crónica para agregar");
 		dialogo.setVisible(true);
@@ -527,5 +463,96 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 		for (int i = indices.length - 1; i >= 0; i--) {
 			listModelVacunas.remove(indices[i]);
 		}
+	}
+	
+	public void agregarPaciente() {
+		CMF cmf = CMF.getInstance();
+
+		try {
+			// Obtener datos del formulario
+			String nombre = Validations.capitalize(campoNombre.getText().trim());
+			String primerApellido = Validations.capitalize(campoPrimerApellido.getText().trim());
+			String segundoApellido = Validations.capitalize(campoSegundoApellido.getText().trim());
+			String ci = campoCI.getText().trim();
+			String direccion = campoDireccion.getText().trim();
+			boolean esFemenino = radioFemenino.isSelected();
+			boolean estaEmbarazada = checkEmbarazada.isSelected();
+			Date fechaUltimaPruebaSeleccionada = fechaUltimaPrueba.getDate(); // Obtener la fecha seleccionada del JDateChooser
+
+			// Validar que los campos obligatorios no estén vacíos
+			if (nombre.isEmpty() || primerApellido.isEmpty() || ci.isEmpty()) {
+				throw new IllegalArgumentException("Los campos Nombre, Primer Apellido y CI son obligatorios.");
+			}
+
+			// Validar género y embarazo basado en el CI
+			boolean ciEsFemenino = Validations.isFemale(ci);
+			if (ciEsFemenino != esFemenino) {
+				throw new IllegalArgumentException("El género seleccionado no coincide con el CI proporcionado.");
+			}
+			if (!ciEsFemenino && estaEmbarazada) {
+				throw new IllegalArgumentException("Un paciente masculino no puede estar embarazado.");
+			}
+
+			if(cmf.isCiRepited(ci)) {
+				throw new IllegalArgumentException("El CI proporcionado ya está registrado.");
+			}
+
+			// Obtener listas de enfermedades crónicas y vacunas
+			ArrayList<String> enfermedadesCronicas = new ArrayList<>(listModelEnfermedades.size());
+			for (int i = 0; i < listModelEnfermedades.size(); i++) {
+				enfermedadesCronicas.add(listModelEnfermedades.getElementAt(i));
+			}
+
+			ArrayList<String> vacunas = new ArrayList<>(listModelVacunas.size());
+			for (int i = 0; i < listModelVacunas.size(); i++) {
+				vacunas.add(listModelVacunas.getElementAt(i));
+			}
+
+			// Llamar al método agregarPaciente
+			boolean pacienteAgregado = cmf.agregarPaciente(
+					nombre,
+					primerApellido,
+					segundoApellido,
+					enfermedadesCronicas,
+					vacunas,
+					ci,
+					estaEmbarazada,
+					fechaUltimaPruebaSeleccionada
+					);
+
+			if (pacienteAgregado) {
+				JOptionPane.showMessageDialog(contentPane, "Paciente agregado exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+				dispose(); // Cerrar el formulario
+			} else {
+				JOptionPane.showMessageDialog(contentPane, "No se pudo agregar el paciente.", "Error", JOptionPane.ERROR_MESSAGE);
+			}
+		} catch (IllegalArgumentException ex) {
+			JOptionPane.showMessageDialog(contentPane, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+		} catch (Exception ex) {
+			JOptionPane.showMessageDialog(contentPane, "Ocurrió un error inesperado: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	
+	public void activarEdicion(boolean activo) {
+		campoNombre.setEditable(activo);
+		campoPrimerApellido.setEditable(activo);
+		campoSegundoApellido.setEditable(activo);
+		campoCI.setEditable(activo);
+		campoDireccion.setEditable(activo);
+		campoEdad.setEditable(activo);
+		
+		if (radioFemenino.isSelected()) {
+			radioMasculino.setEnabled(activo);
+		} else {
+			radioFemenino.setEnabled(activo);
+		}
+		
+		checkEmbarazada.setEnabled(activo);
+		botonAgregarEnfermedad.setVisible(activo);
+		botonAgregarVacuna.setVisible(activo);
+		botonEliminarEnfermedad.setVisible(activo);
+		botonEliminarVacuna.setVisible(activo);
+		
+		fechaUltimaPrueba.setEnabled(activo);
 	}
 }

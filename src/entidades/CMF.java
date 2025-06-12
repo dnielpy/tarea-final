@@ -126,7 +126,7 @@ public class CMF {
 	
 	public boolean agregarPaciente(String nombre, String primerApellido, String segundoApellido,
 			List<String> enfermedadesCronicas, List<String> vacunacion,
-			String CI, boolean estaEmbarazada, String fechaUltimaRevision) {
+			String CI, boolean estaEmbarazada, Date fechaUltimaRevision) {
 		if (!Validations.isValidCI(CI)) {
 			throw new IllegalArgumentException("CI inválido: " + CI);
 		}
@@ -347,7 +347,7 @@ public class CMF {
 	public static Date generarFechaRandom() {
 	    Calendar calendar = Calendar.getInstance();
 
-	    // Fecha inicio fija: 1 enero 1950
+	    // Fecha inicio fija
 	    calendar.set(1950, 0, 1);
 	    long startMillis = calendar.getTimeInMillis();
 
@@ -373,7 +373,7 @@ public class CMF {
 	    enfermedades2.add("Hipertensi\u00F3n");
 	    List<String> vacunas2 = new ArrayList<>();
 	    vacunas2.add("Antipolio: 13/4/2020");
-	    agregarPaciente("Amanda", "L\u00F3pez", "Garc\u00EDa", enfermedades2, vacunas2, "03021178187", false, "15/03/2023");
+	    agregarPaciente("Amanda", "L\u00F3pez", "Garc\u00EDa", enfermedades2, vacunas2, "03021178187", false, generarFechaRandom());
 
 	    List<String> enfermedades3 = new ArrayList<>();
 	    enfermedades3.add("Asma");
@@ -386,7 +386,7 @@ public class CMF {
 	    List<String> vacunas4 = new ArrayList<>();
 	    vacunas4.add("Antipolio: 10/1/2022");
 	    vacunas4.add("Antitet\u00E1nica: 5/3/2023");
-	    agregarPaciente("Daniela", "Su\u00E1rez", "Molina", enfermedades4, vacunas4, "95011022345", false, "20/03/2023");
+	    agregarPaciente("Daniela", "Su\u00E1rez", "Molina", enfermedades4, vacunas4, "95011022345", false, generarFechaRandom());
 
 	    List<String> enfermedades5 = new ArrayList<>();
 	    List<String> vacunas5 = new ArrayList<>();
@@ -402,7 +402,7 @@ public class CMF {
 	    List<String> enfermedades7 = new ArrayList<>();
 	    List<String> vacunas7 = new ArrayList<>();
 	    vacunas7.add("Antitet\u00E1nica: 3/4/2021");
-	    agregarPaciente("Gabriela", "Torres", "Mart\u00EDnez", enfermedades7, vacunas7, "94040322345", false, "05/04/2023");
+	    agregarPaciente("Gabriela", "Torres", "Mart\u00EDnez", enfermedades7, vacunas7, "94040322345", false, generarFechaRandom());
 
 	    List<String> enfermedades8 = new ArrayList<>();
 	    List<String> vacunas8 = new ArrayList<>();
@@ -413,7 +413,7 @@ public class CMF {
 	    List<String> vacunas9 = new ArrayList<>();
 	    vacunas9.add("Antigripal: 11/11/2020");
 	    vacunas9.add("Antitet\u00E1nica: 20/7/2022");
-	    agregarPaciente("Isabel", "Fern\u00E1ndez", "Cruz", enfermedades9, vacunas9, "03050322345", true, "15/04/2023");
+	    agregarPaciente("Isabel", "Fern\u00E1ndez", "Cruz", enfermedades9, vacunas9, "03050322345", true, generarFechaRandom());
 
 	    List<String> enfermedades10 = new ArrayList<>();
 	    List<String> vacunas10 = new ArrayList<>();
@@ -421,7 +421,7 @@ public class CMF {
 
 	    List<String> enfermedades11 = new ArrayList<>();
 	    List<String> vacunas11 = new ArrayList<>();
-	    agregarPaciente("Karla", "Ruiz", "Dom\u00EDnguez", enfermedades11, vacunas11, "98062122345", true, "25/04/2023");
+	    agregarPaciente("Karla", "Ruiz", "Dom\u00EDnguez", enfermedades11, vacunas11, "98062122345", true, generarFechaRandom());
 
 	    List<String> enfermedades12 = new ArrayList<>();
 	    List<String> vacunas12 = new ArrayList<>();
@@ -429,7 +429,7 @@ public class CMF {
 
 	    List<String> enfermedades13 = new ArrayList<>();
 	    List<String> vacunas13 = new ArrayList<>();
-	    agregarPaciente("Mar\u00EDa Jos\u00E9", "Salazar", "Garc\u00EDa", enfermedades13, vacunas13, "80031722345", true, "05/05/2023");
+	    agregarPaciente("Mar\u00EDa Jos\u00E9", "Salazar", "Garc\u00EDa", enfermedades13, vacunas13, "80031722345", true, generarFechaRandom());
 
 	    List<String> enfermedades14 = new ArrayList<>();
 	    List<String> vacunas14 = new ArrayList<>();
@@ -437,7 +437,7 @@ public class CMF {
 
 	    List<String> enfermedades15 = new ArrayList<>();
 	    List<String> vacunas15 = new ArrayList<>();
-	    agregarPaciente("Olga", "D\u00EDaz", "Garc\u00EDa", enfermedades15, vacunas15, "82082222345", false, "15/05/2023");
+	    agregarPaciente("Olga", "D\u00EDaz", "Garc\u00EDa", enfermedades15, vacunas15, "82082222345", false, generarFechaRandom());
 
 	    List<String> enfermedades16 = new ArrayList<>();
 	    List<String> vacunas16 = new ArrayList<>();
@@ -453,7 +453,7 @@ public class CMF {
 
 	    List<String> enfermedades19 = new ArrayList<>();
 	    List<String> vacunas19 = new ArrayList<>();
-	    agregarPaciente("Sof\u00EDa", "Medina", "Ramos", enfermedades19, vacunas19, "97090922345", false, "05/06/2023");
+	    agregarPaciente("Sof\u00EDa", "Medina", "Ramos", enfermedades19, vacunas19, "97090922345", false, generarFechaRandom());
 
 	    List<String> enfermedades20 = new ArrayList<>();
 	    List<String> vacunas20 = new ArrayList<>();
@@ -461,7 +461,7 @@ public class CMF {
 
 	    List<String> enfermedades21 = new ArrayList<>();
 	    List<String> vacunas21 = new ArrayList<>();
-	    agregarPaciente("\u00DArsula", "Vargas", "Delgado", enfermedades21, vacunas21, "92112322345", true, "15/06/2023");
+	    agregarPaciente("\u00DArsula", "Vargas", "Delgado", enfermedades21, vacunas21, "92112322345", true, generarFechaRandom());
 
 	    List<String> enfermedades22 = new ArrayList<>();
 	    List<String> vacunas22 = new ArrayList<>();
@@ -469,11 +469,11 @@ public class CMF {
 
 	    List<String> enfermedades23 = new ArrayList<>();
 	    List<String> vacunas23 = new ArrayList<>();
-	    agregarPaciente("Wendy", "Cruz", "L\u00F3pez", enfermedades23, vacunas23, "89080722345", true, "25/06/2023");
+	    agregarPaciente("Wendy", "Cruz", "L\u00F3pez", enfermedades23, vacunas23, "89080722345", true, generarFechaRandom());
 
 	    List<String> enfermedades24 = new ArrayList<>();
 	    List<String> vacunas24 = new ArrayList<>();
-	    agregarPaciente("Ximena", "Flores", "Castillo", enfermedades24, vacunas24, "95041422345", true, "30/06/2023");
+	    agregarPaciente("Ximena", "Flores", "Castillo", enfermedades24, vacunas24, "95041422345", true, generarFechaRandom());
 
 	    List<String> enfermedades25 = new ArrayList<>();
 	    List<String> vacunas25 = new ArrayList<>();
@@ -481,7 +481,7 @@ public class CMF {
 
 	    List<String> enfermedades26 = new ArrayList<>();
 	    List<String> vacunas26 = new ArrayList<>();
-	    agregarPaciente("Zulema", "Navarro", "Ruiz", enfermedades26, vacunas26, "88101822345", true, "10/07/2023");
+	    agregarPaciente("Zulema", "Navarro", "Ruiz", enfermedades26, vacunas26, "88101822345", true, generarFechaRandom());
 	}
 
 }

@@ -34,12 +34,12 @@ public class Paciente extends Persona {
     }
 
     public void setDireccion(String direccion) {
-        Objects.requireNonNull(direccion, "La dirección no puede ser nula");
+        Objects.requireNonNull(direccion, "La direcci\u00F3n no puede ser nula");
         if (direccion.trim().isEmpty()) {
-            throw new IllegalArgumentException("La dirección no puede estar vacía");
+            throw new IllegalArgumentException("La dirección no puede estar vac\u00EDa");
         }
         if (direccion.length() > 300) {
-            throw new IllegalArgumentException("La dirección no puede exceder 300 caracteres");
+            throw new IllegalArgumentException("La direcci\u00F3n no puede exceder 300 caracteres");
         }
         this.direccion = direccion.trim();
     }
@@ -52,7 +52,7 @@ public class Paciente extends Persona {
         if(Validations.isValidCI(carnet.trim())) {
             this.ci = carnet.trim();
         } else {
-            throw new IllegalArgumentException("Carnet de identidad inválido" + carnet);
+            throw new IllegalArgumentException("Carnet de identidad inv\u00E1lido" + carnet);
         }
     }
 
@@ -76,7 +76,7 @@ public class Paciente extends Persona {
     public void agregarEnfermedadCronica(String enfermedad) {
         Objects.requireNonNull(enfermedad, "La enfermedad no puede ser nula");
         if (enfermedad.trim().isEmpty()) {
-            throw new IllegalArgumentException("La enfermedad no puede estar vacía");
+            throw new IllegalArgumentException("La enfermedad no puede estar vac\u00EDa");
         }
         if (enfermedad.length() > 200) {
             throw new IllegalArgumentException("El nombre de la enfermedad no puede exceder 200 caracteres");
@@ -89,7 +89,7 @@ public class Paciente extends Persona {
     }
 
     public void setVacunacion(ArrayList<String> vacunacion) {
-        Objects.requireNonNull(vacunacion, "La lista de vacunación no puede ser nula");
+        Objects.requireNonNull(vacunacion, "La lista de vacunaci\u00F3n no puede ser nula");
         this.vacunacion = new ArrayList<>();
         for (String vacuna : vacunacion) {
             agregarVacuna(vacuna);
@@ -99,7 +99,7 @@ public class Paciente extends Persona {
     public void agregarVacuna(String vacuna) {
         Objects.requireNonNull(vacuna, "La vacuna no puede ser nula");
         if (vacuna.trim().isEmpty()) {
-            throw new IllegalArgumentException("La vacuna no puede estar vacía");
+            throw new IllegalArgumentException("La vacuna no puede estar vac\u00EDa");
         }
         if (vacuna.length() > 100) {
             throw new IllegalArgumentException("El nombre de la vacuna no puede exceder 100 caracteres");
