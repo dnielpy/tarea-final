@@ -5,11 +5,6 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-
-import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
@@ -36,6 +31,7 @@ public class PlaceholderTextField extends JTextField {
     private void initComponent() {
         setOpaque(false);
         setForeground(Color.BLACK);
+        setFont(new Font("Arial", Font.PLAIN, 16));
 
         // Redibujar al escribir
         getDocument().addDocumentListener(new DocumentListener() {

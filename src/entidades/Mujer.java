@@ -1,12 +1,8 @@
 package entidades;
 
-import java.util.ArrayList;
 import java.text.SimpleDateFormat;
-import java.text.ParseException;
-import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class Mujer extends Paciente {
@@ -45,7 +41,6 @@ public class Mujer extends Paciente {
 
     public void setEmbarazada(boolean embarazada) {
         if (this.getEdad() < 12 && embarazada) {
-            System.out.println(this.getEdad());
             throw new IllegalArgumentException("Paciente menor de 12 a\u00F1os no puede estar embarazada");
         }
         if (this.getEdad() > 55 && embarazada) {

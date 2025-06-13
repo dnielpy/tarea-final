@@ -154,7 +154,7 @@ public class CMF {
 			}
 		}
 
-		this.pacientes.add(newPaciente);
+		pacientes.add(newPaciente);
 		return true;
 	}
 
