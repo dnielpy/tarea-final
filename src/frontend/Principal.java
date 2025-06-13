@@ -96,14 +96,14 @@ public class Principal extends JFrame implements MouseListener, ConstantesFronte
         cartelRol.setBounds(31, 168, 237, 26);
         panelUsuario.add(cartelRol);
 
-        BotonBlanco botonIniciarSesion = new BotonBlanco("CERRAR SESI\u00D3N");
-        botonIniciarSesion.addActionListener(new ActionListener() {
+        BotonBlanco botonCerrarSesion = new BotonBlanco("CERRAR SESI\u00D3N");
+        botonCerrarSesion.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 cerrarSesion();
             }
         });
-        botonIniciarSesion.setBounds(55, 200, 185, 30);
-        panelUsuario.add(botonIniciarSesion);
+        botonCerrarSesion.setBounds(55, 200, 185, 30);
+        panelUsuario.add(botonCerrarSesion);
 
         JPanel panelPrincipal = new JPanel();
         panelPrincipal.setBackground(Color.WHITE);

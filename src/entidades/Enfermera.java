@@ -4,16 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Objects;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-
-import java.time.LocalDate;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Objects;
 
 public class Enfermera extends Persona {
     private int id;

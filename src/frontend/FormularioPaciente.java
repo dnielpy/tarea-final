@@ -10,6 +10,7 @@ import java.awt.Color;
 
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;
+import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.ImageIcon;
@@ -18,7 +19,6 @@ import javax.swing.SwingConstants;
 import javax.swing.JTextField;
 
 import java.awt.Font;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -47,6 +47,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.SystemColor;
 
 public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 
@@ -60,7 +61,6 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 	private JLabel cartelSegundoApellido;
 	private JTextField campoCI;
 	private JLabel cartelCI;
-	private JLabel imagenFondo;
 	private JTextField campoDireccion;
 	private DefaultListModel<String> listModelEnfermedades;
 	private DefaultListModel<String> listModelVacunas;
@@ -80,7 +80,11 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 	private JLabel botonEliminarVacuna;
 	private JLabel botonAgregarEnfermedad;
 	
+	private JButton botonCancelar;
+	private JButton botonEditar;
+	
 	private boolean editable;
+	private JPanel panelGris;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -101,8 +105,10 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 	 */
 	public FormularioPaciente(Window ancestro) {
 		super(ancestro, ModalityType.APPLICATION_MODAL);
+		this.editable = true;
 		inicializarFormulario();
 		setTitle("Agregar paciente");
+		activarEdicion(this.editable);
 	}
 
 	
@@ -112,10 +118,10 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 		setTitle("Información del paciente");
 		this.editable = editable;
 		mostrarInformacionPaciente(paciente);	
-		activarEdicion(editable);
+		activarEdicion(this.editable);
 		
 		JLabel cartelHistoriaClinica = new JLabel
-				("Número de Historia Clínica:" + String.valueOf(paciente.getHistoriaClinica().getId()));
+				("Número de Historia Clínica: " + String.valueOf(paciente.getHistoriaClinica().getId()));
 		cartelHistoriaClinica.setFont(new Font("Arial", Font.PLAIN, 16));
 		cartelHistoriaClinica.setBounds(40, 226, 250, 22);
 		panelAgrupador2.add(cartelHistoriaClinica);
@@ -165,7 +171,7 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 		imagenPaciente.setBorder(BORDE_COMPONENTE);
 		panelAgrupador1.add(imagenPaciente);
 
-		cartelNombre = new JLabel("Nombre:");
+		cartelNombre = new JLabel("Nombre: ");
 		cartelNombre.setFont(new Font("Arial", Font.PLAIN, 16));
 		cartelNombre.setBounds(173, 36, 69, 19);
 		panelAgrupador1.add(cartelNombre);
@@ -176,51 +182,47 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 		campoNombre.setBounds(240, 34, 310, 22);
 		panelAgrupador1.add(campoNombre);
 
-		cartelPrimerApellido = new JLabel("Primer apellido:");
+		cartelPrimerApellido = new JLabel("Primer apellido: ");
 		cartelPrimerApellido.setFont(new Font("Arial", Font.PLAIN, 16));
 		cartelPrimerApellido.setBounds(173, 65, 119, 22);
 		panelAgrupador1.add(cartelPrimerApellido);
 
 		campoPrimerApellido = new PlaceholderTextField();
-		campoPrimerApellido.setFont(new Font("Arial", Font.PLAIN, 16));
 		campoPrimerApellido.setColumns(10);
 		campoPrimerApellido.setBounds(293, 65, 257, 22);
 		panelAgrupador1.add(campoPrimerApellido);
 
 		campoSegundoApellido = new PlaceholderTextField();
-		campoSegundoApellido.setFont(new Font("Arial", Font.PLAIN, 16));
 		campoSegundoApellido.setColumns(10);
 		campoSegundoApellido.setBounds(311, 95, 236, 22);
 		panelAgrupador1.add(campoSegundoApellido);
 
-		cartelSegundoApellido = new JLabel("Segundo apellido:");
+		cartelSegundoApellido = new JLabel("Segundo apellido: ");
 		cartelSegundoApellido.setFont(new Font("Arial", Font.PLAIN, 16));
 		cartelSegundoApellido.setBounds(173, 95, 135, 22);
 		panelAgrupador1.add(cartelSegundoApellido);
 
 		campoCI = new PlaceholderTextField();
-		campoCI.setFont(new Font("Arial", Font.PLAIN, 16));
 		campoCI.setColumns(10);
 		campoCI.setBounds(321, 124, 226, 22);
 		panelAgrupador1.add(campoCI);
 
-		cartelCI = new JLabel("Carn\u00E9 de identidad:");
+		cartelCI = new JLabel("Carn\u00E9 de identidad: ");
 		cartelCI.setFont(new Font("Arial", Font.PLAIN, 16));
 		cartelCI.setBounds(173, 124, 143, 22);
 		panelAgrupador1.add(cartelCI);
 
 		campoDireccion = new PlaceholderTextField();
-		campoDireccion.setFont(new Font("Arial", Font.PLAIN, 16));
 		campoDireccion.setColumns(10);
 		campoDireccion.setBounds(117, 172, 433, 22);
 		panelAgrupador1.add(campoDireccion);
 
-		JLabel cartelDireccion = new JLabel("Direcci\u00F3n:");
+		JLabel cartelDireccion = new JLabel("Direcci\u00F3n: ");
 		cartelDireccion.setFont(new Font("Arial", Font.PLAIN, 16));
 		cartelDireccion.setBounds(40, 172, 82, 22);
 		panelAgrupador1.add(cartelDireccion);
 
-		JLabel cartelGenero = new JLabel("G\u00E9nero:");
+		JLabel cartelGenero = new JLabel("G\u00E9nero: ");
 		cartelGenero.setFont(new Font("Arial", Font.PLAIN, 16));
 		cartelGenero.setBounds(40, 219, 61, 16);
 		panelAgrupador1.add(cartelGenero);
@@ -231,6 +233,8 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 			public void actionPerformed(ActionEvent e) {
 				  checkEmbarazada.setSelected(false);
 				  checkEmbarazada.setEnabled(false);
+				  fechaUltimaPrueba.setDate(null);
+				  fechaUltimaPrueba.setEnabled(false);
 			}
 		});
 		radioMasculino.setFont(new Font("Arial", Font.PLAIN, 16));
@@ -242,6 +246,7 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 		radioFemenino.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				checkEmbarazada.setEnabled(true);
+				fechaUltimaPrueba.setEnabled(true);
 			}
 		});
 		radioFemenino.setFont(new Font("Arial", Font.PLAIN, 16));
@@ -262,14 +267,12 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 		genero.add(radioMasculino);		
 		genero.clearSelection();
 		
-		JLabel cartelEdad = new JLabel("Edad:");
+		JLabel cartelEdad = new JLabel("Edad: ");
 		cartelEdad.setFont(new Font("Arial", Font.PLAIN, 16));
 		cartelEdad.setBounds(429, 218, 47, 19);
 		panelAgrupador1.add(cartelEdad);
 		
 		campoEdad = new PlaceholderTextField();
-		campoEdad.setText("");
-		campoEdad.setFont(new Font("Arial", Font.PLAIN, 16));
 		campoEdad.setColumns(10);
 		campoEdad.setBounds(478, 216, 69, 22);
 		panelAgrupador1.add(campoEdad);
@@ -283,21 +286,25 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 
 		JScrollPane scrollPaneEnfermedades = new JScrollPane();
 		scrollPaneEnfermedades.setBounds(40, 91, 240, 122);
+		scrollPaneEnfermedades.setBorder(BORDE_COMPONENTE);
 		panelAgrupador2.add(scrollPaneEnfermedades);
 
 		listModelEnfermedades = new DefaultListModel<>();
 
 		listaEnfermedades = new JList<>(listModelEnfermedades);
+		listaEnfermedades.setBorder(null);
 		listaEnfermedades.setFont(new Font("Arial", Font.PLAIN, 16));
 		scrollPaneEnfermedades.setViewportView(listaEnfermedades);
 
 		JScrollPane scrollPaneVacunas = new JScrollPane();
 		scrollPaneVacunas.setBounds(308, 91, 240, 122);
+		scrollPaneVacunas.setBorder(BORDE_COMPONENTE);
 		panelAgrupador2.add(scrollPaneVacunas);
 
 		listModelVacunas = new DefaultListModel<>();
 
 		listaVacunas = new JList<>(listModelVacunas);
+		listaVacunas.setBorder(null);
 		listaVacunas.setFont(new Font("Arial", Font.PLAIN, 16));
 		scrollPaneVacunas.setViewportView(listaVacunas);
 
@@ -331,7 +338,7 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 				eliminarVacunasSeleccionadas();
 			}
 		});
-		botonEliminarVacuna.setToolTipText("Clic para borrar los elemento(s) selecionado(s) lista");
+		botonEliminarVacuna.setToolTipText("Clic para borrar los elemento(s) selecionado(s) de la lista");
 		botonEliminarVacuna.setIcon(new ImageIcon(FormularioPaciente.class.getResource("/fotos/trash-22x22.png")));
 		botonEliminarVacuna.setBounds(526, 64, 22, 22);
 		botonEliminarVacuna.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -376,11 +383,10 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 		fechaUltimaPrueba.setMaxSelectableDate(new Date());
 		panelAgrupador2.add(fechaUltimaPrueba);
 
-		BotonBlanco botonAceptar = new BotonBlanco((String) null);
+		BotonBlanco botonAceptar = new BotonBlanco("ACEPTAR");
 		botonAceptar.setFont(new Font("Arial", Font.PLAIN, 18));
-		botonAceptar.setToolTipText("Cick para guardar los datos actuales");
-		botonAceptar.setText("ACEPTAR");
-		botonAceptar.setBounds(260, 620, 130, 30);
+		botonAceptar.setToolTipText("Clic para guardar los datos actuales");
+		botonAceptar.setBounds(181, 620, 130, 30);
 		contentPane.add(botonAceptar);
 		botonAceptar.addActionListener(new ActionListener() {
 
@@ -389,11 +395,54 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 				agregarPaciente();
 			}
 		});
-
-		imagenFondo = new JLabel("");
-		imagenFondo.setIcon(new ImageIcon(FormularioPaciente.class.getResource("/fotos/fondo formulario paciente.jpg")));
-		imagenFondo.setBounds(0, 0, 650, 700);
-		contentPane.add(imagenFondo);
+		
+		BotonBlanco botonGuardar = new BotonBlanco("GUARDAR");
+		botonGuardar.setFont(new Font("Arial", Font.PLAIN, 18));
+		botonGuardar.setToolTipText("Clic para guardar los datos actuales");
+		botonGuardar.setBounds(181, 620, 130, 30);
+		contentPane.add(botonGuardar);
+		botonGuardar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+			}
+		});
+		
+		botonEditar = new BotonBlanco("EDITAR");
+		botonEditar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				activarEdicion(true);
+			}
+		});
+		botonEditar.setToolTipText("Clic para editar los datos del formulario");
+		botonEditar.setFont(new Font("Arial", Font.PLAIN, 18));
+		botonEditar.setBounds(344, 620, 130, 30);
+		contentPane.add(botonEditar);
+		
+		botonCancelar = new BotonBlanco("CANCELAR");
+		botonCancelar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+			}
+		});
+		botonCancelar.setToolTipText("Clic para volver a la ventana principal");
+		botonCancelar.setFont(new Font("Arial", Font.PLAIN, 18));
+		botonCancelar.setBounds(344, 620, 130, 30);
+		contentPane.add(botonCancelar);
+		
+		JPanel panelVerde = new JPanel();
+		panelVerde.setBounds(0, 0, 644, 124);
+		panelVerde.setBackground(COLOR_VERDE);
+		contentPane.add(panelVerde);
+		
+		JPanel panelAzul = new JPanel();
+		panelAzul.setBounds(0, 499, 650, 166);
+		panelAzul.setBackground(COLOR_AZUL);
+		contentPane.add(panelAzul);
+		
+		panelGris = new JPanel();
+		panelGris.setBackground(SystemColor.menu);
+		panelGris.setBounds(0, 134, 644, 354);
+		contentPane.add(panelGris);
 	}
 
 	public void mostrarInformacionPaciente(Paciente paciente) {
@@ -534,6 +583,7 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 	}
 	
 	public void activarEdicion(boolean activo) {
+		editable = activo;
 		campoNombre.setEditable(activo);
 		campoPrimerApellido.setEditable(activo);
 		campoSegundoApellido.setEditable(activo);
@@ -541,18 +591,23 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 		campoDireccion.setEditable(activo);
 		campoEdad.setEditable(activo);
 		
-		if (radioFemenino.isSelected()) {
-			radioMasculino.setEnabled(activo);
-		} else {
-			radioFemenino.setEnabled(activo);
-		}
+		radioMasculino.setVisible(activo);
+		radioFemenino.setVisible(activo);
+		checkEmbarazada.setVisible(activo);
+		fechaUltimaPrueba.setVisible(activo);
 		
-		checkEmbarazada.setEnabled(activo);
 		botonAgregarEnfermedad.setVisible(activo);
 		botonAgregarVacuna.setVisible(activo);
 		botonEliminarEnfermedad.setVisible(activo);
-		botonEliminarVacuna.setVisible(activo);
+		botonEliminarVacuna.setVisible(activo);		
 		
-		fechaUltimaPrueba.setEnabled(activo);
+		botonCancelar.setEnabled(activo);
+		botonCancelar.setVisible(activo);
+
+		botonEditar.setEnabled(!activo);
+		botonEditar.setVisible(!activo);
+		
+		revalidate();
+		repaint();
 	}
 }

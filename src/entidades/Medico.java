@@ -1,15 +1,9 @@
 package entidades;
 
 import java.text.SimpleDateFormat;
-import java.text.ParseException;
-import java.util.Objects;
-
 import service.Validations;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Objects;
 
 public class Medico extends Persona {
     private int numRegistro;
