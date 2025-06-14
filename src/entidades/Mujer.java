@@ -10,8 +10,8 @@ public class Mujer extends Paciente {
     private boolean embarazada;
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
-    public Mujer(int historiaClinicaID, String nombre, String primerApellido, String segundoApellido, String id, Date fechaUltimaRevision, boolean embarazada) {
-        super(historiaClinicaID, nombre, primerApellido, segundoApellido, id);
+    public Mujer(int historiaClinicaID, String nombre, String primerApellido, String segundoApellido, String id, String direccion, Date fechaUltimaRevision, boolean embarazada) {
+        super(historiaClinicaID, nombre, primerApellido, segundoApellido, id, direccion);
         setFechaUltimaRevision(fechaUltimaRevision);
         setEmbarazada(embarazada);
     }

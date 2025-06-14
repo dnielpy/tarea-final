@@ -13,13 +13,14 @@ public class Paciente extends Persona {
     protected int edad;
     protected String direccion;
 
-    public Paciente(int historiaClinicaID, String nombre, String primerApellido, String segundoApellido, String ci) {
+    public Paciente(int historiaClinicaID, String nombre, String primerApellido, String segundoApellido, String ci, String direccion) {
     	historiaClinica = new HistoriaClinica(historiaClinicaID);
         setNombre(nombre);
         setPrimerApellido(primerApellido);
         setSegundoApellido(segundoApellido);
         setCI(ci);
         setEdad();
+        setDireccion(direccion);
         this.vacunacion = new ArrayList<>();
         this.enfermedadesCronicas = new ArrayList<>();
         this.historiaClinica = new HistoriaClinica(historiaClinicaID);
