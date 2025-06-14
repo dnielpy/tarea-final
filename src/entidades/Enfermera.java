@@ -13,11 +13,12 @@ public class Enfermera extends Persona {
     private Date fechaInicio;
     private ArrayList<ResultadoAnalisis> resultadoAnalisis;
 
-    public Enfermera(String nombre, String primerApellido, String segundoApellido, int id, boolean licenciatura, int experiencia, Date fecha) {
+    public Enfermera(String nombre, String primerApellido, String segundoApellido, int id, String ci, boolean licenciatura, int experiencia, Date fecha) {
         setNombre(nombre);
         setPrimerApellido(primerApellido);
         setSegundoApellido(segundoApellido);
         setId(id);
+        setCI(ci);
         setLicenciatura(licenciatura);
         setExperiencia(experiencia);
         setFechaInicio(fecha);
@@ -30,7 +31,7 @@ public class Enfermera extends Persona {
 
     public void setId(int id) {
         if (id <= 0) {
-            throw new IllegalArgumentException("El ID debe ser un número positivo");
+            throw new IllegalArgumentException("El ID debe ser un nï¿½mero positivo");
         }
         this.id = id;
     }
@@ -52,7 +53,7 @@ public class Enfermera extends Persona {
             throw new IllegalArgumentException("La experiencia no puede ser negativa");
         }
         if (experiencia > 50) {
-            throw new IllegalArgumentException("La experiencia no puede ser mayor a 50 años");
+            throw new IllegalArgumentException("La experiencia no puede ser mayor a 50 aï¿½os");
         }
         this.experiencia = experiencia;
     }
@@ -80,7 +81,7 @@ public class Enfermera extends Persona {
     }
 
     public void agregarResultadoAnalisis(ResultadoAnalisis resultado) {
-        Objects.requireNonNull(resultado, "El resultado de análisis no puede ser nulo");
+        Objects.requireNonNull(resultado, "El resultado de anï¿½lisis no puede ser nulo");
         this.resultadoAnalisis.add(resultado);
     }
 }

@@ -7,7 +7,6 @@ import java.util.Date;
 
 public class Medico extends Persona {
     private int numRegistro;
-    private String ci;
     private Date fechaInscripcion;
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
@@ -16,7 +15,7 @@ public class Medico extends Persona {
         setPrimerApellido(primerApellido);
         setSegundoApellido(segundoApellido);
         setNumRegistro(numRegistro);
-        setCarnet(ci);
+        setCI(ci);
         setFechaInscripcion(fecha);
     }
 
@@ -29,18 +28,6 @@ public class Medico extends Persona {
             throw new IllegalArgumentException("Número de registro debe ser positivo");
         }
         this.numRegistro = numRegistro;
-    }
-
-    public String getCarnet() {
-        return ci;
-    }
-
-    public void setCarnet(String carnet) {
-        if (Validations.isValidCI(carnet)) {
-            this.ci = carnet;
-        } else {
-            throw new IllegalArgumentException("Carnet de identidad inválido");
-        }
     }
 
     // Getter que devuelve el objeto Date

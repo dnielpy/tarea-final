@@ -7,6 +7,19 @@ public abstract class Persona {
 	protected String nombre;
 	protected String primerApellido;
 	protected String segundoApellido;
+	protected String ci;
+
+	public String getCI(){
+		return ci;
+	}
+
+	public void setCI(String carnet) {
+        if(Validations.isValidCI(carnet.trim())) {
+            this.ci = carnet.trim();
+        } else {
+            throw new IllegalArgumentException("Carnet de identidad inv\u00E1lido" + carnet);
+        }
+    }
 
 	public String getNombre() {
 		return nombre;
