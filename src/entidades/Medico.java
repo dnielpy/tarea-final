@@ -5,12 +5,14 @@ import service.Validations;
 
 import java.util.Date;
 
-public class Medico extends Persona {
+public class Medico extends PersonalSanitario {
     private int numRegistro;
     private Date fechaInscripcion;
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
-    public Medico(String nombre, String primerApellido, String segundoApellido, int numRegistro, String ci, Date fecha) {
+    public Medico(String nombre, String primerApellido, String segundoApellido, int numRegistro, String ci, Date fecha, String email, String password) {
+        setEmail(email);
+        setPassword(password);
         setNombre(nombre);
         setPrimerApellido(primerApellido);
         setSegundoApellido(segundoApellido);
@@ -25,7 +27,7 @@ public class Medico extends Persona {
 
     public void setNumRegistro(int numRegistro) {
         if (numRegistro <= 0) {
-            throw new IllegalArgumentException("Número de registro debe ser positivo");
+            throw new IllegalArgumentException("Nï¿½mero de registro debe ser positivo");
         }
         this.numRegistro = numRegistro;
     }

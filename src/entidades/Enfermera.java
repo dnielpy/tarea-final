@@ -6,14 +6,16 @@ import java.util.Objects;
 import java.time.LocalDate;
 import java.time.ZoneId;
 
-public class Enfermera extends Persona {
+public class Enfermera extends PersonalSanitario {
     private int id;
     private boolean licenciatura;
     private int experiencia;
     private Date fechaInicio;
     private ArrayList<ResultadoAnalisis> resultadoAnalisis;
 
-    public Enfermera(String nombre, String primerApellido, String segundoApellido, int id, String ci, boolean licenciatura, int experiencia, Date fecha) {
+    public Enfermera(String nombre, String primerApellido, String segundoApellido, int id, String ci, boolean licenciatura, int experiencia, Date fecha, String email, String password) {
+        setEmail(email);
+        setPassword(password);
         setNombre(nombre);
         setPrimerApellido(primerApellido);
         setSegundoApellido(segundoApellido);

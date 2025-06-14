@@ -94,8 +94,8 @@ public class CMF {
 		this.nombreDirector = nombreDirector.trim();
 	}
 
-	public void crearMedico(String nombre, String primerApellido, String segundoApellido, int numRegistro, String ci, Date fecha) {
-		medico = new Medico(nombre, primerApellido, segundoApellido, numRegistro, ci, fecha);
+	public void crearMedico(String nombre, String primerApellido, String segundoApellido, int numRegistro, String ci, Date fecha, String email, String password) {
+		medico = new Medico(nombre, primerApellido, segundoApellido, numRegistro, ci, fecha, email, password);
 	}
 
 	public void crearRegistroGeneral() {
@@ -171,12 +171,12 @@ public class CMF {
 		return response;
 	}
 
-	public void crearEnfermera(String nombre, String primerApellido, String segundoApellido, int id, String ci,boolean licenciatura, int experiencia, Date fecha) {
+	public void crearEnfermera(String nombre, String primerApellido, String segundoApellido, int id, String ci,boolean licenciatura, int experiencia, Date fecha, String email, String password) {
 		Objects.requireNonNull(nombre, "El nombre no puede ser nulo");
 		if (this.enfermera != null) {
 			throw new IllegalStateException("Ya existe una enfermera asignada a este CMF");
 		}
-		this.enfermera = new Enfermera(nombre, primerApellido, segundoApellido, id, ci, licenciatura, experiencia, fecha);
+		this.enfermera = new Enfermera(nombre, primerApellido, segundoApellido, id, ci, licenciatura, experiencia, fecha, email, password);
 	}
 
 	public void agregarHojaCargoDiaria(Date fecha) {
@@ -364,9 +364,9 @@ public class CMF {
 	private static final Random rand = new Random();
 
 	private static String generarDireccionCuba() {
-	    String[] calles = {"Calle 23", "Avenida Boyeros", "Calle Línea", "Calle Monte", "Avenida 5ta", "Calle Obispo", "Calle Enramadas"};
+	    String[] calles = {"Calle 23", "Avenida Boyeros", "Calle Lï¿½nea", "Calle Monte", "Avenida 5ta", "Calle Obispo", "Calle Enramadas"};
 	    String[] municipios = {"Plaza", "Centro Habana", "Marianao", "Cerro", "Vedado", "Guanabacoa", "Habana del Este"};
-	    String[] provincias = {"La Habana", "Santiago de Cuba", "Camagüey", "Holguín", "Villa Clara", "Cienfuegos", "Pinar del Río"};
+	    String[] provincias = {"La Habana", "Santiago de Cuba", "Camagï¿½ey", "Holguï¿½n", "Villa Clara", "Cienfuegos", "Pinar del Rï¿½o"};
 
 	    String calle = calles[rand.nextInt(calles.length)] + " #" + (100 + rand.nextInt(900));
 	    String municipio = municipios[rand.nextInt(municipios.length)];
@@ -376,7 +376,7 @@ public class CMF {
 	}
 	
 	public void cargarDatos() {
-	    crearMedico("Alfonso", "Rodr\u00EDguez", "Camela", 11321, "75060212345", generarFechaRandom());
+	    crearMedico("Alfonso", "Rodr\u00EDguez", "Camela", 11321, "75060212345", generarFechaRandom(), "admin@example.com", "test");
 
 	    List<String> enfermedades1 = new ArrayList<>();
 	    enfermedades1.add("Diabetes");
