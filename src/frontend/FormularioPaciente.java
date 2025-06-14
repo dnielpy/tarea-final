@@ -30,6 +30,7 @@ import com.toedter.calendar.JDateChooser;
 import javax.swing.JScrollPane;
 
 import componentesPropios.BotonBlanco;
+import componentesPropios.ImageButtonLabel;
 import componentesPropios.PlaceholderTextField;
 import componentesPropios.TextDialog;
 import entidades.CMF;
@@ -54,14 +55,14 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 	private JPanel contentPane;
 	private JLabel imagenPaciente;
 	private JLabel cartelNombre;
-	private JTextField campoNombre;
+	private PlaceholderTextField campoNombre;
 	private JLabel cartelPrimerApellido;
-	private JTextField campoPrimerApellido;
-	private JTextField campoSegundoApellido;
+	private PlaceholderTextField campoPrimerApellido;
+	private PlaceholderTextField campoSegundoApellido;
 	private JLabel cartelSegundoApellido;
-	private JTextField campoCI;
+	private PlaceholderTextField campoCI;
 	private JLabel cartelCI;
-	private JTextField campoDireccion;
+	private PlaceholderTextField campoDireccion;
 	private DefaultListModel<String> listModelEnfermedades;
 	private DefaultListModel<String> listModelVacunas;
 	private JList<String> listaEnfermedades;
@@ -177,6 +178,7 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 		panelAgrupador1.add(cartelNombre);
 
 		campoNombre = new PlaceholderTextField();
+		campoNombre.setInputFormat(PlaceholderTextField.InputFormat.ALPHABETIC);
 		campoNombre.setFont(new Font("Arial", Font.PLAIN, 16));
 		campoNombre.setColumns(10);
 		campoNombre.setBounds(240, 34, 310, 22);
@@ -188,11 +190,13 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 		panelAgrupador1.add(cartelPrimerApellido);
 
 		campoPrimerApellido = new PlaceholderTextField();
+		campoPrimerApellido.setInputFormat(PlaceholderTextField.InputFormat.ALPHABETIC);
 		campoPrimerApellido.setColumns(10);
 		campoPrimerApellido.setBounds(293, 65, 257, 22);
 		panelAgrupador1.add(campoPrimerApellido);
 
 		campoSegundoApellido = new PlaceholderTextField();
+		campoSegundoApellido.setInputFormat(PlaceholderTextField.InputFormat.ALPHABETIC);
 		campoSegundoApellido.setColumns(10);
 		campoSegundoApellido.setBounds(311, 95, 236, 22);
 		panelAgrupador1.add(campoSegundoApellido);
@@ -203,6 +207,7 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 		panelAgrupador1.add(cartelSegundoApellido);
 
 		campoCI = new PlaceholderTextField();
+		campoCI.setInputFormat(PlaceholderTextField.InputFormat.NUMERIC);
 		campoCI.setColumns(10);
 		campoCI.setBounds(321, 124, 226, 22);
 		panelAgrupador1.add(campoCI);
@@ -264,8 +269,7 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 
 		ButtonGroup genero = new ButtonGroup();
 		genero.add(radioFemenino);
-		genero.add(radioMasculino);		
-		genero.clearSelection();
+		genero.add(radioMasculino);
 		
 		JLabel cartelEdad = new JLabel("Edad: ");
 		cartelEdad.setFont(new Font("Arial", Font.PLAIN, 16));
@@ -318,7 +322,8 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 		cartelVacunas.setFont(new Font("Arial", Font.PLAIN, 16));
 		panelAgrupador2.add(cartelVacunas);
 
-		botonEliminarEnfermedad = new JLabel("");
+		botonEliminarEnfermedad = new ImageButtonLabel
+				(new ImageIcon(FormularioPaciente.class.getResource("/fotos/trash-22x22.png")));
 		botonEliminarEnfermedad.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -326,12 +331,11 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 			}
 		});
 		botonEliminarEnfermedad.setToolTipText("Clic para borrar los elemento(s) selecionado(s) de la lista");
-		botonEliminarEnfermedad.setIcon(new ImageIcon(FormularioPaciente.class.getResource("/fotos/trash-22x22.png")));
 		botonEliminarEnfermedad.setBounds(258, 64, 22, 22);
-		botonEliminarEnfermedad.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		panelAgrupador2.add(botonEliminarEnfermedad);
 
-		botonEliminarVacuna = new JLabel("");
+		botonEliminarVacuna = new ImageButtonLabel
+				(new ImageIcon(FormularioPaciente.class.getResource("/fotos/trash-22x22.png")));
 		botonEliminarVacuna.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -339,12 +343,11 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 			}
 		});
 		botonEliminarVacuna.setToolTipText("Clic para borrar los elemento(s) selecionado(s) de la lista");
-		botonEliminarVacuna.setIcon(new ImageIcon(FormularioPaciente.class.getResource("/fotos/trash-22x22.png")));
 		botonEliminarVacuna.setBounds(526, 64, 22, 22);
-		botonEliminarVacuna.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		panelAgrupador2.add(botonEliminarVacuna);
 
-		botonAgregarEnfermedad = new JLabel("");
+		botonAgregarEnfermedad = new ImageButtonLabel
+				(new ImageIcon(FormularioPaciente.class.getResource("/fotos/agregar-22x22.png")));
 		botonAgregarEnfermedad.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -352,12 +355,11 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 			}
 		});
 		botonAgregarEnfermedad.setToolTipText("Clic para agregar nuevo elemento a la lista");
-		botonAgregarEnfermedad.setIcon(new ImageIcon(FormularioPaciente.class.getResource("/fotos/agregar-22x22.png")));
 		botonAgregarEnfermedad.setBounds(234, 64, 22, 22);
-		botonAgregarEnfermedad.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		panelAgrupador2.add(botonAgregarEnfermedad);
 
-		botonAgregarVacuna = new JLabel("");
+		botonAgregarVacuna = new ImageButtonLabel
+				(new ImageIcon(FormularioPaciente.class.getResource("/fotos/agregar-22x22.png")));
 		botonAgregarVacuna.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -365,9 +367,7 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 			}
 		});
 		botonAgregarVacuna.setToolTipText("Clic para agregar nuevo elemento a la lista");
-		botonAgregarVacuna.setIcon(new ImageIcon(FormularioPaciente.class.getResource("/fotos/agregar-22x22.png")));
 		botonAgregarVacuna.setBounds(502, 64, 22, 22);
-		botonAgregarVacuna.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		panelAgrupador2.add(botonAgregarVacuna);
 
 		JLabel cartelUltimaPrueba = new JLabel("Fecha de \u00FAltima prueba citol\u00F3gica:");
@@ -566,7 +566,8 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 					vacunas,
 					ci,
 					estaEmbarazada,
-					fechaUltimaPruebaSeleccionada
+					fechaUltimaPruebaSeleccionada,
+					direccion
 					);
 
 			if (pacienteAgregado) {

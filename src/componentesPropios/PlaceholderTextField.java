@@ -8,13 +8,18 @@ import javax.swing.event.DocumentListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
+import javax.swing.text.*;
+
 public class PlaceholderTextField extends JTextField {
+
+	public enum InputFormat {ANY, NUMERIC, ALPHABETIC, ALPHANUMERIC}
 
     private String placeholder;
     private Color placeholderColor = Color.GRAY;
     private Color lineColor = Color.BLACK;
-    private Color focusLineColor = new Color(0x2196F3); // Azul Material
+    private Color focusLineColor = new Color(0x2196F3);
     private boolean showError = false;
+    private InputFormat inputFormat = InputFormat.ANY;
 
     private static final Color ERROR_COLOR = Color.RED;
     private static final String ERROR_PLACEHOLDER = "*Campo obligatorio";
@@ -25,7 +30,7 @@ public class PlaceholderTextField extends JTextField {
     }
 
     public PlaceholderTextField() {
-        this("VacÌo");
+        this("Vac\u00EDo");
     }
 
     private void initComponent() {
@@ -33,40 +38,32 @@ public class PlaceholderTextField extends JTextField {
         setForeground(Color.BLACK);
         setFont(new Font("Arial", Font.PLAIN, 16));
 
+        // Filtro para validar entrada
+        ((AbstractDocument) this.getDocument()).setDocumentFilter(new InputValidationFilter());
+
         // Redibujar al escribir
         getDocument().addDocumentListener(new DocumentListener() {
             public void insertUpdate(DocumentEvent e) {
-                if (showError) limpiarError(); // Si escribe, limpiar error
+                if (showError) limpiarError();
                 repaint();
             }
 
-            public void removeUpdate(DocumentEvent e) {
-                repaint();
-            }
-
-            public void changedUpdate(DocumentEvent e) {
-                repaint();
-            }
+            public void removeUpdate(DocumentEvent e) { repaint(); }
+            public void changedUpdate(DocumentEvent e) { repaint(); }
         });
 
         // Redibujar al enfocar
         addFocusListener(new FocusAdapter() {
             @Override
-            public void focusGained(FocusEvent e) {
-                repaint();
-            }
-
+            public void focusGained(FocusEvent e) { repaint(); }
             @Override
-            public void focusLost(FocusEvent e) {
-                repaint();
-            }
+            public void focusLost(FocusEvent e) { repaint(); }
         });
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-
         if (getText().isEmpty()) {
             Graphics2D g2 = (Graphics2D) g.create();
             g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
@@ -86,7 +83,7 @@ public class PlaceholderTextField extends JTextField {
 
         Color color;
         if (!isEditable()) {
-            color = lineColor; // puedes usar new Color(180,180,180) para un gris claro
+            color = lineColor;
         } else if (showError) {
             color = ERROR_COLOR;
         } else if (isFocusOwner()) {
@@ -100,7 +97,7 @@ public class PlaceholderTextField extends JTextField {
         g2.dispose();
     }
 
-    // M…TODOS PERSONALIZADOS
+    // --- M…TODOS PERSONALIZADOS ---
 
     public void mostrarErrorCampoObligatorio() {
         if (getText().trim().isEmpty()) {
@@ -116,7 +113,7 @@ public class PlaceholderTextField extends JTextField {
         }
     }
 
-    // SETTERS
+    // --- SETTERS ---
 
     public void setPlaceholder(String placeholder) {
         this.placeholder = placeholder;
@@ -136,5 +133,56 @@ public class PlaceholderTextField extends JTextField {
     public void setFocusLineColor(Color color) {
         this.focusLineColor = color;
         repaint();
+    }
+
+    public void setInputFormat(InputFormat format) {
+        this.inputFormat = format;
+    }
+
+    // --- VALIDACI”N DE ENTRADA ---
+
+    private class InputValidationFilter extends DocumentFilter {
+        @Override
+        public void insertString(FilterBypass fb, int offset, String text, AttributeSet attr) throws BadLocationException {
+            replace(fb, offset, 0, text, attr);
+        }
+
+        @Override
+        public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
+            if (text == null) return;
+
+            String oldText = fb.getDocument().getText(0, fb.getDocument().getLength());
+            String newText = new StringBuilder(oldText).replace(offset, offset + length, text).toString();
+
+            newText = limpiarEspacios(newText);
+
+            if (esValidoSegunFormato(newText)) {
+                super.replace(fb, 0, fb.getDocument().getLength(), newText, attrs);
+            }
+        }
+
+        private String limpiarEspacios(String s) {
+            // Elimina espacios al principio y m·s de un espacio seguido
+            return s.replaceAll("^\\s+", "").replaceAll("\\s{2,}", " ");
+        }
+
+        private boolean esValidoSegunFormato(String text) {
+            String regex;
+            switch (inputFormat) {
+                case NUMERIC:
+                    regex = "[0-9 ]*";
+                    break;
+                case ALPHABETIC:
+                    regex = "[a-zA-Z·ÈÌÛ˙¡…Õ”⁄Ò— ]*";
+                    break;
+                case ALPHANUMERIC:
+                    regex = "[a-zA-Z0-9·ÈÌÛ˙¡…Õ”⁄Ò— ]*";
+                    break;
+                case ANY:
+                default:
+                    regex = ".*"; // Permitir cualquier car·cter
+            }
+            return text.matches(regex);
+        }
     }
 }
