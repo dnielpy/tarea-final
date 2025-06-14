@@ -1,13 +1,14 @@
 package runner;
 
-public class Auth {
-    private static final String DEFAULT_DOCTOR_EMAIL = "jose@medicoscmf.com";
-    private static final String DEFAULT_DOCTOR_PASSWORD = "12345678";
+import entidades.CMF;
 
-    private static final String DEFAULT_ENF_EMAIL = "yamila@enfermerascmf.com";
-    private static final String DEFAULT_ENF_PASSWORD = "12345678";
+public class Auth {
+    
+    CMF cmf = CMF.getInstance();
 
     public boolean authUser(String userEmail, String userPassword) throws AuthenticationException {
+        boolean response = false;
+        
         if (userEmail == null || userEmail.trim().isEmpty()) {
             throw new AuthenticationException("El email no puede estar vac\u00EDo");
         }
@@ -24,18 +25,28 @@ public class Auth {
             throw new AuthenticationException("La contrase\u00F1a debe tener al menos 8 caracteres");
         }
 
-        if (userEmail.equals(DEFAULT_DOCTOR_EMAIL) && userPassword.equals(DEFAULT_DOCTOR_PASSWORD)) {
-            Usuario.setEmail(DEFAULT_DOCTOR_EMAIL);
+        // Check doctor credentials
+        if (cmf.getMedico() != null && userEmail.equals(cmf.getMedico().getEmail()) && userPassword.equals(cmf.getMedico().getPassword())) {
+            Usuario.setEmail(cmf.getMedico().getEmail());
             Usuario.setPassword("");
             Usuario.setRole("M\u00C9DICO");
-        } else if (userEmail.equals(DEFAULT_ENF_EMAIL) && userPassword.equals(DEFAULT_ENF_PASSWORD)) {
-            Usuario.setEmail(DEFAULT_ENF_EMAIL);
+            response = true;
+        }
+
+        // Check nurse credentials
+        if (cmf.getEnfermera() != null && userEmail.equals(cmf.getEnfermera().getEmail()) && userPassword.equals(cmf.getEnfermera().getPassword()) && response == false) {
+            Usuario.setEmail(cmf.getEnfermera().getEmail());
             Usuario.setPassword("");
             Usuario.setRole("ENFERMERA");
-        } else {
+            response = true;
+        }
+
+        if(response){
+            return response;
+        }
+        else{
             throw new AuthenticationException("Credenciales incorrectas");
         }
-        return true;
     }
 
     private boolean isValidEmail(String email) {

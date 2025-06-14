@@ -376,7 +376,7 @@ public class CMF {
 	}
 	
 	public void cargarDatos() {
-	    crearMedico("Alfonso", "Rodr\u00EDguez", "Camela", 11321, "75060212345", generarFechaRandom(), "admin@example.com", "test");
+	    crearMedico("Alfonso", "Rodr\u00EDguez", "Camela", 11321, "75060212345", generarFechaRandom(), "admin@example.com", "12345678");
 
 	    List<String> enfermedades1 = new ArrayList<>();
 	    enfermedades1.add("Diabetes");
