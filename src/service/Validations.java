@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.Period;
 
 import componentesPropios.InfoDialog;
+import excepciones.Excepciones.IllegalCiException;
 
 public class Validations {
 
@@ -26,7 +27,7 @@ public class Validations {
 		boolean isValid = true;
 
 		if (ci == null || ci.length() != 11 || !ci.matches("\\d{11}")) {
-			isValid = false;
+			throw new IllegalCiException("El CI debe tener 11 dÃ­gitos y solo contener nÃºmeros");
 		} else {
 			String year = ci.substring(0, 2);
 			String month = ci.substring(2, 4);
@@ -66,9 +67,9 @@ public class Validations {
 				int day = Integer.parseInt(string.substring(4, 6));
 				int currentYear = LocalDate.now().getYear();
 				int currentCentury = (currentYear / 100) * 100;
-				// Determinar el siglo (asume personas con menos de 120 años)
+				// Determinar el siglo (asume personas con menos de 120 aï¿½os)
 				int fullYear = (year > currentYear % 100) ? (currentCentury - 100 + year) : (currentCentury + year);
-				// Validar que la fecha sea válida
+				// Validar que la fecha sea vï¿½lida
 				LocalDate nacimiento = LocalDate.of(fullYear, month, day);
 				LocalDate hoy = LocalDate.now();
 				years = Period.between(nacimiento, hoy).getYears();

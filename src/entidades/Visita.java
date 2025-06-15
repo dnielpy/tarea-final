@@ -3,6 +3,9 @@ package entidades;
 import java.util.Date;
 import java.util.Objects;
 
+import excepciones.Excepciones.IllegalAddressException;
+import excepciones.Excepciones.IllegalNameException;
+
 public class Visita {
     private int id;
     private String pacienteID;
@@ -66,7 +69,7 @@ public class Visita {
 
     public void setDiagnostico(String diagnostico) {
         if (diagnostico == null || diagnostico.trim().isEmpty()) {
-            throw new IllegalArgumentException("Diagn\u00F3stico no puede ser nulo o vac\u00EDo");
+            throw new IllegalNameException("Diagnóstico no puede ser nulo o vacío");
         }
         this.diagnostico = diagnostico;
     }
@@ -77,7 +80,7 @@ public class Visita {
 
     public void setDireccion(String direccion) {
         if (direccion == null || direccion.trim().isEmpty()) {
-            throw new IllegalArgumentException("Direcci\u00F3n no puede ser nula o vac\u00EDa");
+            throw new IllegalAddressException("Dirección no puede ser nula o vacía");
         }
         this.direccion = direccion;
     }

@@ -3,6 +3,9 @@ package entidades;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import excepciones.Excepciones.IllegalAddressException;
+import excepciones.Excepciones.IllegalCiException;
+import excepciones.Excepciones.IllegalVaccinationException;
 import service.Validations;
 
 public class Paciente extends Persona {
@@ -34,12 +37,12 @@ public class Paciente extends Persona {
     }
 
     public void setDireccion(String direccion) {
-        Objects.requireNonNull(direccion, "La direcci\u00F3n no puede ser nula");
+        Objects.requireNonNull(direccion, "La dirección no puede ser nula");
         if (direccion.trim().isEmpty()) {
-            throw new IllegalArgumentException("La dirección no puede estar vac\u00EDa");
+            throw new IllegalAddressException("La dirección no puede estar vacía");
         }
         if (direccion.length() > 300) {
-            throw new IllegalArgumentException("La direcci\u00F3n no puede exceder 300 caracteres");
+            throw new IllegalAddressException("La dirección no puede exceder 300 caracteres");
         }
         this.direccion = direccion.trim();
     }
@@ -87,10 +90,10 @@ public class Paciente extends Persona {
     public void agregarVacuna(String vacuna) {
         Objects.requireNonNull(vacuna, "La vacuna no puede ser nula");
         if (vacuna.trim().isEmpty()) {
-            throw new IllegalArgumentException("La vacuna no puede estar vac\u00EDa");
+            throw new IllegalVaccinationException("La vacuna no puede estar vacía");
         }
         if (vacuna.length() > 100) {
-            throw new IllegalArgumentException("El nombre de la vacuna no puede exceder 100 caracteres");
+            throw new IllegalVaccinationException("El nombre de la vacuna no puede exceder 100 caracteres");
         }
         this.vacunacion.add(vacuna.trim());
     }

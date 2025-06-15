@@ -5,6 +5,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import excepciones.Excepciones.IllegalDateException;
+
 public class Mujer extends Paciente {
     private Date fechaUltimaRevision;
     private boolean embarazada;
@@ -24,12 +26,12 @@ public class Mujer extends Paciente {
         if (fechaUltimaRevision != null) {
             Calendar calendario = Calendar.getInstance();         
             if (fechaUltimaRevision.after(calendario.getTime())) {
-			    throw new IllegalArgumentException("Fecha de revisi\u00F3n no puede ser futura");
+			    throw new IllegalDateException("Fecha de revisi\u00F3n no puede ser futura");
 			}
             
             calendario.setTime(fechaUltimaRevision);
 			if (calendario.get(Calendar.YEAR) < 1900) {
-			    throw new IllegalArgumentException("Fecha de revisi\u00F3n no puede ser anterior a 1900");
+			    throw new IllegalDateException("Fecha de revisi\u00F3n no puede ser anterior a 1900");
 			}		
         }
         this.fechaUltimaRevision = fechaUltimaRevision;
