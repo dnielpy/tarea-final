@@ -12,17 +12,12 @@ public class Paciente extends Persona {
     protected ArrayList<String> enfermedadesCronicas;
     protected ArrayList<String> vacunacion;
     protected HistoriaClinica historiaClinica;
-    protected int edad;
     protected String direccion;
 
     public Paciente(int historiaClinicaID, String nombre, String primerApellido, String segundoApellido, String ci, String direccion) {
-    	historiaClinica = new HistoriaClinica(historiaClinicaID);
-        setNombre(nombre);
-        setPrimerApellido(primerApellido);
-        setSegundoApellido(segundoApellido);
-        setCI(ci);
-        setEdad();
-        setDireccion(direccion);
+    	super(nombre, primerApellido, segundoApellido, ci);
+    	setDireccion(direccion);
+    	historiaClinica = new HistoriaClinica(historiaClinicaID);  
         this.vacunacion = new ArrayList<>();
         this.enfermedadesCronicas = new ArrayList<>();
         this.historiaClinica = new HistoriaClinica(historiaClinicaID);
@@ -47,17 +42,13 @@ public class Paciente extends Persona {
         this.direccion = direccion.trim();
     }
 
-    public void setEdad() {
-        this.edad = Validations.getAgeFromCI(ci);
-    }
-
     public int getEdad() {
-        return this.edad;
+        return Validations.getAgeFromCI(ci);
     }
 
     public String getGenero() {
-        int septimoDigito = Character.getNumericValue(ci.charAt(6));
-        return (septimoDigito % 2 == 0) ? "Femenino" : "Masculino";
+        int decimoDigito = Character.getNumericValue(ci.charAt(9));
+        return (decimoDigito % 2 == 0) ? "Femenino" : "Masculino";
     }
 
     public ArrayList<String> getEnfermedadesCronicas() {

@@ -5,7 +5,13 @@ public abstract class PersonalSanitario extends Persona{
     protected String email;
     protected String password;
 
-
+    public PersonalSanitario(String nombre, String primerApellido, 
+    		String segundoApellido, String ci, String email, String password) {
+    	super(nombre, primerApellido, segundoApellido, ci);
+    	setEmail(email);
+    	setPassword(password);
+    }
+    
     public String getEmail() {
         return email;
     }

@@ -14,13 +14,8 @@ public class Enfermera extends PersonalSanitario {
     private ArrayList<ResultadoAnalisis> resultadoAnalisis;
 
     public Enfermera(String nombre, String primerApellido, String segundoApellido, int id, String ci, boolean licenciatura, int experiencia, Date fecha, String email, String password) {
-        setEmail(email);
-        setPassword(password);
-        setNombre(nombre);
-        setPrimerApellido(primerApellido);
-        setSegundoApellido(segundoApellido);
+        super(nombre, primerApellido, segundoApellido, ci, email, password); 	
         setId(id);
-        setCI(ci);
         setLicenciatura(licenciatura);
         setExperiencia(experiencia);
         setFechaInicio(fecha);

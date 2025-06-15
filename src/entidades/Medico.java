@@ -11,13 +11,8 @@ public class Medico extends PersonalSanitario {
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
     public Medico(String nombre, String primerApellido, String segundoApellido, int numRegistro, String ci, Date fecha, String email, String password) {
-        setEmail(email);
-        setPassword(password);
-        setNombre(nombre);
-        setPrimerApellido(primerApellido);
-        setSegundoApellido(segundoApellido);
+        super(nombre, primerApellido, segundoApellido, ci, email, password);
         setNumRegistro(numRegistro);
-        setCI(ci);
         setFechaInscripcion(fecha);
     }
 

@@ -14,34 +14,32 @@ public class ImageButtonLabel extends JLabel {
         setOpaque(false);
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
-        // Interacciones
-        if (!isEnabled()) {
-        	addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseEntered(MouseEvent e) {
-                    alpha = 0.6f;
-                    repaint();
-                }
+        addMouseListener(new MouseAdapter() {
+        	@Override
+        	public void mouseEntered(MouseEvent e) {
+        		alpha = 0.6f;
+        		repaint();
+        	}
 
-                @Override
-                public void mouseExited(MouseEvent e) {
-                    alpha = 1.0f;
-                    repaint();
-                }
+        	@Override
+        	public void mouseExited(MouseEvent e) {
+        		alpha = 1.0f;
+        		repaint();
+        	}
 
-                @Override
-                public void mousePressed(MouseEvent e) {
-                    alpha = 0.4f;
-                    repaint();
-                }
+        	@Override
+        	public void mousePressed(MouseEvent e) {
+        		alpha = 0.4f;
+        		repaint();
+        	}
 
-                @Override
-                public void mouseReleased(MouseEvent e) {
-                    alpha = 0.6f;
-                    repaint();
-                }
-            });
-        }   
+        	@Override
+        	public void mouseReleased(MouseEvent e) {
+        		alpha = 0.6f;
+        		repaint();
+        	}
+        });
+
 
         // Focus (para teclas o tabulación)
         setFocusable(true);
