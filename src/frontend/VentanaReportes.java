@@ -2,9 +2,12 @@ package frontend;
 
 import java.awt.*;
 import java.awt.event.*;
+
 import javax.swing.*;
 import javax.swing.border.LineBorder;
+
 import componentesPropios.BotonReporte;
+import componentesPropios.ImageButtonLabel;
 import entidades.CMF;
 
 public class VentanaReportes extends JPanel implements MouseListener, ConstantesFrontend {
@@ -96,7 +99,8 @@ public class VentanaReportes extends JPanel implements MouseListener, Constantes
 		add(panelEncabezado);
 		panelEncabezado.setLayout(null);
 		
-		JLabel botonAtras = new JLabel("");
+		ImageButtonLabel botonAtras = new ImageButtonLabel
+				(new ImageIcon(VentanaReportes.class.getResource("/fotos/atras.png")));
 		botonAtras.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -105,10 +109,7 @@ public class VentanaReportes extends JPanel implements MouseListener, Constantes
 				panelEncabezado.setVisible(false);			
 			}
 		});
-		botonAtras.setIcon(new ImageIcon(VentanaReportes.class.getResource("/fotos/atras.png")));
-		botonAtras.setFont(new Font("Arial", Font.BOLD, 16));
 		botonAtras.setBounds(47, 15, 18, 18);
-		botonAtras.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		panelEncabezado.add(botonAtras);
 		
 		JSeparator separadorEncabezado = new JSeparator();

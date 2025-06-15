@@ -3,8 +3,6 @@ package frontend;
 import javax.swing.table.AbstractTableModel;
 
 import entidades.Paciente;
-import entidades.Persona;
-
 import java.util.List;
 
 public class PacienteTableModel extends AbstractTableModel {
@@ -14,52 +12,56 @@ public class PacienteTableModel extends AbstractTableModel {
     public PacienteTableModel(List<Paciente> pacientes) {
         this.pacientes = pacientes;
     }
-    
+
     public void setPacientes(List<Paciente> pacientes) {
         this.pacientes = pacientes;
+        fireTableDataChanged(); 
     }
 
     public int getRowCount() {
-        return pacientes.size();
+        return (pacientes != null) ? pacientes.size() : 0;
     }
 
     public int getColumnCount() {
-        return columnNames.length;
+        return (columnNames != null) ? columnNames.length : 0;
     }
 
     public Object getValueAt(int rowIndex, int columnIndex) {
-        Persona paciente = pacientes.get(rowIndex);
-        switch (columnIndex) {
-            case 0:
-                return paciente.getNombreYApellidos();
-            case 1:
-                return ((Paciente)paciente).getGenero();
-            case 2:
-                return ((Paciente)paciente).getCI();
-            case 3:
-                return ((Paciente)paciente).getHistoriaClinica().getId();
-            case 4:
-                return ((Paciente)paciente).getEdad();
-            default:
-                return null;
-        }
+        Paciente paciente = pacientes.get(rowIndex);
+        Object value = null;
+
+        if (columnIndex == 0) value = paciente.getNombreYApellidos();
+        if (columnIndex == 1) value = paciente.getGenero();
+        if (columnIndex == 2) value = paciente.getCI();
+        if (columnIndex == 3) value = paciente.getHistoriaClinica().getId();
+        if (columnIndex == 4) value = paciente.getEdad();
+
+        return value;
     }
 
     @Override
     public String getColumnName(int column) {
         return columnNames[column];
     }
-    
-    // MÉTODO PERSONALIZADO PARA ELIMINAR FILAS
-    public void eliminarPacientePorId(int id, int indice) {
-    	boolean ciclar = true;
-        for (int i = 0; i < pacientes.size() && ciclar; i++) {
-            if (pacientes.get(i).getHistoriaClinica().getId() == id) {
-                pacientes.remove(i);
-                fireTableRowsDeleted(indice, indice);  // Notificar a la tabla que una fila fue eliminada
-                ciclar = false;
-            }
-        }
+
+    @Override
+    public Class<?> getColumnClass(int columnIndex) {
+        Object value = (getRowCount() > 0) ? getValueAt(0, columnIndex) : null;
+        return (value != null) ? value.getClass() : Object.class;
     }
 
+    public void eliminarPacientePorId(int id) {
+        int index = -1;
+
+        for (int i = 0; i < pacientes.size(); i++) {
+            if (pacientes.get(i).getHistoriaClinica().getId() == id && index == -1) {
+                index = i;
+            }
+        }
+
+        if (index != -1) {
+            fireTableRowsDeleted(index, index); // Notificar ANTES de eliminar
+            pacientes.remove(index);
+        }
+    }
 }

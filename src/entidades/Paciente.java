@@ -48,7 +48,7 @@ public class Paciente extends Persona {
 
     public String getGenero() {
         int decimoDigito = Character.getNumericValue(ci.charAt(9));
-        return (decimoDigito % 2 == 0) ? "Femenino" : "Masculino";
+        return (decimoDigito % 2 == 0) ? "Masculino" : "Femenino";
     }
 
     public ArrayList<String> getEnfermedadesCronicas() {

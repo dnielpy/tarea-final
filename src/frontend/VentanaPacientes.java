@@ -1,8 +1,5 @@
 package frontend;
 
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.JTableHeader;
-
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
@@ -29,10 +26,13 @@ import javax.swing.ImageIcon;
 
 import componentesPropios.InfoDialog;
 import componentesPropios.QuestionDialog;
+import componentesPropios.TablaPersonalizada;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 public class VentanaPacientes extends JPanel implements ConstantesFrontend {
 
@@ -45,59 +45,49 @@ public class VentanaPacientes extends JPanel implements ConstantesFrontend {
         initComponents();
     }
 
-    private static void customizeTable(JTable table) {
-        table.setBackground(Color.WHITE);
-        table.setForeground(Color.BLACK);
-        table.setFont(new Font("Arial", Font.PLAIN, 16));
-        JTableHeader header = table.getTableHeader();
-        header.setBackground(Color.WHITE);
-        header.setForeground(Color.BLACK);
-        header.setFont(new Font("Arial", Font.BOLD, 16));
-        table.setGridColor(SystemColor.controlHighlight);
-        DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
-        renderer.setBorder(BORDE_COMPONENTE);
-        table.setDefaultRenderer(Object.class, renderer);
-        table.setRowHeight(30);
-        table.setFillsViewportHeight(true);
-    }
-
     public void borrarSeleccion() {
         int[] selectedRows = table.getSelectedRows();
-        
-        if (selectedRows.length > 0) {
+
+        if (selectedRows.length == 0) {
+            new InfoDialog(
+                null,
+                "Advertencia",
+                "No se ha seleccionado ninguna fila."
+            ).setVisible(true);
+        } else {
             QuestionDialog confirmDialog = new QuestionDialog(
-                    null,
-                    "Confirmar eliminación",
-                    "¿Está seguro de que desea eliminar la(s) fila(s) seleccionada(s)?"
+                null,
+                "Confirmar eliminación",
+                "¿Está seguro de que desea eliminar la(s) fila(s) seleccionada(s)?"
             );
             confirmDialog.setVisible(true);
 
             if (confirmDialog.esConfirmado()) {
-                for (int i = selectedRows.length - 1; i >= 0; i--) {
+                List<Integer> idsAEliminar = new ArrayList<>();
+
+                for (int i = 0; i < selectedRows.length; i++) {
                     int viewRow = selectedRows[i];
                     int modelRow = table.convertRowIndexToModel(viewRow);
                     int id = (int) model.getValueAt(modelRow, model.findColumn("H. Clínica"));
-                    model.eliminarPacientePorId(id, modelRow);
+                    idsAEliminar.add(id);
+                }
+
+                for (int i = 0; i < idsAEliminar.size(); i++) {
+                    model.eliminarPacientePorId(idsAEliminar.get(i));
                 }
 
                 new InfoDialog(
-                        null,
-                        "Eliminación exitosa",
-                        "La selección fue eliminada correctamente."
+                    null,
+                    "Eliminación exitosa",
+                    "La selección fue eliminada correctamente."
                 ).setVisible(true);
             } else {
                 new InfoDialog(
-                        null,
-                        "Cancelado",
-                        "La eliminación fue cancelada."
+                    null,
+                    "Cancelado",
+                    "La eliminación fue cancelada."
                 ).setVisible(true);
             }
-        } else {
-            new InfoDialog(
-                    null,
-                    "Advertencia",
-                    "No se ha seleccionado ninguna fila."
-            ).setVisible(true);
         }
     }
 
@@ -133,6 +123,7 @@ public class VentanaPacientes extends JPanel implements ConstantesFrontend {
         cartelPestanna.setBounds(25, 0, 107, 51);
         panelSuperior.add(cartelPestanna);
 
+        // Crear el modelo de la tabla con edición desactivada
         model = new PacienteTableModel(cmf.getPacientes()) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -140,26 +131,31 @@ public class VentanaPacientes extends JPanel implements ConstantesFrontend {
             }
         };
 
-        table = new JTable(model);
-        table.getColumnModel().getColumn(0).setPreferredWidth(200);
-        table.getColumnModel().getColumn(1).setPreferredWidth(30);
-        table.getColumnModel().getColumn(2).setPreferredWidth(70);
-        table.getColumnModel().getColumn(3).setPreferredWidth(30);
-        table.getColumnModel().getColumn(4).setPreferredWidth(10);
+        table = TablaPersonalizada.crearTablaPersonalizada(model);
 
-        TableRowSorter<PacienteTableModel> sorter = new TableRowSorter<>(model);
-        table.setRowSorter(sorter);
+		// Configuración de columnas (si quieres hacerla personalizada por tabla)
+		table.getColumnModel().getColumn(0).setPreferredWidth(200);
+		table.getColumnModel().getColumn(1).setPreferredWidth(30);
+		table.getColumnModel().getColumn(2).setPreferredWidth(70);
+		table.getColumnModel().getColumn(3).setPreferredWidth(30);
+		table.getColumnModel().getColumn(4).setPreferredWidth(10);
 
-        JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setBounds(0, 30, 630, 406);
+		// Filtro (si aplica)
+		TableRowSorter<PacienteTableModel> sorter = new TableRowSorter<>(model);
+		table.setRowSorter(sorter);
 
-        JPanel panelTabla = new JPanel();
-        panelTabla.setBackground(Color.WHITE);
-        panelTabla.setBounds(80, 130, 630, 439);
-        panelTabla.setLayout(null);
-        panelTabla.add(scrollPane);
+		// ScrollPane con tabla
+		JScrollPane scrollPane = TablaPersonalizada.envolverEnScroll(table, 0, 30, 630, 406);
 
-        customizeTable(table);
+		// Panel contenedor
+		JPanel panelTabla = new JPanel();
+		panelTabla.setBounds(80, 141, 630, 436);
+		add(panelTabla);
+		panelTabla.setBackground(Color.WHITE);
+		panelTabla.setLayout(null);
+		panelTabla.add(scrollPane);
+
+        // Agregar a tu contenedor principal
         add(panelTabla);
 
         JButton botonAgregarPaciente = new JButton("AGREGAR PACIENTE");
