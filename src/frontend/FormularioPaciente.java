@@ -116,13 +116,13 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 	public FormularioPaciente(Window ancestro, Paciente paciente, boolean editable) {	
 		super(ancestro, ModalityType.APPLICATION_MODAL);
 		inicializarFormulario();
-		setTitle("Información del paciente");
+		setTitle("Informaciï¿½n del paciente");
 		this.editable = editable;
 		mostrarInformacionPaciente(paciente);	
 		activarEdicion(this.editable);
 		
 		JLabel cartelHistoriaClinica = new JLabel
-				("Número de Historia Clínica: " + String.valueOf(paciente.getHistoriaClinica().getId()));
+				("Nï¿½mero de Historia Clï¿½nica: " + String.valueOf(paciente.getHistoriaClinica().getId()));
 		cartelHistoriaClinica.setFont(new Font("Arial", Font.PLAIN, 16));
 		cartelHistoriaClinica.setBounds(40, 226, 250, 22);
 		panelAgrupador2.add(cartelHistoriaClinica);
@@ -449,7 +449,7 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 		campoNombre.setText(paciente.getNombre());
 		campoPrimerApellido.setText(paciente.getPrimerApellido());
 		campoSegundoApellido.setText(paciente.getSegundoApellido());
-		campoCI.setText(paciente.getCi());
+		campoCI.setText(paciente.getCI());
 		campoDireccion.setText(paciente.getDireccion());
 		campoEdad.setText(String.valueOf(paciente.getEdad()));
 		
@@ -477,7 +477,7 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 	}
 	
 	protected void agregarEnfermedadCronica() {
-		TextDialog dialogo = new TextDialog((JDialog)this, "Agregar enfermedad crónica", "Introduzca una enfermedad crónica para agregar");
+		TextDialog dialogo = new TextDialog((JDialog)this, "Agregar enfermedad crï¿½nica", "Introduzca una enfermedad crï¿½nica para agregar");
 		dialogo.setVisible(true);
 
 		if (dialogo.isConfirmado()) {
@@ -528,25 +528,25 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 			boolean estaEmbarazada = checkEmbarazada.isSelected();
 			Date fechaUltimaPruebaSeleccionada = fechaUltimaPrueba.getDate(); // Obtener la fecha seleccionada del JDateChooser
 
-			// Validar que los campos obligatorios no estén vacíos
+			// Validar que los campos obligatorios no estï¿½n vacï¿½os
 			if (nombre.isEmpty() || primerApellido.isEmpty() || ci.isEmpty()) {
 				throw new IllegalArgumentException("Los campos Nombre, Primer Apellido y CI son obligatorios.");
 			}
 
-			// Validar género y embarazo basado en el CI
+			// Validar gï¿½nero y embarazo basado en el CI
 			boolean ciEsFemenino = Validations.isFemale(ci);
 			if (ciEsFemenino != esFemenino) {
-				throw new IllegalArgumentException("El género seleccionado no coincide con el CI proporcionado.");
+				throw new IllegalArgumentException("El gï¿½nero seleccionado no coincide con el CI proporcionado.");
 			}
 			if (!ciEsFemenino && estaEmbarazada) {
 				throw new IllegalArgumentException("Un paciente masculino no puede estar embarazado.");
 			}
 
 			if(cmf.isCiRepited(ci)) {
-				throw new IllegalArgumentException("El CI proporcionado ya está registrado.");
+				throw new IllegalArgumentException("El CI proporcionado ya estï¿½ registrado.");
 			}
 
-			// Obtener listas de enfermedades crónicas y vacunas
+			// Obtener listas de enfermedades crï¿½nicas y vacunas
 			ArrayList<String> enfermedadesCronicas = new ArrayList<>(listModelEnfermedades.size());
 			for (int i = 0; i < listModelEnfermedades.size(); i++) {
 				enfermedadesCronicas.add(listModelEnfermedades.getElementAt(i));
@@ -557,7 +557,7 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 				vacunas.add(listModelVacunas.getElementAt(i));
 			}
 
-			// Llamar al método agregarPaciente
+			// Llamar al mï¿½todo agregarPaciente
 			boolean pacienteAgregado = cmf.agregarPaciente(
 					nombre,
 					primerApellido,
@@ -571,7 +571,7 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 					);
 
 			if (pacienteAgregado) {
-				JOptionPane.showMessageDialog(contentPane, "Paciente agregado exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(contentPane, "Paciente agregado exitosamente.", "ï¿½xito", JOptionPane.INFORMATION_MESSAGE);
 				dispose(); // Cerrar el formulario
 			} else {
 				JOptionPane.showMessageDialog(contentPane, "No se pudo agregar el paciente.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -579,7 +579,7 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 		} catch (IllegalArgumentException ex) {
 			JOptionPane.showMessageDialog(contentPane, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		} catch (Exception ex) {
-			JOptionPane.showMessageDialog(contentPane, "Ocurrió un error inesperado: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(contentPane, "Ocurriï¿½ un error inesperado: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 	

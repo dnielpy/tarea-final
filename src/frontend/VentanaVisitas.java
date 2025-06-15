@@ -8,8 +8,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import componentesPropios.CustomTextField;
-
 public class VentanaVisitas extends JPanel implements ConstantesFrontend {
 
 	public VentanaVisitas() {

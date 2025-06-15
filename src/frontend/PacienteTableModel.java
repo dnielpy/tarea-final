@@ -35,7 +35,7 @@ public class PacienteTableModel extends AbstractTableModel {
             case 1:
                 return ((Paciente)paciente).getGenero();
             case 2:
-                return ((Paciente)paciente).getCi();
+                return ((Paciente)paciente).getCI();
             case 3:
                 return ((Paciente)paciente).getHistoriaClinica().getId();
             case 4:
