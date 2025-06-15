@@ -23,7 +23,8 @@ public class PlaceholderTextField extends JTextField implements ConstantesFronte
     private Color focusLineColor = COLOR_AZUL;
     private boolean showError = false;
     private InputFormat inputFormat = InputFormat.ANY;
-
+    private int characterLimit = -1; // -1 = sin límite
+    
     private static final Color ERROR_COLOR = Color.RED;
     private static final String ERROR_PLACEHOLDER = "*Campo obligatorio";
 
@@ -151,24 +152,23 @@ public class PlaceholderTextField extends JTextField implements ConstantesFronte
     // --- VALIDACIÓN DE ENTRADA ---
 
     private class InputValidationFilter extends DocumentFilter {
-        @Override
+    	@Override
         public void insertString(FilterBypass fb, int offset, String text, AttributeSet attr) throws BadLocationException {
             replace(fb, offset, 0, text, attr);
         }
 
-        @Override
-        public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
-            if (text == null) return;
+    	@Override
+    	public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
+    		if (text != null) {
+    			String oldText = fb.getDocument().getText(0, fb.getDocument().getLength());
+    			StringBuilder sb = new StringBuilder(oldText).replace(offset, offset + length, text);
+    			String newText = limpiarEspacios(sb.toString());
 
-            String oldText = fb.getDocument().getText(0, fb.getDocument().getLength());
-            String newText = new StringBuilder(oldText).replace(offset, offset + length, text).toString();
-
-            newText = limpiarEspacios(newText);
-
-            if (esValidoSegunFormato(newText)) {
-                super.replace(fb, 0, fb.getDocument().getLength(), newText, attrs);
-            }
-        }
+    			if (esValidoSegunFormato(newText) && (characterLimit < 0 || newText.length() <= characterLimit)) {
+    				super.replace(fb, 0, fb.getDocument().getLength(), newText, attrs);
+    			}
+    		}
+    	}
 
         private String limpiarEspacios(String s) {
             // Elimina espacios al principio y más de un espacio seguido
@@ -196,26 +196,7 @@ public class PlaceholderTextField extends JTextField implements ConstantesFronte
     }
     
     public void setCharacterLimit(final int limit) {
-        AbstractDocument doc = (AbstractDocument) this.getDocument();
-        doc.setDocumentFilter(new DocumentFilter() {
-            @Override
-            public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
-                if (string == null) return;
-                if (fb.getDocument().getLength() + string.length() <= limit) {
-                    super.insertString(fb, offset, string, attr);
-                }
-            }
-
-            @Override
-            public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
-                if (text == null) return;
-                int currentLength = fb.getDocument().getLength();
-                int newLength = currentLength - length + text.length();
-                if (newLength <= limit) {
-                    super.replace(fb, offset, length, text, attrs);
-                }
-            }
-        });
+        this.characterLimit = limit;
     }
 
 }

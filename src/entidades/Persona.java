@@ -9,6 +9,13 @@ public abstract class Persona {
 	protected String segundoApellido;
 	protected String ci;
 
+	public Persona(String nombre, String primerApellido, String segundoApellido, String ci) {
+		setNombre(nombre);
+		setPrimerApellido(primerApellido);
+		setSegundoApellido(segundoApellido);
+		setCI(ci);
+	}
+	
 	public String getCI(){
 		return ci;
 	}

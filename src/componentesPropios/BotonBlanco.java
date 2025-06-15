@@ -10,43 +10,86 @@ import javax.swing.JButton;
 
 import frontend.ConstantesFrontend;
 
-public class BotonBlanco extends JButton implements MouseListener, ConstantesFrontend {
-	
-	public BotonBlanco(String texto) {
+import java.awt.event.*;
+
+public class BotonBlanco extends JButton implements MouseListener, FocusListener, ConstantesFrontend {
+
+    private Color colorNormal = COLOR_GRIS_CLARO;
+    private Color colorHover = COLOR_GRIS_CURSOR;
+    private Color colorTextoNormal = Color.BLACK;
+    private Color colorTextoFocus = COLOR_AZUL;
+
+    private boolean mousePresionado = false;
+
+    public BotonBlanco(String texto) {
         super(texto);
         setCursor(new Cursor(Cursor.HAND_CURSOR));
-        // setBorder(BORDE_COMPONENTE);
-        setForeground(Color.BLACK);
-        setBackground(COLOR_GRIS_CLARO);
-    	setFont(new Font("Arial", Font.PLAIN, 18));
-        setFocusPainted(false); // Quitar el marco de foco
-    }
+        setForeground(colorTextoNormal);
+        setBackground(colorNormal);
+        setFont(new Font("Arial", Font.PLAIN, 18));
+        setFocusPainted(false);
+        setFocusable(true);
 
-	@Override
-	public void mouseClicked(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-    public void mouseEntered(MouseEvent arg0) {
-        setBackground(COLOR_GRIS);
+        addMouseListener(this);
+        addFocusListener(this);
     }
 
     @Override
-    public void mouseExited(MouseEvent arg0) {
-        setBackground(COLOR_GRIS_CLARO);
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        setFocusable(enabled);
+        if (!enabled) {
+            setBackground(colorNormal);
+            setForeground(colorTextoNormal);
+        }
     }
 
-	@Override
-	public void mousePressed(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
+    // MouseListener
 
-	@Override
-	public void mouseReleased(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void mouseEntered(MouseEvent e) {
+        if (isEnabled() && !mousePresionado) {
+            setBackground(colorHover);
+        }
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+        if (isEnabled() && !mousePresionado) {
+            setBackground(colorNormal);
+        }
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        if (isEnabled()) {
+            mousePresionado = true;
+        }
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        mousePresionado = false;
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        // No implementado
+    }
+
+    // FocusListener
+
+    @Override
+    public void focusGained(FocusEvent e) {
+        if (isEnabled()) {
+            setForeground(colorTextoFocus);
+        }
+    }
+
+    @Override
+    public void focusLost(FocusEvent e) {
+        if (isEnabled()) {
+            setForeground(colorTextoNormal);
+        }
+    }
 }
