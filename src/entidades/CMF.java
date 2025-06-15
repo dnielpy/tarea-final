@@ -13,7 +13,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import service.Validations;
 
 public class CMF {
-	private static CMF instance; // Instancia única de CMF
+	private static CMF instance; // Instancia ï¿½nica de CMF
 
 	private int id;
 	private String nombre;
@@ -25,7 +25,7 @@ public class CMF {
 	private RegistroHistorico registroHistorico;
 	private Enfermera enfermera;
 
-	// Constructor privado para evitar instanciación directa
+	// Constructor privado para evitar instanciaciï¿½n directa
 	private CMF(int id, String nombre, String nombreDirector) {
 		setId(id);
 		setNombre(nombre);
@@ -36,7 +36,7 @@ public class CMF {
 
 	public static CMF getInstance() {
 		if (instance == null) {
-			instance = new CMF(1, "Policlínico Alberro Cotorro", "Esteban Marrero Bermúdez");
+			instance = new CMF(1, "Policlï¿½nico Alberro Cotorro", "Esteban Marrero Bermï¿½dez");
 			instance.cargarDatos(); 
 		}
 		return instance;
@@ -83,19 +83,19 @@ public class CMF {
 	}
 
 	public void setNombre(String nombre) {
-		if (nombre == null || nombre.trim().isEmpty()) throw new IllegalArgumentException("Nombre no puede ser nulo o vacío");
+		if (nombre == null || nombre.trim().isEmpty()) throw new IllegalArgumentException("Nombre no puede ser nulo o vacï¿½o");
 		if (nombre.length() > 100) throw new IllegalArgumentException("Nombre no puede exceder 100 caracteres");
 		this.nombre = nombre.trim();
 	}
 
 	public void setNombreDirector(String nombreDirector) {
-		if (nombreDirector == null || nombreDirector.trim().isEmpty()) throw new IllegalArgumentException("Nombre del director no puede ser nulo o vacío");
+		if (nombreDirector == null || nombreDirector.trim().isEmpty()) throw new IllegalArgumentException("Nombre del director no puede ser nulo o vacï¿½o");
 		if (nombreDirector.length() > 100) throw new IllegalArgumentException("Nombre del director no puede exceder 100 caracteres");
 		this.nombreDirector = nombreDirector.trim();
 	}
 
-	public void crearMedico(String nombre, String primerApellido, String segundoApellido, int numRegistro, String ci, Date fecha) {
-		medico = new Medico(nombre, primerApellido, segundoApellido, numRegistro, ci, fecha);
+	public void crearMedico(String nombre, String primerApellido, String segundoApellido, int numRegistro, String ci, Date fecha, String email, String password) {
+		medico = new Medico(nombre, primerApellido, segundoApellido, numRegistro, ci, fecha, email, password);
 	}
 
 	public void crearRegistroGeneral() {
@@ -129,7 +129,7 @@ public class CMF {
 			List<String> enfermedadesCronicas, List<String> vacunacion,
 			String CI, boolean estaEmbarazada, Date fechaUltimaRevision, String direccion) {
 		if (!Validations.isValidCI(CI)) {
-			throw new IllegalArgumentException("CI inválido: " + CI);
+			throw new IllegalArgumentException("CI invï¿½lido: " + CI);
 		}
 
 		int nuevoID = obtenerNuevoHistoriaClinicaID();
@@ -171,12 +171,12 @@ public class CMF {
 		return response;
 	}
 
-	public void crearEnfermera(String nombre, String primerApellido, String segundoApellido, int id, boolean licenciatura, int experiencia, Date fecha) {
+	public void crearEnfermera(String nombre, String primerApellido, String segundoApellido, int id, String ci,boolean licenciatura, int experiencia, Date fecha, String email, String password) {
 		Objects.requireNonNull(nombre, "El nombre no puede ser nulo");
 		if (this.enfermera != null) {
 			throw new IllegalStateException("Ya existe una enfermera asignada a este CMF");
 		}
-		this.enfermera = new Enfermera(nombre, primerApellido, segundoApellido, id, licenciatura, experiencia, fecha);
+		this.enfermera = new Enfermera(nombre, primerApellido, segundoApellido, id, ci, licenciatura, experiencia, fecha, email, password);
 	}
 
 	public void agregarHojaCargoDiaria(Date fecha) {
@@ -198,10 +198,10 @@ public class CMF {
 		boolean response = false;
 
 		if (ci == null || ci.trim().isEmpty()) {
-			throw new IllegalArgumentException("El CI no puede ser nulo o vacío");
+			throw new IllegalArgumentException("El CI no puede ser nulo o vacï¿½o");
 		}
 		for (Paciente paciente : pacientes) {
-			if (paciente.getCi().equals(ci)) {
+			if (paciente.getCI().equals(ci)) {
 				response = true;
 			}
 		}
@@ -328,7 +328,7 @@ public class CMF {
 
 	public int obtenerCantidadPacientesPorFecha(Date fecha) {
 		if (fecha == null) {
-			throw new IllegalArgumentException("La fecha no puede ser nula o vacía");
+			throw new IllegalArgumentException("La fecha no puede ser nula o vacï¿½a");
 		}
 
 		int visitas = 0;
@@ -364,9 +364,9 @@ public class CMF {
 	private static final Random rand = new Random();
 
 	private static String generarDireccionCuba() {
-	    String[] calles = {"Calle 23", "Avenida Boyeros", "Calle Línea", "Calle Monte", "Avenida 5ta", "Calle Obispo", "Calle Enramadas"};
+	    String[] calles = {"Calle 23", "Avenida Boyeros", "Calle Lï¿½nea", "Calle Monte", "Avenida 5ta", "Calle Obispo", "Calle Enramadas"};
 	    String[] municipios = {"Plaza", "Centro Habana", "Marianao", "Cerro", "Vedado", "Guanabacoa", "Habana del Este"};
-	    String[] provincias = {"La Habana", "Santiago de Cuba", "Camagüey", "Holguín", "Villa Clara", "Cienfuegos", "Pinar del Río"};
+	    String[] provincias = {"La Habana", "Santiago de Cuba", "Camagï¿½ey", "Holguï¿½n", "Villa Clara", "Cienfuegos", "Pinar del Rï¿½o"};
 
 	    String calle = calles[rand.nextInt(calles.length)] + " #" + (100 + rand.nextInt(900));
 	    String municipio = municipios[rand.nextInt(municipios.length)];
@@ -376,7 +376,7 @@ public class CMF {
 	}
 	
 	public void cargarDatos() {
-	    crearMedico("Alfonso", "Rodr\u00EDguez", "Camela", 11321, "75060212345", generarFechaRandom());
+	    crearMedico("Alfonso", "Rodr\u00EDguez", "Camela", 11321, "75060212345", generarFechaRandom(), "admin@example.com", "12345678");
 
 	    List<String> enfermedades1 = new ArrayList<>();
 	    enfermedades1.add("Diabetes");

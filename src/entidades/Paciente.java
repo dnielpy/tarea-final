@@ -9,7 +9,6 @@ public class Paciente extends Persona {
     protected ArrayList<String> enfermedadesCronicas;
     protected ArrayList<String> vacunacion;
     protected HistoriaClinica historiaClinica;
-    protected String ci;
     protected int edad;
     protected String direccion;
 
@@ -43,18 +42,6 @@ public class Paciente extends Persona {
             throw new IllegalArgumentException("La direcci\u00F3n no puede exceder 300 caracteres");
         }
         this.direccion = direccion.trim();
-    }
-
-    public String getCi() {
-        return ci;
-    }
-
-    public void setCI(String carnet) {
-        if(Validations.isValidCI(carnet.trim())) {
-            this.ci = carnet.trim();
-        } else {
-            throw new IllegalArgumentException("Carnet de identidad inv\u00E1lido" + carnet);
-        }
     }
 
     public void setEdad() {
