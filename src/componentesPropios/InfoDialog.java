@@ -8,8 +8,8 @@ import java.awt.event.ActionListener;
 
 public class InfoDialog extends JDialog {
 
-    public InfoDialog(Frame parent, String titulo, String mensaje) {
-        super(parent, titulo, true);
+    public InfoDialog(Window parent, String titulo, String mensaje) {
+    	super(parent, titulo, DEFAULT_MODALITY_TYPE);
         initUI(mensaje);
     }
 

@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.Period;
 
+import componentesPropios.InfoDialog;
+
 public class Validations {
 
 	public static boolean validateName(String nombre) {
@@ -55,38 +57,34 @@ public class Validations {
 		return isValid;
 	}
 
+	public static int getYearsFromString(String string) {
+		int years = -1;
+		try {
+			if (string.length() >= 6) {
+				int year = Integer.parseInt(string.substring(0, 2));
+				int month = Integer.parseInt(string.substring(2, 4));
+				int day = Integer.parseInt(string.substring(4, 6));
+				int currentYear = LocalDate.now().getYear();
+				int currentCentury = (currentYear / 100) * 100;
+				// Determinar el siglo (asume personas con menos de 120 años)
+				int fullYear = (year > currentYear % 100) ? (currentCentury - 100 + year) : (currentCentury + year);
+				// Validar que la fecha sea válida
+				LocalDate nacimiento = LocalDate.of(fullYear, month, day);
+				LocalDate hoy = LocalDate.now();
+				years = Period.between(nacimiento, hoy).getYears();
+			}
+		} catch (Exception e) {
+			// years queda en -1 si hay error
+		}
+		return years;
+	}
+
 	public static int getAgeFromCI(String ci) {
 		boolean isValid = isValidCI(ci);
 		int age = -1;
 
 		if (isValid) {
-			try {
-				String yearStr = ci.substring(0, 2);
-				String monthStr = ci.substring(2, 4);
-				String dayStr = ci.substring(4, 6);
-
-				int year = Integer.parseInt(yearStr);
-				int month = Integer.parseInt(monthStr);
-				int day = Integer.parseInt(dayStr);
-
-				int currentYear = LocalDate.now().getYear();
-				int currentCentury = (currentYear / 100) * 100;
-				if (year > currentYear % 100) {
-					year += currentCentury - 100; // Siglo anterior
-				} else {
-					year += currentCentury; // Siglo actual
-				}
-
-				int currentMonth = LocalDate.now().getMonthValue();
-				int currentDay = LocalDate.now().getDayOfMonth();
-				age = currentYear - year;
-
-				if (currentMonth < month || (currentMonth == month && currentDay < day)) {
-					age--;
-				}
-			} catch (Exception e) {
-				System.err.println("Error al calcular la edad desde el CI: " + e.getMessage());
-			}
+			age = getYearsFromString(ci);
 		}
 
 		return age;
