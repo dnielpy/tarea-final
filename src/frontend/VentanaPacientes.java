@@ -19,6 +19,7 @@ import javax.swing.table.TableRowSorter;
 
 import entidades.CMF;
 import entidades.Paciente;
+import frontend.FormularioPaciente.ModoFormulario;
 
 import javax.swing.JButton;
 
@@ -62,7 +63,7 @@ public class VentanaPacientes extends JPanel implements ConstantesFrontend {
 
     public void borrarSeleccion() {
         int[] selectedRows = table.getSelectedRows();
-
+        
         if (selectedRows.length > 0) {
             QuestionDialog confirmDialog = new QuestionDialog(
                     null,
@@ -102,7 +103,7 @@ public class VentanaPacientes extends JPanel implements ConstantesFrontend {
 
     private void abrirFormulario(Paciente paciente) {
         Window ventanaPrincipal = SwingUtilities.getWindowAncestor(this);
-        FormularioPaciente formularioPaciente = new FormularioPaciente(ventanaPrincipal, paciente, false);
+        FormularioPaciente formularioPaciente = new FormularioPaciente(ventanaPrincipal, paciente, ModoFormulario.VISUALIZACION);
         formularioPaciente.setLocationRelativeTo(ventanaPrincipal);
         formularioPaciente.setVisible(true);
     }

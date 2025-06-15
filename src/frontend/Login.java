@@ -219,7 +219,7 @@ public class Login extends JFrame implements ConstantesFrontend{
     		}
     	} catch (Auth.AuthenticationException ex) {
     		InfoDialog dialogo = new InfoDialog(
-    				null,
+    				this.getOwner(),
     				"Error de autenticación",
     				ex.getMessage()
     		);
@@ -229,7 +229,7 @@ public class Login extends JFrame implements ConstantesFrontend{
 	
 	public void iniciarSesion() {
 		InfoDialog dialogo = new InfoDialog(
-				null,
+				this.getOwner(),
 				"Inicio de sesión",
 				"Inicio de sesión exitoso"
 		);

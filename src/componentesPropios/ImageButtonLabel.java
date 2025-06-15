@@ -1,6 +1,7 @@
 package componentesPropios;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.*;
 
@@ -14,31 +15,33 @@ public class ImageButtonLabel extends JLabel {
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
         // Interacciones
-        addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                alpha = 0.6f;
-                repaint();
-            }
+        if (!isEnabled()) {
+        	addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    alpha = 0.6f;
+                    repaint();
+                }
 
-            @Override
-            public void mouseExited(MouseEvent e) {
-                alpha = 1.0f;
-                repaint();
-            }
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    alpha = 1.0f;
+                    repaint();
+                }
 
-            @Override
-            public void mousePressed(MouseEvent e) {
-                alpha = 0.4f;
-                repaint();
-            }
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    alpha = 0.4f;
+                    repaint();
+                }
 
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                alpha = 0.6f;
-                repaint();
-            }
-        });
+                @Override
+                public void mouseReleased(MouseEvent e) {
+                    alpha = 0.6f;
+                    repaint();
+                }
+            });
+        }   
 
         // Focus (para teclas o tabulación)
         setFocusable(true);
@@ -56,6 +59,7 @@ public class ImageButtonLabel extends JLabel {
             }
         });
     }
+    
 
     @Override
     protected void paintComponent(Graphics g) {

@@ -5,19 +5,22 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
 import javax.swing.text.*;
 
-public class PlaceholderTextField extends JTextField {
+import frontend.ConstantesFrontend;
+
+public class PlaceholderTextField extends JTextField implements ConstantesFrontend {
 
 	public enum InputFormat {ANY, NUMERIC, ALPHABETIC, ALPHANUMERIC}
 
     private String placeholder;
     private Color placeholderColor = Color.GRAY;
     private Color lineColor = Color.BLACK;
-    private Color focusLineColor = new Color(0x2196F3);
+    private Color focusLineColor = COLOR_AZUL;
     private boolean showError = false;
     private InputFormat inputFormat = InputFormat.ANY;
 
@@ -78,12 +81,18 @@ public class PlaceholderTextField extends JTextField {
     }
 
     @Override
+    public void setEditable(boolean editable) {
+    	super.setEditable(editable);
+    	setFocusable(editable);
+    };
+    
+    @Override
     protected void paintBorder(Graphics g) {
         Graphics2D g2 = (Graphics2D) g.create();
 
         Color color;
         if (!isEditable()) {
-            color = lineColor;
+            color = COLOR_GRIS;
         } else if (showError) {
             color = ERROR_COLOR;
         } else if (isFocusOwner()) {
@@ -170,7 +179,7 @@ public class PlaceholderTextField extends JTextField {
             String regex;
             switch (inputFormat) {
                 case NUMERIC:
-                    regex = "[0-9 ]*";
+                    regex = "[0-9]*";
                     break;
                 case ALPHABETIC:
                     regex = "[a-zA-Z·ÈÌÛ˙¡…Õ”⁄Ò— ]*";
@@ -185,4 +194,28 @@ public class PlaceholderTextField extends JTextField {
             return text.matches(regex);
         }
     }
+    
+    public void setCharacterLimit(final int limit) {
+        AbstractDocument doc = (AbstractDocument) this.getDocument();
+        doc.setDocumentFilter(new DocumentFilter() {
+            @Override
+            public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
+                if (string == null) return;
+                if (fb.getDocument().getLength() + string.length() <= limit) {
+                    super.insertString(fb, offset, string, attr);
+                }
+            }
+
+            @Override
+            public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
+                if (text == null) return;
+                int currentLength = fb.getDocument().getLength();
+                int newLength = currentLength - length + text.length();
+                if (newLength <= limit) {
+                    super.replace(fb, offset, length, text, attrs);
+                }
+            }
+        });
+    }
+
 }

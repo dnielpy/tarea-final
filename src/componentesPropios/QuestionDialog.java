@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Frame;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -19,8 +20,8 @@ public class QuestionDialog extends JDialog {
 	
 	private boolean confirmado = false;
 
-	public QuestionDialog(Frame parent, String titulo, String mensaje) {
-		super(parent, titulo, true);
+	public QuestionDialog(Window parent, String titulo, String mensaje) {
+		super(parent, titulo, DEFAULT_MODALITY_TYPE);
         initUI(mensaje);
 	}
 	
