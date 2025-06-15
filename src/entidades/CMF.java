@@ -13,7 +13,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import service.Validations;
 
 public class CMF {
-	private static CMF instance; // Instancia ï¿½nica de CMF
+	private static CMF instance; // Instancia unica de CMF
 
 	private int id;
 	private String nombre;
@@ -26,7 +26,7 @@ public class CMF {
 	private Enfermera enfermera;
 	private ArrayList<Visita> visitas;
 
-	// Constructor privado para evitar instanciaciï¿½n directa
+	// Constructor privado para evitar instanciacion directa
 	private CMF(int id, String nombre, String nombreDirector) {
 		setId(id);
 		setNombre(nombre);
@@ -383,121 +383,121 @@ public class CMF {
 	    enfermedades1.add("Diabetes");
 	    List<String> vacunas1 = new ArrayList<>();
 	    vacunas1.add("Antipolio: 13/4/2009");
-	    agregarPaciente("Armando", "L\u00F3pez", "Toro", enfermedades1, vacunas1, "78041312335", false, null, generarDireccionCuba()); // HOMBRE → penúltimo impar (4 → 4 OK)
+	    agregarPaciente("Armando", "L\u00F3pez", "Toro", enfermedades1, vacunas1, "78041312345", false, null, generarDireccionCuba()); // HOMBRE → penúltimo impar (4 → 4 OK)
 
 	    List<String> enfermedades2 = new ArrayList<>();
 	    enfermedades2.add("Hipertensi\u00F3n");
 	    List<String> vacunas2 = new ArrayList<>();
 	    vacunas2.add("Antipolio: 13/4/2020");
-	    agregarPaciente("Amanda", "L\u00F3pez", "Garc\u00EDa", enfermedades2, vacunas2, "03021178186", false, generarFechaRandom(), generarDireccionCuba()); // HOMBRE → 8 OK (original tenía 8)
+	    agregarPaciente("Amanda", "L\u00F3pez", "Garc\u00EDa", enfermedades2, vacunas2, "03021178136", false, generarFechaRandom(), generarDireccionCuba()); // HOMBRE → 8 OK (original tenía 8)
 
 	    List<String> enfermedades3 = new ArrayList<>();
 	    enfermedades3.add("Asma");
 	    List<String> vacunas3 = new ArrayList<>();
 	    vacunas3.add("Antipolio: 13/4/2019");
-	    agregarPaciente("Carlos", "Garces", "Fern\u00E1ndez", enfermedades3, vacunas3, "89041312395", false, null, generarDireccionCuba()); // HOMBRE → 4 OK
+	    agregarPaciente("Carlos", "Garces", "Fern\u00E1ndez", enfermedades3, vacunas3, "89041312325", false, null, generarDireccionCuba()); // HOMBRE → 4 OK
 
 	    List<String> enfermedades4 = new ArrayList<>();
 	    enfermedades4.add("Obesidad");
 	    List<String> vacunas4 = new ArrayList<>();
 	    vacunas4.add("Antipolio: 10/1/2022");
 	    vacunas4.add("Antitet\u00E1nica: 5/3/2023");
-	    agregarPaciente("Daniela", "Su\u00E1rez", "Molina", enfermedades4, vacunas4, "95011022344", false, generarFechaRandom(), generarDireccionCuba()); // HOMBRE → penúltimo 4 OK
+	    agregarPaciente("Daniela", "Su\u00E1rez", "Molina", enfermedades4, vacunas4, "95011022314", false, generarFechaRandom(), generarDireccionCuba()); // HOMBRE → penúltimo 4 OK
 
 	    List<String> enfermedades5 = new ArrayList<>();
 	    List<String> vacunas5 = new ArrayList<>();
 	    vacunas5.add("Antipolio: 15/5/2021");
 	    vacunas5.add("Antigripal: 20/10/2022");
-	    agregarPaciente("Esteban", "P\u00E9rez", "L\u00F3pez", enfermedades5, vacunas5, "72051512335", false, null, generarDireccionCuba());
+	    agregarPaciente("Esteban", "P\u00E9rez", "L\u00F3pez", enfermedades5, vacunas5, "72051512365", false, null, generarDireccionCuba());
 
 	    List<String> enfermedades6 = new ArrayList<>();
 	    List<String> vacunas6 = new ArrayList<>();
 	    vacunas6.add("Antigripal: 12/9/2022");
-	    agregarPaciente("Fernando", "G\u00F3mez", "Rivas", enfermedades6, vacunas6, "85091212315", false, null, generarDireccionCuba());
+	    agregarPaciente("Fernando", "G\u00F3mez", "Rivas", enfermedades6, vacunas6, "85091212385", false, null, generarDireccionCuba());
 
 	    List<String> enfermedades7 = new ArrayList<>();
 	    List<String> vacunas7 = new ArrayList<>();
 	    vacunas7.add("Antitet\u00E1nica: 3/4/2021");
-	    agregarPaciente("Gabriela", "Torres", "Mart\u00EDnez", enfermedades7, vacunas7, "94040322344", false, generarFechaRandom(), generarDireccionCuba()); // mujer → penúltimo 4
+	    agregarPaciente("Gabriela", "Torres", "Mart\u00EDnez", enfermedades7, vacunas7, "94040322374", false, generarFechaRandom(), generarDireccionCuba()); // mujer → penúltimo 4
 
 	    List<String> enfermedades8 = new ArrayList<>();
 	    List<String> vacunas8 = new ArrayList<>();
 	    vacunas8.add("Antipolio: 15/2/2018");
-	    agregarPaciente("H\u00E9ctor", "S\u00E1nchez", "L\u00F3pez", enfermedades8, vacunas8, "96021512375", false, null, generarDireccionCuba());
+	    agregarPaciente("H\u00E9ctor", "S\u00E1nchez", "L\u00F3pez", enfermedades8, vacunas8, "96021512365", false, null, generarDireccionCuba());
 
 	    List<String> enfermedades9 = new ArrayList<>();
 	    List<String> vacunas9 = new ArrayList<>();
 	    vacunas9.add("Antigripal: 11/11/2020");
 	    vacunas9.add("Antitet\u00E1nica: 20/7/2022");
-	    agregarPaciente("Isabel", "Fern\u00E1ndez", "Cruz", enfermedades9, vacunas9, "03050322324", true, generarFechaRandom(), generarDireccionCuba()); // mujer → 4
+	    agregarPaciente("Isabel", "Fern\u00E1ndez", "Cruz", enfermedades9, vacunas9, "03050322394", true, generarFechaRandom(), generarDireccionCuba()); // mujer → 4
 
 	    List<String> enfermedades10 = new ArrayList<>();
 	    List<String> vacunas10 = new ArrayList<>();
-	    agregarPaciente("Javier", "Morales", "Castillo", enfermedades10, vacunas10, "75060212355", false, null, generarDireccionCuba());
+	    agregarPaciente("Javier", "Morales", "Castillo", enfermedades10, vacunas10, "75060212345", false, null, generarDireccionCuba());
 
 	    List<String> enfermedades11 = new ArrayList<>();
 	    List<String> vacunas11 = new ArrayList<>();
-	    agregarPaciente("Karla", "Ruiz", "Dom\u00EDnguez", enfermedades11, vacunas11, "98062122344", true, generarFechaRandom(), generarDireccionCuba()); // mujer
+	    agregarPaciente("Karla", "Ruiz", "Dom\u00EDnguez", enfermedades11, vacunas11, "98062122314", true, generarFechaRandom(), generarDireccionCuba()); // mujer
 
 	    List<String> enfermedades12 = new ArrayList<>();
 	    List<String> vacunas12 = new ArrayList<>();
-	    agregarPaciente("Luis", "Herrera", "P\u00E9rez", enfermedades12, vacunas12, "92011412335", false, null, generarDireccionCuba());
+	    agregarPaciente("Luis", "Herrera", "P\u00E9rez", enfermedades12, vacunas12, "92011412365", false, null, generarDireccionCuba());
 
 	    List<String> enfermedades13 = new ArrayList<>();
 	    List<String> vacunas13 = new ArrayList<>();
-	    agregarPaciente("Mar\u00EDa Jos\u00E9", "Salazar", "Garc\u00EDa", enfermedades13, vacunas13, "80031722344", true, generarFechaRandom(), generarDireccionCuba()); // mujer
+	    agregarPaciente("Mar\u00EDa Jos\u00E9", "Salazar", "Garc\u00EDa", enfermedades13, vacunas13, "80031722354", true, generarFechaRandom(), generarDireccionCuba()); // mujer
 
 	    List<String> enfermedades14 = new ArrayList<>();
 	    List<String> vacunas14 = new ArrayList<>();
-	    agregarPaciente("Nicol\u00E1s", "Vega", "Ortega", enfermedades14, vacunas14, "84120512315", false, null, generarDireccionCuba());
+	    agregarPaciente("Nicol\u00E1s", "Vega", "Ortega", enfermedades14, vacunas14, "84120512385", false, null, generarDireccionCuba());
 
 	    List<String> enfermedades15 = new ArrayList<>();
 	    List<String> vacunas15 = new ArrayList<>();
-	    agregarPaciente("Olga", "D\u00EDaz", "Garc\u00EDa", enfermedades15, vacunas15, "82082222344", false, generarFechaRandom(), generarDireccionCuba()); // mujer
+	    agregarPaciente("Olga", "D\u00EDaz", "Garc\u00EDa", enfermedades15, vacunas15, "82082222334", false, generarFechaRandom(), generarDireccionCuba()); // mujer
 
 	    List<String> enfermedades16 = new ArrayList<>();
 	    List<String> vacunas16 = new ArrayList<>();
-	    agregarPaciente("Pablo", "Mart\u00EDnez", "S\u00E1nchez", enfermedades16, vacunas16, "91051912395", false, null, generarDireccionCuba());
+	    agregarPaciente("Pablo", "Mart\u00EDnez", "S\u00E1nchez", enfermedades16, vacunas16, "91051912365", false, null, generarDireccionCuba());
 
 	    List<String> enfermedades17 = new ArrayList<>();
 	    List<String> vacunas17 = new ArrayList<>();
-	    agregarPaciente("Quetzal", "Rojas", "Castillo", enfermedades17, vacunas17, "95071312355", false, null, generarDireccionCuba());
+	    agregarPaciente("Quetzal", "Rojas", "Castillo", enfermedades17, vacunas17, "95071312365", false, null, generarDireccionCuba());
 
 	    List<String> enfermedades18 = new ArrayList<>();
 	    List<String> vacunas18 = new ArrayList<>();
-	    agregarPaciente("Ra\u00FAl", "L\u00F3pez", "Fern\u00E1ndez", enfermedades18, vacunas18, "81033012375", false, null, generarDireccionCuba());
+	    agregarPaciente("Ra\u00FAl", "L\u00F3pez", "Fern\u00E1ndez", enfermedades18, vacunas18, "81033012325", false, null, generarDireccionCuba());
 
 	    List<String> enfermedades19 = new ArrayList<>();
 	    List<String> vacunas19 = new ArrayList<>();
-	    agregarPaciente("Sof\u00EDa", "Medina", "Ramos", enfermedades19, vacunas19, "97090922344", false, generarFechaRandom(), generarDireccionCuba()); // mujer
+	    agregarPaciente("Sof\u00EDa", "Medina", "Ramos", enfermedades19, vacunas19, "97090922394", false, generarFechaRandom(), generarDireccionCuba()); // mujer
 
 	    List<String> enfermedades20 = new ArrayList<>();
 	    List<String> vacunas20 = new ArrayList<>();
-	    agregarPaciente("Tom\u00E1s", "Aguilar", "Herrera", enfermedades20, vacunas20, "87020112395", false, null, generarDireccionCuba());
+	    agregarPaciente("Tom\u00E1s", "Aguilar", "Herrera", enfermedades20, vacunas20, "87020112345", false, null, generarDireccionCuba());
 
 	    List<String> enfermedades21 = new ArrayList<>();
 	    List<String> vacunas21 = new ArrayList<>();
-	    agregarPaciente("\u00DArsula", "Vargas", "Delgado", enfermedades21, vacunas21, "92112322344", true, generarFechaRandom(), generarDireccionCuba());
+	    agregarPaciente("\u00DArsula", "Vargas", "Delgado", enfermedades21, vacunas21, "92112322334", true, generarFechaRandom(), generarDireccionCuba());
 
 	    List<String> enfermedades22 = new ArrayList<>();
 	    List<String> vacunas22 = new ArrayList<>();
-	    agregarPaciente("V\u00EDctor", "Salinas", "Mora", enfermedades22, vacunas22, "77062912315", false, null, generarDireccionCuba());
+	    agregarPaciente("V\u00EDctor", "Salinas", "Mora", enfermedades22, vacunas22, "77062912385", false, null, generarDireccionCuba());
 
 	    List<String> enfermedades23 = new ArrayList<>();
 	    List<String> vacunas23 = new ArrayList<>();
-	    agregarPaciente("Wendy", "Cruz", "L\u00F3pez", enfermedades23, vacunas23, "89080722344", true, generarFechaRandom(), generarDireccionCuba());
+	    agregarPaciente("Wendy", "Cruz", "L\u00F3pez", enfermedades23, vacunas23, "89080722374", true, generarFechaRandom(), generarDireccionCuba());
 
 	    List<String> enfermedades24 = new ArrayList<>();
 	    List<String> vacunas24 = new ArrayList<>();
-	    agregarPaciente("Ximena", "Flores", "Castillo", enfermedades24, vacunas24, "95041422344", true, generarFechaRandom(), generarDireccionCuba());
+	    agregarPaciente("Ximena", "Flores", "Castillo", enfermedades24, vacunas24, "95041422334", true, generarFechaRandom(), generarDireccionCuba());
 
 	    List<String> enfermedades25 = new ArrayList<>();
 	    List<String> vacunas25 = new ArrayList<>();
-	    agregarPaciente("Yahir", "Castillo", "G\u00F3mez", enfermedades25, vacunas25, "80100612355", false, null, generarDireccionCuba());
+	    agregarPaciente("Yahir", "Castillo", "G\u00F3mez", enfermedades25, vacunas25, "80100612365", false, null, generarDireccionCuba());
 
 	    List<String> enfermedades26 = new ArrayList<>();
 	    List<String> vacunas26 = new ArrayList<>();
-	    agregarPaciente("Zulema", "Navarro", "Ruiz", enfermedades26, vacunas26, "88101822344", true, generarFechaRandom(), generarDireccionCuba());
+	    agregarPaciente("Zulema", "Navarro", "Ruiz", enfermedades26, vacunas26, "88101822374", true, generarFechaRandom(), generarDireccionCuba());
 	}
 
 	public void agregarVisita(Visita visita) {

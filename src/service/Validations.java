@@ -67,9 +67,9 @@ public class Validations {
 				int day = Integer.parseInt(string.substring(4, 6));
 				int currentYear = LocalDate.now().getYear();
 				int currentCentury = (currentYear / 100) * 100;
-				// Determinar el siglo (asume personas con menos de 120 a�os)
+				// Determinar el siglo (asume personas con menos de 120 anios)
 				int fullYear = (year > currentYear % 100) ? (currentCentury - 100 + year) : (currentCentury + year);
-				// Validar que la fecha sea v�lida
+				// Validar que la fecha sea valida
 				LocalDate nacimiento = LocalDate.of(fullYear, month, day);
 				LocalDate hoy = LocalDate.now();
 				years = Period.between(nacimiento, hoy).getYears();
@@ -96,8 +96,8 @@ public class Validations {
 		boolean isFemale = false;
 
 		if (isValid) {
-			int genderDigit = Character.getNumericValue(ci.charAt(6));
-			isFemale = (genderDigit % 2 == 0) ? true : false;
+			int genderDigit = Character.getNumericValue(ci.charAt(9));
+			isFemale = (genderDigit % 2 == 0) ? false : true;
 		}
 
 		return isFemale;

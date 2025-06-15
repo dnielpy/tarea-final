@@ -27,6 +27,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.JPasswordField;
 
 import componentesPropios.BotonBlanco;
+import componentesPropios.ImageButtonLabel;
 import componentesPropios.InfoDialog;
 import runner.Auth;
 
@@ -40,6 +41,7 @@ public class Login extends JFrame implements ConstantesFrontend{
 	private boolean contrasenaVisible;
 	private JTextField campoUsuario;
 	private JPasswordField campoContrasenna;
+	private ImageButtonLabel ojoIcono;
 	private boolean auth ;
 
 	public Login() {
@@ -69,7 +71,7 @@ public class Login extends JFrame implements ConstantesFrontend{
 		panelPrincipal.add(panelLateral);
 		panelLateral.setLayout(null);
 
-		final JLabel ojoIcono = new JLabel("");
+		ojoIcono = new ImageButtonLabel(new ImageIcon(Login.class.getResource("/fotos/no visible (1).png")));
 		ojoIcono.setToolTipText("Clic para ver u ocultar contrase\u00F1a");
 		ojoIcono.addMouseListener(new MouseAdapter() {
             @Override
@@ -85,11 +87,8 @@ public class Login extends JFrame implements ConstantesFrontend{
                 }
             }
         });
-		ojoIcono.setBackground(SystemColor.menu);
-		ojoIcono.setIcon(new ImageIcon(Login.class.getResource("/fotos/no visible (1).png")));
 		ojoIcono.setBounds(671, 281, 33, 33);
 		panelPrincipal.add(ojoIcono);
-		ojoIcono.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
 		JLabel cartelUsuario = new JLabel("USUARIO");
 		cartelUsuario.setFont(new Font("Arial", Font.PLAIN, 18));
