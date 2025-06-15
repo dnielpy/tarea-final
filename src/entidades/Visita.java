@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.Objects;
 
 public class Visita {
+    private int id;
+    private String pacienteID;
     private Date fecha;
     private String diagnostico;
     private String direccion;
@@ -11,13 +13,37 @@ public class Visita {
     private String indicacionesComplementarias;
     private String especialidadRemitida;
 
-    public Visita(Date fecha, String diagnostico, String tratamiento, String indicacionesComplementarias, String especialidadRemitida, String direccion) {
+    public Visita(int id, String pacienteID, Date fecha, String diagnostico, String tratamiento, String indicacionesComplementarias, String especialidadRemitida, String direccion) {
+        setId(id);
+        setPacienteID(pacienteID);
         setFecha(fecha);
         setDiagnostico(diagnostico);
         setTratamiento(tratamiento);
         setIndicacionesComplementarias(indicacionesComplementarias);
         setEspecialidadRemitida(especialidadRemitida);
         setDireccion(direccion);
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        if (id <= 0) {
+            throw new IllegalArgumentException("ID debe ser mayor que cero");
+        }
+        this.id = id;
+    }
+
+    public String getPacienteID() {
+        return pacienteID;
+    }
+
+    public void setPacienteID(String pacienteID) {
+        if (pacienteID == null || pacienteID.trim().isEmpty()) {
+            throw new IllegalArgumentException("Paciente ID no puede ser nulo o vacío");
+        }
+        this.pacienteID = pacienteID;
     }
 
     public Date getFecha() {
