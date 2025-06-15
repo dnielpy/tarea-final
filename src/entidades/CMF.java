@@ -24,6 +24,7 @@ public class CMF {
 	private RegistroGeneral registroGeneral;
 	private RegistroHistorico registroHistorico;
 	private Enfermera enfermera;
+	private ArrayList<Visita> visitas;
 
 	// Constructor privado para evitar instanciaci�n directa
 	private CMF(int id, String nombre, String nombreDirector) {
@@ -497,6 +498,54 @@ public class CMF {
 	    List<String> enfermedades26 = new ArrayList<>();
 	    List<String> vacunas26 = new ArrayList<>();
 	    agregarPaciente("Zulema", "Navarro", "Ruiz", enfermedades26, vacunas26, "88101822345", true, generarFechaRandom(), generarDireccionCuba());
+	}
+
+	public void agregarVisita(Visita visita) {
+		Objects.requireNonNull(visita, "La visita no puede ser nula");
+		if (visitas == null) {
+			visitas = new ArrayList<>();
+		}
+		visitas.add(visita);
+	}
+
+	public boolean editarVisita(int id, Visita nuevaVisita) {
+		boolean response = false;
+	
+		Objects.requireNonNull(nuevaVisita, "La nueva visita no puede ser nula");
+		if (visitas == null) {
+			throw new IllegalStateException("No hay visitas registradas");
+		}
+		for (int i = 0; i < visitas.size(); i++) {
+			if (visitas.get(i).getId() == id) {
+				visitas.set(i, nuevaVisita);
+				response = true;
+			}
+		}
+		return response; // No se encontró la visita con el ID especificado
+	}
+
+	public List<Visita> obtenerListaVisitas() {
+		ArrayList<Visita> listaVisitas = new ArrayList<>();
+		
+		if (visitas != null) {
+			listaVisitas = visitas;
+		}
+		
+		return listaVisitas;
+	}
+
+	public Visita obtenerVisitaPorId(int id) {
+		Visita v = null;
+		
+		if (visitas == null) {
+			throw new IllegalStateException("No hay visitas registradas");
+		}
+		for (Visita visita : visitas) {
+			if (visita.getId() == id) {
+				v = visita;
+			}
+		}
+		return v; // No se encontró la visita con el ID especificado
 	}
 
 }
