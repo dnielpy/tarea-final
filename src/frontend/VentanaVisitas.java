@@ -13,13 +13,13 @@ public class VentanaVisitas extends JPanel implements ConstantesFrontend {
 		setBackground(Color.WHITE);
 		setLayout(null);
 		setBounds(305, 0, 796, 673);
-		
+
 		JPanel panelSuperior = new JPanel();
 		panelSuperior.setBounds(0, 0, 874, 51);
 		add(panelSuperior);
 		panelSuperior.setBackground(COLOR_AZUL);
 		panelSuperior.setLayout(null);
-		
+
 		JLabel cartelPestanna = new JLabel("VISITAS");
 		cartelPestanna.setHorizontalAlignment(SwingConstants.LEFT);
 		cartelPestanna.setForeground(Color.WHITE);
