@@ -310,8 +310,7 @@ public class Login extends JDialog implements ConstantesFrontend{
 		);
 		dialogo.setVisible(true);
 		dispose(); 
-		Principal principal = new Principal();
-		principal.setVisible(true);
+		
 	}
 	
 	public boolean authenticado() {
