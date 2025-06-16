@@ -13,16 +13,16 @@ public class Visita {
     private String diagnostico;
     private String direccion;
     private String tratamiento;
-    private String indicacionesComplementarias;
+    private Analisis analisis;
     private String especialidadRemitida;
 
-    public Visita(int id, String pacienteID, Date fecha, String diagnostico, String tratamiento, String indicacionesComplementarias, String especialidadRemitida, String direccion) {
+    public Visita(int id, String pacienteID, Date fecha, String diagnostico, String tratamiento, Analisis analisis, String especialidadRemitida, String direccion) {
         setId(id);
         setPacienteID(pacienteID);
         setFecha(fecha);
         setDiagnostico(diagnostico);
         setTratamiento(tratamiento);
-        setIndicacionesComplementarias(indicacionesComplementarias);
+        setAnalisis(analisis);
         setEspecialidadRemitida(especialidadRemitida);
         setDireccion(direccion);
     }
@@ -96,12 +96,12 @@ public class Visita {
         this.tratamiento = tratamiento;
     }
 
-    public String getIndicacionesComplementarias() {
-        return indicacionesComplementarias;
+    public Analisis getAnalisis() {
+        return analisis; 
     }
 
-    public void setIndicacionesComplementarias(String indicacionesComplementarias) {
-        this.indicacionesComplementarias = indicacionesComplementarias;
+    public void setAnalisis(Analisis analisis) {
+        this.analisis = analisis;
     }
 
     public String getEspecialidadRemitida() {
