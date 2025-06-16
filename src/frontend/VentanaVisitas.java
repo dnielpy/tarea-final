@@ -37,85 +37,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class VentanaVisitas extends JPanel implements ConstantesFrontend {
-
 	private CMF cmf;
 	private JTable table;
-	private PacienteTableModel model;
+	private VisitaTableModel model;
 
 	public VentanaVisitas() {
 		this.cmf = CMF.getInstance();
-		List<Paciente> pacientesConVisitas = obtenerPacientesConVisitas();
-		model = new PacienteTableModel(pacientesConVisitas);
+		model = new VisitaTableModel(cmf.obtenerListaVisitas());
 		initComponents();
 	}
 
-	private List<Paciente> obtenerPacientesConVisitas() {
-		List<Paciente> pacientesConVisitas = new ArrayList<>();
-		for (Visita visita : cmf.obtenerListaVisitas()) {
-			for (Paciente paciente : cmf.getPacientes()) {
-				if (paciente.getCI() == visita.getPacienteID()) {
-					pacientesConVisitas.add(paciente);
-				}
-			}
-		}
-		return pacientesConVisitas;
-	}
-
-	public void borrarSeleccion() {
-		int[] selectedRows = table.getSelectedRows();
-
-		if (selectedRows.length == 0) {
-			new InfoDialog(
-					null,
-					"Advertencia",
-					"No se ha seleccionado ninguna fila.").setVisible(true);
-		} else {
-			QuestionDialog confirmDialog = new QuestionDialog(
-					null,
-					"Confirmar eliminación",
-					"¿Está seguro de que desea eliminar la(s) fila(s) seleccionada(s)?");
-			confirmDialog.setVisible(true);
-
-			if (confirmDialog.esConfirmado()) {
-				List<Integer> idsAEliminar = new ArrayList<>();
-
-				for (int i = 0; i < selectedRows.length; i++) {
-					int viewRow = selectedRows[i];
-					int modelRow = table.convertRowIndexToModel(viewRow);
-					int id = (int) model.getValueAt(modelRow, model.findColumn("H. Clínica"));
-					idsAEliminar.add(id);
-				}
-
-				for (int i = 0; i < idsAEliminar.size(); i++) {
-					model.eliminarPacientePorId(idsAEliminar.get(i));
-				}
-
-				new InfoDialog(
-						null,
-						"Eliminación exitosa",
-						"La selección fue eliminada correctamente.").setVisible(true);
-			} else {
-				new InfoDialog(
-						null,
-						"Cancelado",
-						"La eliminación fue cancelada.").setVisible(true);
-			}
-		}
-	}
-
-	private void abrirFormulario(Paciente paciente) {
+	private void abrirFormulario(Visita visita) {
 		Window ventanaPrincipal = SwingUtilities.getWindowAncestor(this);
-		FormularioPaciente formularioPaciente = new FormularioPaciente(ventanaPrincipal, paciente,
-				ModoFormulario.VISUALIZACION);
-		formularioPaciente.setLocationRelativeTo(ventanaPrincipal);
-		formularioPaciente.setVisible(true);
-	}
+		FormularioVisitas formularioVisitas = new FormularioVisitas(ventanaPrincipal, visita);
+		formularioVisitas.setLocationRelativeTo(ventanaPrincipal);
+		formularioVisitas.setVisible(true);
 
-	private void abrirFormulario() {
-		Window ventanaPrincipal = SwingUtilities.getWindowAncestor(this);
-		FormularioPaciente formularioPaciente = new FormularioPaciente(ventanaPrincipal);
-		formularioPaciente.setLocationRelativeTo(ventanaPrincipal);
-		formularioPaciente.setVisible(true);
+		// Actualizar la tabla después de guardar una visita
+		model.setVisitas(cmf.obtenerListaVisitas());
 	}
 
 	private void initComponents() {
@@ -129,38 +68,16 @@ public class VentanaVisitas extends JPanel implements ConstantesFrontend {
 		panelSuperior.setBackground(COLOR_AZUL);
 		panelSuperior.setLayout(null);
 
-		JLabel cartelPestanna = new JLabel("PACIENTES");
+		JLabel cartelPestanna = new JLabel("VISITAS");
 		cartelPestanna.setHorizontalAlignment(SwingConstants.LEFT);
 		cartelPestanna.setForeground(Color.WHITE);
 		cartelPestanna.setFont(new Font("Arial", Font.PLAIN, 18));
 		cartelPestanna.setBounds(25, 0, 107, 51);
 		panelSuperior.add(cartelPestanna);
 
-		// Crear el modelo de la tabla con edición desactivada
-		model = new PacienteTableModel(obtenerPacientesConVisitas()) {
-			@Override
-			public boolean isCellEditable(int row, int column) {
-				return false;
-			}
-		};
-
 		table = TablaPersonalizada.crearTablaPersonalizada(model);
-
-		// Configuración de columnas (si quieres hacerla personalizada por tabla)
-		table.getColumnModel().getColumn(0).setPreferredWidth(200);
-		table.getColumnModel().getColumn(1).setPreferredWidth(30);
-		table.getColumnModel().getColumn(2).setPreferredWidth(70);
-		table.getColumnModel().getColumn(3).setPreferredWidth(30);
-		table.getColumnModel().getColumn(4).setPreferredWidth(10);
-
-		// Filtro (si aplica)
-		TableRowSorter<PacienteTableModel> sorter = new TableRowSorter<>(model);
-		table.setRowSorter(sorter);
-
-		// ScrollPane con tabla
 		JScrollPane scrollPane = TablaPersonalizada.envolverEnScroll(table, 0, 30, 630, 406);
 
-		// Panel contenedor
 		JPanel panelTabla = new JPanel();
 		panelTabla.setBounds(80, 141, 630, 436);
 		add(panelTabla);
@@ -168,13 +85,10 @@ public class VentanaVisitas extends JPanel implements ConstantesFrontend {
 		panelTabla.setLayout(null);
 		panelTabla.add(scrollPane);
 
-		// Agregar a tu contenedor principal
-		add(panelTabla);
-
 		JButton botonAgregarVisita = new JButton("AGREGAR VISITA");
 		botonAgregarVisita.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				abrirFormulario();
+				abrirFormulario(null); // Abrir formulario para agregar una nueva visita
 			}
 		});
 		botonAgregarVisita.setForeground(Color.BLACK);
@@ -183,23 +97,10 @@ public class VentanaVisitas extends JPanel implements ConstantesFrontend {
 		botonAgregarVisita.setBounds(507, 585, 203, 33);
 		add(botonAgregarVisita);
 
-		JLabel cartelListadoPacientes = new JLabel("Listado de pacientes:");
-		cartelListadoPacientes.setFont(new Font("Arial", Font.BOLD, 18));
-		cartelListadoPacientes.setBounds(80, 104, 203, 20);
-		add(cartelListadoPacientes);
-
-		JLabel botonEliminar = new JLabel("");
-		botonEliminar.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				borrarSeleccion();
-			}
-		});
-		botonEliminar.setToolTipText("Eliminar selección");
-		botonEliminar.setIcon(new ImageIcon(VentanaPacientes.class.getResource("/fotos/trash.png")));
-		botonEliminar.setBounds(462, 585, 33, 33);
-		botonEliminar.setCursor(new Cursor(Cursor.HAND_CURSOR));
-		add(botonEliminar);
+		JLabel cartelListadoVisitas = new JLabel("Listado de visitas:");
+		cartelListadoVisitas.setFont(new Font("Arial", Font.BOLD, 18));
+		cartelListadoVisitas.setBounds(80, 104, 203, 20);
+		add(cartelListadoVisitas);
 
 		table.addMouseListener(new MouseAdapter() {
 			@Override
@@ -208,9 +109,9 @@ public class VentanaVisitas extends JPanel implements ConstantesFrontend {
 					int viewRow = table.getSelectedRow();
 					if (viewRow != -1) {
 						int modelRow = table.convertRowIndexToModel(viewRow);
-						int id = (int) model.getValueAt(modelRow, model.findColumn("H. Clínica"));
-						Paciente paciente = cmf.getPacientePorId(id); // Fetch patient data by ID
-						abrirFormulario(paciente); // Open form with patient data
+						int id = (int) model.getValueAt(modelRow, model.findColumn("Historia Clínica"));
+						Visita visita = cmf.obtenerVisitaPorId(id);
+						abrirFormulario(visita); // Abrir formulario para editar la visita
 					}
 				}
 			}
