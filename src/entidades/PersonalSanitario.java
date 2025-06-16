@@ -1,39 +1,24 @@
 package entidades;
 
-public abstract class PersonalSanitario extends Persona{
+import runner.Usuario;
 
-    protected String email;
-    protected String password;
+public abstract class PersonalSanitario extends Persona {
+
+    protected Usuario user;
 
     public PersonalSanitario(String nombre, String primerApellido, 
-    		String segundoApellido, String ci, String email, String password) {
+    		String segundoApellido, String ci, String userName, String password, Usuario.TipoDeRol rol) {
     	super(nombre, primerApellido, segundoApellido, ci);
-    	setEmail(email);
-    	setPassword(password);
+    	
+    	user = new Usuario(userName, password, rol);
     }
     
-    public String getEmail() {
-        return email;
+    public Usuario getUser() {
+    	return user;
     }
     
-    public void setEmail(String email) {
-        if (email != null && email.contains("@")) {
-            this.email = email.trim();
-        } else {
-            throw new IllegalArgumentException("Email inv\u00E1lido: " + email);
-        }
-    }
-    
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        if (password != null && password.length() >= 6) {
-            this.password = password;
-        } else {
-            throw new IllegalArgumentException("Password must be at least 6 characters long.");
-        }
+    public void setUser(Usuario user) {
+    	this.user = user;
     }
 
 }

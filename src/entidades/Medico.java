@@ -1,6 +1,8 @@
 package entidades;
 
 import java.text.SimpleDateFormat;
+
+import runner.Usuario;
 import service.Validations;
 
 import java.util.Date;
@@ -11,7 +13,7 @@ public class Medico extends PersonalSanitario {
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
     public Medico(String nombre, String primerApellido, String segundoApellido, int numRegistro, String ci, Date fecha, String email, String password) {
-        super(nombre, primerApellido, segundoApellido, ci, email, password);
+        super(nombre, primerApellido, segundoApellido, ci, email, password, Usuario.TipoDeRol.MÉDICO);
         setNumRegistro(numRegistro);
         setFechaInscripcion(fecha);
     }

@@ -6,6 +6,8 @@ import java.util.Objects;
 import java.time.LocalDate;
 import java.time.ZoneId;
 
+import runner.Usuario;
+
 public class Enfermera extends PersonalSanitario {
     private int id;
     private boolean licenciatura;
@@ -14,11 +16,11 @@ public class Enfermera extends PersonalSanitario {
     private ArrayList<ResultadoAnalisis> resultadoAnalisis;
 
     public Enfermera(String nombre, String primerApellido, String segundoApellido, int id, String ci, boolean licenciatura, int experiencia, Date fecha, String email, String password) {
-        super(nombre, primerApellido, segundoApellido, ci, email, password); 	
+        super(nombre, primerApellido, segundoApellido, ci, email, password, Usuario.TipoDeRol.ENFERMERA);
         setId(id);
         setLicenciatura(licenciatura);
         setExperiencia(experiencia);
-        setFechaInicio(fecha);
+        setFechaInicio(fecha);    
         this.resultadoAnalisis = new ArrayList<>();
     }
 

@@ -10,13 +10,14 @@ public class InfoDialog extends JDialog {
 
     public InfoDialog(Window parent, String titulo, String mensaje) {
     	super(parent, titulo, DEFAULT_MODALITY_TYPE);
+    	setIconImage(Toolkit.getDefaultToolkit().getImage(InfoDialog.class.getResource("/fotos/Logo peque.png")));
         initUI(mensaje);
     }
 
     private void initUI(String mensajeTexto) {
     	setSize(500, 200);
     	setLocationRelativeTo(getParent());
-    	setLayout(new BorderLayout(10, 10));
+    	getContentPane().setLayout(new BorderLayout(10, 10));
     	setResizable(false);
     	getContentPane().setBackground(Color.WHITE);
 
@@ -26,7 +27,7 @@ public class InfoDialog extends JDialog {
     	mensaje.setHorizontalAlignment(SwingConstants.CENTER);
     	mensaje.setOpaque(false);
 
-    	add(mensaje, BorderLayout.CENTER);
+    	getContentPane().add(mensaje, BorderLayout.CENTER);
 
     	JPanel botones = new JPanel();
     	botones.setBackground(Color.WHITE); // fondo blanco
@@ -42,7 +43,7 @@ public class InfoDialog extends JDialog {
     	});
     	botones.add(btnAceptar);
 
-    	add(botones, BorderLayout.SOUTH);
+    	getContentPane().add(botones, BorderLayout.SOUTH);
     }
 }
 

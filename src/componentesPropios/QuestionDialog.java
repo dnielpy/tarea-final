@@ -4,17 +4,15 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.Frame;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import javax.swing.border.EmptyBorder;
+import java.awt.Toolkit;
 
 public class QuestionDialog extends JDialog {
 	
@@ -22,13 +20,14 @@ public class QuestionDialog extends JDialog {
 
 	public QuestionDialog(Window parent, String titulo, String mensaje) {
 		super(parent, titulo, DEFAULT_MODALITY_TYPE);
+		setIconImage(Toolkit.getDefaultToolkit().getImage(QuestionDialog.class.getResource("/fotos/Logo peque.png")));
         initUI(mensaje);
 	}
 	
 	private void initUI(String mensajeTexto) {
 		setSize(500, 200);
 		setLocationRelativeTo(getParent());
-		setLayout(new BorderLayout(10, 10));
+		getContentPane().setLayout(new BorderLayout(10, 10));
 		setResizable(false);
 		getContentPane().setBackground(Color.WHITE);
 
@@ -38,7 +37,7 @@ public class QuestionDialog extends JDialog {
 		mensaje.setHorizontalAlignment(SwingConstants.CENTER);
 		mensaje.setOpaque(false);
 
-		add(mensaje, BorderLayout.CENTER);
+		getContentPane().add(mensaje, BorderLayout.CENTER);
 
 		JPanel botones = new JPanel();
 		botones.setBackground(Color.WHITE); // fondo blanco
@@ -68,7 +67,7 @@ public class QuestionDialog extends JDialog {
 		botones.add(btnSi);
 		botones.add(btnNo);
 
-		add(botones, BorderLayout.SOUTH);
+		getContentPane().add(botones, BorderLayout.SOUTH);
 	}
 
 	public boolean esConfirmado() {

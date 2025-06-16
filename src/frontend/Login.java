@@ -1,8 +1,6 @@
 package frontend;
 
-import java.awt.Cursor;
-
-import javax.swing.JFrame;
+import javax.swing.JDialog;
 import javax.swing.JPanel;
 
 import java.awt.Color;
@@ -16,6 +14,7 @@ import javax.swing.JTextField;
 
 import java.awt.Font;
 import java.awt.SystemColor;
+import java.awt.Window;
 
 import javax.swing.JSeparator;
 
@@ -23,13 +22,18 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.JPasswordField;
 
 import componentesPropios.BotonBlanco;
+import componentesPropios.CopyDialog;
 import componentesPropios.ImageButtonLabel;
 import componentesPropios.InfoDialog;
+import componentesPropios.QuestionDialog;
 import runner.Auth;
+import runner.Usuario;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -37,28 +41,83 @@ import java.awt.event.ActionEvent;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 
-public class Login extends JFrame implements ConstantesFrontend{
+import entidades.CMF;
+
+public class Login extends JDialog implements ConstantesFrontend{
 	private boolean contrasenaVisible;
 	private JTextField campoUsuario;
 	private JPasswordField campoContrasenna;
 	private ImageButtonLabel ojoIcono;
-	private boolean auth ;
+	private boolean auth;
 
-	public Login() {
+	public Login(Window parent) {
+        super(parent, "Autenticaci贸n", ModalityType.APPLICATION_MODAL); // Modal y con t铆tulo
 		this.auth = false;
 		setBackground(Color.WHITE);
 		setFont(new Font("Arial", Font.PLAIN, 16));
 		contrasenaVisible = false;
 
 		setResizable(false);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setType(Type.POPUP);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Login.class.getResource("/fotos/Logo peque.png")));
 		setTitle("Autenticaci\u00F3n");
 		setBounds(100, 100, 800, 510);
 		getContentPane().setLayout(null);
-		setLocationRelativeTo(null);
+		setLocationRelativeTo(parent);
 
+		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE); // Evita cierre autom谩tico
+
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				QuestionDialog confirmacion = new QuestionDialog(Login.this,
+						"Confirmar salida", "驴Est谩s seguro de que deseas cerrar la aplicaci贸n?");
+				confirmacion.setVisible(true); // Espera respuesta
+
+				if (confirmacion.esConfirmado()) {
+					System.exit(0); // Cierra completamente la aplicaci贸n
+				}
+			}
+		});
+		inicializarInterfaz();
+	}
+	
+	public void autenticar() {
+	    String usuario = campoUsuario.getText();
+	    String contrasenna = new String(campoContrasenna.getPassword());
+
+	    if (contrasenna.equals("鈼忊棌鈼忊棌鈼忊棌鈼忊棌鈼忊棌") || contrasenna.trim().isEmpty()) {
+	        InfoDialog dialogo = new InfoDialog(
+	            this.getOwner(),
+	            "Error de autenticaci贸n",
+	            "La contrase帽a no puede estar vac铆a"
+	        );
+	        dialogo.setVisible(true);
+	        return;
+	    }
+
+	    Auth authManager = new Auth();
+
+	    try {
+	        Usuario usuarioAutenticado = authManager.authUser(usuario, contrasenna);
+
+	        // Guardar en la sesi贸n (singleton CMF)
+	        CMF.getInstance().setUsuario(usuarioAutenticado);
+
+	        auth = true;
+	        iniciarSesion();
+
+	    } catch (Auth.AuthenticationException ex) {
+	        InfoDialog dialogo = new InfoDialog(
+	            this.getOwner(),
+	            "Error de autenticaci贸n",
+	            ex.getMessage()
+	        );
+	        dialogo.setVisible(true);
+	    }
+	}
+	
+	private void inicializarInterfaz() {
 		JPanel panelPrincipal = new JPanel();
 		panelPrincipal.setBackground(Color.WHITE);
 		panelPrincipal.setBounds(0, 0, 794, 534);
@@ -113,6 +172,13 @@ public class Login extends JFrame implements ConstantesFrontend{
                 }
             }
         });
+		
+		campoUsuario.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        autenticar();
+		    }
+		});
+		
 		campoUsuario.setForeground(SystemColor.controlShadow);
 		campoUsuario.setText("Ingrese el nombre de usuario");
 		campoUsuario.setFont(new Font("Arial", Font.ITALIC, 16));
@@ -143,6 +209,13 @@ public class Login extends JFrame implements ConstantesFrontend{
                 }
             }
         });
+		
+		campoContrasenna.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        autenticar();
+		    }
+		});
+		
 		campoContrasenna.setForeground(SystemColor.controlShadow);
 		campoContrasenna.setText("\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022");
 		campoContrasenna.setFont(new Font("Arial", Font.PLAIN, 16));
@@ -168,69 +241,72 @@ public class Login extends JFrame implements ConstantesFrontend{
 		panelPrincipal.add(separatorContrasenna);
 
 		BotonBlanco botonAceptar = new BotonBlanco("ACEPTAR");
+		botonAceptar.setToolTipText("Clic para iniciar sesi\u00F3n con los datos introducidos");
 		botonAceptar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				autenticar();
 			}
 		});
-		botonAceptar.setForeground(new Color(0, 0, 0));
-		botonAceptar.setBackground(SystemColor.menu);
-		botonAceptar.setBounds(325, 361, 129, 43);
+		botonAceptar.setBounds(325, 360, 129, 33);
 		panelPrincipal.add(botonAceptar);
 		botonAceptar.setLayout(null);
 		
-		JPanel panel = new JPanel();
-		panel.setLayout(null);
-		panel.setBackground(new Color(109, 163, 67));
-		panel.setBounds(0, 0, 250, 225);
-		panelPrincipal.add(panel);
+		ImageButtonLabel botonInfo = new ImageButtonLabel((ImageIcon) null);
+		botonInfo.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				mostrarInformacion();
+			}
+		});
+		botonInfo.setIcon(new ImageIcon(Login.class.getResource("/fotos/Info.png")));
+		botonInfo.setText("");
+		botonInfo.setBounds(466, 360, 33, 33);
+		panelPrincipal.add(botonInfo);
 		
-		JLabel label = new JLabel();
-		label.setIcon(new ImageIcon(Login.class.getResource("/fotos/Tipografia-Peque.png")));
-		label.setHorizontalAlignment(SwingConstants.CENTER);
-		label.setBounds(0, 129, 250, 62);
-		panel.add(label);
+		JPanel panelLogo = new JPanel();
+		panelLogo.setLayout(null);
+		panelLogo.setBackground(new Color(109, 163, 67));
+		panelLogo.setBounds(0, 0, 250, 225);
+		panelPrincipal.add(panelLogo);
 		
-		JLabel label_1 = new JLabel("");
-		label_1.setIcon(new ImageIcon(Login.class.getResource("/fotos/Logo peque.png")));
-		label_1.setHorizontalAlignment(SwingConstants.CENTER);
-		label_1.setBounds(0, 15, 250, 120);
-		panel.add(label_1);
+		JLabel cartelTipografia = new JLabel();
+		cartelTipografia.setIcon(new ImageIcon(Login.class.getResource("/fotos/Tipografia-Peque.png")));
+		cartelTipografia.setHorizontalAlignment(SwingConstants.CENTER);
+		cartelTipografia.setBounds(0, 129, 250, 62);
+		panelLogo.add(cartelTipografia);
 		
-		JPanel panel_1 = new JPanel();
-		panel_1.setBorder(new LineBorder(Color.WHITE, 1, true));
-		panel_1.setBackground(Color.WHITE);
-		panel_1.setBounds(21, 15, 208, 189);
-		panel.add(panel_1);
-
+		JLabel cartelLogo = new JLabel("");
+		cartelLogo.setIcon(new ImageIcon(Login.class.getResource("/fotos/Logo peque.png")));
+		cartelLogo.setHorizontalAlignment(SwingConstants.CENTER);
+		cartelLogo.setBounds(0, 15, 250, 120);
+		panelLogo.add(cartelLogo);
+		
+		JPanel panelBlanco = new JPanel();
+		panelBlanco.setBorder(new LineBorder(Color.WHITE, 1, true));
+		panelBlanco.setBackground(Color.WHITE);
+		panelBlanco.setBounds(21, 15, 208, 189);
+		panelLogo.add(panelBlanco);
 	}
 	
-	public void autenticar() {
-		String usuario = campoUsuario.getText();
-    	String contrasenna = new String(campoContrasenna.getPassword());
+	public void mostrarInformacion() {
+	    Usuario usuarioMedico = CMF.getInstance().getMedico().getUser();
+	    Usuario usuarioEnfermera = CMF.getInstance().getEnfermera().getUser();
 
-    	Auth authManager = new Auth();
+	    String datosMedico = usuarioMedico.getUserName() + " / " + usuarioMedico.getPassword();
+	    String datosEnfermera = usuarioEnfermera.getUserName() + " / " + usuarioEnfermera.getPassword();
 
-    	try {
-    		if (authManager.authUser(usuario, contrasenna)) {
-    			auth = true;
-    			iniciarSesion();
-    		}
-    	} catch (Auth.AuthenticationException ex) {
-    		InfoDialog dialogo = new InfoDialog(
-    				this.getOwner(),
-    				"Error de autenticaci髇",
-    				ex.getMessage()
-    		);
-    		dialogo.setVisible(true);
-    	}
+	    String mensaje = "Para probar el programa inicie sesi\u00F3n con alguno de estos usuarios:<br><br>"
+	            + "<b>M\u00E9dico:</b> " + datosMedico + "<br>"
+	            + "<b>Enfermera:</b> " + datosEnfermera;
+
+	    new CopyDialog(this, "Informaci\u00F3n", mensaje).setVisible(true);
 	}
 	
 	public void iniciarSesion() {
 		InfoDialog dialogo = new InfoDialog(
 				this.getOwner(),
-				"Inicio de sesi髇",
-				"Inicio de sesi髇 exitoso"
+				"Inicio de sesi贸n",
+				"Inicio de sesi贸n exitoso"
 		);
 		dialogo.setVisible(true);
 		dispose(); 
@@ -238,8 +314,8 @@ public class Login extends JFrame implements ConstantesFrontend{
 		principal.setVisible(true);
 	}
 	
-	public boolean getAuth(){
-		return this.auth;
+	public boolean authenticado() {
+	    return auth;
 	}
 }
 
