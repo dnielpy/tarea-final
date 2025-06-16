@@ -18,6 +18,7 @@ import javax.swing.JScrollPane;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.awt.Toolkit;
 
 public class TextDialog extends JDialog {
 	
@@ -34,6 +35,7 @@ public class TextDialog extends JDialog {
 	 */
 	public TextDialog(JDialog parent, String titulo, String mensaje) {
         super(parent, titulo, true);
+        setIconImage(Toolkit.getDefaultToolkit().getImage(TextDialog.class.getResource("/fotos/Logo peque.png")));
         initUI(mensaje);
     }
 

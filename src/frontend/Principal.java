@@ -20,11 +20,14 @@ import java.awt.event.WindowEvent;
 
 import componentesPropios.BotonBlanco;
 import componentesPropios.BotonMenu;
+import componentesPropios.InfoDialog;
 import componentesPropios.QuestionDialog;
 
 import javax.swing.SwingConstants;
 
+import entidades.CMF;
 import runner.Usuario;
+
 import java.awt.CardLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -34,6 +37,7 @@ public class Principal extends JFrame implements MouseListener, ConstantesFronte
     private JPanel panelVentanas;
     private BotonMenu botonActivo;
     private JPanel contentPane;
+    private CMF cmf;
 
     public BotonMenu getBotonActivo() {
         return botonActivo;
@@ -57,7 +61,8 @@ public class Principal extends JFrame implements MouseListener, ConstantesFronte
     }
 
     public Principal() {
-
+    	cmf = CMF.getInstance();
+    	
         setIconImage(Toolkit.getDefaultToolkit().getImage(Principal.class.getResource("/fotos/Logo peque.png")));
         setTitle("Sistema de gesti\u00F3n del CMF");
         setResizable(false);
@@ -182,19 +187,30 @@ public class Principal extends JFrame implements MouseListener, ConstantesFronte
             }
         });
         
-        if (Usuario.getRole() == "M\u00C9DICO") {
-            imagenUsuario.setIcon(new ImageIcon(Principal.class.getResource("/fotos/medico.png")));
-            botonVisitasOAnalisis.setText("VISITAS");
-            VentanaVisitas visitas = new VentanaVisitas();
-            panelVentanas.add(visitas, "VISITAS");
-            visitas.setLayout(null);
-            cartelRol.setText("M\u00C9DICO");
-        } else if (Usuario.getRole() == "ENFERMERA") {
-            imagenUsuario.setIcon(new ImageIcon(Principal.class.getResource("/fotos/enfermera.png")));
-            botonVisitasOAnalisis.setText("AN\u00C1LISIS");
-            VentanaAnalisis analisis = new VentanaAnalisis();
-            panelVentanas.add(analisis, "AN\u00C1LISIS");
-            cartelRol.setText("ENFERMERA");
+        Usuario usuario = cmf.getUsuario();
+        if (usuario != null) {
+            if (usuario.getRole() == Usuario.TipoDeRol.MÉDICO) {
+                imagenUsuario.setIcon(new ImageIcon(Principal.class.getResource("/fotos/medico.png")));
+                botonVisitasOAnalisis.setText("VISITAS");
+                VentanaVisitas visitas = new VentanaVisitas();
+                panelVentanas.add(visitas, "VISITAS");
+                visitas.setLayout(null);
+                cartelRol.setText("MÉDICO");
+            } else if (usuario.getRole() == Usuario.TipoDeRol.ENFERMERA) {
+                imagenUsuario.setIcon(new ImageIcon(Principal.class.getResource("/fotos/enfermera.png")));
+                botonVisitasOAnalisis.setText("ANÁLISIS");
+                VentanaAnalisis analisis = new VentanaAnalisis();
+                panelVentanas.add(analisis, "ANÁLISIS");
+                cartelRol.setText("ENFERMERA");
+            }
+        } else {
+            System.err.println("Error: Usuario en sesión es null");
+            new InfoDialog(
+                this,
+                "Error",
+                "No se ha iniciado sesión correctamente.\nLa aplicación se cerrará."              
+            ).setVisible(true);;
+            System.exit(1);
         }
     };
     
@@ -202,11 +218,12 @@ public class Principal extends JFrame implements MouseListener, ConstantesFronte
         QuestionDialog dialogo = new QuestionDialog(
                 this,
                 "Confirmar salida",
-                "\u00BFSeguro que desea salir?\nSe perder\u00E1n todos los progresos al salir de la aplicaci\u00F3n."
+                "\u00BFSeguro que desea salir?\n\nSe perder\u00E1n todos los progresos no guardados al salir de la aplicaci\u00F3n."
         );
         dialogo.setVisible(true);
 
         if (dialogo.esConfirmado()) {
+        	cmf.setUsuario(null);
             dispose();      // Cierra la ventana
             System.exit(0); // Finaliza la app 
         }
@@ -221,8 +238,9 @@ public class Principal extends JFrame implements MouseListener, ConstantesFronte
         dialogo.setVisible(true);
         
         if (dialogo.esConfirmado()) {
+        	cmf.setUsuario(null);
             dispose();      // Cierra la ventana
-            new Login().setVisible(true);
+            new Login(null).setVisible(true);
         }   
     }
 

@@ -33,6 +33,7 @@ import javax.swing.JScrollPane;
 
 import componentesPropios.BotonBlanco;
 import componentesPropios.ImageButtonLabel;
+import componentesPropios.CopyDialog;
 import componentesPropios.InfoDialog;
 import componentesPropios.PlaceholderTextField;
 import componentesPropios.TextDialog;
@@ -704,35 +705,43 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 	}
 	
 	public void agregarPaciente() {
-		CMF cmf = CMF.getInstance();
+	    CMF cmf = CMF.getInstance();
 
-		try {
-			String[] datos = obtenerDatosBasicos(); // nombre, primerApellido, segundoApellido, ci, direccion
-			boolean embarazada = validarEmbarazo(datos[3], checkEmbarazada.isSelected());
-			Date fechaUltima = obtenerFechaUltimaPrueba();
-			ArrayList<String> enfermedades = obtenerListaEnfermedades();
-			ArrayList<String> vacunas = obtenerListaVacunas();
+	    try {
+	        String[] datos = obtenerDatosBasicos(); // nombre, primerApellido, segundoApellido, ci, direccion
+	        boolean embarazada = validarEmbarazo(datos[3], checkEmbarazada.isSelected());
+	        Date fechaUltima = obtenerFechaUltimaPrueba();
+	        ArrayList<String> enfermedades = obtenerListaEnfermedades();
+	        ArrayList<String> vacunas = obtenerListaVacunas();
 
-			if (cmf.isCiRepited(datos[3])) {
-				throw new IllegalArgumentException("El CI proporcionado ya est\u00E1 registrado.");
-			}
+	        if (cmf.isCiRepited(datos[3])) {
+	            throw new IllegalArgumentException("El CI proporcionado ya est\u00E1 registrado.");
+	        }
 
-			boolean agregado = cmf.agregarPaciente(
-				datos[0], datos[1], datos[2], enfermedades, vacunas,
-				datos[3], embarazada, fechaUltima, datos[4]
-			);
+	        boolean agregado = cmf.agregarPaciente(
+	            datos[0], datos[1], datos[2], enfermedades, vacunas,
+	            datos[3], embarazada, fechaUltima, datos[4]
+	        );
 
-			if (agregado) {
-				JOptionPane.showMessageDialog(contentPane, "Paciente agregado exitosamente.", "\u00C9xito", JOptionPane.INFORMATION_MESSAGE);
-				dispose();
-			} else {
-				JOptionPane.showMessageDialog(contentPane, "No se pudo agregar el paciente.", "Error", JOptionPane.ERROR_MESSAGE);
-			}
-		} catch (IllegalArgumentException ex) {
-			JOptionPane.showMessageDialog(contentPane, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-		} catch (Exception ex) {
-			JOptionPane.showMessageDialog(contentPane, "Ocurri\u00F3 un error inesperado: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-		}
+	        if (agregado) {
+	            new InfoDialog(SwingUtilities.getWindowAncestor(contentPane), 
+	                "\u00C9xito", 
+	                "Paciente agregado exitosamente.").setVisible(true);
+	            dispose();
+	        } else {
+	            new InfoDialog(SwingUtilities.getWindowAncestor(contentPane), 
+	                "Error", 
+	                "No se pudo agregar el paciente.").setVisible(true);
+	        }
+	    } catch (IllegalArgumentException ex) {
+	        new InfoDialog(SwingUtilities.getWindowAncestor(contentPane), 
+	            "Error", 
+	            ex.getMessage()).setVisible(true);
+	    } catch (Exception ex) {
+	        new InfoDialog(SwingUtilities.getWindowAncestor(contentPane), 
+	            "Error", 
+	            "Ocurri\u00F3 un error inesperado: " + ex.getMessage()).setVisible(true);
+	    }
 	}
 
 

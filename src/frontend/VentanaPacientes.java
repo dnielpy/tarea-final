@@ -24,6 +24,7 @@ import java.awt.SystemColor;
 
 import javax.swing.ImageIcon;
 
+import componentesPropios.CopyDialog;
 import componentesPropios.InfoDialog;
 import componentesPropios.QuestionDialog;
 import componentesPropios.TablaPersonalizada;
