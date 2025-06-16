@@ -13,7 +13,7 @@ public class Enfermera extends PersonalSanitario {
     private boolean licenciatura;
     private int experiencia;
     private Date fechaInicio;
-    private ArrayList<ResultadoAnalisis> resultadoAnalisis;
+    private ArrayList<Analisis> analisis;
 
     public Enfermera(String nombre, String primerApellido, String segundoApellido, int id, String ci, boolean licenciatura, int experiencia, Date fecha, String email, String password) {
         super(nombre, primerApellido, segundoApellido, ci, email, password, Usuario.TipoDeRol.ENFERMERA);
@@ -21,7 +21,7 @@ public class Enfermera extends PersonalSanitario {
         setLicenciatura(licenciatura);
         setExperiencia(experiencia);
         setFechaInicio(fecha);    
-        this.resultadoAnalisis = new ArrayList<>();
+        this.analisis = new ArrayList<>();
     }
 
     public int getId() {
@@ -75,12 +75,12 @@ public class Enfermera extends PersonalSanitario {
         this.fechaInicio = fecha;
     }
 
-    public ArrayList<ResultadoAnalisis> getResultadoAnalisis() {
-        return resultadoAnalisis;
+    public ArrayList<Analisis> getResultadoAnalisis() {
+        return analisis;
     }
 
-    public void agregarResultadoAnalisis(ResultadoAnalisis resultado) {
-        Objects.requireNonNull(resultado, "El resultado de an�lisis no puede ser nulo");
-        this.resultadoAnalisis.add(resultado);
+    public void agregarResultadoAnalisis(Analisis analisis) {
+        Objects.requireNonNull(analisis, "El resultado de an�lisis no puede ser nulo");
+        this.analisis.add(analisis);
     }
 }

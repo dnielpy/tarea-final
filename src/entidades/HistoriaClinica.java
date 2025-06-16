@@ -6,12 +6,12 @@ import java.util.Objects;
 
 public class HistoriaClinica {
     private int id;
-    private List<ResultadoAnalisis> resultadosDeAnalisis;
+    private List<Analisis> analisis;
     private List<Visita> visitas;
 
     // Constructores
     
-    public HistoriaClinica(int id, List<ResultadoAnalisis> resultadosDeAnalisis, List<Visita> visitas) {
+    public HistoriaClinica(int id, List<Analisis> resultadosDeAnalisis, List<Visita> visitas) {
     	setId(id);
     	setResultadosDeAnalisis(resultadosDeAnalisis);
         setVisitas(visitas);
@@ -19,12 +19,10 @@ public class HistoriaClinica {
 
     public HistoriaClinica(int id) {
        setId(id);
-       resultadosDeAnalisis = new ArrayList<ResultadoAnalisis>();
+       analisis = new ArrayList<Analisis>();
        visitas = new ArrayList<Visita>();
     }
     
-    // Id
-
     public int getId() {
         return id;
     }
@@ -38,27 +36,26 @@ public class HistoriaClinica {
 
     // Análisis
     
-    public List<ResultadoAnalisis> getResultadosDeAnalisis() {
-        return resultadosDeAnalisis;
+    public List<Analisis> getAnalisis() {
+        return analisis;
     }
     
-    public void setResultadosDeAnalisis(List<ResultadoAnalisis> resultados) {
+    public void setResultadosDeAnalisis(List<Analisis> resultados) {
         Objects.requireNonNull(resultados, "La lista de resultados no puede ser nula");
         
-        for (ResultadoAnalisis resultado : resultados) {
+        for (Analisis resultado : resultados) {
             Objects.requireNonNull(resultado, "Los resultados de análisis no pueden ser nulos");
         }
         
-        this.resultadosDeAnalisis = resultados;
+        this.analisis = resultados;
     }
     
-    public void agregarResultadoAnalisis(ResultadoAnalisis resultado) {
+    public void agregarResultadoAnalisis(Analisis resultado) {
         Objects.requireNonNull(resultado, "El resultado no puede ser nulo");
-        resultadosDeAnalisis.add(resultado);
+        analisis.add(resultado);
     }
     
-    // Visita
-    
+ 
     public List<Visita> getRegistroVisitas() {
         return visitas;
     }
