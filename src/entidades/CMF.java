@@ -47,23 +47,23 @@ public class CMF {
 	}
 
 	// Id del consultorio
-	
+
 	public int getId() {
 		return id;
 	}
-	
+
 	public void setId(int id) {
 		if (id <= 0)
 			throw new IllegalArgumentException("ID debe ser positivo");
 		this.id = id;
 	}
-	
+
 	// Nombre del Policlinico
-	
+
 	public String getNombrePoliclinico() {
 		return nombreDelPoliclinico;
 	}
-	
+
 	public void setNombrePoliclinico(String nombre) {
 		if (nombre == null || nombre.trim().isEmpty())
 			throw new IllegalArgumentException("Nombre no puede ser nulo o vac\u00edo");
@@ -71,13 +71,13 @@ public class CMF {
 			throw new IllegalArgumentException("Nombre no puede exceder 100 caracteres");
 		this.nombreDelPoliclinico = nombre.trim();
 	}
-	
+
 	// Director
-	
+
 	public String getNombreDirector() {
 		return nombreDirector;
 	}
-	
+
 	public void setNombreDirector(String nombreDirector) {
 		if (nombreDirector == null || nombreDirector.trim().isEmpty())
 			throw new IllegalArgumentException("Nombre del director no puede ser nulo o vac\u00edo");
@@ -85,9 +85,9 @@ public class CMF {
 			throw new IllegalArgumentException("Nombre del director no puede exceder 100 caracteres");
 		this.nombreDirector = nombreDirector.trim();
 	}
-	
+
 	// Usuario actual
-	
+
 	public Usuario getUsuario() {
 		return usuario;
 	}
@@ -95,13 +95,13 @@ public class CMF {
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
 	}
-	
+
 	// Paciente
-	
+
 	public List<Paciente> getPacientes() {
 		return pacientes;
 	}
-	
+
 	public boolean agregarPaciente(String nombre, String primerApellido, String segundoApellido,
 			List<String> enfermedadesCronicas, List<String> vacunacion,
 			String CI, boolean estaEmbarazada, Date fechaUltimaRevision, String direccion) {
@@ -149,22 +149,22 @@ public class CMF {
 	}
 
 	// Medico
-	
+
 	public Medico getMedico() {
 		return this.medico;
 	}
-	
+
 	public void crearMedico(String nombre, String primerApellido, String segundoApellido, int numRegistro, String ci,
 			Date fecha, String email, String password) {
 		medico = new Medico(nombre, primerApellido, segundoApellido, numRegistro, ci, fecha, email, password);
 	}
-	
+
 	// Enfermera
 
 	public Enfermera getEnfermera() {
 		return this.enfermera;
 	}
-	
+
 	public void crearEnfermera(String nombre, String primerApellido, String segundoApellido, int id, String ci,
 			boolean licenciatura, int experiencia, Date fecha, String email, String password) {
 		Objects.requireNonNull(nombre, "El nombre no puede ser nulo");
@@ -174,7 +174,7 @@ public class CMF {
 		this.enfermera = new Enfermera(nombre, primerApellido, segundoApellido, id, ci, licenciatura, experiencia,
 				fecha, email, password);
 	}
-	
+
 	public void actualizarEnfermera(String nombre, boolean licenciatura, int experiencia, Date fecha) {
 		if (this.enfermera == null) {
 			throw new IllegalStateException("No hay enfermera asignada para actualizar");
@@ -184,9 +184,9 @@ public class CMF {
 		this.enfermera.setExperiencia(experiencia);
 		this.enfermera.setFechaInicio(fecha);
 	}
-	
+
 	// Visitas
-	
+
 	public List<Visita> obtenerListaVisitas() {
 		List<Visita> listaVisitas = new ArrayList<>();
 
@@ -196,7 +196,7 @@ public class CMF {
 
 		return listaVisitas;
 	}
-	
+
 	public void agregarVisita(Visita visita) {
 		Objects.requireNonNull(visita, "La visita no puede ser nula");
 		for (int i = 0; i < visitas.size(); i++) {
@@ -252,26 +252,26 @@ public class CMF {
 			}
 		}
 	}
-	
+
 	// Hojas de cargo
-	
+
 	public void agregarHojaCargoDiaria(Date fecha) {
 		HojaCargosDiaria hoja = new HojaCargosDiaria(fecha);
 		hojasCargoDiaria.add(hoja);
 	}
-	
+
 	// Registro General
 
 	public void crearRegistroGeneral() {
 		registroGeneral = new RegistroGeneral();
 	}
-	
+
 	// Registro Historico
 
 	public void crearRegistroHistorico() {
 		registroHistorico = new RegistroHistorico();
 	}
-	
+
 	// Busquedas
 
 	public Paciente getPacientePorId(int id) {
@@ -284,7 +284,6 @@ public class CMF {
 		}
 		return pac;
 	}
-
 
 	public boolean isCiRepited(String ci) {
 		boolean response = false;
@@ -299,7 +298,7 @@ public class CMF {
 		}
 		return response;
 	}
-	
+
 	public int obtenerNuevoHistoriaClinicaID() {
 		int id = 1;
 		boolean encontrado = true;
@@ -310,13 +309,14 @@ public class CMF {
 				if (paciente.getHistoriaClinica().getId() == id) {
 					encontrado = true;
 				}
-			} if (encontrado) {
+			}
+			if (encontrado) {
 				id++;
 			}
 		}
 		return id;
 	}
-	
+
 	public HojaCargosDiaria obtenerHojaDeCargosPorFecha(Date fecha) {
 		HojaCargosDiaria hojaDeCargo = null;
 		boolean ciclar = true;
@@ -328,7 +328,7 @@ public class CMF {
 		}
 		return hojaDeCargo;
 	}
-	
+
 	public Visita obtenerVisitaPorId(int id) {
 		Visita v = null;
 
@@ -440,16 +440,26 @@ public class CMF {
 		int[] rangoDeEdad = new int[10];
 		for (Paciente paciente : pacientes) {
 			int edad = paciente.getEdad();
-			if (edad <= 10) rangoDeEdad[0]++;
-			else if (edad <= 20) rangoDeEdad[1]++;
-			else if (edad <= 30) rangoDeEdad[2]++;
-			else if (edad <= 40) rangoDeEdad[3]++;
-			else if (edad <= 50) rangoDeEdad[4]++;
-			else if (edad <= 60) rangoDeEdad[5]++;
-			else if (edad <= 70) rangoDeEdad[6]++;
-			else if (edad <= 80) rangoDeEdad[7]++;
-			else if (edad <= 90) rangoDeEdad[8]++;
-			else rangoDeEdad[9]++;
+			if (edad <= 10)
+				rangoDeEdad[0]++;
+			else if (edad <= 20)
+				rangoDeEdad[1]++;
+			else if (edad <= 30)
+				rangoDeEdad[2]++;
+			else if (edad <= 40)
+				rangoDeEdad[3]++;
+			else if (edad <= 50)
+				rangoDeEdad[4]++;
+			else if (edad <= 60)
+				rangoDeEdad[5]++;
+			else if (edad <= 70)
+				rangoDeEdad[6]++;
+			else if (edad <= 80)
+				rangoDeEdad[7]++;
+			else if (edad <= 90)
+				rangoDeEdad[8]++;
+			else
+				rangoDeEdad[9]++;
 		}
 		return rangoDeEdad;
 	}
@@ -482,7 +492,7 @@ public class CMF {
 	}
 
 	// Datos cableados
-	
+
 	public void cargarDatos() {
 		crearMedico("Alfonso", "Rodr\u00EDguez", "Camela", 11321, "75060212345", generarFechaRandom(),
 				"medico@example.com", "12345678");
@@ -560,7 +570,7 @@ public class CMF {
 				"Tratamiento: Suplementos vitamínicos", new Analisis("Orina", null), "Obstetricia",
 				"Avenida Boyeros #123, Centro Habana, La Habana"));
 		agregarVisita(new Visita(10, 10, generarFechaRandom(), "Diagnóstico: Dolor lumbar",
-				"Tratamiento: Fisioterapia", new Analisis("Radiografía", null), "Rehabilitación",
+				"Tratamiento: Fisioterapia", null, "Rehabilitación",
 				"Calle Línea #456, Marianao, La Habana"));
 
 	}
@@ -571,7 +581,7 @@ public class CMF {
 		List<String> vacunas = generarVacunasAleatorias();
 		agregarPaciente(nombre, primerApellido, segundoApellido, enfermedades, vacunas, ci, esMujer, fecha, direccion);
 	}
-	
+
 	// Metodos para randomizar datos
 
 	public static Date generarFechaRandom() {
@@ -652,5 +662,5 @@ public class CMF {
 		}
 
 		return vacunasAsignadas;
-	}	
+	}
 }

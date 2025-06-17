@@ -198,7 +198,7 @@ public class FormularioVisitas extends JDialog {
         lblAnalisis.setBounds(50, 360, 150, 30); // Uniforme separación
         panelPrincipal.add(lblAnalisis);
 
-        cbTipoAnalisis = new JComboBox<>(new String[] { "Sangre", "Orina", "Radiografía", "Otro" });
+        cbTipoAnalisis = new JComboBox<>(new String[] { "(Ninguno)", "Sangre", "Orina", "Radiografía", "Otro" });
         cbTipoAnalisis.setFont(new Font("Arial", Font.PLAIN, 16));
         cbTipoAnalisis.setBounds(200, 360, 350, 30); // Uniforme separación
         panelPrincipal.add(cbTipoAnalisis);
@@ -253,14 +253,13 @@ public class FormularioVisitas extends JDialog {
             String especialidadRemitida = (String) cbEspecialidadRemitida.getSelectedItem(); // Obtener especialidad
                                                                                              // seleccionada
             String direccion = txtDireccion.getText().trim();
-            String tipoAnalisis = (String) cbTipoAnalisis.getSelectedItem();
+            String tiposAnalisis = (String) cbTipoAnalisis.getSelectedItem();
+            Analisis analisis = null;
 
-            if (diagnostico.isEmpty() || tratamiento.isEmpty() || especialidadRemitida.isEmpty()
-                    || direccion.isEmpty() || tipoAnalisis.isEmpty()) {
-                throw new IllegalArgumentException("Todos los campos son obligatorios.");
+            if (!tiposAnalisis.equals("(Ninguno)") && !tiposAnalisis.isEmpty()) {
+                analisis = new Analisis(tiposAnalisis, null);
             }
 
-            Analisis analisis = new Analisis(tipoAnalisis, null);
             Visita nuevaVisita = new Visita(
                     visita != null ? visita.getId() : cmf.obtenerListaVisitas().size() + 1,
                     Integer.parseInt(txtHistoriaClinica.getText().trim()),

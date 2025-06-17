@@ -11,6 +11,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+
 import entidades.CMF;
 import entidades.Visita;
 import componentesPropios.TablaPersonalizada;
@@ -23,11 +24,12 @@ public class VentanaAnalisis extends JPanel implements ConstantesFrontend {
 
 	private CMF cmf;
 	private JTable table;
-	private VisitaTableModel model;
+	private AnalisisTableModel model;
 
 	public VentanaAnalisis() {
 		this.cmf = CMF.getInstance();
-		model = new VisitaTableModel(cmf.obtenerListaVisitas());
+		ArrayList<Visita> visitasFiltradas = new ArrayList<>(filtrarVisitasSinResultados());
+		model = new AnalisisTableModel(visitasFiltradas);
 		initComponents();
 	}
 

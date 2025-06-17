@@ -9,11 +9,11 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 import entidades.Visita;
 
-public class VisitaTableModel extends AbstractTableModel {
+public class AnalisisTableModel extends AbstractTableModel {
     private List<Visita> visitas;
     private String[] columnNames = { "Historia Clinica", "Especialidad", "Analisis Orientado", "Fecha" };
 
-    public VisitaTableModel(List<Visita> list) {
+    public AnalisisTableModel(List<Visita> list) {
         visitas = list;
     }
 
