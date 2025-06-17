@@ -13,7 +13,7 @@ import java.util.List;
 
 public class VisitaTableModel extends AbstractTableModel {
     private ArrayList<Visita> visitas;
-    private String[] columnNames = { "Historia Clinica", "Especialidad", "Analisis", "Fecha" };
+    private String[] columnNames = { "Historia Clinica", "Especialidad", "Analisis Orientado", "Estado", "Fecha" };
 
     public VisitaTableModel(ArrayList<Visita> visitas) {
         this.visitas = visitas;
@@ -50,7 +50,10 @@ public class VisitaTableModel extends AbstractTableModel {
             value = (visita.getAnalisis() != null) ? visita.getAnalisis().getTipoDeAnalisis() : "Sin análisis";
         }
         if (columnIndex == 3)
+            value = (visita.getAnalisis().getResultados() != null) ? "Listos" : "Pendiente";
+        if (columnIndex == 4) {
             value = visita.getFecha();
+        }
 
         return value;
     }
