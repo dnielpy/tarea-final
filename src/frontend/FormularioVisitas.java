@@ -35,11 +35,15 @@ public class FormularioVisitas extends JDialog {
 
     private Visita visita; // Variable de instancia para almacenar la visita
 
+    private JList<String> listaAnalisis; // Lista para mostrar análisis agregados
+    private DefaultListModel<String> modeloAnalisis; // Modelo para gestionar los análisis
+    private JButton btnAgregarAnalisis; // Botón para agregar análisis
+
     public FormularioVisitas(Window owner, Visita visita) {
         super(owner, "Formulario de Visitas", ModalityType.APPLICATION_MODAL);
         this.visita = visita; // Asignar la visita pasada al constructor
         setLayout(null);
-        setSize(600, 550); // Ajustar altura de la ventana
+        setSize(600, 650); // Ajustar altura de la ventana
         setResizable(false);
         setLocationRelativeTo(owner);
 
@@ -47,7 +51,7 @@ public class FormularioVisitas extends JDialog {
 
         JPanel panelPrincipal = new JPanel();
         panelPrincipal.setBackground(Color.WHITE);
-        panelPrincipal.setBounds(0, 0, 600, 550);
+        panelPrincipal.setBounds(0, 0, 600, 650);
         panelPrincipal.setLayout(null);
         add(panelPrincipal);
 
@@ -203,11 +207,31 @@ public class FormularioVisitas extends JDialog {
         cbTipoAnalisis.setBounds(200, 360, 350, 30); // Uniforme separación
         panelPrincipal.add(cbTipoAnalisis);
 
+        modeloAnalisis = new DefaultListModel<>();
+        listaAnalisis = new JList<>(modeloAnalisis);
+        listaAnalisis.setFont(new Font("Arial", Font.PLAIN, 14));
+        listaAnalisis.setBorder(new LineBorder(Color.GRAY, 1, true));
+        listaAnalisis.setBounds(200, 400, 350, 100); // Ajustar posición
+        panelPrincipal.add(listaAnalisis);
+
+        btnAgregarAnalisis = new JButton("Agregar Análisis");
+        btnAgregarAnalisis.setFont(new Font("Arial", Font.BOLD, 16));
+        btnAgregarAnalisis.setBackground(new Color(0, 123, 255));
+        btnAgregarAnalisis.setForeground(Color.WHITE);
+        btnAgregarAnalisis.setBounds(50, 400, 150, 40); // Ajustar posición
+        btnAgregarAnalisis.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                agregarAnalisis();
+            }
+        });
+        panelPrincipal.add(btnAgregarAnalisis);
+
         btnGuardar = new JButton("Guardar");
         btnGuardar.setFont(new Font("Arial", Font.BOLD, 16));
         btnGuardar.setBackground(new Color(0, 123, 255));
         btnGuardar.setForeground(Color.WHITE);
-        btnGuardar.setBounds(200, 420, 150, 40); // Uniforme separación
+        btnGuardar.setBounds(200, 520, 150, 40); // Uniforme separación
         btnGuardar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -220,7 +244,7 @@ public class FormularioVisitas extends JDialog {
         btnCancelar.setFont(new Font("Arial", Font.BOLD, 16));
         btnCancelar.setBackground(Color.GRAY);
         btnCancelar.setForeground(Color.WHITE);
-        btnCancelar.setBounds(400, 420, 150, 40); // Uniforme separación
+        btnCancelar.setBounds(400, 520, 150, 40); // Uniforme separación
         btnCancelar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -245,6 +269,16 @@ public class FormularioVisitas extends JDialog {
         listaResultados.setVisible(!modeloResultados.isEmpty());
     }
 
+    private void agregarAnalisis() {
+        String tipoAnalisis = (String) cbTipoAnalisis.getSelectedItem();
+        if (tipoAnalisis != null && !tipoAnalisis.equals("(Ninguno)") && !tipoAnalisis.trim().isEmpty()) {
+            modeloAnalisis.addElement(tipoAnalisis);
+        } else {
+            JOptionPane.showMessageDialog(this, "Seleccione un tipo de análisis válido.", "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
     private void guardarVisita() {
         try {
             Date fecha = new Date(); // Guardar como objeto Date
@@ -253,11 +287,13 @@ public class FormularioVisitas extends JDialog {
             String especialidadRemitida = (String) cbEspecialidadRemitida.getSelectedItem(); // Obtener especialidad
                                                                                              // seleccionada
             String direccion = txtDireccion.getText().trim();
-            String tiposAnalisis = (String) cbTipoAnalisis.getSelectedItem();
             Analisis analisis = null;
-
-            if (!tiposAnalisis.equals("(Ninguno)") && !tiposAnalisis.isEmpty()) {
-                analisis = new Analisis(tiposAnalisis, null);
+            if (!modeloAnalisis.isEmpty()) {
+                String[] analisisArray = new String[modeloAnalisis.size()];
+                for (int i = 0; i < modeloAnalisis.size(); i++) {
+                    analisisArray[i] = modeloAnalisis.getElementAt(i);
+                }
+                analisis = new Analisis(String.join(", ", analisisArray), null);
             }
 
             Visita nuevaVisita = new Visita(
