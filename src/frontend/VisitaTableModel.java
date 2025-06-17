@@ -41,13 +41,10 @@ public class VisitaTableModel extends AbstractTableModel {
             value = visita.getPacienteHistoriaClinicaID();
         if (columnIndex == 1)
             value = visita.getEspecialidadRemitida();
-        if (columnIndex == 2) {
-            value = (visita.getAnalisis() != null) ? visita.getAnalisis().getTipoDeAnalisis() : "Sin análisis";
-        }
-        if (columnIndex == 3) {
-            value = visita.getFecha();
-        }
-
+        if (columnIndex == 2) 
+            value = (visita.getAnalisis() != null) ? visita.getAnalisis().getTipoDeAnalisis() : "Sin análisis";     
+        if (columnIndex == 3) 
+            value = visita.getFechaFormateada();     
         return value;
     }
 

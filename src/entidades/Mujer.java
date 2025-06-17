@@ -1,38 +1,34 @@
 package entidades;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.concurrent.TimeUnit;
-
 import excepciones.Excepciones.IllegalDateException;
 
-public class Mujer extends Paciente {
-    private Date fechaUltimaRevision;
-    private boolean embarazada;
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+import java.time.LocalDate;
+import java.time.Period;
 
-    public Mujer(int historiaClinicaID, String nombre, String primerApellido, String segundoApellido, String id, String direccion, Date fechaUltimaRevision, boolean embarazada) {
+public class Mujer extends Paciente {
+    private LocalDate fechaUltimaRevision;
+    private boolean embarazada;
+
+    public Mujer(int historiaClinicaID, String nombre, String primerApellido, String segundoApellido, String id,
+                 String direccion, LocalDate fechaUltimaRevision, boolean embarazada) {
         super(historiaClinicaID, nombre, primerApellido, segundoApellido, id, direccion);
         setFechaUltimaRevision(fechaUltimaRevision);
         setEmbarazada(embarazada);
     }
 
-    public Date getFechaUltimaRevision() {
+    public LocalDate getFechaUltimaRevision() {
         return fechaUltimaRevision;
     }
 
-    public void setFechaUltimaRevision(Date fechaUltimaRevision) {
+    public void setFechaUltimaRevision(LocalDate fechaUltimaRevision) {
         if (fechaUltimaRevision != null) {
-            Calendar calendario = Calendar.getInstance();         
-            if (fechaUltimaRevision.after(calendario.getTime())) {
-			    throw new IllegalDateException("Fecha de revisi\u00F3n no puede ser futura");
-			}
-            
-            calendario.setTime(fechaUltimaRevision);
-			if (calendario.get(Calendar.YEAR) < 1900) {
-			    throw new IllegalDateException("Fecha de revisi\u00F3n no puede ser anterior a 1900");
-			}		
+            if (fechaUltimaRevision.isAfter(LocalDate.now())) {
+                throw new IllegalDateException("Fecha de revisi\u00F3n no puede ser futura");
+            }
+
+            if (fechaUltimaRevision.getYear() < 1900) {
+                throw new IllegalDateException("Fecha de revisi\u00F3n no puede ser anterior a 1900");
+            }
         }
         this.fechaUltimaRevision = fechaUltimaRevision;
     }
@@ -42,29 +38,27 @@ public class Mujer extends Paciente {
     }
 
     public void setEmbarazada(boolean embarazada) {
-        if (this.getEdad() < 12 && embarazada) {
+        int edad = this.getEdad();
+
+        if (edad < 12 && embarazada) {
             throw new IllegalArgumentException("Paciente menor de 12 a\u00F1os no puede estar embarazada");
         }
-        if (this.getEdad() > 55 && embarazada) {
+
+        if (edad > 55 && embarazada) {
             throw new IllegalArgumentException("Paciente mayor de 55 a\u00F1os no puede estar embarazada");
         }
+
         this.embarazada = embarazada;
     }
 
     public boolean estaEnRiesgo() {
-        boolean riesgo = false;
-        
-        if (fechaUltimaRevision == null) {
-        	riesgo = true;
-        } else {
-        	Date hoy = new Date();
-        	long milisegundos = hoy.getTime() - fechaUltimaRevision.getTime();
-        	long anios = TimeUnit.MILLISECONDS.toDays(milisegundos) / 365l;
-
-			if (anios > 3) {
-			    riesgo = true;
-			}
-        }    
-        return riesgo;
+    	boolean enRiesgo;
+    	if (fechaUltimaRevision == null) {
+    		enRiesgo = true;
+    	} else {
+    		Period periodo = Period.between(fechaUltimaRevision, LocalDate.now());
+    		enRiesgo = periodo.getYears() > 3;
+    	}
+    	return enRiesgo;
     }
 }

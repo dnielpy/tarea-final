@@ -1,8 +1,9 @@
 package entidades;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -104,7 +105,7 @@ public class CMF {
 
 	public boolean agregarPaciente(String nombre, String primerApellido, String segundoApellido,
 			List<String> enfermedadesCronicas, List<String> vacunacion,
-			String CI, boolean estaEmbarazada, Date fechaUltimaRevision, String direccion) {
+			String CI, boolean estaEmbarazada, LocalDate fechaUltimaRevision, String direccion) {
 		if (!Validations.isValidCI(CI)) {
 			throw new IllegalArgumentException("CI inv\u00e1lido: " + CI);
 		}
@@ -151,11 +152,11 @@ public class CMF {
 	// Medico
 
 	public Medico getMedico() {
-		return this.medico;
+		return medico;
 	}
 
 	public void crearMedico(String nombre, String primerApellido, String segundoApellido, int numRegistro, String ci,
-			Date fecha, String email, String password) {
+			LocalDate fecha, String email, String password) {
 		medico = new Medico(nombre, primerApellido, segundoApellido, numRegistro, ci, fecha, email, password);
 	}
 
@@ -166,23 +167,23 @@ public class CMF {
 	}
 
 	public void crearEnfermera(String nombre, String primerApellido, String segundoApellido, int id, String ci,
-			boolean licenciatura, int experiencia, Date fecha, String email, String password) {
+			boolean licenciatura, int experiencia, LocalDate fecha, String email, String password) {
 		Objects.requireNonNull(nombre, "El nombre no puede ser nulo");
 		if (this.enfermera != null) {
 			throw new IllegalStateException("Ya existe una enfermera asignada a este CMF");
 		}
-		this.enfermera = new Enfermera(nombre, primerApellido, segundoApellido, id, ci, licenciatura, experiencia,
+		enfermera = new Enfermera(nombre, primerApellido, segundoApellido, id, ci, licenciatura, experiencia,
 				fecha, email, password);
 	}
 
-	public void actualizarEnfermera(String nombre, boolean licenciatura, int experiencia, Date fecha) {
-		if (this.enfermera == null) {
+	public void actualizarEnfermera(String nombre, boolean licenciatura, int experiencia, LocalDate fecha) {
+		if (enfermera == null) {
 			throw new IllegalStateException("No hay enfermera asignada para actualizar");
 		}
-		this.enfermera.setNombre(nombre);
-		this.enfermera.setLicenciatura(licenciatura);
-		this.enfermera.setExperiencia(experiencia);
-		this.enfermera.setFechaInicio(fecha);
+		enfermera.setNombre(nombre);
+		enfermera.setLicenciatura(licenciatura);
+		enfermera.setExperiencia(experiencia);
+		enfermera.setFechaInicio(fecha);
 	}
 
 	// Visitas
@@ -245,17 +246,18 @@ public class CMF {
 			throw new IllegalStateException("No hay visitas registradas");
 		}
 
-		for (int i = 0; i < visitas.size(); i++) {
+		boolean eliminada = false;
+		for (int i = 0; i < visitas.size() && !eliminada; i++) {
 			if (visitas.get(i).getId() == id) {
 				visitas.remove(i);
-				break; // Salir del bucle después de eliminar la visita
+				eliminada = true; // Detener el ciclo
 			}
 		}
 	}
 
 	// Hojas de cargo
 
-	public void agregarHojaCargoDiaria(Date fecha) {
+	public void agregarHojaCargoDiaria(LocalDate fecha) {
 		HojaCargosDiaria hoja = new HojaCargosDiaria(fecha);
 		hojasCargoDiaria.add(hoja);
 	}
@@ -286,18 +288,19 @@ public class CMF {
 	}
 
 	public boolean isCiRepited(String ci) {
-		boolean response = false;
-
 		if (ci == null || ci.trim().isEmpty()) {
-			throw new IllegalArgumentException("El CI no puede ser nulo o vac\u00edo");
+			throw new IllegalArgumentException("El CI no puede ser nulo o vacío");
 		}
-		for (Paciente paciente : pacientes) {
-			if (paciente.getCI().equals(ci)) {
+
+		boolean response = false;
+		for (int i = 0; i < pacientes.size() && !response; i++) {
+			if (pacientes.get(i).getCI().equals(ci)) {
 				response = true;
 			}
 		}
 		return response;
 	}
+
 
 	public int obtenerNuevoHistoriaClinicaID() {
 		int id = 1;
@@ -305,8 +308,8 @@ public class CMF {
 
 		while (encontrado) {
 			encontrado = false;
-			for (Paciente paciente : pacientes) {
-				if (paciente.getHistoriaClinica().getId() == id) {
+			for (int i = 0; i < pacientes.size() && !encontrado; i++) {
+				if (pacientes.get(i).getHistoriaClinica().getId() == id) {
 					encontrado = true;
 				}
 			}
@@ -317,7 +320,7 @@ public class CMF {
 		return id;
 	}
 
-	public HojaCargosDiaria obtenerHojaDeCargosPorFecha(Date fecha) {
+	public HojaCargosDiaria obtenerHojaDeCargosPorFecha(LocalDate fecha) {
 		HojaCargosDiaria hojaDeCargo = null;
 		boolean ciclar = true;
 		for (int i = 0; i < hojasCargoDiaria.size() && ciclar; i++) {
@@ -576,7 +579,7 @@ public class CMF {
 	}
 
 	private void crearPacienteConDatos(String nombre, String primerApellido, String segundoApellido, String ci,
-			boolean esMujer, Date fecha, String direccion) {
+			boolean esMujer, LocalDate fecha, String direccion) {
 		List<String> enfermedades = generarEnfermedadesCronicasAleatorias();
 		List<String> vacunas = generarVacunasAleatorias();
 		agregarPaciente(nombre, primerApellido, segundoApellido, enfermedades, vacunas, ci, esMujer, fecha, direccion);
@@ -584,61 +587,53 @@ public class CMF {
 
 	// Metodos para randomizar datos
 
-	public static Date generarFechaRandom() {
-		Calendar calendar = Calendar.getInstance();
+	public static LocalDate generarFechaRandom() {
+	    LocalDate start = LocalDate.of(1950, 1, 1);
+	    LocalDate end = LocalDate.now();
 
-		// Fecha inicio fija
-		calendar.set(1950, 0, 1);
-		long startMillis = calendar.getTimeInMillis();
+	    long daysBetween = ChronoUnit.DAYS.between(start, end);
+	    long randomDays = ThreadLocalRandom.current().nextLong(daysBetween + 1);
 
-		// Fecha fin: fecha actual
-		long endMillis = Calendar.getInstance().getTimeInMillis();
-
-		// Generar milisegundos random entre las dos fechas
-		long randomMillisSinceEpoch = ThreadLocalRandom.current().nextLong(startMillis, endMillis);
-
-		return new Date(randomMillisSinceEpoch);
+	    return start.plusDays(randomDays);
 	}
 
-	private static final Random rand = new Random();
+	private static final Random random = new Random();
 
 	private static String generarDireccionCuba() {
-		String[] calles = { "Calle 23", "Avenida Boyeros", "Calle L\u00ednea", "Calle Monte", "Avenida 5ta",
-				"Calle Obispo", "Calle Enramadas" };
-		String[] municipios = { "Plaza", "Centro Habana", "Marianao", "Cerro", "Vedado", "Guanabacoa",
-				"Habana del Este" };
-		String[] provincias = { "La Habana", "Santiago de Cuba", "Camag\u00fcey", "Holgu\u00edn", "Villa Clara",
-				"Cienfuegos", "Pinar del Rio" };
+	    String[] calles = { "Calle 23", "Avenida Boyeros", "Calle L\u00ednea", "Calle Monte", "Avenida 5ta",
+	            "Calle Obispo", "Calle Enramadas" };
+	    String[] municipios = { "Plaza", "Centro Habana", "Marianao", "Cerro", "Vedado", "Guanabacoa",
+	            "Habana del Este" };
+	    String[] provincias = { "La Habana", "Santiago de Cuba", "Camag\u00fcey", "Holgu\u00edn", "Villa Clara",
+	            "Cienfuegos", "Pinar del Rio" };
 
-		String calle = calles[rand.nextInt(calles.length)] + " #" + (100 + rand.nextInt(900));
-		String municipio = municipios[rand.nextInt(municipios.length)];
-		String provincia = provincias[rand.nextInt(provincias.length)];
+	    String calle = calles[random.nextInt(calles.length)] + " #" + (100 + random.nextInt(900));
+	    String municipio = municipios[random.nextInt(municipios.length)];
+	    String provincia = provincias[random.nextInt(provincias.length)];
 
-		return calle + ", " + municipio + ", " + provincia;
+	    return calle + ", " + municipio + ", " + provincia;
 	}
 
-	private Random random = new Random();
-
 	private List<String> generarEnfermedadesCronicasAleatorias() {
-		List<String> posiblesEnfermedades = Arrays.asList(
-				"Diabetes",
-				"Hipertensi\u00F3n",
-				"Asma",
-				"Obesidad",
-				"Enfermedad card\u00EDaca",
-				"Artritis",
-				"EPOC");
+	    List<String> posiblesEnfermedades = Arrays.asList(
+	            "Diabetes",
+	            "Hipertensi\u00F3n",
+	            "Asma",
+	            "Obesidad",
+	            "Enfermedad card\u00EDaca",
+	            "Artritis",
+	            "EPOC");
 
-		List<String> enfermedadesAsignadas = new ArrayList<>();
-		int cantidad = random.nextInt(3); // 0, 1 o 2 enfermedades
+	    List<String> enfermedadesAsignadas = new ArrayList<>();
+	    int cantidad = random.nextInt(3); // 0, 1 o 2 enfermedades
 
-		Collections.shuffle(posiblesEnfermedades);
+	    Collections.shuffle(posiblesEnfermedades, random); // Mejor usar tu instancia
 
-		for (int i = 0; i < cantidad; i++) {
-			enfermedadesAsignadas.add(posiblesEnfermedades.get(i));
-		}
+	    for (int i = 0; i < cantidad; i++) {
+	        enfermedadesAsignadas.add(posiblesEnfermedades.get(i));
+	    }
 
-		return enfermedadesAsignadas;
+	    return enfermedadesAsignadas;
 	}
 
 	private List<String> generarVacunasAleatorias() {

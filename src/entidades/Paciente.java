@@ -1,6 +1,7 @@
 package entidades;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import excepciones.Excepciones.IllegalAddressException;
@@ -8,24 +9,23 @@ import excepciones.Excepciones.IllegalVaccinationException;
 import service.Validations;
 
 public class Paciente extends Persona {
-    protected ArrayList<String> enfermedadesCronicas;
-    protected ArrayList<String> vacunacion;
+	
+	protected String direccion;
+    protected List<String> enfermedadesCronicas;
+    protected List<String> vacunacion;
     protected HistoriaClinica historiaClinica;
-    protected String direccion;
-
+    
+    // Constructor
     public Paciente(int historiaClinicaID, String nombre, String primerApellido, String segundoApellido, String ci, String direccion) {
     	super(nombre, primerApellido, segundoApellido, ci);
     	setDireccion(direccion);
     	historiaClinica = new HistoriaClinica(historiaClinicaID);  
-        this.vacunacion = new ArrayList<>();
-        this.enfermedadesCronicas = new ArrayList<>();
-        this.historiaClinica = new HistoriaClinica(historiaClinicaID);
+        vacunacion = new ArrayList<>();
+        enfermedadesCronicas = new ArrayList<>();
     }
 
-    public HistoriaClinica getHistoriaClinica() {
-    	return historiaClinica;
-    }
-
+    // Direccion
+    
     public String getDireccion() {
         return direccion;
     }
@@ -41,6 +41,15 @@ public class Paciente extends Persona {
         this.direccion = direccion.trim();
     }
 
+    // Historia clinica
+    
+    public HistoriaClinica getHistoriaClinica() {
+    	return historiaClinica;
+    }
+
+
+    // Edad y genero
+    
     public int getEdad() {
         return Validations.getAgeFromCI(ci);
     }
@@ -49,8 +58,10 @@ public class Paciente extends Persona {
         int decimoDigito = Character.getNumericValue(ci.charAt(9));
         return (decimoDigito % 2 == 0) ? "Masculino" : "Femenino";
     }
+    
+    // Enfermedades cronicas
 
-    public ArrayList<String> getEnfermedadesCronicas() {
+    public List<String> getEnfermedadesCronicas() {
         return new ArrayList<>(enfermedadesCronicas);
     }
 
@@ -62,10 +73,12 @@ public class Paciente extends Persona {
         if (enfermedad.length() > 200) {
             throw new IllegalArgumentException("El nombre de la enfermedad no puede exceder 200 caracteres");
         }
-        this.enfermedadesCronicas.add(enfermedad.trim());
+        enfermedadesCronicas.add(enfermedad.trim());
     }
 
-    public ArrayList<String> getVacunacion() {
+    // Vacunacion
+    
+    public List<String> getVacunacion() {
         return new ArrayList<>(vacunacion);
     }
 
@@ -76,7 +89,7 @@ public class Paciente extends Persona {
             agregarVacuna(vacuna);
         }
     }
-
+    
     public void agregarVacuna(String vacuna) {
         Objects.requireNonNull(vacuna, "La vacuna no puede ser nula");
         if (vacuna.trim().isEmpty()) {
@@ -87,6 +100,8 @@ public class Paciente extends Persona {
         }
         this.vacunacion.add(vacuna.trim());
     }
+    
+    // En riesgo
 
     public boolean estaEnRiesgo() {
         return enfermedadesCronicas != null && enfermedadesCronicas.size() >= 3;
