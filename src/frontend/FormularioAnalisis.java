@@ -45,7 +45,7 @@ public class FormularioAnalisis extends JDialog {
         lblHistoriaClinica.setBounds(30, 70, 150, 25);
         panelPrincipal.add(lblHistoriaClinica);
 
-        txtHistoriaClinica = new JTextField(String.valueOf(visita.getPacienteID()));
+        txtHistoriaClinica = new JTextField(String.valueOf(visita.getPacienteHistoriaClinicaID()));
         txtHistoriaClinica.setFont(new Font("Arial", Font.PLAIN, 14));
         txtHistoriaClinica.setBounds(200, 70, 250, 25);
         txtHistoriaClinica.setEditable(false);

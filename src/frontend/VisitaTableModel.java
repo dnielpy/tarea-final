@@ -43,7 +43,7 @@ public class VisitaTableModel extends AbstractTableModel {
         // patient ID
 
         if (columnIndex == 0)
-            value = visita.getPacienteID();
+            value = visita.getPacienteHistoriaClinicaID();
         if (columnIndex == 1)
             value = visita.getEspecialidadRemitida();
         if (columnIndex == 2) {
