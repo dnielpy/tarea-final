@@ -547,6 +547,18 @@ public class CMF {
 		return vacunasAsignadas;
 	}
 
+	public HojaCargosDiaria obtenerHojaDeCargosPorFecha(Date fecha) {
+		HojaCargosDiaria hojaDeCargo = null;
+		boolean ciclar = true;
+		for (int i = 0; i < hojasCargoDiaria.size() && ciclar; i++) {
+			if (hojasCargoDiaria.get(i).getFecha().equals(fecha)) {
+				hojaDeCargo = hojasCargoDiaria.get(i);
+				ciclar = false;
+			}
+		}
+		return hojaDeCargo;
+	}
+
 	public void agregarVisita(Visita visita) {
 		Objects.requireNonNull(visita, "La visita no puede ser nula");
 		for (int i = 0; i < visitas.size(); i++) {
@@ -555,7 +567,23 @@ public class CMF {
 				return;
 			}
 		}
-		visitas.add(visita); // Agregar la visita si no existe
+		visitas.add(visita);
+
+		// agregar la visita a la historia clinica del paciente, y a la hoja de cargos
+		// Agregar visita a la Historia Clinica
+		for (Paciente x : pacientes) {
+			if (x.getHistoriaClinica().getId() == visita.getPacienteHistoriaClinicaID()) {
+				x.getHistoriaClinica().agregarVisita(visita);
+			}
+		}
+		HojaCargosDiaria hojaDeCargo = obtenerHojaDeCargosPorFecha(visita.getFecha());
+		if (hojaDeCargo != null) {
+			hojaDeCargo.agregarVisita(visita);
+		} else {
+			agregarHojaCargoDiaria(visita.getFecha());
+			hojaDeCargo = obtenerHojaDeCargosPorFecha(visita.getFecha());
+			hojaDeCargo.agregarVisita(visita);
+		}
 	}
 
 	public boolean editarVisita(int id, Visita nuevaVisita) {

@@ -120,7 +120,7 @@ public class FormularioVisitas extends JDialog {
         lblHistoriaClinica.setBounds(50, 120, 150, 30); // Ajustar posición
         panelPrincipal.add(lblHistoriaClinica);
 
-        txtHistoriaClinica = new JTextField(visita != null ? String.valueOf(visita.getPacienteID()) : "");
+        txtHistoriaClinica = new JTextField(visita != null ? String.valueOf(visita.getPacienteHistoriaClinicaID()) : "");
         txtHistoriaClinica.setFont(new Font("Arial", Font.PLAIN, 16));
         txtHistoriaClinica.setBounds(200, 120, 350, 30); // Ajustar posición
         txtHistoriaClinica.setEditable(false); // No se puede editar manualmente

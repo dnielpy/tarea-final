@@ -8,7 +8,7 @@ import excepciones.Excepciones.IllegalNameException;
 
 public class Visita {
     private int id;
-    private int pacienteID;
+    private int pacienteHistoriaClinicaID;
     private Date fecha;
     private String diagnostico;
     private String direccion;
@@ -16,10 +16,11 @@ public class Visita {
     private Analisis analisis;
     private String especialidadRemitida;
 
-    public Visita(int id, int pacienteID, Date fecha, String diagnostico, String tratamiento, Analisis analisis,
+    public Visita(int id, int pacienteHistoriaClinicaID, Date fecha, String diagnostico, String tratamiento,
+            Analisis analisis,
             String especialidadRemitida, String direccion) {
         setId(id);
-        setPacienteID(pacienteID);
+        setPacienteHistoriaClinicaID(pacienteHistoriaClinicaID);
         setFecha(fecha);
         setDiagnostico(diagnostico);
         setTratamiento(tratamiento);
@@ -39,12 +40,12 @@ public class Visita {
         this.id = id;
     }
 
-    public int getPacienteID() {
-        return pacienteID;
+    public int getPacienteHistoriaClinicaID() {
+        return pacienteHistoriaClinicaID;
     }
 
-    public void setPacienteID(int pacienteID) {
-        this.pacienteID = pacienteID;
+    public void setPacienteHistoriaClinicaID(int pacienteHistoriaClinicaID) {
+        this.pacienteHistoriaClinicaID = pacienteHistoriaClinicaID;
     }
 
     public Date getFecha() {
