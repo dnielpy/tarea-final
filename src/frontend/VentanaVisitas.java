@@ -53,8 +53,9 @@ public class VentanaVisitas extends JPanel implements ConstantesFrontend {
 		formularioVisitas.setLocationRelativeTo(ventanaPrincipal);
 		formularioVisitas.setVisible(true);
 
-		// Actualizar la tabla después de guardar una visita
+		// Actualizar la tabla después de guardar o editar una visita
 		model.setVisitas(cmf.obtenerListaVisitas());
+		model.fireTableDataChanged(); // Redibujar la tabla
 	}
 
 	private void initComponents() {
@@ -109,7 +110,7 @@ public class VentanaVisitas extends JPanel implements ConstantesFrontend {
 					int viewRow = table.getSelectedRow();
 					if (viewRow != -1) {
 						int modelRow = table.convertRowIndexToModel(viewRow);
-						int id = (int) model.getValueAt(modelRow, model.findColumn("Historia Clínica"));
+						int id = (int) model.getValueAt(modelRow, model.findColumn("Historia Clinica"));
 						Visita visita = cmf.obtenerVisitaPorId(id);
 						abrirFormulario(visita); // Abrir formulario para editar la visita
 					}

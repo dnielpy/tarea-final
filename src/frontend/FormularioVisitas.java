@@ -23,7 +23,7 @@ public class FormularioVisitas extends JDialog {
     private JTextField barraBusqueda; // Barra de búsqueda para IDs de pacientes
     private JList<String> listaResultados; // Lista para mostrar resultados de búsqueda
     private DefaultListModel<String> modeloResultados;
-    private JTextField txtPacienteID; // Campo no editable para mostrar el ID seleccionado
+    private JTextField txtHistoriaClinica; // Campo no editable para mostrar el ID seleccionado
     private JTextField txtDiagnostico;
     private JTextField txtTratamiento;
     private JComboBox<String> cbEspecialidadRemitida; // Lista desplegable para especialidades
@@ -33,8 +33,11 @@ public class FormularioVisitas extends JDialog {
     private JButton btnCancelar;
     CMF cmf;
 
+    private Visita visita; // Variable de instancia para almacenar la visita
+
     public FormularioVisitas(Window owner, Visita visita) {
         super(owner, "Formulario de Visitas", ModalityType.APPLICATION_MODAL);
+        this.visita = visita; // Asignar la visita pasada al constructor
         setLayout(null);
         setSize(600, 550); // Ajustar altura de la ventana
         setResizable(false);
@@ -88,27 +91,40 @@ public class FormularioVisitas extends JDialog {
             }
         });
 
+        // Ajustar la lógica de selección en la barra de búsqueda
         listaResultados.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 1) {
                     String seleccionado = listaResultados.getSelectedValue();
-                    txtPacienteID.setText(seleccionado); // Actualizar el campo PacienteID
+                    Paciente pacienteSeleccionado = null;
+
+                    for (Paciente paciente : cmf.getPacientes()) {
+                        if (paciente.getCI().equals(seleccionado)) {
+                            pacienteSeleccionado = paciente;
+                            break;
+                        }
+                    }
+
+                    if (pacienteSeleccionado != null) {
+                        txtHistoriaClinica.setText(String.valueOf(pacienteSeleccionado.getHistoriaClinica().getId()));
+                    }
+
                     listaResultados.setVisible(false); // Ocultar lista tras selección
                 }
             }
         });
 
-        JLabel lblPacienteID = new JLabel("Paciente ID:");
-        lblPacienteID.setFont(new Font("Arial", Font.PLAIN, 18));
-        lblPacienteID.setBounds(50, 120, 150, 30); // Ajustar posición
-        panelPrincipal.add(lblPacienteID);
+        JLabel lblHistoriaClinica = new JLabel("H. Clínica:");
+        lblHistoriaClinica.setFont(new Font("Arial", Font.PLAIN, 18));
+        lblHistoriaClinica.setBounds(50, 120, 150, 30); // Ajustar posición
+        panelPrincipal.add(lblHistoriaClinica);
 
-        txtPacienteID = new JTextField();
-        txtPacienteID.setFont(new Font("Arial", Font.PLAIN, 16));
-        txtPacienteID.setBounds(200, 120, 350, 30); // Ajustar posición
-        txtPacienteID.setEditable(false); // No se puede editar manualmente
-        panelPrincipal.add(txtPacienteID);
+        txtHistoriaClinica = new JTextField(visita != null ? String.valueOf(visita.getPacienteID()) : "");
+        txtHistoriaClinica.setFont(new Font("Arial", Font.PLAIN, 16));
+        txtHistoriaClinica.setBounds(200, 120, 350, 30); // Ajustar posición
+        txtHistoriaClinica.setEditable(false); // No se puede editar manualmente
+        panelPrincipal.add(txtHistoriaClinica);
 
         JLabel lblFecha = new JLabel("Fecha:");
         lblFecha.setFont(new Font("Arial", Font.PLAIN, 18));
@@ -230,23 +246,6 @@ public class FormularioVisitas extends JDialog {
 
     private void guardarVisita() {
         try {
-            String pacienteID = txtPacienteID.getText().trim();
-
-            Paciente pacienteSeleccionado = null;
-
-            for (Paciente paciente : cmf.getPacientes()) {
-                if (paciente.getCI().equals(pacienteID)) {
-                    pacienteSeleccionado = paciente;
-                    break;
-                }
-            }
-
-            if (pacienteSeleccionado == null) {
-                throw new IllegalArgumentException("El ID del paciente no coincide con ningún paciente registrado.");
-            }
-
-            int historiaClinicaID = pacienteSeleccionado.getHistoriaClinica().getId(); // Obtener historia clínica
-
             Date fecha = new Date(); // Guardar como objeto Date
             String diagnostico = txtDiagnostico.getText().trim();
             String tratamiento = txtTratamiento.getText().trim();
@@ -261,11 +260,29 @@ public class FormularioVisitas extends JDialog {
             }
 
             Analisis analisis = new Analisis(tipoAnalisis, null);
-            Visita nuevaVisita = new Visita(cmf.obtenerListaVisitas().size() + 1, historiaClinicaID, fecha, diagnostico,
-                    tratamiento, analisis, especialidadRemitida, direccion);
-            cmf.agregarVisita(nuevaVisita);
+            Visita nuevaVisita = new Visita(
+                    visita != null ? visita.getId() : cmf.obtenerListaVisitas().size() + 1,
+                    Integer.parseInt(txtHistoriaClinica.getText().trim()),
+                    fecha,
+                    diagnostico,
+                    tratamiento,
+                    analisis,
+                    especialidadRemitida,
+                    direccion);
+
+            if (visita != null) {
+                cmf.eliminarVisita(visita.getId()); // Eliminar la visita anterior
+            }
+
+            cmf.agregarVisita(nuevaVisita); // Agregar la nueva visita
+
             JOptionPane.showMessageDialog(this, "Visita guardada exitosamente.");
             dispose();
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "El campo 'H. Clínica' debe contener un número válido.", "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        } catch (IllegalArgumentException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Error al guardar la visita: " + ex.getMessage(), "Error",
                     JOptionPane.ERROR_MESSAGE);

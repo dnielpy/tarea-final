@@ -43,6 +43,7 @@ public class CMF {
 		setNombreDirector(nombreDirector);
 		this.hojasCargoDiaria = new ArrayList<>();
 		this.pacientes = new ArrayList<>();
+		visitas = new ArrayList();
 	}
 
 	public static CMF getInstance() {
@@ -462,27 +463,35 @@ public class CMF {
 				generarDireccionCuba());
 
 		agregarVisita(new Visita(1, 1, generarFechaRandom(), "Diagnóstico: Resfriado común",
-				"Tratamiento: Paracetamol", null, "Medicina General", "Calle 23 #123, Plaza, La Habana"));
+				"Tratamiento: Paracetamol", new Analisis("Sangre", null), "Medicina General",
+				"Calle 23 #123, Plaza, La Habana"));
 		agregarVisita(new Visita(2, 2, generarFechaRandom(), "Diagnóstico: Dolor de cabeza",
-				"Tratamiento: Ibuprofeno", null, "Neurología", "Avenida Boyeros #456, Centro Habana, La Habana"));
+				"Tratamiento: Ibuprofeno", new Analisis("Orina", null), "Neurología",
+				"Avenida Boyeros #456, Centro Habana, La Habana"));
 		agregarVisita(new Visita(3, 3, generarFechaRandom(), "Diagnóstico: Tos persistente",
-				"Tratamiento: Jarabe expectorante", null, "Neumología", "Calle Línea #789, Marianao, La Habana"));
+				"Tratamiento: Jarabe expectorante", new Analisis("Radiografía", null), "Neumología",
+				"Calle Línea #789, Marianao, La Habana"));
 		agregarVisita(new Visita(4, 4, generarFechaRandom(), "Diagnóstico: Dolor abdominal",
-				"Tratamiento: Omeprazol", null, "Gastroenterología", "Calle Monte #321, Cerro, La Habana"));
+				"Tratamiento: Omeprazol", new Analisis("Otro", null), "Gastroenterología",
+				"Calle Monte #321, Cerro, La Habana"));
 		agregarVisita(new Visita(5, 5, generarFechaRandom(), "Diagnóstico: Presión alta",
-				"Tratamiento: Enalapril", null, "Cardiología", "Avenida 5ta #654, Vedado, La Habana"));
+				"Tratamiento: Enalapril", new Analisis("Sangre", null), "Cardiología",
+				"Avenida 5ta #654, Vedado, La Habana"));
 		agregarVisita(new Visita(6, 6, generarFechaRandom(), "Diagnóstico: Dolor muscular",
-				"Tratamiento: Diclofenaco", null, "Ortopedia", "Calle Obispo #987, Guanabacoa, La Habana"));
+				"Tratamiento: Diclofenaco", new Analisis("Radiografía", null), "Ortopedia",
+				"Calle Obispo #987, Guanabacoa, La Habana"));
 		agregarVisita(new Visita(7, 7, generarFechaRandom(), "Diagnóstico: Control prenatal",
-				"Tratamiento: Suplementos vitamínicos", null, "Obstetricia",
+				"Tratamiento: Suplementos vitamínicos", new Analisis("Otro", null), "Obstetricia",
 				"Calle Enramadas #456, Habana del Este, La Habana"));
 		agregarVisita(new Visita(8, 8, generarFechaRandom(), "Diagnóstico: Alergia estacional",
-				"Tratamiento: Antihistamínicos", null, "Alergología", "Calle 23 #789, Plaza, La Habana"));
+				"Tratamiento: Antihistamínicos", new Analisis("Sangre", null), "Alergología",
+				"Calle 23 #789, Plaza, La Habana"));
 		agregarVisita(new Visita(9, 9, generarFechaRandom(), "Diagnóstico: Control prenatal",
-				"Tratamiento: Suplementos vitamínicos", null, "Obstetricia",
+				"Tratamiento: Suplementos vitamínicos", new Analisis("Orina", null), "Obstetricia",
 				"Avenida Boyeros #123, Centro Habana, La Habana"));
 		agregarVisita(new Visita(10, 10, generarFechaRandom(), "Diagnóstico: Dolor lumbar",
-				"Tratamiento: Fisioterapia", null, "Rehabilitación", "Calle Línea #456, Marianao, La Habana"));
+				"Tratamiento: Fisioterapia", new Analisis("Radiografía", null), "Rehabilitación",
+				"Calle Línea #456, Marianao, La Habana"));
 
 	}
 
@@ -540,10 +549,13 @@ public class CMF {
 
 	public void agregarVisita(Visita visita) {
 		Objects.requireNonNull(visita, "La visita no puede ser nula");
-		if (visitas == null) {
-			visitas = new ArrayList<>();
+		for (int i = 0; i < visitas.size(); i++) {
+			if (visitas.get(i).getId() == visita.getId()) {
+				visitas.set(i, visita);
+				return;
+			}
 		}
-		visitas.add(visita);
+		visitas.add(visita); // Agregar la visita si no existe
 	}
 
 	public boolean editarVisita(int id, Visita nuevaVisita) {
@@ -560,6 +572,19 @@ public class CMF {
 			}
 		}
 		return response; // No se encontro la visita con el ID especificado
+	}
+
+	public void eliminarVisita(int id) {
+		if (visitas == null) {
+			throw new IllegalStateException("No hay visitas registradas");
+		}
+
+		for (int i = 0; i < visitas.size(); i++) {
+			if (visitas.get(i).getId() == id) {
+				visitas.remove(i);
+				break; // Salir del bucle después de eliminar la visita
+			}
+		}
 	}
 
 	public ArrayList<Visita> obtenerListaVisitas() {
