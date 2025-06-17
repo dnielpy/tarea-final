@@ -85,7 +85,7 @@ public class CMF {
 				pac = paciente;
 			}
 		}
-		return pac; // Return null if no patient is found with the given ID
+		return pac;
 	}
 
 	public void setId(int id) {
