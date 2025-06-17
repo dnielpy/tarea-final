@@ -8,7 +8,6 @@ import javax.swing.border.LineBorder;
 
 import componentesPropios.BotonReporte;
 import componentesPropios.ImageButtonLabel;
-import entidades.CMF;
 
 public class VentanaReportes extends JPanel implements MouseListener, ConstantesFrontend {
 

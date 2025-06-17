@@ -11,11 +11,9 @@ import javax.swing.event.DocumentListener;
 import java.awt.Color;
 
 import javax.swing.DefaultListModel;
-import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
@@ -33,7 +31,6 @@ import javax.swing.JScrollPane;
 
 import componentesPropios.BotonBlanco;
 import componentesPropios.ImageButtonLabel;
-import componentesPropios.CopyDialog;
 import componentesPropios.InfoDialog;
 import componentesPropios.PlaceholderTextField;
 import componentesPropios.TextDialog;

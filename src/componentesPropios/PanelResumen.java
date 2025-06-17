@@ -1,8 +1,6 @@
 package componentesPropios;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
-
 import frontend.ConstantesFrontend;
 
 import java.awt.*;

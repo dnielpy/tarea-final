@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 import excepciones.Excepciones.IllegalAddressException;
-import excepciones.Excepciones.IllegalCiException;
 import excepciones.Excepciones.IllegalVaccinationException;
 import service.Validations;
 

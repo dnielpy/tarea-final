@@ -1,25 +1,23 @@
 package frontend;
 
+import java.util.List;
+
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import entidades.Paciente;
 import entidades.Visita;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class VisitaTableModel extends AbstractTableModel {
-    private ArrayList<Visita> visitas;
+    private List<Visita> visitas;
     private String[] columnNames = { "Historia Clinica", "Especialidad", "Analisis Orientado", "Estado", "Fecha" };
 
-    public VisitaTableModel(ArrayList<Visita> visitas) {
-        this.visitas = visitas;
+    public VisitaTableModel(List<Visita> list) {
+        visitas = list;
     }
 
-    public void setVisitas(ArrayList<Visita> visitas) {
+    public void setVisitas(List<Visita> visitas) {
         this.visitas = visitas;
         fireTableDataChanged();
     }

@@ -1,9 +1,7 @@
 package componentesPropios;
 
 import java.awt.Color;
-import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -15,9 +13,6 @@ import javax.swing.SwingConstants;
 import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
 
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
 import java.awt.Toolkit;
 
 public class TextDialog extends JDialog {

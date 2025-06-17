@@ -7,7 +7,6 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 
 import entidades.Visita;
-import entidades.Analisis;
 
 public class FormularioAnalisis extends JDialog {
     private JTextField txtHistoriaClinica;

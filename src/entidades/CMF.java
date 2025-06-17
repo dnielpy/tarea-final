@@ -17,33 +17,25 @@ public class CMF {
 	private static CMF instance; // Instancia unica de CMF
 
 	private int id;
-	private String nombre;
+	private String nombreDelPoliclinico;
 	private String nombreDirector;
-	private List<HojaCargosDiaria> hojasCargoDiaria;
-	private List<Paciente> pacientes;
+	private Usuario usuario = null;
 	private Medico medico;
+	private Enfermera enfermera;
+	private List<Paciente> pacientes;
+	private List<Visita> visitas;
+	private List<HojaCargosDiaria> hojasCargoDiaria;
 	private RegistroGeneral registroGeneral;
 	private RegistroHistorico registroHistorico;
-	private Enfermera enfermera;
-	private ArrayList<Visita> visitas;
-	private Usuario usuario = null;
-
-	public Usuario getUsuario() {
-		return usuario;
-	}
-
-	public void setUsuario(Usuario usuario) {
-		this.usuario = usuario;
-	}
 
 	// Constructor privado para evitar instanciacion directa
 	private CMF(int id, String nombre, String nombreDirector) {
 		setId(id);
-		setNombre(nombre);
+		setNombrePoliclinico(nombre);
 		setNombreDirector(nombreDirector);
-		this.hojasCargoDiaria = new ArrayList<>();
-		this.pacientes = new ArrayList<>();
-		visitas = new ArrayList();
+		hojasCargoDiaria = new ArrayList<>();
+		pacientes = new ArrayList<>();
+		visitas = new ArrayList<Visita>();
 	}
 
 	public static CMF getInstance() {
@@ -54,55 +46,38 @@ public class CMF {
 		return instance;
 	}
 
-	public List<Paciente> getPacientes() {
-		return pacientes;
-	}
-
+	// Id del consultorio
+	
 	public int getId() {
 		return id;
 	}
-
-	public String getNombre() {
-		return nombre;
-	}
-
-	public String getNombreDirector() {
-		return nombreDirector;
-	}
-
-	public Enfermera getEnfermera() {
-		return this.enfermera;
-	}
-
-	public Medico getMedico() {
-		return this.medico;
-	}
-
-	public Paciente getPacientePorId(int id) {
-		Paciente pac = null;
-
-		for (Paciente paciente : pacientes) {
-			if (paciente.getHistoriaClinica().getId() == id) {
-				pac = paciente;
-			}
-		}
-		return pac;
-	}
-
+	
 	public void setId(int id) {
 		if (id <= 0)
 			throw new IllegalArgumentException("ID debe ser positivo");
 		this.id = id;
 	}
-
-	public void setNombre(String nombre) {
+	
+	// Nombre del Policlinico
+	
+	public String getNombrePoliclinico() {
+		return nombreDelPoliclinico;
+	}
+	
+	public void setNombrePoliclinico(String nombre) {
 		if (nombre == null || nombre.trim().isEmpty())
 			throw new IllegalArgumentException("Nombre no puede ser nulo o vac\u00edo");
 		if (nombre.length() > 100)
 			throw new IllegalArgumentException("Nombre no puede exceder 100 caracteres");
-		this.nombre = nombre.trim();
+		this.nombreDelPoliclinico = nombre.trim();
 	}
-
+	
+	// Director
+	
+	public String getNombreDirector() {
+		return nombreDirector;
+	}
+	
 	public void setNombreDirector(String nombreDirector) {
 		if (nombreDirector == null || nombreDirector.trim().isEmpty())
 			throw new IllegalArgumentException("Nombre del director no puede ser nulo o vac\u00edo");
@@ -110,39 +85,23 @@ public class CMF {
 			throw new IllegalArgumentException("Nombre del director no puede exceder 100 caracteres");
 		this.nombreDirector = nombreDirector.trim();
 	}
-
-	public void crearMedico(String nombre, String primerApellido, String segundoApellido, int numRegistro, String ci,
-			Date fecha, String email, String password) {
-		medico = new Medico(nombre, primerApellido, segundoApellido, numRegistro, ci, fecha, email, password);
+	
+	// Usuario actual
+	
+	public Usuario getUsuario() {
+		return usuario;
 	}
 
-	public void crearRegistroGeneral() {
-		this.registroGeneral = new RegistroGeneral();
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
 	}
-
-	public void crearRegistroHistorico() {
-		this.registroHistorico = new RegistroHistorico();
+	
+	// Paciente
+	
+	public List<Paciente> getPacientes() {
+		return pacientes;
 	}
-
-	public int obtenerNuevoHistoriaClinicaID() {
-		int id = 1;
-		boolean encontrado = true;
-
-		while (encontrado) {
-			encontrado = false;
-			for (Paciente paciente : pacientes) {
-				if (paciente.getHistoriaClinica().getId() == id) {
-					encontrado = true;
-				}
-			}
-			if (encontrado) {
-				id++;
-			}
-		}
-
-		return id;
-	}
-
+	
 	public boolean agregarPaciente(String nombre, String primerApellido, String segundoApellido,
 			List<String> enfermedadesCronicas, List<String> vacunacion,
 			String CI, boolean estaEmbarazada, Date fechaUltimaRevision, String direccion) {
@@ -189,6 +148,23 @@ public class CMF {
 		return response;
 	}
 
+	// Medico
+	
+	public Medico getMedico() {
+		return this.medico;
+	}
+	
+	public void crearMedico(String nombre, String primerApellido, String segundoApellido, int numRegistro, String ci,
+			Date fecha, String email, String password) {
+		medico = new Medico(nombre, primerApellido, segundoApellido, numRegistro, ci, fecha, email, password);
+	}
+	
+	// Enfermera
+
+	public Enfermera getEnfermera() {
+		return this.enfermera;
+	}
+	
 	public void crearEnfermera(String nombre, String primerApellido, String segundoApellido, int id, String ci,
 			boolean licenciatura, int experiencia, Date fecha, String email, String password) {
 		Objects.requireNonNull(nombre, "El nombre no puede ser nulo");
@@ -198,12 +174,7 @@ public class CMF {
 		this.enfermera = new Enfermera(nombre, primerApellido, segundoApellido, id, ci, licenciatura, experiencia,
 				fecha, email, password);
 	}
-
-	public void agregarHojaCargoDiaria(Date fecha) {
-		HojaCargosDiaria hoja = new HojaCargosDiaria(fecha);
-		this.hojasCargoDiaria.add(hoja);
-	}
-
+	
 	public void actualizarEnfermera(String nombre, boolean licenciatura, int experiencia, Date fecha) {
 		if (this.enfermera == null) {
 			throw new IllegalStateException("No hay enfermera asignada para actualizar");
@@ -213,6 +184,107 @@ public class CMF {
 		this.enfermera.setExperiencia(experiencia);
 		this.enfermera.setFechaInicio(fecha);
 	}
+	
+	// Visitas
+	
+	public List<Visita> obtenerListaVisitas() {
+		List<Visita> listaVisitas = new ArrayList<>();
+
+		if (visitas != null) {
+			listaVisitas = visitas;
+		}
+
+		return listaVisitas;
+	}
+	
+	public void agregarVisita(Visita visita) {
+		Objects.requireNonNull(visita, "La visita no puede ser nula");
+		for (int i = 0; i < visitas.size(); i++) {
+			if (visitas.get(i).getId() == visita.getId()) {
+				visitas.set(i, visita);
+				return;
+			}
+		}
+		visitas.add(visita);
+
+		// agregar la visita a la historia clinica del paciente, y a la hoja de cargos
+		// Agregar visita a la Historia Clinica
+		for (Paciente x : pacientes) {
+			if (x.getHistoriaClinica().getId() == visita.getPacienteHistoriaClinicaID()) {
+				x.getHistoriaClinica().agregarVisita(visita);
+			}
+		}
+		HojaCargosDiaria hojaDeCargo = obtenerHojaDeCargosPorFecha(visita.getFecha());
+		if (hojaDeCargo != null) {
+			hojaDeCargo.agregarVisita(visita);
+		} else {
+			agregarHojaCargoDiaria(visita.getFecha());
+			hojaDeCargo = obtenerHojaDeCargosPorFecha(visita.getFecha());
+			hojaDeCargo.agregarVisita(visita);
+		}
+	}
+
+	public boolean editarVisita(int id, Visita nuevaVisita) {
+		boolean response = false;
+
+		Objects.requireNonNull(nuevaVisita, "La nueva visita no puede ser nula");
+		if (visitas == null) {
+			throw new IllegalStateException("No hay visitas registradas");
+		}
+		for (int i = 0; i < visitas.size(); i++) {
+			if (visitas.get(i).getId() == id) {
+				visitas.set(i, nuevaVisita);
+				response = true;
+			}
+		}
+		return response; // No se encontro la visita con el ID especificado
+	}
+
+	public void eliminarVisita(int id) {
+		if (visitas == null) {
+			throw new IllegalStateException("No hay visitas registradas");
+		}
+
+		for (int i = 0; i < visitas.size(); i++) {
+			if (visitas.get(i).getId() == id) {
+				visitas.remove(i);
+				break; // Salir del bucle después de eliminar la visita
+			}
+		}
+	}
+	
+	// Hojas de cargo
+	
+	public void agregarHojaCargoDiaria(Date fecha) {
+		HojaCargosDiaria hoja = new HojaCargosDiaria(fecha);
+		hojasCargoDiaria.add(hoja);
+	}
+	
+	// Registro General
+
+	public void crearRegistroGeneral() {
+		registroGeneral = new RegistroGeneral();
+	}
+	
+	// Registro Historico
+
+	public void crearRegistroHistorico() {
+		registroHistorico = new RegistroHistorico();
+	}
+	
+	// Busquedas
+
+	public Paciente getPacientePorId(int id) {
+		Paciente pac = null;
+
+		for (Paciente paciente : pacientes) {
+			if (paciente.getHistoriaClinica().getId() == id) {
+				pac = paciente;
+			}
+		}
+		return pac;
+	}
+
 
 	public boolean isCiRepited(String ci) {
 		boolean response = false;
@@ -226,6 +298,49 @@ public class CMF {
 			}
 		}
 		return response;
+	}
+	
+	public int obtenerNuevoHistoriaClinicaID() {
+		int id = 1;
+		boolean encontrado = true;
+
+		while (encontrado) {
+			encontrado = false;
+			for (Paciente paciente : pacientes) {
+				if (paciente.getHistoriaClinica().getId() == id) {
+					encontrado = true;
+				}
+			} if (encontrado) {
+				id++;
+			}
+		}
+		return id;
+	}
+	
+	public HojaCargosDiaria obtenerHojaDeCargosPorFecha(Date fecha) {
+		HojaCargosDiaria hojaDeCargo = null;
+		boolean ciclar = true;
+		for (int i = 0; i < hojasCargoDiaria.size() && ciclar; i++) {
+			if (hojasCargoDiaria.get(i).getFecha().equals(fecha)) {
+				hojaDeCargo = hojasCargoDiaria.get(i);
+				ciclar = false;
+			}
+		}
+		return hojaDeCargo;
+	}
+	
+	public Visita obtenerVisitaPorId(int id) {
+		Visita v = null;
+
+		if (visitas == null) {
+			throw new IllegalStateException("No hay visitas registradas");
+		}
+		for (Visita visita : visitas) {
+			if (visita.getId() == id) {
+				v = visita;
+			}
+		}
+		return v; // No se encontro la visita con el ID especificado
 	}
 
 	// Cantidades
@@ -325,26 +440,16 @@ public class CMF {
 		int[] rangoDeEdad = new int[10];
 		for (Paciente paciente : pacientes) {
 			int edad = paciente.getEdad();
-			if (edad <= 10)
-				rangoDeEdad[0]++;
-			else if (edad <= 20)
-				rangoDeEdad[1]++;
-			else if (edad <= 30)
-				rangoDeEdad[2]++;
-			else if (edad <= 40)
-				rangoDeEdad[3]++;
-			else if (edad <= 50)
-				rangoDeEdad[4]++;
-			else if (edad <= 60)
-				rangoDeEdad[5]++;
-			else if (edad <= 70)
-				rangoDeEdad[6]++;
-			else if (edad <= 80)
-				rangoDeEdad[7]++;
-			else if (edad <= 90)
-				rangoDeEdad[8]++;
-			else
-				rangoDeEdad[9]++;
+			if (edad <= 10) rangoDeEdad[0]++;
+			else if (edad <= 20) rangoDeEdad[1]++;
+			else if (edad <= 30) rangoDeEdad[2]++;
+			else if (edad <= 40) rangoDeEdad[3]++;
+			else if (edad <= 50) rangoDeEdad[4]++;
+			else if (edad <= 60) rangoDeEdad[5]++;
+			else if (edad <= 70) rangoDeEdad[6]++;
+			else if (edad <= 80) rangoDeEdad[7]++;
+			else if (edad <= 90) rangoDeEdad[8]++;
+			else rangoDeEdad[9]++;
 		}
 		return rangoDeEdad;
 	}
@@ -377,42 +482,7 @@ public class CMF {
 	}
 
 	// Datos cableados
-
-	public static Date generarFechaRandom() {
-		Calendar calendar = Calendar.getInstance();
-
-		// Fecha inicio fija
-		calendar.set(1950, 0, 1);
-		long startMillis = calendar.getTimeInMillis();
-
-		// Fecha fin: fecha actual
-		long endMillis = Calendar.getInstance().getTimeInMillis();
-
-		// Generar milisegundos random entre las dos fechas
-		long randomMillisSinceEpoch = ThreadLocalRandom.current().nextLong(startMillis, endMillis);
-
-		return new Date(randomMillisSinceEpoch);
-	}
-
-	private static final Random rand = new Random();
-
-	private static String generarDireccionCuba() {
-		String[] calles = { "Calle 23", "Avenida Boyeros", "Calle L\u00ednea", "Calle Monte", "Avenida 5ta",
-				"Calle Obispo", "Calle Enramadas" };
-		String[] municipios = { "Plaza", "Centro Habana", "Marianao", "Cerro", "Vedado", "Guanabacoa",
-				"Habana del Este" };
-		String[] provincias = { "La Habana", "Santiago de Cuba", "Camag\u00fcey", "Holgu\u00edn", "Villa Clara",
-				"Cienfuegos", "Pinar del Rio" };
-
-		String calle = calles[rand.nextInt(calles.length)] + " #" + (100 + rand.nextInt(900));
-		String municipio = municipios[rand.nextInt(municipios.length)];
-		String provincia = provincias[rand.nextInt(provincias.length)];
-
-		return calle + ", " + municipio + ", " + provincia;
-	}
-
-	private Random random = new Random();
-
+	
 	public void cargarDatos() {
 		crearMedico("Alfonso", "Rodr\u00EDguez", "Camela", 11321, "75060212345", generarFechaRandom(),
 				"medico@example.com", "12345678");
@@ -501,6 +571,43 @@ public class CMF {
 		List<String> vacunas = generarVacunasAleatorias();
 		agregarPaciente(nombre, primerApellido, segundoApellido, enfermedades, vacunas, ci, esMujer, fecha, direccion);
 	}
+	
+	// Metodos para randomizar datos
+
+	public static Date generarFechaRandom() {
+		Calendar calendar = Calendar.getInstance();
+
+		// Fecha inicio fija
+		calendar.set(1950, 0, 1);
+		long startMillis = calendar.getTimeInMillis();
+
+		// Fecha fin: fecha actual
+		long endMillis = Calendar.getInstance().getTimeInMillis();
+
+		// Generar milisegundos random entre las dos fechas
+		long randomMillisSinceEpoch = ThreadLocalRandom.current().nextLong(startMillis, endMillis);
+
+		return new Date(randomMillisSinceEpoch);
+	}
+
+	private static final Random rand = new Random();
+
+	private static String generarDireccionCuba() {
+		String[] calles = { "Calle 23", "Avenida Boyeros", "Calle L\u00ednea", "Calle Monte", "Avenida 5ta",
+				"Calle Obispo", "Calle Enramadas" };
+		String[] municipios = { "Plaza", "Centro Habana", "Marianao", "Cerro", "Vedado", "Guanabacoa",
+				"Habana del Este" };
+		String[] provincias = { "La Habana", "Santiago de Cuba", "Camag\u00fcey", "Holgu\u00edn", "Villa Clara",
+				"Cienfuegos", "Pinar del Rio" };
+
+		String calle = calles[rand.nextInt(calles.length)] + " #" + (100 + rand.nextInt(900));
+		String municipio = municipios[rand.nextInt(municipios.length)];
+		String provincia = provincias[rand.nextInt(provincias.length)];
+
+		return calle + ", " + municipio + ", " + provincia;
+	}
+
+	private Random random = new Random();
 
 	private List<String> generarEnfermedadesCronicasAleatorias() {
 		List<String> posiblesEnfermedades = Arrays.asList(
@@ -545,98 +652,5 @@ public class CMF {
 		}
 
 		return vacunasAsignadas;
-	}
-
-	public HojaCargosDiaria obtenerHojaDeCargosPorFecha(Date fecha) {
-		HojaCargosDiaria hojaDeCargo = null;
-		boolean ciclar = true;
-		for (int i = 0; i < hojasCargoDiaria.size() && ciclar; i++) {
-			if (hojasCargoDiaria.get(i).getFecha().equals(fecha)) {
-				hojaDeCargo = hojasCargoDiaria.get(i);
-				ciclar = false;
-			}
-		}
-		return hojaDeCargo;
-	}
-
-	public void agregarVisita(Visita visita) {
-		Objects.requireNonNull(visita, "La visita no puede ser nula");
-		for (int i = 0; i < visitas.size(); i++) {
-			if (visitas.get(i).getId() == visita.getId()) {
-				visitas.set(i, visita);
-				return;
-			}
-		}
-		visitas.add(visita);
-
-		// agregar la visita a la historia clinica del paciente, y a la hoja de cargos
-		// Agregar visita a la Historia Clinica
-		for (Paciente x : pacientes) {
-			if (x.getHistoriaClinica().getId() == visita.getPacienteHistoriaClinicaID()) {
-				x.getHistoriaClinica().agregarVisita(visita);
-			}
-		}
-		HojaCargosDiaria hojaDeCargo = obtenerHojaDeCargosPorFecha(visita.getFecha());
-		if (hojaDeCargo != null) {
-			hojaDeCargo.agregarVisita(visita);
-		} else {
-			agregarHojaCargoDiaria(visita.getFecha());
-			hojaDeCargo = obtenerHojaDeCargosPorFecha(visita.getFecha());
-			hojaDeCargo.agregarVisita(visita);
-		}
-	}
-
-	public boolean editarVisita(int id, Visita nuevaVisita) {
-		boolean response = false;
-
-		Objects.requireNonNull(nuevaVisita, "La nueva visita no puede ser nula");
-		if (visitas == null) {
-			throw new IllegalStateException("No hay visitas registradas");
-		}
-		for (int i = 0; i < visitas.size(); i++) {
-			if (visitas.get(i).getId() == id) {
-				visitas.set(i, nuevaVisita);
-				response = true;
-			}
-		}
-		return response; // No se encontro la visita con el ID especificado
-	}
-
-	public void eliminarVisita(int id) {
-		if (visitas == null) {
-			throw new IllegalStateException("No hay visitas registradas");
-		}
-
-		for (int i = 0; i < visitas.size(); i++) {
-			if (visitas.get(i).getId() == id) {
-				visitas.remove(i);
-				break; // Salir del bucle después de eliminar la visita
-			}
-		}
-	}
-
-	public ArrayList<Visita> obtenerListaVisitas() {
-		ArrayList<Visita> listaVisitas = new ArrayList<>();
-
-		if (visitas != null) {
-			listaVisitas = visitas;
-		}
-
-		return listaVisitas;
-	}
-
-	public Visita obtenerVisitaPorId(int id) {
-		Visita v = null;
-
-		if (visitas == null) {
-			throw new IllegalStateException("No hay visitas registradas");
-		}
-		for (Visita visita : visitas) {
-			if (visita.getId() == id) {
-				v = visita;
-			}
-		}
-		return v; // No se encontro la visita con el ID especificado
-	}
-
+	}	
 }

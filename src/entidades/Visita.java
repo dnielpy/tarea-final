@@ -16,8 +16,8 @@ public class Visita {
     private Analisis analisis;
     private String especialidadRemitida;
 
-    public Visita(int id, int pacienteHistoriaClinicaID, Date fecha, String diagnostico, String tratamiento,
-            Analisis analisis,
+    public Visita(int id, int pacienteHistoriaClinicaID, Date fecha, String diagnostico, 
+    		String tratamiento, Analisis analisis,
             String especialidadRemitida, String direccion) {
         setId(id);
         setPacienteHistoriaClinicaID(pacienteHistoriaClinicaID);

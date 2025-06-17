@@ -7,8 +7,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.ImageIcon;
-import javax.swing.JProgressBar;
-
 import componentesPropios.PanelResumen;
 import entidades.CMF;
 

@@ -3,8 +3,6 @@ package entidades;
 import java.text.SimpleDateFormat;
 
 import runner.Usuario;
-import service.Validations;
-
 import java.util.Date;
 
 public class Medico extends PersonalSanitario {

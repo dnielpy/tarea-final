@@ -1,7 +1,6 @@
 package frontend;
 
 import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Window;
 import java.awt.event.MouseEvent;
@@ -12,28 +11,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
-import javax.swing.table.TableRowSorter;
-
-import entidades.Analisis;
 import entidades.CMF;
-import entidades.Paciente;
 import entidades.Visita;
-import frontend.FormularioPaciente.ModoFormulario;
-
-import javax.swing.JButton;
-
-import java.awt.SystemColor;
-
-import javax.swing.ImageIcon;
-
-import componentesPropios.CopyDialog;
-import componentesPropios.InfoDialog;
-import componentesPropios.QuestionDialog;
 import componentesPropios.TablaPersonalizada;
 
 import java.awt.event.MouseAdapter;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,9 +42,9 @@ public class VentanaAnalisis extends JPanel implements ConstantesFrontend {
 		model.fireTableDataChanged(); // Redibujar la tabla
 	}
 
-	private ArrayList<Visita> filtrarVisitasSinResultados() {
-		ArrayList<Visita> todasLasVisitas = cmf.obtenerListaVisitas();
-		ArrayList<Visita> visitasFiltradas = new ArrayList<>();
+	private List<Visita> filtrarVisitasSinResultados() {
+		List<Visita> todasLasVisitas = cmf.obtenerListaVisitas();
+		List<Visita> visitasFiltradas = new ArrayList<>();
 
 		for (Visita visita : todasLasVisitas) {
 			if (visita.getAnalisis() != null && visita.getAnalisis().getResultados() == null) {

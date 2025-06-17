@@ -64,8 +64,7 @@ public class Mujer extends Paciente {
 			if (anios > 3) {
 			    riesgo = true;
 			}
-        }
-        
+        }    
         return riesgo;
     }
 }
