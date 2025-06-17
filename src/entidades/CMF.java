@@ -401,7 +401,7 @@ public class CMF {
 		String[] municipios = { "Plaza", "Centro Habana", "Marianao", "Cerro", "Vedado", "Guanabacoa",
 				"Habana del Este" };
 		String[] provincias = { "La Habana", "Santiago de Cuba", "Camag\u00fcey", "Holgu\u00edn", "Villa Clara",
-				"Cienfuegos", "Pinar del R\u00edo" };
+				"Cienfuegos", "Pinar del Rio" };
 
 		String calle = calles[rand.nextInt(calles.length)] + " #" + (100 + rand.nextInt(900));
 		String municipio = municipios[rand.nextInt(municipios.length)];
@@ -461,28 +461,29 @@ public class CMF {
 		crearPacienteConDatos("Zulema", "Navarro", "Ruiz", "88101822374", true, generarFechaRandom(),
 				generarDireccionCuba());
 
-		agregarVisita(new Visita(1, "78041312345", generarFechaRandom(), "Diagnóstico: Resfriado común",
+		agregarVisita(new Visita(1, 1, generarFechaRandom(), "Diagnóstico: Resfriado común",
 				"Tratamiento: Paracetamol", null, "Medicina General", "Calle 23 #123, Plaza, La Habana"));
-		agregarVisita(new Visita(2, "03021178136", generarFechaRandom(), "Diagnóstico: Dolor de cabeza",
+		agregarVisita(new Visita(2, 2, generarFechaRandom(), "Diagnóstico: Dolor de cabeza",
 				"Tratamiento: Ibuprofeno", null, "Neurología", "Avenida Boyeros #456, Centro Habana, La Habana"));
-		agregarVisita(new Visita(3, "89041312325", generarFechaRandom(), "Diagnóstico: Tos persistente",
+		agregarVisita(new Visita(3, 3, generarFechaRandom(), "Diagnóstico: Tos persistente",
 				"Tratamiento: Jarabe expectorante", null, "Neumología", "Calle Línea #789, Marianao, La Habana"));
-		agregarVisita(new Visita(4, "95011022314", generarFechaRandom(), "Diagnóstico: Dolor abdominal",
+		agregarVisita(new Visita(4, 4, generarFechaRandom(), "Diagnóstico: Dolor abdominal",
 				"Tratamiento: Omeprazol", null, "Gastroenterología", "Calle Monte #321, Cerro, La Habana"));
-		agregarVisita(new Visita(5, "72051512365", generarFechaRandom(), "Diagnóstico: Presión alta",
+		agregarVisita(new Visita(5, 5, generarFechaRandom(), "Diagnóstico: Presión alta",
 				"Tratamiento: Enalapril", null, "Cardiología", "Avenida 5ta #654, Vedado, La Habana"));
-		agregarVisita(new Visita(6, "85091212385", generarFechaRandom(), "Diagnóstico: Dolor muscular",
+		agregarVisita(new Visita(6, 6, generarFechaRandom(), "Diagnóstico: Dolor muscular",
 				"Tratamiento: Diclofenaco", null, "Ortopedia", "Calle Obispo #987, Guanabacoa, La Habana"));
-		agregarVisita(new Visita(7, "94040322374", generarFechaRandom(), "Diagnóstico: Control prenatal",
+		agregarVisita(new Visita(7, 7, generarFechaRandom(), "Diagnóstico: Control prenatal",
 				"Tratamiento: Suplementos vitamínicos", null, "Obstetricia",
 				"Calle Enramadas #456, Habana del Este, La Habana"));
-		agregarVisita(new Visita(8, "96021512365", generarFechaRandom(), "Diagnóstico: Alergia estacional",
+		agregarVisita(new Visita(8, 8, generarFechaRandom(), "Diagnóstico: Alergia estacional",
 				"Tratamiento: Antihistamínicos", null, "Alergología", "Calle 23 #789, Plaza, La Habana"));
-		agregarVisita(new Visita(9, "03050322394", generarFechaRandom(), "Diagnóstico: Control prenatal",
+		agregarVisita(new Visita(9, 9, generarFechaRandom(), "Diagnóstico: Control prenatal",
 				"Tratamiento: Suplementos vitamínicos", null, "Obstetricia",
 				"Avenida Boyeros #123, Centro Habana, La Habana"));
-		agregarVisita(new Visita(10, "75060212345", generarFechaRandom(), "Diagnóstico: Dolor lumbar",
+		agregarVisita(new Visita(10, 10, generarFechaRandom(), "Diagnóstico: Dolor lumbar",
 				"Tratamiento: Fisioterapia", null, "Rehabilitación", "Calle Línea #456, Marianao, La Habana"));
+
 	}
 
 	private void crearPacienteConDatos(String nombre, String primerApellido, String segundoApellido, String ci,

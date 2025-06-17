@@ -1,7 +1,11 @@
 package frontend;
 
+import javax.swing.JTable;
+import javax.swing.SwingConstants;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
 
+import entidades.Paciente;
 import entidades.Visita;
 
 import java.util.ArrayList;
@@ -35,14 +39,18 @@ public class VisitaTableModel extends AbstractTableModel {
         Visita visita = visitas.get(rowIndex);
         Object value = null;
 
+        // Create a patient using the CMF (Central Medical Facility) based on the
+        // patient ID
+
         if (columnIndex == 0)
             value = visita.getPacienteID();
         if (columnIndex == 1)
             value = visita.getFecha();
-        // if (columnIndex == 2)
-        // value = visita.getAnalisis().getTipoDeAnalisis();
-        // if (columnIndex == 3)
-        // value = visita.getEspecialidadRemitida();
+        if (columnIndex == 2) {
+            value = (visita.getAnalisis() != null) ? visita.getAnalisis().getTipoDeAnalisis() : "Sin análisis";
+        }
+        if (columnIndex == 3)
+            value = visita.getEspecialidadRemitida();
 
         return value;
     }
@@ -70,6 +78,16 @@ public class VisitaTableModel extends AbstractTableModel {
         if (index != -1) {
             fireTableRowsDeleted(index, index); // Notify BEFORE removing
             visitas.remove(index);
+        }
+    }
+
+    public void aplicarCentrado(JTable table) {
+        DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
+        renderer.setHorizontalAlignment(SwingConstants.CENTER);
+        renderer.setVerticalAlignment(SwingConstants.CENTER); // Centrar también verticalmente
+
+        for (int i = 0; i < getColumnCount(); i++) {
+            table.getColumnModel().getColumn(i).setCellRenderer(renderer);
         }
     }
 }

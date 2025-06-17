@@ -26,7 +26,7 @@ public class FormularioVisitas extends JDialog {
     private JTextField txtPacienteID; // Campo no editable para mostrar el ID seleccionado
     private JTextField txtDiagnostico;
     private JTextField txtTratamiento;
-    private JTextField txtEspecialidadRemitida;
+    private JComboBox<String> cbEspecialidadRemitida; // Lista desplegable para especialidades
     private JTextField txtDireccion;
     private JComboBox<String> cbTipoAnalisis;
     private JButton btnGuardar;
@@ -149,11 +149,21 @@ public class FormularioVisitas extends JDialog {
         lblEspecialidadRemitida.setBounds(50, 280, 200, 30); // Uniforme separación
         panelPrincipal.add(lblEspecialidadRemitida);
 
-        txtEspecialidadRemitida = new JTextField(visita != null ? visita.getEspecialidadRemitida() : "");
-        txtEspecialidadRemitida.setFont(new Font("Arial", Font.PLAIN, 16));
-        txtEspecialidadRemitida.setBorder(new LineBorder(Color.GRAY, 1, true));
-        txtEspecialidadRemitida.setBounds(250, 280, 300, 30); // Uniforme separación
-        panelPrincipal.add(txtEspecialidadRemitida);
+        cbEspecialidadRemitida = new JComboBox<>(new String[] {
+                "Medicina General",
+                "Neurología",
+                "Neumología",
+                "Gastroenterología",
+                "Cardiología",
+                "Ortopedia",
+                "Obstetricia",
+                "Alergología",
+                "Rehabilitación"
+        });
+        cbEspecialidadRemitida.setFont(new Font("Arial", Font.PLAIN, 16));
+        cbEspecialidadRemitida.setBounds(250, 280, 300, 30); // Uniforme separación
+        cbEspecialidadRemitida.setSelectedItem(visita != null ? visita.getEspecialidadRemitida() : "Medicina General");
+        panelPrincipal.add(cbEspecialidadRemitida);
 
         JLabel lblDireccion = new JLabel("Dirección:");
         lblDireccion.setFont(new Font("Arial", Font.PLAIN, 18));
@@ -222,10 +232,6 @@ public class FormularioVisitas extends JDialog {
         try {
             String pacienteID = txtPacienteID.getText().trim();
 
-            if (pacienteID.isEmpty()) {
-                throw new IllegalArgumentException("Debe seleccionar un paciente desde la barra de búsqueda.");
-            }
-
             Paciente pacienteSeleccionado = null;
 
             for (Paciente paciente : cmf.getPacientes()) {
@@ -244,7 +250,8 @@ public class FormularioVisitas extends JDialog {
             Date fecha = new Date(); // Guardar como objeto Date
             String diagnostico = txtDiagnostico.getText().trim();
             String tratamiento = txtTratamiento.getText().trim();
-            String especialidadRemitida = txtEspecialidadRemitida.getText().trim();
+            String especialidadRemitida = (String) cbEspecialidadRemitida.getSelectedItem(); // Obtener especialidad
+                                                                                             // seleccionada
             String direccion = txtDireccion.getText().trim();
             String tipoAnalisis = (String) cbTipoAnalisis.getSelectedItem();
 
@@ -254,12 +261,11 @@ public class FormularioVisitas extends JDialog {
             }
 
             Analisis analisis = new Analisis(tipoAnalisis, null);
-            Visita nuevaVisita = new Visita(historiaClinicaID, pacienteID, fecha, diagnostico,
+            Visita nuevaVisita = new Visita(cmf.obtenerListaVisitas().size() + 1, historiaClinicaID, fecha, diagnostico,
                     tratamiento, analisis, especialidadRemitida, direccion);
             cmf.agregarVisita(nuevaVisita);
             JOptionPane.showMessageDialog(this, "Visita guardada exitosamente.");
             dispose();
-
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Error al guardar la visita: " + ex.getMessage(), "Error",
                     JOptionPane.ERROR_MESSAGE);
