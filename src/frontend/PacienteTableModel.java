@@ -7,7 +7,7 @@ import java.util.List;
 
 public class PacienteTableModel extends AbstractTableModel {
     private List<Paciente> pacientes;
-    private String[] columnNames = {"Nombre", "Género", "CI", "H. Clínica", "Edad"};
+    private String[] columnNames = { "Nombre", "Género", "CI", "H. Clínica", "Edad" };
 
     public PacienteTableModel(List<Paciente> pacientes) {
         this.pacientes = pacientes;
@@ -15,7 +15,7 @@ public class PacienteTableModel extends AbstractTableModel {
 
     public void setPacientes(List<Paciente> pacientes) {
         this.pacientes = pacientes;
-        fireTableDataChanged(); 
+        fireTableDataChanged();
     }
 
     public int getRowCount() {
@@ -30,11 +30,16 @@ public class PacienteTableModel extends AbstractTableModel {
         Paciente paciente = pacientes.get(rowIndex);
         Object value = null;
 
-        if (columnIndex == 0) value = paciente.getNombreYApellidos();
-        if (columnIndex == 1) value = paciente.getGenero();
-        if (columnIndex == 2) value = paciente.getCI();
-        if (columnIndex == 3) value = paciente.getHistoriaClinica().getId();
-        if (columnIndex == 4) value = paciente.getEdad();
+        if (columnIndex == 0)
+            value = paciente.getNombreYApellidos();
+        if (columnIndex == 1)
+            value = paciente.getGenero();
+        if (columnIndex == 2)
+            value = paciente.getCI();
+        if (columnIndex == 3)
+            value = paciente.getHistoriaClinica().getId();
+        if (columnIndex == 4)
+            value = paciente.getEdad();
 
         return value;
     }

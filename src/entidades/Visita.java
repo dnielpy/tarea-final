@@ -8,7 +8,7 @@ import excepciones.Excepciones.IllegalNameException;
 
 public class Visita {
     private int id;
-    private String pacienteID;
+    private int pacienteID;
     private Date fecha;
     private String diagnostico;
     private String direccion;
@@ -16,7 +16,8 @@ public class Visita {
     private Analisis analisis;
     private String especialidadRemitida;
 
-    public Visita(int id, String pacienteID, Date fecha, String diagnostico, String tratamiento, Analisis analisis, String especialidadRemitida, String direccion) {
+    public Visita(int id, int pacienteID, Date fecha, String diagnostico, String tratamiento, Analisis analisis,
+            String especialidadRemitida, String direccion) {
         setId(id);
         setPacienteID(pacienteID);
         setFecha(fecha);
@@ -38,14 +39,11 @@ public class Visita {
         this.id = id;
     }
 
-    public String getPacienteID() {
+    public int getPacienteID() {
         return pacienteID;
     }
 
-    public void setPacienteID(String pacienteID) {
-        if (pacienteID == null || pacienteID.trim().isEmpty()) {
-            throw new IllegalArgumentException("Paciente ID no puede ser nulo o vacío");
-        }
+    public void setPacienteID(int pacienteID) {
         this.pacienteID = pacienteID;
     }
 
@@ -97,7 +95,7 @@ public class Visita {
     }
 
     public Analisis getAnalisis() {
-        return analisis; 
+        return analisis;
     }
 
     public void setAnalisis(Analisis analisis) {
