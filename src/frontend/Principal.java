@@ -26,6 +26,7 @@ import componentesPropios.QuestionDialog;
 import javax.swing.SwingConstants;
 
 import entidades.CMF;
+import runner.Runner;
 import runner.Usuario;
 
 import java.awt.CardLayout;
@@ -61,8 +62,8 @@ public class Principal extends JFrame implements MouseListener, ConstantesFronte
     }
 
     public Principal() {
-    	cmf = CMF.getInstance();
-    	
+        cmf = CMF.getInstance();
+
         setIconImage(Toolkit.getDefaultToolkit().getImage(Principal.class.getResource("/fotos/Logo peque.png")));
         setTitle("Sistema de gesti\u00F3n del CMF");
         setResizable(false);
@@ -82,7 +83,7 @@ public class Principal extends JFrame implements MouseListener, ConstantesFronte
 
         JLabel imagenUsuario = new JLabel("");
         imagenUsuario.setIcon(new ImageIcon(Principal.class.getResource("/fotos/Logo peque.png")));
-        
+
         imagenUsuario.setHorizontalAlignment(SwingConstants.CENTER);
         imagenUsuario.setBounds(0, 27, 300, 122);
         panelUsuario.add(imagenUsuario);
@@ -168,25 +169,25 @@ public class Principal extends JFrame implements MouseListener, ConstantesFronte
         panelVentanas.add(inicio, "INICIO");
         inicio.setLayout(null);
 
-        VentanaPacientes pacientes = new VentanaPacientes(); 
-		panelVentanas.add(pacientes, "PACIENTES");
-		pacientes.setLayout(null);
+        VentanaPacientes pacientes = new VentanaPacientes();
+        panelVentanas.add(pacientes, "PACIENTES");
+        pacientes.setLayout(null);
 
         VentanaHojasDeCargo hojaDeCargo = new VentanaHojasDeCargo();
         panelVentanas.add(hojaDeCargo, "HOJAS DE CARGO");
         hojaDeCargo.setLayout(null);
 
         VentanaReportes reportes = new VentanaReportes();
-        panelVentanas.add(reportes, "REPORTES");	
-        
-         // Escuchar el evento de cierre de ventana
+        panelVentanas.add(reportes, "REPORTES");
+
+        // Escuchar el evento de cierre de ventana
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
                 mostrarConfirmacionSalida();
             }
         });
-        
+
         Usuario usuario = cmf.getUsuario();
         if (usuario != null) {
             if (usuario.getRole() == Usuario.TipoDeRol.MÉDICO) {
@@ -206,26 +207,25 @@ public class Principal extends JFrame implements MouseListener, ConstantesFronte
         } else {
             System.err.println("Error: Usuario en sesión es null");
             new InfoDialog(
-                this,
-                "Error",
-                "No se ha iniciado sesión correctamente.\nLa aplicación se cerrará."              
-            ).setVisible(true);;
+                    this,
+                    "Error",
+                    "No se ha iniciado sesión correctamente.\nLa aplicación se cerrará.").setVisible(true);
+            ;
             System.exit(1);
         }
     };
-    
+
     private void mostrarConfirmacionSalida() {
         QuestionDialog dialogo = new QuestionDialog(
                 this,
                 "Confirmar salida",
-                "\u00BFSeguro que desea salir?\n\nSe perder\u00E1n todos los progresos no guardados al salir de la aplicaci\u00F3n."
-        );
+                "\u00BFSeguro que desea salir?\n\nSe perder\u00E1n todos los progresos no guardados al salir de la aplicaci\u00F3n.");
         dialogo.setVisible(true);
 
         if (dialogo.esConfirmado()) {
-        	cmf.setUsuario(null);
-            dispose();      // Cierra la ventana
-            System.exit(0); // Finaliza la app 
+            cmf.setUsuario(null);
+            dispose(); // Cierra la ventana
+            System.exit(0); // Finaliza la app
         }
     }
 
@@ -233,25 +233,23 @@ public class Principal extends JFrame implements MouseListener, ConstantesFronte
         QuestionDialog dialogo = new QuestionDialog(
                 this,
                 "Confirmar cierre de sesi\u00F3n",
-                "\u00BFSeguro que desea cerrar su sesi\u00F3n?"
-        );
+                "\u00BFSeguro que desea cerrar su sesi\u00F3n?");
         dialogo.setVisible(true);
-        
+
         if (dialogo.esConfirmado()) {
-        	cmf.setUsuario(null);
-            dispose();      // Cierra la ventana
-            new Login(null).setVisible(true);
-        }   
+            dispose(); // Cierra la ventana
+            Runner.login();
+        }
     }
 
     public void mouseClicked(MouseEvent e) {
-        BotonMenu boton = (BotonMenu)e.getSource();
+        BotonMenu boton = (BotonMenu) e.getSource();
         if (!boton.estaActivo()) {
             getBotonActivo().setActivo(false);
             boton.setActivo(true);
             setBotonActivo(boton);
 
-            CardLayout card = (CardLayout)(panelVentanas.getLayout());
+            CardLayout card = (CardLayout) (panelVentanas.getLayout());
             card.show(panelVentanas, boton.getText());
 
         }
@@ -259,14 +257,14 @@ public class Principal extends JFrame implements MouseListener, ConstantesFronte
     }
 
     public void mouseEntered(MouseEvent e) {
-        if (!((BotonMenu)e.getSource()).estaActivo()) {
-            ((BotonMenu)e.getSource()).setBackground(new Color(0, 192, 255));	
-        }	
+        if (!((BotonMenu) e.getSource()).estaActivo()) {
+            ((BotonMenu) e.getSource()).setBackground(new Color(0, 192, 255));
+        }
     }
 
     public void mouseExited(MouseEvent e) {
-        if (!((BotonMenu)e.getSource()).estaActivo()) {
-            ((BotonMenu)e.getSource()).setBackground(new Color(0, 171, 227));
+        if (!((BotonMenu) e.getSource()).estaActivo()) {
+            ((BotonMenu) e.getSource()).setBackground(new Color(0, 171, 227));
         }
     }
 
