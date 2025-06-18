@@ -11,7 +11,7 @@ import entidades.Visita;
 
 public class VisitaTableModel extends AbstractTableModel {
     private List<Visita> visitas;
-    private String[] columnNames = { "Historia Clinica", "Especialidad", "Analisis Orientado", "Fecha" };
+    private String[] columnNames = { "Historia Clinica", "Especialidad", "Analisis Orientado"};
 
     public VisitaTableModel(List<Visita> list) {
         visitas = list;
@@ -42,9 +42,7 @@ public class VisitaTableModel extends AbstractTableModel {
         if (columnIndex == 1)
             value = visita.getEspecialidadRemitida();
         if (columnIndex == 2) 
-            value = (visita.getAnalisis() != null) ? visita.getAnalisis().getTipoDeAnalisis() : "Sin análisis";     
-        if (columnIndex == 3) 
-            value = visita.getFechaFormateada();     
+            value = (visita.getAnalisis() != null) ? visita.getAnalisis().getTipoDeAnalisis() : "Sin análisis";         
         return value;
     }
 

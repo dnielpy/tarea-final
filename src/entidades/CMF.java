@@ -6,7 +6,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
@@ -210,11 +212,9 @@ public class CMF {
 
 		// agregar la visita a la historia clinica del paciente, y a la hoja de cargos
 		// Agregar visita a la Historia Clinica
-		for (Paciente x : pacientes) {
-			if (x.getHistoriaClinica().getId() == visita.getPacienteHistoriaClinicaID()) {
-				x.getHistoriaClinica().agregarVisita(visita);
-			}
-		}
+		
+		actualizarVisitaHistoriaClinica(visita);
+		
 		HojaCargosDiaria hojaDeCargo = obtenerHojaDeCargosPorFecha(visita.getFecha());
 		if (hojaDeCargo != null) {
 			hojaDeCargo.agregarVisita(visita);
@@ -222,6 +222,16 @@ public class CMF {
 			agregarHojaCargoDiaria(visita.getFecha());
 			hojaDeCargo = obtenerHojaDeCargosPorFecha(visita.getFecha());
 			hojaDeCargo.agregarVisita(visita);
+		}
+	}
+	
+	public void actualizarVisitaHistoriaClinica(Visita visita) {
+		boolean encontrado = false;
+		for (int i = 0; i < getPacientes().size() && !encontrado; i++) {
+			if (getPacientes().get(i).getHistoriaClinica().getId() == visita.getPacienteHistoriaClinicaID()) {
+				getPacientes().get(i).getHistoriaClinica().agregarVisita(visita);
+				encontrado = true;
+			}
 		}
 	}
 
@@ -278,12 +288,15 @@ public class CMF {
 
 	public Paciente getPacientePorId(int id) {
 		Paciente pac = null;
+		boolean encontrado = false;
 
-		for (Paciente paciente : pacientes) {
-			if (paciente.getHistoriaClinica().getId() == id) {
-				pac = paciente;
+		for (int i = 0; i < pacientes.size() && !encontrado; i++) {
+			if (pacientes.get(i).getHistoriaClinica().getId() == id) {
+				pac = pacientes.get(i);
+				encontrado = true;
 			}
 		}
+
 		return pac;
 	}
 
@@ -497,84 +510,86 @@ public class CMF {
 	// Datos cableados
 
 	public void cargarDatos() {
-		crearMedico("Alfonso", "Rodr\u00EDguez", "Camela", 11321, "75060212345", generarFechaRandom(),
+		LocalDate fechaBase = LocalDate.of(1960, 1, 1);
+
+		crearMedico("Alfonso", "Rodr\u00EDguez", "Camela", 11321, "75060212345", generarFechaRandomDesde(fechaBase),
 				"medico@example.com", "12345678");
-		crearEnfermera("Maria", "Hernandez", "Rodriguez", 43, "98121296831", true, 4, generarFechaRandom(),
-				"enfermera@example.com", "12345678");
+		crearEnfermera("Maria", "Hernandez", "Rodriguez", 43, "98121296831", true, 4,
+				generarFechaRandomDesde(fechaBase), "enfermera@example.com", "12345678");
 
 		crearPacienteConDatos("Armando", "L\u00F3pez", "Toro", "78041312345", false, null, generarDireccionCuba());
-		crearPacienteConDatos("Amanda", "L\u00F3pez", "Garc\u00EDa", "03021178136", false, generarFechaRandom(),
-				generarDireccionCuba());
+		crearPacienteConDatos("Amanda", "L\u00F3pez", "Garc\u00EDa", "03021178136", false,
+				generarFechaRandomDesde(fechaBase), generarDireccionCuba());
 		crearPacienteConDatos("Carlos", "Garces", "Fern\u00E1ndez", "89041312325", false, null, generarDireccionCuba());
-		crearPacienteConDatos("Daniela", "Su\u00E1rez", "Molina", "95011022314", false, generarFechaRandom(),
-				generarDireccionCuba());
-		crearPacienteConDatos("Esteban", "P\u00E9rez", "L\u00F3pez", "72051512365", false, null,
-				generarDireccionCuba());
+		crearPacienteConDatos("Daniela", "Su\u00E1rez", "Molina", "95011022314", false,
+				generarFechaRandomDesde(fechaBase), generarDireccionCuba());
+		crearPacienteConDatos("Esteban", "P\u00E9rez", "L\u00F3pez", "72051512365", false, null, generarDireccionCuba());
 		crearPacienteConDatos("Fernando", "G\u00F3mez", "Rivas", "85091212385", false, null, generarDireccionCuba());
-		crearPacienteConDatos("Gabriela", "Torres", "Mart\u00EDnez", "94040322374", true, generarFechaRandom(),
-				generarDireccionCuba());
+		crearPacienteConDatos("Gabriela", "Torres", "Mart\u00EDnez", "94040322374", true,
+				generarFechaRandomDesde(fechaBase), generarDireccionCuba());
 		crearPacienteConDatos("H\u00E9ctor", "S\u00E1nchez", "L\u00F3pez", "96021512365", false, null,
 				generarDireccionCuba());
-		crearPacienteConDatos("Isabel", "Fern\u00E1ndez", "Cruz", "03050322394", true, generarFechaRandom(),
-				generarDireccionCuba());
+		crearPacienteConDatos("Isabel", "Fern\u00E1ndez", "Cruz", "03050322394", true,
+				generarFechaRandomDesde(fechaBase), generarDireccionCuba());
 		crearPacienteConDatos("Javier", "Morales", "Castillo", "75060212345", false, null, generarDireccionCuba());
-		crearPacienteConDatos("Karla", "Ruiz", "Dom\u00EDnguez", "98062122314", true, generarFechaRandom(),
-				generarDireccionCuba());
+		crearPacienteConDatos("Karla", "Ruiz", "Dom\u00EDnguez", "98062122314", true,
+				generarFechaRandomDesde(fechaBase), generarDireccionCuba());
 		crearPacienteConDatos("Luis", "Herrera", "P\u00E9rez", "92011412365", false, null, generarDireccionCuba());
 		crearPacienteConDatos("Mar\u00EDa Jos\u00E9", "Salazar", "Garc\u00EDa", "80031722354", true,
-				generarFechaRandom(), generarDireccionCuba());
+				generarFechaRandomDesde(fechaBase), generarDireccionCuba());
 		crearPacienteConDatos("Nicol\u00E1s", "Vega", "Ortega", "84120512385", false, null, generarDireccionCuba());
-		crearPacienteConDatos("Olga", "D\u00EDaz", "Garc\u00EDa", "82082222334", false, generarFechaRandom(),
-				generarDireccionCuba());
+		crearPacienteConDatos("Olga", "D\u00EDaz", "Garc\u00EDa", "82082222334", false,
+				generarFechaRandomDesde(fechaBase), generarDireccionCuba());
 		crearPacienteConDatos("Pablo", "Mart\u00EDnez", "S\u00E1nchez", "91051912365", false, null,
 				generarDireccionCuba());
 		crearPacienteConDatos("Quetzal", "Rojas", "Castillo", "95071312365", false, null, generarDireccionCuba());
 		crearPacienteConDatos("Ra\u00FAl", "L\u00F3pez", "Fern\u00E1ndez", "81033012325", false, null,
 				generarDireccionCuba());
-		crearPacienteConDatos("Sof\u00EDa", "Medina", "Ramos", "97090922394", false, generarFechaRandom(),
-				generarDireccionCuba());
+		crearPacienteConDatos("Sof\u00EDa", "Medina", "Ramos", "97090922394", false,
+				generarFechaRandomDesde(fechaBase), generarDireccionCuba());
 		crearPacienteConDatos("Tom\u00E1s", "Aguilar", "Herrera", "87020112345", false, null, generarDireccionCuba());
-		crearPacienteConDatos("\u00DArsula", "Vargas", "Delgado", "92112322334", true, generarFechaRandom(),
-				generarDireccionCuba());
+		crearPacienteConDatos("\u00DArsula", "Vargas", "Delgado", "92112322334", true,
+				generarFechaRandomDesde(fechaBase), generarDireccionCuba());
 		crearPacienteConDatos("V\u00EDctor", "Salinas", "Mora", "77062912385", false, null, generarDireccionCuba());
-		crearPacienteConDatos("Wendy", "Cruz", "L\u00F3pez", "89080722374", true, generarFechaRandom(),
-				generarDireccionCuba());
-		crearPacienteConDatos("Ximena", "Flores", "Castillo", "95041422334", true, generarFechaRandom(),
-				generarDireccionCuba());
+		crearPacienteConDatos("Wendy", "Cruz", "L\u00F3pez", "89080722374", true,
+				generarFechaRandomDesde(fechaBase), generarDireccionCuba());
+		crearPacienteConDatos("Ximena", "Flores", "Castillo", "95041422334", true,
+				generarFechaRandomDesde(fechaBase), generarDireccionCuba());
 		crearPacienteConDatos("Yahir", "Castillo", "G\u00F3mez", "80100612365", false, null, generarDireccionCuba());
-		crearPacienteConDatos("Zulema", "Navarro", "Ruiz", "88101822374", true, generarFechaRandom(),
-				generarDireccionCuba());
+		crearPacienteConDatos("Zulema", "Navarro", "Ruiz", "88101822374", true,
+				generarFechaRandomDesde(fechaBase), generarDireccionCuba());
 
-		agregarVisita(new Visita(1, 1, generarFechaRandom(), "Diagnóstico: Resfriado común",
-				"Tratamiento: Paracetamol", new Analisis("Sangre", null), "Medicina General",
+		fechaBase = LocalDate.now().minusDays(3);
+		
+		agregarVisita(new Visita(1, 1, generarFechaRandomDesde(fechaBase), "Resfriado común",
+				"Paracetamol", new Analisis("Sangre", null), "Medicina General",
 				"Calle 23 #123, Plaza, La Habana"));
-		agregarVisita(new Visita(2, 2, generarFechaRandom(), "Diagnóstico: Dolor de cabeza",
-				"Tratamiento: Ibuprofeno", new Analisis("Orina", null), "Neurología",
+		agregarVisita(new Visita(2, 2, generarFechaRandomDesde(fechaBase), "Dolor de cabeza",
+				"Ibuprofeno", new Analisis("Orina", null), "Neurología",
 				"Avenida Boyeros #456, Centro Habana, La Habana"));
-		agregarVisita(new Visita(3, 3, generarFechaRandom(), "Diagnóstico: Tos persistente",
-				"Tratamiento: Jarabe expectorante", new Analisis("Radiografía", null), "Neumología",
+		agregarVisita(new Visita(3, 3, generarFechaRandomDesde(fechaBase), "Tos persistente",
+				"Jarabe expectorante", new Analisis("Radiografía", null), "Neumología",
 				"Calle Línea #789, Marianao, La Habana"));
-		agregarVisita(new Visita(4, 4, generarFechaRandom(), "Diagnóstico: Dolor abdominal",
-				"Tratamiento: Omeprazol", new Analisis("Otro", null), "Gastroenterología",
+		agregarVisita(new Visita(4, 4, generarFechaRandomDesde(fechaBase), "Dolor abdominal",
+				"Omeprazol", new Analisis("Otro", null), "Gastroenterología",
 				"Calle Monte #321, Cerro, La Habana"));
-		agregarVisita(new Visita(5, 5, generarFechaRandom(), "Diagnóstico: Presión alta",
-				"Tratamiento: Enalapril", new Analisis("Sangre", null), "Cardiología",
+		agregarVisita(new Visita(5, 5, generarFechaRandomDesde(fechaBase), "Presión alta",
+				"Enalapril", new Analisis("Sangre", null), "Cardiología",
 				"Avenida 5ta #654, Vedado, La Habana"));
-		agregarVisita(new Visita(6, 6, generarFechaRandom(), "Diagnóstico: Dolor muscular",
-				"Tratamiento: Diclofenaco", new Analisis("Radiografía", null), "Ortopedia",
+		agregarVisita(new Visita(6, 6, generarFechaRandomDesde(fechaBase), "Dolor muscular",
+				"Diclofenaco", new Analisis("Radiografía", null), "Ortopedia",
 				"Calle Obispo #987, Guanabacoa, La Habana"));
-		agregarVisita(new Visita(7, 7, generarFechaRandom(), "Diagnóstico: Control prenatal",
-				"Tratamiento: Suplementos vitamínicos", new Analisis("Otro", null), "Obstetricia",
+		agregarVisita(new Visita(7, 7, generarFechaRandomDesde(fechaBase), "Control prenatal",
+				"Suplementos vitamínicos", new Analisis("Otro", null), "Obstetricia",
 				"Calle Enramadas #456, Habana del Este, La Habana"));
-		agregarVisita(new Visita(8, 8, generarFechaRandom(), "Diagnóstico: Alergia estacional",
-				"Tratamiento: Antihistamínicos", new Analisis("Sangre", null), "Alergología",
+		agregarVisita(new Visita(8, 8, generarFechaRandomDesde(fechaBase), "Alergia estacional",
+				"Antihistamínicos", new Analisis("Sangre", null), "Alergología",
 				"Calle 23 #789, Plaza, La Habana"));
-		agregarVisita(new Visita(9, 9, generarFechaRandom(), "Diagnóstico: Control prenatal",
-				"Tratamiento: Suplementos vitamínicos", new Analisis("Orina", null), "Obstetricia",
+		agregarVisita(new Visita(9, 9, generarFechaRandomDesde(fechaBase), "Control prenatal",
+				"Suplementos vitamínicos", new Analisis("Orina", null), "Obstetricia",
 				"Avenida Boyeros #123, Centro Habana, La Habana"));
-		agregarVisita(new Visita(10, 10, generarFechaRandom(), "Diagnóstico: Dolor lumbar",
-				"Tratamiento: Fisioterapia", null, "Rehabilitación",
-				"Calle Línea #456, Marianao, La Habana"));
+		agregarVisita(new Visita(10, 10, generarFechaRandomDesde(fechaBase), "Dolor lumbar",
+				"Fisioterapia", null, "Rehabilitación", "Calle Línea #456, Marianao, La Habana"));
 
 	}
 
@@ -587,9 +602,14 @@ public class CMF {
 
 	// Metodos para randomizar datos
 
-	public static LocalDate generarFechaRandom() {
-	    LocalDate start = LocalDate.of(1950, 1, 1);
+	public static LocalDate generarFechaRandomDesde(LocalDate start) {
+	    Objects.requireNonNull(start, "La fecha inicial no puede ser nula");
+
 	    LocalDate end = LocalDate.now();
+
+	    if (start.isAfter(end)) {
+	        throw new IllegalArgumentException("La fecha inicial no puede ser posterior a la fecha actual");
+	    }
 
 	    long daysBetween = ChronoUnit.DAYS.between(start, end);
 	    long randomDays = ThreadLocalRandom.current().nextLong(daysBetween + 1);
@@ -600,18 +620,22 @@ public class CMF {
 	private static final Random random = new Random();
 
 	private static String generarDireccionCuba() {
-	    String[] calles = { "Calle 23", "Avenida Boyeros", "Calle L\u00ednea", "Calle Monte", "Avenida 5ta",
-	            "Calle Obispo", "Calle Enramadas" };
-	    String[] municipios = { "Plaza", "Centro Habana", "Marianao", "Cerro", "Vedado", "Guanabacoa",
-	            "Habana del Este" };
-	    String[] provincias = { "La Habana", "Santiago de Cuba", "Camag\u00fcey", "Holgu\u00edn", "Villa Clara",
-	            "Cienfuegos", "Pinar del Rio" };
+	    Map<String, String> calleMunicipio = new HashMap<>();
+	    calleMunicipio.put("Calle 23", "Plaza de la Revolución");
+	    calleMunicipio.put("Avenida Boyeros", "Boyeros");
+	    calleMunicipio.put("Calle Línea", "Plaza de la Revolución");
+	    calleMunicipio.put("Calle Monte", "Centro Habana");
+	    calleMunicipio.put("Avenida 5ta", "Playa");
+	    calleMunicipio.put("Calle Obispo", "La Habana Vieja");
+	    calleMunicipio.put("Calle Enramadas", "Habana del Este");
 
-	    String calle = calles[random.nextInt(calles.length)] + " #" + (100 + random.nextInt(900));
-	    String municipio = municipios[random.nextInt(municipios.length)];
-	    String provincia = provincias[random.nextInt(provincias.length)];
+	    List<String> calles = new ArrayList<>(calleMunicipio.keySet());
+	    String calle = calles.get(random.nextInt(calles.size()));
+	    String municipio = calleMunicipio.get(calle);
+	    String provincia = "La Habana";
 
-	    return calle + ", " + municipio + ", " + provincia;
+	    String direccion = calle + " #" + (100 + random.nextInt(900));
+	    return direccion + ", " + municipio + ", " + provincia;
 	}
 
 	private List<String> generarEnfermedadesCronicasAleatorias() {
