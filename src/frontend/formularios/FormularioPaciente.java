@@ -35,6 +35,8 @@ import com.toedter.calendar.JDateChooser;
 
 
 
+
+
 import javax.swing.JScrollPane;
 
 import frontend.ConstantesFrontend;
@@ -43,6 +45,7 @@ import frontend.ui.PlaceholderTextField.InputFormat;
 import frontend.ui.botones.BotonBlanco;
 import frontend.ui.botones.ImageButtonLabel;
 import frontend.ui.dialogs.InfoDialog;
+import frontend.ui.dialogs.QuestionDialog;
 import frontend.ui.dialogs.TextDialog;
 import entidades.CMF;
 import entidades.personal.Mujer;
@@ -52,6 +55,7 @@ import javax.swing.JList;
 
 import service.Validations;
 
+import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
@@ -86,6 +90,7 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 	private JPanel panelAgrupador1;
 
 	private JCheckBox checkEmbarazada;
+	private JLabel cartelEmbarazada;
 	private JDateChooser fechaUltimaPrueba;
 	private JLabel cartelEdad;
 
@@ -96,7 +101,7 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 	private JLabel botonEliminarVacuna;
 	private JLabel botonAgregarEnfermedad;
 	
-	ImageButtonLabel botonHistoriaClinica;
+	private ImageButtonLabel botonHistoriaClinica;
 
 	private BotonBlanco botonAtras;
 	private BotonBlanco botonEditar;
@@ -130,8 +135,6 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 		});
 	}
 
-
-	
 	public FormularioPaciente(Window ancestro) {
 		super(ancestro, ModalityType.APPLICATION_MODAL);	
 		inicializarFormulario();
@@ -139,7 +142,6 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 		setTitle("Agregar paciente");
 	}
 
-	
 	/**
 	 * @wbp.parser.constructor
 	 */
@@ -173,6 +175,12 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 
 	public void abrirHistoriaClinica() {
 		FormularioHistoriaClinica formHC = new FormularioHistoriaClinica(this, paciente.getHistoriaClinica());
+
+		// Obtener la posición de este formulario (el de paciente)
+		Point location = getLocationOnScreen();
+
+		// Posicionar el nuevo formulario a la derecha
+		formHC.setLocation(location.x + 100, location.y + 100);
 		formHC.setVisible(true);
 	}
 	
@@ -330,13 +338,16 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 		// Embarazada
 
 		checkEmbarazada = new JCheckBox("Embarazada");
-		checkEmbarazada.setEnabled(false);
-		checkEmbarazada.setVisible(false);
 		checkEmbarazada.setHorizontalAlignment(SwingConstants.LEFT);
 		checkEmbarazada.setFont(new Font("Arial", Font.PLAIN, 16));
 		checkEmbarazada.setBackground(Color.WHITE);
 		checkEmbarazada.setBounds(297, 189, 118, 16);
 		panelAgrupador1.add(checkEmbarazada);
+		
+		cartelEmbarazada = new JLabel();
+		cartelEmbarazada.setFont(new Font("Arial", Font.PLAIN, 16));
+		cartelEmbarazada.setBounds(297, 189, 118, 16);
+		panelAgrupador1.add(cartelEmbarazada);
 
 		// Edad
 
@@ -456,7 +467,6 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 		cartelUltimaPrueba = new JLabel("Fecha de \u00FAltima prueba citol\u00F3gica:");
 		cartelUltimaPrueba.setFont(new Font("Arial", Font.PLAIN, 16));
 		cartelUltimaPrueba.setBounds(40, 29, 240, 22);
-		cartelUltimaPrueba.setVisible(false);
 		panelAgrupador2.add(cartelUltimaPrueba);
 
 		fechaUltimaPrueba = new JDateChooser();
@@ -503,7 +513,7 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 		panelAzul.add(botonAtras);
 		botonAtras.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				dispose();
+				pedirConfirmacion();
 			}
 		});
 		botonAtras.setToolTipText("Clic para volver a la ventana principal");
@@ -530,11 +540,33 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 		panelAzul.add(botonEditar);
 		botonEditar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				setModoActual(ModoFormulario.EDICION);
+				QuestionDialog dialogo = new QuestionDialog(FormularioPaciente.this,
+						"Editar paciente", "¿Deseas editar la información de este paciente?");
+				dialogo.setVisible(true);
+
+				if (dialogo.esConfirmado()) {
+					setModoActual(ModoFormulario.EDICION);
+				}
 			}
 		});
 		botonEditar.setToolTipText("Clic para editar los datos del formulario");
 		botonEditar.setFont(new Font("Arial", Font.PLAIN, 18));	   	
+	}
+
+	public void pedirConfirmacion() {
+		if (modoActual == ModoFormulario.CREACION) {
+            QuestionDialog dialogo = new QuestionDialog(FormularioPaciente.this,
+                "Cancelar creación", "¿Estás seguro de que deseas cancelar la creación del paciente?\nLos datos introducidos se perderán.");
+            dialogo.setVisible(true);
+
+            if (dialogo.esConfirmado()) {
+                dispose();
+            }
+        } else if (modoActual == ModoFormulario.EDICION) {
+            setModoActual(ModoFormulario.VISUALIZACION);
+        } else {
+            dispose();
+        }
 	}
 
 	public void mostrarInformacionPaciente(Paciente paciente) {
@@ -548,23 +580,25 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 
 		if (paciente instanceof Mujer) {	
 		    if (((Mujer) paciente).getFechaUltimaRevision() != null) {
+		    	if (modoActual != ModoFormulario.VISUALIZACION) {
+		    		
+		    	}
+		    	cartelUltimaPrueba.setVisible(true);
 		        LocalDate fecha = ((Mujer) paciente).getFechaUltimaRevision();
-		        cartelUltimaPrueba.setVisible(true);
 
 		        Date fechaConvertida = Date.from(fecha.atStartOfDay(ZoneId.systemDefault()).toInstant());
 		        fechaUltimaPrueba.setDate(fechaConvertida);
-		        fechaUltimaPrueba.setVisible(false);
 
 		        SimpleDateFormat formato = new SimpleDateFormat("d 'de' MMMM 'de' yyyy", new Locale("es", "ES"));
 		        String fechaFormateada = formato.format(fechaConvertida);
 		        cartelFecha.setText(fechaFormateada);
-		        cartelFecha.setVisible(true);	
-		    }				
-		    checkEmbarazada.setSelected(((Mujer) paciente).isEmbarazada());
-		} else {
-		    cartelUltimaPrueba.setVisible(false);
-		    checkEmbarazada.setVisible(false);	
-		    cartelFecha.setVisible(false);	
+	
+		    } else {
+		    	cartelFecha.setText("");
+		    }
+		    boolean resp = ((Mujer) paciente).isEmbarazada();
+		    checkEmbarazada.setSelected(resp);
+		    cartelEmbarazada.setText(resp == true ? "Embarazada" : "");
 		}
 		
 		if (paciente.getEnfermedadesCronicas() != null) {
@@ -651,17 +685,19 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 	private void actualizarGenero(final boolean activo) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				fechaUltimaPrueba.setVisible(activo);
-				fechaUltimaPrueba.setEnabled(activo);
-				cartelUltimaPrueba.setVisible(activo);
-				cartelUltimaPrueba.setEnabled(activo);
-				checkEmbarazada.setVisible(activo);
-				checkEmbarazada.setEnabled(activo);
+				if (modoActual != ModoFormulario.VISUALIZACION) {
+					fechaUltimaPrueba.setVisible(activo);
+					fechaUltimaPrueba.setEnabled(activo);
+					cartelUltimaPrueba.setVisible(activo);
+					cartelUltimaPrueba.setEnabled(activo);
+					checkEmbarazada.setVisible(activo);
+					checkEmbarazada.setEnabled(activo);
 
-				if (!activo) {
-					fechaUltimaPrueba.setDate(null); 
-					checkEmbarazada.setSelected(false);
-				}
+					if (!activo) {
+						fechaUltimaPrueba.setDate(null); 
+						checkEmbarazada.setSelected(false);
+					}
+				}			
 			}
 		});
 	}
@@ -783,14 +819,15 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 
 		if (getModoActual() == ModoFormulario.VISUALIZACION) {
 			setTitle("Informaci\u00F3n del paciente");
-			activarEdicion(false);
-			
+			activarEdicion(false);			
+			mostrarInformacionPaciente(paciente);
 		} else {	
 			activarEdicion(true);
 			if (getModoActual() == ModoFormulario.EDICION) {
 				setTitle("Editar paciente");
+				mostrarInformacionPaciente(paciente);
 			} else if (getModoActual() == ModoFormulario.CREACION) {
-				setTitle("Crear del paciente");
+				setTitle("Crear paciente");
 			}
 		}
 	}
@@ -805,8 +842,18 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 		botonAgregarEnfermedad.setVisible(activo);
 		botonAgregarVacuna.setVisible(activo);
 		botonEliminarEnfermedad.setVisible(activo);
-		botonEliminarVacuna.setVisible(activo);		
+		botonEliminarVacuna.setVisible(activo);	
 		
+		checkEmbarazada.setVisible(activo);
+		cartelEmbarazada.setVisible(!activo);
+
+		fechaUltimaPrueba.setVisible(activo);
+		if (((Mujer)paciente).getFechaUltimaRevision() != null) {
+			cartelFecha.setVisible(!activo);	
+		} else {
+			cartelFecha.setVisible(false);	
+		}
+			
 		botonGuardar.setEnabled(activo);
 		botonGuardar.setVisible(activo);
 		botonEditar.setEnabled(!activo);
