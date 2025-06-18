@@ -19,6 +19,8 @@ import javax.swing.SwingUtilities;
 
 import java.awt.Font;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
@@ -514,21 +516,24 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 		campoGenero.setText(paciente.getGenero());
 
 		if (paciente instanceof Mujer) {	
-			if (((Mujer) paciente).getFechaUltimaRevision() != null) {
-				Date fecha = ((Mujer) paciente).getFechaUltimaRevision();
-				cartelUltimaPrueba.setVisible(true);
-				fechaUltimaPrueba.setDate(fecha);
-				fechaUltimaPrueba.setVisible(false);
-				SimpleDateFormat formato = new SimpleDateFormat("d 'de' MMMM 'de' yyyy", new Locale("es", "ES"));
-				String fechaFormateada = formato.format(fecha);
-				cartelFecha.setText(fechaFormateada);
-				cartelFecha.setVisible(true);	
-			}				
-			checkEmbarazada.setSelected(((Mujer) paciente).isEmbarazada());
+		    if (((Mujer) paciente).getFechaUltimaRevision() != null) {
+		        LocalDate fecha = ((Mujer) paciente).getFechaUltimaRevision();
+		        cartelUltimaPrueba.setVisible(true);
+
+		        Date fechaConvertida = Date.from(fecha.atStartOfDay(ZoneId.systemDefault()).toInstant());
+		        fechaUltimaPrueba.setDate(fechaConvertida);
+		        fechaUltimaPrueba.setVisible(false);
+
+		        SimpleDateFormat formato = new SimpleDateFormat("d 'de' MMMM 'de' yyyy", new Locale("es", "ES"));
+		        String fechaFormateada = formato.format(fechaConvertida);
+		        cartelFecha.setText(fechaFormateada);
+		        cartelFecha.setVisible(true);	
+		    }				
+		    checkEmbarazada.setSelected(((Mujer) paciente).isEmbarazada());
 		} else {
-			cartelUltimaPrueba.setVisible(false);
-			checkEmbarazada.setVisible(false);	
-			cartelFecha.setVisible(false);	
+		    cartelUltimaPrueba.setVisible(false);
+		    checkEmbarazada.setVisible(false);	
+		    cartelFecha.setVisible(false);	
 		}
 		
 		if (paciente.getEnfermedadesCronicas() != null) {
@@ -681,8 +686,14 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 		return embarazada;
 	}
 
-	private Date obtenerFechaUltimaPrueba() {
-		return fechaUltimaPrueba.getDate();
+	private LocalDate obtenerFechaUltimaPrueba() {
+	    Date fecha = fechaUltimaPrueba.getDate();
+	    if (fecha == null) {
+	        return null;
+	    }
+	    return fecha.toInstant()
+	                .atZone(ZoneId.systemDefault())
+	                .toLocalDate();
 	}
 
 	private ArrayList<String> obtenerListaEnfermedades() {
@@ -707,7 +718,7 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 	    try {
 	        String[] datos = obtenerDatosBasicos(); // nombre, primerApellido, segundoApellido, ci, direccion
 	        boolean embarazada = validarEmbarazo(datos[3], checkEmbarazada.isSelected());
-	        Date fechaUltima = obtenerFechaUltimaPrueba();
+	        LocalDate fechaUltima = obtenerFechaUltimaPrueba();
 	        ArrayList<String> enfermedades = obtenerListaEnfermedades();
 	        ArrayList<String> vacunas = obtenerListaVacunas();
 

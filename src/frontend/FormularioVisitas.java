@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 
 import javax.swing.*;
@@ -13,7 +14,6 @@ import javax.swing.border.LineBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import service.Validations;
 import entidades.Analisis;
 import entidades.CMF;
 import entidades.Paciente;
@@ -281,7 +281,7 @@ public class FormularioVisitas extends JDialog {
 
     private void guardarVisita() {
         try {
-            Date fecha = new Date(); // Guardar como objeto Date
+            LocalDate fecha = LocalDate.now();
             String diagnostico = txtDiagnostico.getText().trim();
             String tratamiento = txtTratamiento.getText().trim();
             String especialidadRemitida = (String) cbEspecialidadRemitida.getSelectedItem(); // Obtener especialidad

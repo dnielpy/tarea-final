@@ -1,26 +1,26 @@
 package entidades;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Objects;
 import java.time.LocalDate;
-import java.time.ZoneId;
-
 import runner.Usuario;
+
+import java.util.List;
 
 public class Enfermera extends PersonalSanitario {
     private int id;
     private boolean licenciatura;
     private int experiencia;
-    private Date fechaInicio;
-    private ArrayList<Analisis> analisis;
+    private LocalDate fechaInicio;
+    private List<Analisis> analisis;
 
-    public Enfermera(String nombre, String primerApellido, String segundoApellido, int id, String ci, boolean licenciatura, int experiencia, Date fecha, String email, String password) {
+    public Enfermera(String nombre, String primerApellido, String segundoApellido, int id, String ci,
+                     boolean licenciatura, int experiencia, LocalDate fecha, String email, String password) {
         super(nombre, primerApellido, segundoApellido, ci, email, password, Usuario.TipoDeRol.ENFERMERA);
         setId(id);
         setLicenciatura(licenciatura);
         setExperiencia(experiencia);
-        setFechaInicio(fecha);    
+        setFechaInicio(fecha);
         this.analisis = new ArrayList<>();
     }
 
@@ -30,7 +30,7 @@ public class Enfermera extends PersonalSanitario {
 
     public void setId(int id) {
         if (id <= 0) {
-            throw new IllegalArgumentException("El ID debe ser un n�mero positivo");
+            throw new IllegalArgumentException("El ID debe ser un n\u00FAmero positivo");
         }
         this.id = id;
     }
@@ -52,35 +52,29 @@ public class Enfermera extends PersonalSanitario {
             throw new IllegalArgumentException("La experiencia no puede ser negativa");
         }
         if (experiencia > 50) {
-            throw new IllegalArgumentException("La experiencia no puede ser mayor a 50 a�os");
+            throw new IllegalArgumentException("La experiencia no puede ser mayor a 50 a\u00F1os");
         }
         this.experiencia = experiencia;
     }
 
-    public Date getFechaInicio() {
+    public LocalDate getFechaInicio() {
         return fechaInicio;
     }
 
-    public void setFechaInicio(Date fecha) {
+    public void setFechaInicio(LocalDate fecha) {
         Objects.requireNonNull(fecha, "La fecha de inicio no puede ser nula");
-
-        // Convertir java.util.Date a LocalDate
-        LocalDate fechaDate = fecha.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        LocalDate hoy = LocalDate.now();
-
-        if (fechaDate.isAfter(hoy)) {
+        if (fecha.isAfter(LocalDate.now())) {
             throw new IllegalArgumentException("La fecha de inicio no puede ser futura");
         }
-
         this.fechaInicio = fecha;
     }
 
-    public ArrayList<Analisis> getResultadoAnalisis() {
+    public List<Analisis> getResultadoAnalisis() {
         return analisis;
     }
 
     public void agregarResultadoAnalisis(Analisis analisis) {
-        Objects.requireNonNull(analisis, "El resultado de an�lisis no puede ser nulo");
+        Objects.requireNonNull(analisis, "El resultado de an\u00E1lisis no puede ser nulo");
         this.analisis.add(analisis);
     }
 }

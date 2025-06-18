@@ -1,6 +1,7 @@
 package entidades;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 import excepciones.Excepciones.IllegalAddressException;
@@ -9,14 +10,16 @@ import excepciones.Excepciones.IllegalNameException;
 public class Visita {
     private int id;
     private int pacienteHistoriaClinicaID;
-    private Date fecha;
+    private LocalDate fecha;
     private String diagnostico;
     private String direccion;
     private String tratamiento;
     private Analisis analisis;
     private String especialidadRemitida;
 
-    public Visita(int id, int pacienteHistoriaClinicaID, Date fecha, String diagnostico, 
+    // Constructor
+    
+    public Visita(int id, int pacienteHistoriaClinicaID, LocalDate fecha, String diagnostico, 
     		String tratamiento, Analisis analisis,
             String especialidadRemitida, String direccion) {
         setId(id);
@@ -29,6 +32,8 @@ public class Visita {
         setDireccion(direccion);
     }
 
+    // Id
+    
     public int getId() {
         return id;
     }
@@ -40,6 +45,8 @@ public class Visita {
         this.id = id;
     }
 
+    // Id de Historia Clinica del paciente
+    
     public int getPacienteHistoriaClinicaID() {
         return pacienteHistoriaClinicaID;
     }
@@ -48,19 +55,30 @@ public class Visita {
         this.pacienteHistoriaClinicaID = pacienteHistoriaClinicaID;
     }
 
-    public Date getFecha() {
+    // Fecha de orientado
+    
+    public LocalDate getFecha() {
         return fecha;
     }
 
-    public void setFecha(Date fecha) {
+    public void setFecha(LocalDate fecha) {
         Objects.requireNonNull(fecha, "Fecha no puede ser nula");
 
-        Date hoy = new Date();
-        if (fecha.after(hoy)) {
+        if (fecha.isAfter(LocalDate.now())) {
             throw new IllegalArgumentException("Fecha no puede ser futura");
         }
         this.fecha = fecha;
     }
+    
+    public String getFechaFormateada() {
+        if (fecha == null) {
+            return "";
+        }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MMM/yyyy");
+        return fecha.format(formatter);
+    }
+    
+    // Diagnostico
 
     public String getDiagnostico() {
         return diagnostico;
@@ -73,6 +91,8 @@ public class Visita {
         this.diagnostico = diagnostico;
     }
 
+    // Direccion
+    
     public String getDireccion() {
         return direccion;
     }
@@ -84,6 +104,8 @@ public class Visita {
         this.direccion = direccion;
     }
 
+    // Tratamiento
+    
     public String getTratamiento() {
         return tratamiento;
     }
@@ -95,6 +117,8 @@ public class Visita {
         this.tratamiento = tratamiento;
     }
 
+    // Analisis
+    
     public Analisis getAnalisis() {
         return analisis;
     }
@@ -103,6 +127,8 @@ public class Visita {
         this.analisis = analisis;
     }
 
+    // Especialidad remitida
+    
     public String getEspecialidadRemitida() {
         return especialidadRemitida;
     }

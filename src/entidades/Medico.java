@@ -1,16 +1,16 @@
 package entidades;
 
-import java.text.SimpleDateFormat;
-
 import runner.Usuario;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class Medico extends PersonalSanitario {
     private int numRegistro;
-    private Date fechaInscripcion;
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    private LocalDate fechaInscripcion;
+    private static final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-    public Medico(String nombre, String primerApellido, String segundoApellido, int numRegistro, String ci, Date fecha, String email, String password) {
+    public Medico(String nombre, String primerApellido, String segundoApellido, int numRegistro, String ci,
+                  LocalDate fecha, String email, String password) {
         super(nombre, primerApellido, segundoApellido, ci, email, password, Usuario.TipoDeRol.MÉDICO);
         setNumRegistro(numRegistro);
         setFechaInscripcion(fecha);
@@ -22,24 +22,21 @@ public class Medico extends PersonalSanitario {
 
     public void setNumRegistro(int numRegistro) {
         if (numRegistro <= 0) {
-            throw new IllegalArgumentException("Nï¿½mero de registro debe ser positivo");
+            throw new IllegalArgumentException("Número de registro debe ser positivo");
         }
         this.numRegistro = numRegistro;
     }
 
-    // Getter que devuelve el objeto Date
-    public Date getFechaInscripcion() {
+    public LocalDate getFechaInscripcion() {
         return fechaInscripcion;
     }
 
-    // Getter que devuelve la fecha formateada como String
     public String getFechaInscripcionFormateada() {
         if (fechaInscripcion == null) return null;
-        return dateFormat.format(fechaInscripcion);
+        return fechaInscripcion.format(dateFormat);
     }
 
-    // Setter que recibe directamente un Date (opcional)
-    public void setFechaInscripcion(Date fecha) {
+    public void setFechaInscripcion(LocalDate fecha) {
         this.fechaInscripcion = fecha;
     }
 }

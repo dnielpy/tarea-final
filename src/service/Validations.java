@@ -1,10 +1,8 @@
 package service;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.time.Period;
 
-import componentesPropios.CopyDialog;
 import excepciones.Excepciones.IllegalCiException;
 
 public class Validations {
