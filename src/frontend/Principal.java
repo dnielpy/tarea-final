@@ -18,10 +18,14 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import componentesPropios.BotonBlanco;
-import componentesPropios.BotonMenu;
-import componentesPropios.InfoDialog;
-import componentesPropios.QuestionDialog;
+import frontend.panelesPrincipales.VentanaAnalisis;
+import frontend.panelesPrincipales.VentanaHojasDeCargo;
+import frontend.panelesPrincipales.VentanaInicio;
+import frontend.panelesPrincipales.VentanaPacientes;
+import frontend.panelesPrincipales.VentanaReportes;
+import frontend.panelesPrincipales.VentanaVisitas;
+import frontend.ui.botones.*;
+import frontend.ui.dialogs.*;
 
 import javax.swing.SwingConstants;
 

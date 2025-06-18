@@ -13,6 +13,15 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
+import entidades.personal.Enfermera;
+import entidades.personal.Medico;
+import entidades.personal.Mujer;
+import entidades.personal.Paciente;
+import entidades.registros.Analisis;
+import entidades.registros.HojaCargosDiaria;
+import entidades.registros.RegistroGeneral;
+import entidades.registros.RegistroHistorico;
+import entidades.registros.Visita;
 import runner.Usuario;
 import service.Validations;
 

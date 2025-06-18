@@ -27,11 +27,8 @@ import java.awt.event.WindowEvent;
 
 import javax.swing.JPasswordField;
 
-import componentesPropios.BotonBlanco;
-import componentesPropios.CopyDialog;
-import componentesPropios.ImageButtonLabel;
-import componentesPropios.InfoDialog;
-import componentesPropios.QuestionDialog;
+import frontend.ui.botones.*;
+import frontend.ui.dialogs.*;
 import runner.Auth;
 import runner.Usuario;
 
