@@ -10,12 +10,12 @@ import java.awt.Toolkit;
 import java.awt.Color;
 import java.awt.Window;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
 import frontend.ui.TablaPersonalizada;
-
 import entidades.registros.Visita;
 import entidades.registros.HistoriaClinica;
 import frontend.ConstantesFrontend;
@@ -23,25 +23,17 @@ import frontend.tablas.VisitaTableModel;
 
 public class FormularioHistoriaClinica extends JDialog implements ConstantesFrontend {
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		try {
-			FormularioHistoriaClinica dialog = new FormularioHistoriaClinica(null, null);
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+	private JLabel cartelIDHistoria;
+	private JLabel cartelCantVisitas;
+	private JLabel cartelCantAnalisis;
+	private VisitaTableModel modeloVisitas;
+	private JTable tablaVisitas;
 
-	/**
-	 * Create the dialog.
-	 */
+	private HistoriaClinica hc;
+
 	public FormularioHistoriaClinica(Window window, HistoriaClinica hc) {
 		super(window, "Historia Clínica", ModalityType.APPLICATION_MODAL);
-		setLocationRelativeTo(window);
+		this.hc = hc;
 		setBackground(COLOR_GRIS_CLARO);
 		setResizable(false);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(HistoriaClinica.class.getResource("/fotos/Logo peque.png")));
@@ -50,14 +42,14 @@ public class FormularioHistoriaClinica extends JDialog implements ConstantesFron
 		setBounds(100, 100, 625, 650);
 		getContentPane().setBackground(Color.WHITE);
 		getContentPane().setLayout(null);
-		
-		initComponents(hc);
+
+		initComponents();
+		cargarDatos();
 	}
-	
-	public void initComponents(HistoriaClinica hc) {
-		
+
+	public void initComponents() {
+
 		// General
-		
 		JLabel cartelInformacionGeneral = new JLabel("Informaci\u00F3n general");
 		cartelInformacionGeneral.setOpaque(true);
 		cartelInformacionGeneral.setHorizontalAlignment(SwingConstants.CENTER);
@@ -66,31 +58,30 @@ public class FormularioHistoriaClinica extends JDialog implements ConstantesFron
 		cartelInformacionGeneral.setBackground(Color.WHITE);
 		cartelInformacionGeneral.setBounds(50, 30, 232, 26);
 		getContentPane().add(cartelInformacionGeneral);
-		
+
 		JPanel panelInfoGeneral = new JPanel();
 		panelInfoGeneral.setBorder(BORDE_GRANDE);
 		panelInfoGeneral.setBackground(Color.WHITE);
 		panelInfoGeneral.setBounds(35, 44, 550, 89);
 		getContentPane().add(panelInfoGeneral);
 		panelInfoGeneral.setLayout(null);
-		
-		JLabel cartelIDHistoria = new JLabel("Historia Cl\u00EDnica #");
+
+		cartelIDHistoria = new JLabel("Historia Cl\u00EDnica #");
 		cartelIDHistoria.setFont(new Font("Arial", Font.PLAIN, 16));
 		cartelIDHistoria.setBounds(26, 38, 178, 19);
 		panelInfoGeneral.add(cartelIDHistoria);
-		
-		JLabel cartelCantVisitas = new JLabel("Visitas: ");
+
+		cartelCantVisitas = new JLabel("Visitas: ");
 		cartelCantVisitas.setFont(new Font("Arial", Font.PLAIN, 16));
 		cartelCantVisitas.setBounds(216, 38, 116, 19);
 		panelInfoGeneral.add(cartelCantVisitas);
-		
-		JLabel cartelCantAnalisis = new JLabel("An\u00E1lisis orientados: ");
+
+		cartelCantAnalisis = new JLabel("An\u00E1lisis orientados: ");
 		cartelCantAnalisis.setFont(new Font("Arial", Font.PLAIN, 16));
 		cartelCantAnalisis.setBounds(344, 38, 178, 19);
 		panelInfoGeneral.add(cartelCantAnalisis);
-		
+
 		// Visitas
-		
 		JLabel cartelVisitas = new JLabel("Visitas realizadas");
 		cartelVisitas.setOpaque(true);
 		cartelVisitas.setHorizontalAlignment(SwingConstants.CENTER);
@@ -99,23 +90,22 @@ public class FormularioHistoriaClinica extends JDialog implements ConstantesFron
 		cartelVisitas.setBackground(Color.WHITE);
 		cartelVisitas.setBounds(50, 145, 232, 26);
 		getContentPane().add(cartelVisitas);
-		
+
 		JPanel panelVisitas = new JPanel();
 		panelVisitas.setBorder(BORDE_GRANDE);
 		panelVisitas.setBounds(35, 160, 550, 185);
 		getContentPane().add(panelVisitas);
 		panelVisitas.setBackground(Color.WHITE);
 		panelVisitas.setLayout(null);
-		
-		VisitaTableModel modelo = new VisitaTableModel(new ArrayList<Visita>());
-		modelo.setMostrarFecha(true);
-		modelo.setMostrarHistoriaClinica(false);
-		JTable tabla = TablaPersonalizada.crearTablaPersonalizada(modelo);
-		JScrollPane scroll = TablaPersonalizada.envolverEnScroll(tabla, 20, 20, 510, 150);
+
+		modeloVisitas = new VisitaTableModel(new ArrayList<Visita>());
+		modeloVisitas.setMostrarFecha(true);
+		modeloVisitas.setMostrarHistoriaClinica(false);
+		tablaVisitas = TablaPersonalizada.crearTablaPersonalizada(modeloVisitas);
+		JScrollPane scroll = TablaPersonalizada.envolverEnScroll(tablaVisitas, 20, 20, 510, 150);
 		panelVisitas.add(scroll);
-		
-		// Analisis
-		
+
+		// Análisis
 		JLabel cartelAnalisis = new JLabel("An\u00E1lisis orientados");
 		cartelAnalisis.setOpaque(true);
 		cartelAnalisis.setHorizontalAlignment(SwingConstants.CENTER);
@@ -124,31 +114,46 @@ public class FormularioHistoriaClinica extends JDialog implements ConstantesFron
 		cartelAnalisis.setBackground(Color.WHITE);
 		cartelAnalisis.setBounds(50, 355, 232, 26);
 		getContentPane().add(cartelAnalisis);
-		
+
 		JPanel panelAnalisis = new JPanel();
 		panelAnalisis.setBorder(BORDE_GRANDE);
 		panelAnalisis.setBounds(35, 370, 550, 185);
 		getContentPane().add(panelAnalisis);
 		panelAnalisis.setBackground(Color.WHITE);
 		panelAnalisis.setLayout(null);
-		
+
 		// Fondo
-		
 		JPanel panelVerde = new JPanel();
 		panelVerde.setBackground(COLOR_VERDE);
 		panelVerde.setBounds(0, 0, 619, 89);
 		getContentPane().add(panelVerde);
 		panelVerde.setLayout(null);
-		
+
 		JPanel panelAzul = new JPanel();
 		panelAzul.setBackground(COLOR_AZUL);
-		panelAzul.setBounds(0, 500, 619, 115);
+		panelAzul.setBounds(0, 500, 619, 139);
 		getContentPane().add(panelAzul);
 		panelAzul.setLayout(null);
-		
+
 		JPanel panelGris = new JPanel();
 		panelGris.setBounds(0, 96, 620, 395);
 		getContentPane().add(panelGris);
 		panelGris.setLayout(null);
+	}
+
+	public void cargarDatos() {
+		if (hc != null) {
+			// Texto limpio sin acumulación
+			cartelIDHistoria.setText("Historia Clínica #" + hc.getId());
+			cartelCantAnalisis.setText("Análisis orientados: " + (hc.getAnalisis() != null ? hc.getAnalisis().size() : 0));
+			cartelCantVisitas.setText("Visitas: " + (hc.getRegistroVisitas() != null ? hc.getRegistroVisitas().size() : 0));
+
+			// Actualizar modelo de visitas
+			if (modeloVisitas != null) {
+				List<Visita> visitas = hc.getRegistroVisitas() != null ? hc.getRegistroVisitas() : new ArrayList<Visita>();
+				modeloVisitas.setVisitas(visitas);
+				modeloVisitas.fireTableDataChanged();
+			}
+		}
 	}
 }
