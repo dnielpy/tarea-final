@@ -85,9 +85,9 @@ public class VentanaVisitas extends JPanel implements ConstantesFrontend {
 		botonAgregarVisita.setBounds(507, 585, 203, 33);
 		add(botonAgregarVisita);
 
-		JLabel cartelListadoVisitas = new JLabel("Listado de visitas:");
+		JLabel cartelListadoVisitas = new JLabel("Listado de visitas de hoy:");
 		cartelListadoVisitas.setFont(new Font("Arial", Font.BOLD, 18));
-		cartelListadoVisitas.setBounds(80, 104, 203, 20);
+		cartelListadoVisitas.setBounds(80, 104, 241, 20);
 		add(cartelListadoVisitas);
 
 		table.addMouseListener(new MouseAdapter() {

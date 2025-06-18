@@ -77,7 +77,7 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 	private PlaceholderTextField campoEdad;
 	private JLabel cartelUltimaPrueba;
 
-	JPanel panelAgrupador1;
+	private JPanel panelAgrupador1;
 
 	private JCheckBox checkEmbarazada;
 	private JDateChooser fechaUltimaPrueba;
@@ -89,6 +89,8 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 	private JLabel botonAgregarVacuna;
 	private JLabel botonEliminarVacuna;
 	private JLabel botonAgregarEnfermedad;
+	
+	ImageButtonLabel botonHistoriaClinica;
 
 	private BotonBlanco botonAtras;
 	private BotonBlanco botonEditar;
@@ -110,8 +112,9 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				try {
-					FormularioPaciente frame = new FormularioPaciente(null);
+				try {		
+					FormularioPaciente frame = new FormularioPaciente
+							(null, CMF.getInstance().getPacientes().get(1), ModoFormulario.VISUALIZACION);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -121,9 +124,7 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 	}
 
 
-	/**
-	 * @wbp.parser.constructor
-	 */
+	
 	public FormularioPaciente(Window ancestro) {
 		super(ancestro, ModalityType.APPLICATION_MODAL);	
 		inicializarFormulario();
@@ -131,6 +132,10 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 		setTitle("Agregar paciente");
 	}
 
+	
+	/**
+	 * @wbp.parser.constructor
+	 */
 	public FormularioPaciente(Window ancestro, Paciente paciente, ModoFormulario modoActual) {	
 		super(ancestro, ModalityType.APPLICATION_MODAL);
 		inicializarFormulario();
@@ -140,8 +145,15 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 		JLabel cartelHistoriaClinica = new JLabel
 				("N\u00famero de Historia Cl\u00ednica: " + String.valueOf(paciente.getHistoriaClinica().getId()));
 		cartelHistoriaClinica.setFont(new Font("Arial", Font.PLAIN, 16));
-		cartelHistoriaClinica.setBounds(40, 226, 250, 22);
+		cartelHistoriaClinica.setBounds(40, 226, 216, 22);
 		panelAgrupador2.add(cartelHistoriaClinica);
+		
+		
+		botonHistoriaClinica = new ImageButtonLabel
+				(new ImageIcon(FormularioPaciente.class.getResource("/fotos/historia-clinica.png")));
+		botonHistoriaClinica.setText("");
+		botonHistoriaClinica.setBounds(258, 223, 20, 25);
+		panelAgrupador2.add(botonHistoriaClinica);
 
 	}
 
@@ -547,6 +559,8 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 				listModelVacunas.addElement(vacuna);
 			}
 		}
+		
+		
 
 	}
 
@@ -597,24 +611,22 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 	private void actualizarEdad() {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
+				String mensaje = null;
 				String ci = campoCI.getText();
+
 				if (ci.length() >= 6 && !edadCalculada) {
 					int edad = Validations.getYearsFromString(ci);
 					if (edad == -1) {
-						campoEdad.setText("inv\u00E1lida");
-						SwingUtilities.invokeLater(new Runnable() {
-							public void run() {
-								new InfoDialog(
-									FormularioPaciente.this,
-									"Error al calcular la edad",
-									"La fecha de nacimiento es inv\u00E1lida o no tiene un formato correcto."
-								).setVisible(true);
-							}
-						});
+						campoEdad.setText("inválida");
+						mensaje = "La fecha de nacimiento es inválida o no tiene un formato correcto.";
 					} else {
 						campoEdad.setText(String.valueOf(edad));
 						edadCalculada = true;
 					}
+				}
+
+				if (mensaje != null) {
+					new InfoDialog(FormularioPaciente.this, "Error al calcular la edad", mensaje).setVisible(true);
 				}
 			}
 		});
@@ -641,25 +653,24 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 	private void calcularGenero() {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
+				String resultado;
+				
 				String ci = campoCI.getText();
 				if (ci.length() >= 10) {
-					char penultimoDigito = ci.charAt(9);
-					if (Character.isDigit(penultimoDigito)) {
-						int digito = Character.getNumericValue(penultimoDigito);
-						if (digito % 2 != 0) {
-							campoGenero.setText("Femenino");
-							actualizarGenero(true);
-						} else {
-							campoGenero.setText("Masculino");
-							actualizarGenero(false);
-						}
+					char penultimo = ci.charAt(9);
+					if (Character.isDigit(penultimo)) {
+						int digito = Character.getNumericValue(penultimo);
+						boolean esFemenino = digito % 2 != 0;
+						resultado = esFemenino ? "Femenino" : "Masculino";
+						actualizarGenero(esFemenino);
 					} else {
-						campoGenero.setText("Inválido");
+						resultado = "Inválido";
 					}
 				} else {
-					campoGenero.setText("");
-					actualizarGenero(false);
+					resultado = "";
 				}
+
+				campoGenero.setText(resultado);
 			}
 		});
 	}
@@ -691,9 +702,7 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 	    if (fecha == null) {
 	        return null;
 	    }
-	    return fecha.toInstant()
-	                .atZone(ZoneId.systemDefault())
-	                .toLocalDate();
+	    return fecha.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 	}
 
 	private ArrayList<String> obtenerListaEnfermedades() {
