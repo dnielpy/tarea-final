@@ -70,6 +70,7 @@ public class VentanaHojasDeCargo extends JPanel implements ConstantesFrontend {
 		HojaCargosDiaria hojaDeCargos = cmf.obtenerHojaDeCargosPorFecha(LocalDate.now());
 		List<Visita> visitasIniciales = (hojaDeCargos != null) ? hojaDeCargos.getVisitas() : null;
 		model = new VisitaTableModel(visitasIniciales);
+		model.setMostrarFecha(false);
 
 		table = TablaPersonalizada.crearTablaPersonalizada(model);
 		JScrollPane scrollPane = TablaPersonalizada.envolverEnScroll(table, 0, 30, 630, 406);

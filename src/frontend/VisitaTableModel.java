@@ -1,5 +1,6 @@
 package frontend;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JTable;
@@ -11,10 +12,15 @@ import entidades.Visita;
 
 public class VisitaTableModel extends AbstractTableModel {
     private List<Visita> visitas;
-    private String[] columnNames = { "Historia Clinica", "Especialidad", "Analisis Orientado"};
+    private boolean mostrarFecha;
+    private boolean mostrarHistoriaClinica;
+    private String[] columnNames;
 
     public VisitaTableModel(List<Visita> list) {
-        visitas = list;
+        this.visitas = list;
+        this.mostrarFecha = false;
+        this.mostrarHistoriaClinica = true;
+        actualizarColumnNames();
     }
 
     public void setVisitas(List<Visita> visitas) {
@@ -22,39 +28,98 @@ public class VisitaTableModel extends AbstractTableModel {
         fireTableDataChanged();
     }
 
+    public void setMostrarFecha(boolean mostrarFecha) {
+        this.mostrarFecha = mostrarFecha;
+        actualizarColumnNames();
+        fireTableStructureChanged();
+    }
+
+    public void setMostrarHistoriaClinica(boolean mostrarHistoriaClinica) {
+        this.mostrarHistoriaClinica = mostrarHistoriaClinica;
+        actualizarColumnNames();
+        fireTableStructureChanged();
+    }
+
+    private void actualizarColumnNames() {
+        List<String> columnas = new ArrayList<>();
+
+        if (mostrarHistoriaClinica) {
+            columnas.add("Historia Clinica");
+        }
+
+        columnas.add("Remitido a");
+        columnas.add("Analisis Orientado");
+
+        if (mostrarFecha) {
+            columnas.add("Fecha");
+        }
+
+        columnNames = columnas.toArray(new String[0]);
+    }
+
     @Override
     public int getRowCount() {
-        return (visitas != null) ? visitas.size() : 0;
+        int filas = 0;
+        if (visitas != null) {
+            filas = visitas.size();
+        }
+        return filas;
     }
 
     @Override
     public int getColumnCount() {
-        return (columnNames != null) ? columnNames.length : 0;
+        int columnas = 0;
+        if (columnNames != null) {
+            columnas = columnNames.length;
+        }
+        return columnas;
     }
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
+        Object valor = null;
         Visita visita = visitas.get(rowIndex);
-        Object value = null;
+        int offset = 0;
 
-        if (columnIndex == 0)
-            value = visita.getPacienteHistoriaClinicaID();
-        if (columnIndex == 1)
-            value = visita.getEspecialidadRemitida();
-        if (columnIndex == 2) 
-            value = (visita.getAnalisis() != null) ? visita.getAnalisis().getTipoDeAnalisis() : "Sin análisis";         
-        return value;
+        if (mostrarHistoriaClinica) {
+            if (columnIndex == 0) {
+                valor = visita.getPacienteHistoriaClinicaID();
+            }
+            offset = 1;
+        }
+
+        if (columnIndex == offset) {
+            valor = visita.getEspecialidadRemitida();
+        } else if (columnIndex == offset + 1) {
+            valor = (visita.getAnalisis() != null) ? visita.getAnalisis().getTipoDeAnalisis() : "Sin análisis";
+        } else if (mostrarFecha && columnIndex == offset + 2) {
+            valor = visita.getFechaFormateada(); // Se asume formato String
+        }
+
+        return valor;
     }
 
     @Override
     public String getColumnName(int column) {
-        return columnNames[column];
+        String nombre = "";
+        if (column >= 0 && column < columnNames.length) {
+            nombre = columnNames[column];
+        }
+        return nombre;
     }
 
     @Override
     public Class<?> getColumnClass(int columnIndex) {
-        Object value = (getRowCount() > 0) ? getValueAt(0, columnIndex) : null;
-        return (value != null) ? value.getClass() : Object.class;
+        Class<?> clase = Object.class;
+
+        if (getRowCount() > 0) {
+            Object valor = getValueAt(0, columnIndex);
+            if (valor != null) {
+                clase = valor.getClass();
+            }
+        }
+
+        return clase;
     }
 
     public void eliminarVisitaPorId(int id) {
@@ -67,7 +132,7 @@ public class VisitaTableModel extends AbstractTableModel {
         }
 
         if (index != -1) {
-            fireTableRowsDeleted(index, index); // Notify BEFORE removing
+            fireTableRowsDeleted(index, index);
             visitas.remove(index);
         }
     }
@@ -75,7 +140,7 @@ public class VisitaTableModel extends AbstractTableModel {
     public void aplicarCentrado(JTable table) {
         DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
         renderer.setHorizontalAlignment(SwingConstants.CENTER);
-        renderer.setVerticalAlignment(SwingConstants.CENTER); // Centrar también verticalmente
+        renderer.setVerticalAlignment(SwingConstants.CENTER);
 
         for (int i = 0; i < getColumnCount(); i++) {
             table.getColumnModel().getColumn(i).setCellRenderer(renderer);

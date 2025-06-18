@@ -31,6 +31,7 @@ public class VentanaVisitas extends JPanel implements ConstantesFrontend {
 	public VentanaVisitas() {
 		this.cmf = CMF.getInstance();
 		model = new VisitaTableModel(cmf.obtenerListaVisitas());
+		model.setMostrarFecha(false);
 		initComponents();
 	}
 

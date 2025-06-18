@@ -6,12 +6,12 @@ import java.util.Objects;
 
 public class HistoriaClinica {
     private int id;
-    private ArrayList<Analisis> analisis;
-    private ArrayList<Visita> visitas;
+    private List<Analisis> analisis;
+    private List<Visita> visitas;
 
     // Constructores
 
-    public HistoriaClinica(int id, ArrayList<Analisis> resultadosDeAnalisis, ArrayList<Visita> visitas) {
+    public HistoriaClinica(int id, List<Analisis> resultadosDeAnalisis, List<Visita> visitas) {
         setId(id);
         setResultadosDeAnalisis(resultadosDeAnalisis);
         setVisitas(visitas);
@@ -36,11 +36,11 @@ public class HistoriaClinica {
 
     // Análisis
 
-    public ArrayList<Analisis> getAnalisis() {
+    public List<Analisis> getAnalisis() {
         return analisis;
     }
 
-    public void setResultadosDeAnalisis(ArrayList<Analisis> resultados) {
+    public void setResultadosDeAnalisis(List<Analisis> resultados) {
         Objects.requireNonNull(resultados, "La lista de resultados no puede ser nula");
 
         for (Analisis resultado : resultados) {
@@ -59,7 +59,7 @@ public class HistoriaClinica {
         return visitas;
     }
 
-    public void setVisitas(ArrayList<Visita> visitas) {
+    public void setVisitas(List<Visita> visitas) {
         Objects.requireNonNull(visitas, "La lista de registros no puede ser nula");
 
         for (Visita visita : visitas) {
