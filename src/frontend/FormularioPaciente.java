@@ -37,6 +37,7 @@ import componentesPropios.InfoDialog;
 import componentesPropios.PlaceholderTextField;
 import componentesPropios.TextDialog;
 import entidades.CMF;
+import entidades.HistoriaClinica;
 import entidades.Mujer;
 import entidades.Paciente;
 
@@ -100,6 +101,7 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 	private JPanel panelAzul;
 	
 	private PlaceholderTextField cartelFecha;
+	private Paciente paciente;
 
 	private ModoFormulario modoActual;
 
@@ -138,6 +140,7 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 	 */
 	public FormularioPaciente(Window ancestro, Paciente paciente, ModoFormulario modoActual) {	
 		super(ancestro, ModalityType.APPLICATION_MODAL);
+		this.paciente = paciente;
 		inicializarFormulario();
 		setModoActual(modoActual);
 		mostrarInformacionPaciente(paciente);	
@@ -151,12 +154,23 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 		
 		botonHistoriaClinica = new ImageButtonLabel
 				(new ImageIcon(FormularioPaciente.class.getResource("/fotos/historia-clinica.png")));
+		botonHistoriaClinica.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				abrirHistoriaClinica();
+			}
+		});
 		botonHistoriaClinica.setText("");
 		botonHistoriaClinica.setBounds(258, 223, 20, 25);
 		panelAgrupador2.add(botonHistoriaClinica);
 
 	}
 
+	public void abrirHistoriaClinica() {
+		FormularioHistoriaClinica formHC = new FormularioHistoriaClinica(this, paciente.getHistoriaClinica());
+		formHC.setVisible(true);
+	}
+	
 	public ModoFormulario getModoActual() {
 		return modoActual;
 	}
@@ -174,28 +188,28 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 
 		// Panel de informacion personal
 
-		JLabel cartelInformacionMedica = new JLabel("Informaci\u00F3n m\u00E9dica:");
+		JLabel cartelInformacionMedica = new JLabel("Informaci\u00F3n m\u00E9dica");
 		cartelInformacionMedica.setHorizontalAlignment(SwingConstants.CENTER);
 		cartelInformacionMedica.setBackground(Color.WHITE);
 		cartelInformacionMedica.setFont(new Font("Arial", Font.BOLD, 18));
 		cartelInformacionMedica.setBounds(55, 289, 219, 26);
 		cartelInformacionMedica.setOpaque(true);
-		cartelInformacionMedica.setBorder(BORDE_COMPONENTE);
+		cartelInformacionMedica.setBorder(BORDE_PEQUENO);
 		contentPane.add(cartelInformacionMedica);
 
-		JLabel cartelInformacionPersonal = new JLabel("Informaci\u00F3n personal:");
+		JLabel cartelInformacionPersonal = new JLabel("Informaci\u00F3n personal");
 		cartelInformacionPersonal.setBounds(55, 18, 232, 26);
 		contentPane.add(cartelInformacionPersonal);
 		cartelInformacionPersonal.setOpaque(true);
 		cartelInformacionPersonal.setHorizontalAlignment(SwingConstants.CENTER);
 		cartelInformacionPersonal.setFont(new Font("Arial", Font.BOLD, 18));
-		cartelInformacionPersonal.setBorder(BORDE_COMPONENTE);
+		cartelInformacionPersonal.setBorder(BORDE_PEQUENO);
 		cartelInformacionPersonal.setBackground(Color.WHITE);
 
 		panelAgrupador1 = new JPanel();
 		panelAgrupador1.setBackground(Color.WHITE);
 		panelAgrupador1.setBounds(28, 31, 589, 236);
-		panelAgrupador1.setBorder(BORDE_COMPONENTE);
+		panelAgrupador1.setBorder(BORDE_GRANDE);
 		contentPane.add(panelAgrupador1);
 		panelAgrupador1.setLayout(null);
 
@@ -338,7 +352,7 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 		panelAgrupador2 = new JPanel();
 		panelAgrupador2.setBackground(Color.WHITE);
 		panelAgrupador2.setBounds(28, 302, 589, 272);
-		panelAgrupador2.setBorder(BORDE_COMPONENTE);
+		panelAgrupador2.setBorder(BORDE_GRANDE);
 		contentPane.add(panelAgrupador2);
 		panelAgrupador2.setLayout(null);
 
@@ -559,9 +573,6 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 				listModelVacunas.addElement(vacuna);
 			}
 		}
-		
-		
-
 	}
 
 	protected void agregarEnfermedadCronica() {
