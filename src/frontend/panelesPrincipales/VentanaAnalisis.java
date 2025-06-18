@@ -1,0 +1,113 @@
+package frontend.panelesPrincipales;
+
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Window;
+import java.awt.event.MouseEvent;
+
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+
+import entidades.CMF;
+import entidades.registros.Visita;
+import frontend.ConstantesFrontend;
+import frontend.formularios.FormularioAnalisis;
+import frontend.tablas.AnalisisTableModel;
+import frontend.ui.TablaPersonalizada;
+
+import java.awt.event.MouseAdapter;
+import java.util.ArrayList;
+import java.util.List;
+
+public class VentanaAnalisis extends JPanel implements ConstantesFrontend {
+
+	private CMF cmf;
+	private JTable table;
+	private AnalisisTableModel model;
+
+	public VentanaAnalisis() {
+		this.cmf = CMF.getInstance();
+		ArrayList<Visita> visitasFiltradas = new ArrayList<>(filtrarVisitasSinResultados());
+		model = new AnalisisTableModel(visitasFiltradas);
+		initComponents();
+	}
+
+	private void abrirFormulario(Visita visita) {
+		Window ventanaPrincipal = SwingUtilities.getWindowAncestor(this);
+		FormularioAnalisis formularioAnalisis = new FormularioAnalisis(ventanaPrincipal, visita);
+		formularioAnalisis.setLocationRelativeTo(ventanaPrincipal);
+		formularioAnalisis.setVisible(true);
+
+		// Actualizar la tabla después de guardar o editar un análisis
+		model.setVisitas(filtrarVisitasSinResultados());
+		model.fireTableDataChanged(); // Redibujar la tabla
+	}
+
+	private List<Visita> filtrarVisitasSinResultados() {
+		List<Visita> todasLasVisitas = cmf.obtenerListaVisitas();
+		List<Visita> visitasFiltradas = new ArrayList<>();
+
+		for (Visita visita : todasLasVisitas) {
+			if (visita.getAnalisis() != null && visita.getAnalisis().getResultados() == null) {
+				visitasFiltradas.add(visita);
+			}
+		}
+
+		return visitasFiltradas;
+	}
+
+	private void initComponents() {
+		setBackground(Color.WHITE);
+		setLayout(null);
+
+		// Banner superior
+		JPanel panelSuperior = new JPanel();
+		panelSuperior.setBounds(0, 0, 796, 51);
+		panelSuperior.setBackground(COLOR_AZUL);
+		panelSuperior.setLayout(null);
+		add(panelSuperior);
+
+		JLabel cartelPestanna = new JLabel("ANÁLISIS");
+		cartelPestanna.setHorizontalAlignment(SwingConstants.LEFT);
+		cartelPestanna.setForeground(Color.WHITE);
+		cartelPestanna.setFont(new Font("Arial", Font.PLAIN, 18));
+		cartelPestanna.setBounds(25, 0, 150, 51);
+		panelSuperior.add(cartelPestanna);
+
+		table = TablaPersonalizada.crearTablaPersonalizada(model);
+		JScrollPane scrollPane = TablaPersonalizada.envolverEnScroll(table, 0, 30, 630, 406);
+
+		JPanel panelTabla = new JPanel();
+		panelTabla.setBounds(80, 141, 630, 436);
+		panelTabla.setBackground(Color.WHITE);
+		panelTabla.setLayout(null);
+		panelTabla.add(scrollPane);
+
+		add(panelTabla);
+
+		JLabel cartelListadoVisitas = new JLabel("Listado de análisis pendientes:");
+		cartelListadoVisitas.setFont(new Font("Arial", Font.BOLD, 18));
+		cartelListadoVisitas.setBounds(80, 104, 300, 20);
+		add(cartelListadoVisitas);
+
+		table.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount() == 2) { // Double-click detected
+					int viewRow = table.getSelectedRow();
+					if (viewRow != -1) {
+						int modelRow = table.convertRowIndexToModel(viewRow);
+						int id = (int) model.getValueAt(modelRow, model.findColumn("Historia Clinica"));
+						Visita visita = cmf.obtenerVisitaPorId(id);
+						abrirFormulario(visita); // Open FormularioAnalisis
+					}
+				}
+			}
+		});
+	}
+
+}
