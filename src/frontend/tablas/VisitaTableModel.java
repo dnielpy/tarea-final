@@ -89,9 +89,9 @@ public class VisitaTableModel extends AbstractTableModel {
         }
 
         if (columnIndex == offset) {
-            valor = visita.getEspecialidadRemitida();
+            valor = visita.getResumenEspecialidadesRemitidas();
         } else if (columnIndex == offset + 1) {
-            valor = (visita.getAnalisis() != null) ? visita.getAnalisis().getTipoDeAnalisis() : "Sin análisis";
+            valor = visita.getResumenAnalisis();
         } else if (mostrarFecha && columnIndex == offset + 2) {
             valor = visita.getFechaFormateada(); // Se asume formato String
         }

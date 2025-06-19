@@ -16,6 +16,7 @@ import entidades.CMF;
 import entidades.registros.Visita;
 import frontend.ConstantesFrontend;
 import frontend.formularios.FormularioVisitas;
+import frontend.formularios.FormularioVisitas.ModoFormulario;
 import frontend.tablas.VisitaTableModel;
 import frontend.ui.TablaPersonalizada;
 
@@ -38,9 +39,20 @@ public class VentanaVisitas extends JPanel implements ConstantesFrontend {
 		initComponents();
 	}
 
+	private void abrirFormulario() {
+		Window ventanaPrincipal = SwingUtilities.getWindowAncestor(this);
+		FormularioVisitas formularioVisitas = new FormularioVisitas(ventanaPrincipal);
+		formularioVisitas.setLocationRelativeTo(ventanaPrincipal);
+		formularioVisitas.setVisible(true);
+
+		// Actualizar la tabla después de guardar o editar una visita
+		model.setVisitas(cmf.obtenerListaVisitas());
+		model.fireTableDataChanged(); // Redibujar la tabla
+	}
+	
 	private void abrirFormulario(Visita visita) {
 		Window ventanaPrincipal = SwingUtilities.getWindowAncestor(this);
-		FormularioVisitas formularioVisitas = new FormularioVisitas(ventanaPrincipal, visita);
+		FormularioVisitas formularioVisitas = new FormularioVisitas(ventanaPrincipal, visita, ModoFormulario.VISUALIZACION);
 		formularioVisitas.setLocationRelativeTo(ventanaPrincipal);
 		formularioVisitas.setVisible(true);
 
@@ -80,7 +92,7 @@ public class VentanaVisitas extends JPanel implements ConstantesFrontend {
 		JButton botonAgregarVisita = new JButton("AGREGAR VISITA");
 		botonAgregarVisita.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				abrirFormulario(null); // Abrir formulario para agregar una nueva visita
+				abrirFormulario(); // Abrir formulario para agregar una nueva visita
 			}
 		});
 		botonAgregarVisita.setForeground(Color.BLACK);
