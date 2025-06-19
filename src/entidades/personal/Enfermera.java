@@ -1,21 +1,15 @@
 package entidades.personal;
 
-import java.util.ArrayList;
 import java.util.Objects;
 import java.time.LocalDate;
 
 import runner.Usuario;
-
-import java.util.List;
-
-import entidades.registros.Analisis;
 
 public class Enfermera extends PersonalSanitario {
     private int id;
     private boolean licenciatura;
     private int experiencia;
     private LocalDate fechaInicio;
-    private List<Analisis> analisis;
 
     public Enfermera(String nombre, String primerApellido, String segundoApellido, int id, String ci,
                      boolean licenciatura, int experiencia, LocalDate fecha, String email, String password) {
@@ -24,7 +18,6 @@ public class Enfermera extends PersonalSanitario {
         setLicenciatura(licenciatura);
         setExperiencia(experiencia);
         setFechaInicio(fecha);
-        this.analisis = new ArrayList<>();
     }
 
     public int getId() {
@@ -70,14 +63,5 @@ public class Enfermera extends PersonalSanitario {
             throw new IllegalArgumentException("La fecha de inicio no puede ser futura");
         }
         this.fechaInicio = fecha;
-    }
-
-    public List<Analisis> getResultadoAnalisis() {
-        return analisis;
-    }
-
-    public void agregarResultadoAnalisis(Analisis analisis) {
-        Objects.requireNonNull(analisis, "El resultado de an\u00E1lisis no puede ser nulo");
-        this.analisis.add(analisis);
     }
 }

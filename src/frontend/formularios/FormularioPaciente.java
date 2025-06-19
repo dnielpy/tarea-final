@@ -848,7 +848,7 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 		cartelEmbarazada.setVisible(!activo);
 
 		fechaUltimaPrueba.setVisible(activo);
-		if (((Mujer)paciente).getFechaUltimaRevision() != null) {
+		if (paciente instanceof Mujer && ((Mujer)paciente).getFechaUltimaRevision() != null) {
 			cartelFecha.setVisible(!activo);	
 		} else {
 			cartelFecha.setVisible(false);	

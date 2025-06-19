@@ -2,10 +2,12 @@ package entidades.registros;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Objects;
-
-import excepciones.Excepciones.IllegalAddressException;
-import excepciones.Excepciones.IllegalNameException;
+import java.util.Set;
+import util.ConstantesEspecialidades;
 
 public class Visita {
     private int id;
@@ -14,26 +16,33 @@ public class Visita {
     private String diagnostico;
     private String direccion;
     private String tratamiento;
-    private Analisis analisis;
-    private String especialidadRemitida;
+    private List<Analisis> analisis;
+    private List<String> especialidadesRemitidas;
 
     // Constructor
-    
     public Visita(int id, int pacienteHistoriaClinicaID, LocalDate fecha, String diagnostico, 
-    		String tratamiento, Analisis analisis,
-            String especialidadRemitida, String direccion) {
+                  String tratamiento, List<Analisis> analisis, List<String> especialidadesRemitidas, String direccion) {
         setId(id);
         setPacienteHistoriaClinicaID(pacienteHistoriaClinicaID);
         setFecha(fecha);
         setDiagnostico(diagnostico);
         setTratamiento(tratamiento);
         setAnalisis(analisis);
-        setEspecialidadRemitida(especialidadRemitida);
+        setEspecialidadesRemitidas(especialidadesRemitidas);
         setDireccion(direccion);
     }
-
-    // Id
     
+    public Visita(int id, int pacienteHistoriaClinicaID, LocalDate fecha, String diagnostico, 
+    		String tratamiento, String direccion) {
+    	setId(id);
+    	setPacienteHistoriaClinicaID(pacienteHistoriaClinicaID);
+    	setFecha(fecha);
+    	setDiagnostico(diagnostico);
+    	setTratamiento(tratamiento);
+    	setDireccion(direccion);
+    }
+
+    // ID
     public int getId() {
         return id;
     }
@@ -45,31 +54,31 @@ public class Visita {
         this.id = id;
     }
 
-    // Id de Historia Clinica del paciente
-    
+    // ID de Historia Clínica
     public int getPacienteHistoriaClinicaID() {
         return pacienteHistoriaClinicaID;
     }
 
     public void setPacienteHistoriaClinicaID(int pacienteHistoriaClinicaID) {
+        if (pacienteHistoriaClinicaID <= 0) {
+            throw new IllegalArgumentException("ID de historia cl\u00ednica debe ser mayor que cero");
+        }
         this.pacienteHistoriaClinicaID = pacienteHistoriaClinicaID;
     }
 
-    // Fecha de orientado
-    
+    // Fecha
     public LocalDate getFecha() {
         return fecha;
     }
 
     public void setFecha(LocalDate fecha) {
         Objects.requireNonNull(fecha, "Fecha no puede ser nula");
-
         if (fecha.isAfter(LocalDate.now())) {
             throw new IllegalArgumentException("Fecha no puede ser futura");
         }
         this.fecha = fecha;
     }
-    
+
     public String getFechaFormateada() {
         if (fecha == null) {
             return "";
@@ -77,66 +86,101 @@ public class Visita {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MMM/yyyy");
         return fecha.format(formatter);
     }
-    
-    // Diagnostico
 
+    // Diagnóstico
     public String getDiagnostico() {
         return diagnostico;
     }
 
     public void setDiagnostico(String diagnostico) {
         if (diagnostico == null || diagnostico.trim().isEmpty()) {
-            throw new IllegalNameException("DiagnÃ³stico no puede ser nulo o vacÃ­o");
+            throw new IllegalArgumentException("Diagn\u00f3stico no puede ser nulo o vac\u00edo");
         }
-        this.diagnostico = diagnostico;
+        this.diagnostico = diagnostico.trim();
     }
 
-    // Direccion
-    
+    // Dirección
     public String getDireccion() {
         return direccion;
     }
 
     public void setDireccion(String direccion) {
         if (direccion == null || direccion.trim().isEmpty()) {
-            throw new IllegalAddressException("DirecciÃ³n no puede ser nula o vacÃ­a");
+            throw new IllegalArgumentException("Direcci\u00f3n no puede ser nula o vac\u00eda");
         }
-        this.direccion = direccion;
+        this.direccion = direccion.trim();
     }
 
     // Tratamiento
-    
     public String getTratamiento() {
         return tratamiento;
     }
 
     public void setTratamiento(String tratamiento) {
         if (tratamiento == null || tratamiento.trim().isEmpty()) {
-            throw new IllegalArgumentException("Tratamiento no puede ser nulo o vac\u00EDo");
+            throw new IllegalArgumentException("Tratamiento no puede ser nulo o vac\u00edo");
         }
-        this.tratamiento = tratamiento;
+        this.tratamiento = tratamiento.trim();
     }
 
-    // Analisis
-    
-    public Analisis getAnalisis() {
+    // Análisis
+    public List<Analisis> getAnalisis() {
         return analisis;
     }
 
-    public void setAnalisis(Analisis analisis) {
-        this.analisis = analisis;
+    public void setAnalisis(List<Analisis> analisis) {
+        if (analisis == null) {
+            throw new IllegalArgumentException("La lista de an\u00e1lisis no puede ser nula");
+        }
+        this.analisis = new ArrayList<>(analisis); // copia defensiva
+    }
+    
+    public String getResumenAnalisis() {
+        if (this.analisis == null || this.analisis.isEmpty()) {
+            return "Sin análisis";
+        }
+        Set<String> tipos = new LinkedHashSet<>();
+        for (Analisis a : this.analisis) {
+            tipos.add(a.getTipoDeAnalisis());
+        }
+        return String.join(", ", tipos);
     }
 
     // Especialidad remitida
-    
-    public String getEspecialidadRemitida() {
-        return especialidadRemitida;
+    public List<String> getEspecialidadesRemitidas() {
+        if (especialidadesRemitidas == null) {
+            especialidadesRemitidas = new ArrayList<>();
+        }
+        return especialidadesRemitidas;
     }
 
-    public void setEspecialidadRemitida(String especialidadRemitida) {
-        if (especialidadRemitida != null && especialidadRemitida.trim().isEmpty()) {
-            throw new IllegalArgumentException("Especialidad remitida no puede ser vac\u00EDa");
+    public void setEspecialidadesRemitidas(List<String> especialidadesRemitidas) {
+        if (especialidadesRemitidas == null) {
+            this.especialidadesRemitidas = new ArrayList<>();
+        } else {
+            this.especialidadesRemitidas = especialidadesRemitidas;
         }
-        this.especialidadRemitida = especialidadRemitida;
+    }
+
+    public void agregarEspecialidad(String especialidad) {
+        if (especialidad == null || especialidad.trim().isEmpty()) {
+            throw new IllegalArgumentException("Especialidad no puede ser nula o vacía");
+        }
+        if (!ConstantesEspecialidades.ESPECIALIDADES_REMITIDAS.contains(especialidad.trim())) {
+            throw new IllegalArgumentException("Especialidad remitida no válida: " + especialidad);
+        }
+        if (especialidadesRemitidas == null) {
+            especialidadesRemitidas = new ArrayList<>();
+        }
+        if (!especialidadesRemitidas.contains(especialidad.trim())) {
+            especialidadesRemitidas.add(especialidad.trim());
+        }
+    }
+
+    public String getResumenEspecialidadesRemitidas() {
+        if (especialidadesRemitidas == null || especialidadesRemitidas.isEmpty()) {
+            return "Sin especialidades remitidas";
+        }
+        return String.join(", ", especialidadesRemitidas);
     }
 }

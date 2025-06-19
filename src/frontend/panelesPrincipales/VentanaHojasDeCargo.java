@@ -30,6 +30,7 @@ import entidades.registros.HojaCargosDiaria;
 import entidades.registros.Visita;
 import frontend.ConstantesFrontend;
 import frontend.formularios.FormularioVisitas;
+import frontend.formularios.FormularioVisitas.ModoFormulario;
 import frontend.tablas.VisitaTableModel;
 
 public class VentanaHojasDeCargo extends JPanel implements ConstantesFrontend {
@@ -129,7 +130,7 @@ public class VentanaHojasDeCargo extends JPanel implements ConstantesFrontend {
 
 	private void abrirFormulario(Visita visita) {
 		Window ventanaPrincipal = SwingUtilities.getWindowAncestor(this);
-		FormularioVisitas formularioVisitas = new FormularioVisitas(ventanaPrincipal, visita);
+		FormularioVisitas formularioVisitas = new FormularioVisitas(ventanaPrincipal, visita, ModoFormulario.VISUALIZACION);
 		formularioVisitas.setLocationRelativeTo(ventanaPrincipal);
 		formularioVisitas.setVisible(true);
 	}
