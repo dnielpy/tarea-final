@@ -439,7 +439,6 @@ public class CMF {
 		return id;
 	}
 
-
 	public HojaCargosDiaria obtenerHojaDeCargosPorFecha(LocalDate fecha) {
 		HojaCargosDiaria hojaDeCargo = null;
 		boolean ciclar = true;
