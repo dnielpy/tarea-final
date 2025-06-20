@@ -3,36 +3,22 @@ package frontend.formularios;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.List;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
-import util.ConstantesAnalisis;
-import util.ConstantesEspecialidades;
 import entidades.CMF;
 import entidades.registros.Analisis;
-import entidades.registros.Visita;
 import frontend.ConstantesFrontend;
-import frontend.formularios.FormularioVisitas.ModoFormulario;
 import frontend.ui.PlaceholderTextField;
 import frontend.ui.PlaceholderTextField.InputFormat;
 import frontend.ui.botones.BotonBlanco;
-import frontend.ui.botones.ImageButtonLabel;
 import frontend.ui.dialogs.InfoDialog;
 import frontend.ui.dialogs.QuestionDialog;
-import frontend.ui.dialogs.SelectorDialog;
 
-import javax.swing.*;
-import javax.swing.border.*;
-
-import java.awt.*;
-import java.awt.event.*;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class FormularioAnalisis extends JDialog implements ConstantesFrontend {
 
@@ -47,6 +33,7 @@ public class FormularioAnalisis extends JDialog implements ConstantesFrontend {
 
     private BotonBlanco botonGuardar;
     private BotonBlanco botonEditar;
+    private BotonBlanco botonAtras;
 
     private Analisis analisis;
     private CMF cmf;
@@ -68,7 +55,22 @@ public class FormularioAnalisis extends JDialog implements ConstantesFrontend {
         setSize(645, 600);
         setResizable(false);
         setLocationRelativeTo(owner);
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                if (modoActual == ModoFormulario.EDICION) {
+                    QuestionDialog confirmacion = new QuestionDialog(FormularioAnalisis.this,
+                            "Cancelar edición", "¿Está seguro de que desea cerrar el formulario? Se perderán los cambios.");
+                    confirmacion.setVisible(true);
+
+                    if (confirmacion.esConfirmado()) {
+                        dispose();
+                    } // si no confirma, no se cierra
+                } else {
+                    dispose(); // cerrar normalmente si no está editando
+                }
+            }
+        });
         getContentPane().setBackground(Color.WHITE);
         getContentPane().setLayout(null);
 
@@ -95,10 +97,16 @@ public class FormularioAnalisis extends JDialog implements ConstantesFrontend {
         getContentPane().add(panelResultados);
 
         JScrollPane resultadosScroll = new JScrollPane();
+        resultadosScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        resultadosScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        resultadosScroll.setBorder(BORDE_COMPONENTE);
         resultadosScroll.setBounds(24, 45, 537, 197);
         panelResultados.add(resultadosScroll);
 
         textResultados = new JTextArea();
+        textResultados.setLineWrap(true);
+        textResultados.setWrapStyleWord(true);
+        textResultados.setBorder(null);
         textResultados.setFont(new Font("Arial", Font.PLAIN, 16));
         resultadosScroll.setViewportView(textResultados);
 
@@ -178,7 +186,7 @@ public class FormularioAnalisis extends JDialog implements ConstantesFrontend {
         panelGeneral.add(cartelEstado);
 
         campoEstado = new PlaceholderTextField();
-        campoEstado.setInputFormat(InputFormat.ANY);
+        campoEstado.setInputFormat(InputFormat.ALPHABETIC);
         campoEstado.setFont(new Font("Arial", Font.PLAIN, 16));
         campoEstado.setEditable(false);
         campoEstado.setCharacterLimit(20);
@@ -187,13 +195,19 @@ public class FormularioAnalisis extends JDialog implements ConstantesFrontend {
 
         JPanel panelAzul = new JPanel();
         panelAzul.setBackground(COLOR_AZUL);
-        panelAzul.setBounds(0, 510, 645, 60);
+        panelAzul.setBounds(0, 400, 645, 182);
         panelAzul.setLayout(null);
         getContentPane().add(panelAzul);
+        
+        JPanel panelVerde = new JPanel();
+        panelVerde.setBackground(COLOR_VERDE);
+        panelVerde.setBounds(0, 0, 645, 110);
+        panelVerde.setLayout(null);
+        getContentPane().add(panelVerde);
 
         botonGuardar = new BotonBlanco("GUARDAR");
         botonGuardar.setFont(new Font("Arial", Font.PLAIN, 18));
-        botonGuardar.setBounds(165, 13, 130, 30);
+        botonGuardar.setBounds(165, 111, 130, 30);
         botonGuardar.setToolTipText("Guardar resultados del análisis");
         panelAzul.add(botonGuardar);
         botonGuardar.addActionListener(new ActionListener() {
@@ -204,7 +218,7 @@ public class FormularioAnalisis extends JDialog implements ConstantesFrontend {
 
         botonEditar = new BotonBlanco("EDITAR");
         botonEditar.setFont(new Font("Arial", Font.PLAIN, 18));
-        botonEditar.setBounds(165, 13, 130, 30);
+        botonEditar.setBounds(165, 111, 130, 30);
         botonEditar.setToolTipText("Editar resultados del análisis");
         panelAzul.add(botonEditar);
         botonEditar.addActionListener(new ActionListener() {
@@ -223,60 +237,91 @@ public class FormularioAnalisis extends JDialog implements ConstantesFrontend {
             }
         });
 
-        BotonBlanco botonAtras = new BotonBlanco("ATRÁS");
+        botonAtras = new BotonBlanco("ATRÁS"); // Se cambiará a "CANCELAR" si es edición
         botonAtras.setFont(new Font("Arial", Font.PLAIN, 18));
-        botonAtras.setBounds(335, 13, 130, 30);
+        botonAtras.setBounds(335, 111, 130, 30);
         panelAzul.add(botonAtras);
         botonAtras.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                dispose();
+                if (modoActual == ModoFormulario.EDICION) {
+                    QuestionDialog confirmacion = new QuestionDialog(FormularioAnalisis.this,
+                            "Cancelar edición", "¿Está seguro de que desea cancelar los cambios?");
+                    confirmacion.setVisible(true);
+
+                    if (confirmacion.esConfirmado()) {
+                        setModo(ModoFormulario.VISUALIZACION);
+                    }
+                } else {
+                    dispose();
+                }
             }
         });
+        
+        JPanel panelGris = new JPanel();
+        panelGris.setLayout(null);
+        panelGris.setBackground(SystemColor.menu);
+        panelGris.setBounds(0, 120, 645, 271);
+        getContentPane().add(panelGris);
+        
     }
 
     private void cargarDatos() {
         campoNombre.setText(cmf.getPacientePorId(analisis.getHistoriaClinicaId()).getNombreYApellidos());
-        campoFechaOrientado.setText(analisis.getFechaOrientado() != null ? analisis.getFechaOrientado().toString() : "");
+        campoFechaOrientado.setText(analisis.getFechaOrientado() != null ? analisis.getFechaOrientado().format(DateTimeFormatter.ofPattern("dd/MMM/yyyy")) : "");
         campoTipoAnalisis.setText(analisis.getTipoDeAnalisis());
         campoEstado.setText(analisis.getFechaResultado() != null ? "Completado" : "Pendiente");
-        campoFechaActualizacion.setText(analisis.getFechaResultado() != null ? analisis.getFechaResultado().toString() : "");
+        campoFechaActualizacion.setText(analisis.getFechaResultado() != null ? analisis.getFechaResultado().format(DateTimeFormatter.ofPattern("dd/MMM/yyyy")) : "");
         textResultados.setText(analisis.getResultados() != null ? analisis.getResultados() : "");
         cartelHistoriaClinica.setText("Historia Clínica #" + analisis.getHistoriaClinicaId());
     }
 
     private void configurarModo() {
         boolean esEdicion = modoActual == ModoFormulario.EDICION;
+
         textResultados.setEditable(esEdicion);
         botonGuardar.setVisible(esEdicion);
         botonEditar.setVisible(!esEdicion);
+
+        // Evita que se quede en estado inconsistente si se vuelve a cambiar
+        textResultados.setBackground(esEdicion ? Color.WHITE : UIManager.getColor("TextArea.disabledBackground"));
+        botonAtras.setText(esEdicion ? "CANCELAR" : "ATRÁS");   
     }
 
     private void setModo(ModoFormulario nuevoModo) {
-        modoActual = nuevoModo;
-        configurarModo();
+        if (modoActual != nuevoModo) {
+            if (modoActual == ModoFormulario.EDICION && nuevoModo == ModoFormulario.VISUALIZACION) {
+                // Restaurar los datos originales al cancelar edición
+                textResultados.setText(analisis.getResultados() != null ? analisis.getResultados() : "");
+            }
+            modoActual = nuevoModo;
+            configurarModo();
+        }
     }
+
 
     private void guardarResultados() {
         String texto = textResultados.getText().trim();
+        boolean puedeGuardar = true;
 
         if (texto.isEmpty()) {
             InfoDialog errorDialog = new InfoDialog(this, "Error", "El campo de resultados no puede estar vacío.");
             errorDialog.setVisible(true);
-            return;
+            puedeGuardar = false;
         }
 
-        QuestionDialog confirmacion = new QuestionDialog(this, "Confirmar guardado", "¿Está seguro de que desea guardar los resultados?");
-        confirmacion.setVisible(true);
+        if (puedeGuardar) {
+            QuestionDialog confirmacion = new QuestionDialog(this, "Confirmar guardado", "¿Está seguro de que desea guardar los resultados?");
+            confirmacion.setVisible(true);
 
-        if (confirmacion.esConfirmado()) {
-            analisis.setResultados(texto);
-            analisis.setFechaResultado(LocalDate.now());
+            if (confirmacion.esConfirmado()) {
+                analisis.setResultados(texto);
+                analisis.setFechaResultado(LocalDate.now());
 
-            InfoDialog exitoDialog = new InfoDialog(this, "Resultados guardados", "Los resultados se han guardado exitosamente.");
-            exitoDialog.setVisible(true);
+                InfoDialog exitoDialog = new InfoDialog(this, "Resultados guardados", "Los resultados se han guardado exitosamente.");
+                exitoDialog.setVisible(true);
 
-            dispose(); // Cerrar el formulario después del guardado
+                setModo(ModoFormulario.VISUALIZACION);
+            }
         }
     }
-
 }

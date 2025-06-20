@@ -570,6 +570,9 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 	}
 
 	public void mostrarInformacionPaciente(Paciente paciente) {
+		listModelEnfermedades.clear();
+		listModelVacunas.clear();
+		
 		campoNombre.setText(paciente.getNombre());
 		campoPrimerApellido.setText(paciente.getPrimerApellido());
 		campoSegundoApellido.setText(paciente.getSegundoApellido());
