@@ -140,12 +140,14 @@ public class Visita {
 
         if (this.analisis == null || this.analisis.isEmpty()) {
             tipos.add("Sin análisis");
-        }
-        for (Analisis a : this.analisis) {
-            tipos.add(a.getTipoDeAnalisis());
+        } else {
+            for (Analisis a : this.analisis) {
+                tipos.add(a.getTipoDeAnalisis());
+            }
         }
 
-        return String.join(", ", tipos);
+        String resumen = String.join(", ", tipos);
+        return resumen;
     }
 
     // Especialidad remitida
@@ -181,10 +183,11 @@ public class Visita {
 
     public String getResumenEspecialidadesRemitidas() {
         String response;
-
-        if (especialidadesRemitidas == null || especialidadesRemitidas.isEmpty()) {
+        if (especialidadesRemitidas != null && !especialidadesRemitidas.isEmpty()) {
+            response = String.join(", ", especialidadesRemitidas);
+        } else {
             response = "Sin especialidades remitidas";
         }
-        return String.join(", ", especialidadesRemitidas);
+        return response;
     }
 }

@@ -18,7 +18,8 @@ public class AnalisisTableModel extends AbstractTableModel {
     private boolean mostrarResultados;
 
     private final String[] columnNamesBase = { "ID Visita", "Tipo de Análisis", "Fecha Orientado" };
-    private final String[] columnNamesConResultados = { "ID Visita", "Tipo de Análisis", "Fecha Orientado", "Fecha Resultado", "Resultados", "Estado" };
+    private final String[] columnNamesConResultados = { "ID Visita", "Tipo de Análisis", "Fecha Orientado",
+            "Fecha Resultado", "Resultados", "Estado" };
 
     private final DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
@@ -92,7 +93,7 @@ public class AnalisisTableModel extends AbstractTableModel {
         }
         return analisis;
     }
-    
+
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         Object valor = null;
@@ -147,7 +148,7 @@ public class AnalisisTableModel extends AbstractTableModel {
         return valor;
     }
 
-    public void eliminarAnalisisPorIdSinBreak(int id) {
+    public void eliminarAnalisisPorId(int id) {
         if (analisisList != null) {
             int index = -1;
             int i = 0;
