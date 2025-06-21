@@ -227,6 +227,20 @@ public class CMF {
 		return listaVisitas;
 	}
 
+	public int obtenerCantidadVisitasPorFecha(LocalDate fecha) {
+		if (fecha == null) {
+			throw new IllegalArgumentException("La fecha no puede ser nula");
+		}
+
+		int cantidadVisitas = 0;
+		for (Visita visita : visitas) {
+			if (visita.getFecha().equals(fecha)) {
+				cantidadVisitas++;
+			}
+		}
+		return cantidadVisitas;
+	}
+
 	public void agregarVisita(Visita visita) {
 		Objects.requireNonNull(visita, "La visita no puede ser nula");
 		for (int i = 0; i < visitas.size(); i++) {
