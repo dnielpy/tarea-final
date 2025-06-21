@@ -17,6 +17,7 @@ import entidades.personal.Enfermera;
 import entidades.personal.Medico;
 import entidades.personal.Mujer;
 import entidades.personal.Paciente;
+import entidades.personal.Persona;
 import entidades.registros.Analisis;
 import entidades.registros.HistoriaClinica;
 import entidades.registros.HojaCargosDiaria;
@@ -105,6 +106,20 @@ public class CMF {
 
 	public Usuario getUsuario() {
 		return usuario;
+	}
+
+	public Persona getEntitytyUsuario() {
+		Persona personAuthenticated = null;
+
+		if (medico != null && usuario != null && medico.getUser().getUserName().equals(usuario.getUserName())) {
+			personAuthenticated = medico;
+		}
+
+		if (enfermera != null && usuario != null && enfermera.getUser().getUserName().equals(usuario.getUserName())) {
+			personAuthenticated = enfermera;
+		}
+
+		return personAuthenticated;
 	}
 
 	public void setUsuario(Usuario usuario) {
@@ -224,9 +239,9 @@ public class CMF {
 
 		// agregar la visita a la historia clinica del paciente, y a la hoja de cargos
 		// Agregar visita a la Historia Clinica
-		
+
 		actualizarVisitaHistoriaClinica(visita);
-		
+
 		HojaCargosDiaria hojaDeCargo = obtenerHojaDeCargosPorFecha(visita.getFecha());
 		if (hojaDeCargo != null) {
 			hojaDeCargo.agregarVisita(visita);
@@ -236,31 +251,32 @@ public class CMF {
 			hojaDeCargo.agregarVisita(visita);
 		}
 	}
-	
+
 	public void actualizarVisitaHistoriaClinica(Visita visita) {
-	    boolean encontrado = false;
-	    for (int i = 0; i < getPacientes().size() && !encontrado; i++) {
-	        if (getPacientes().get(i).getHistoriaClinica().getId() == visita.getPacienteHistoriaClinicaID()) {
-	            HistoriaClinica hc = getPacientes().get(i).getHistoriaClinica();
+		boolean encontrado = false;
+		for (int i = 0; i < getPacientes().size() && !encontrado; i++) {
+			if (getPacientes().get(i).getHistoriaClinica().getId() == visita.getPacienteHistoriaClinicaID()) {
+				HistoriaClinica hc = getPacientes().get(i).getHistoriaClinica();
 
-	            // Buscar si ya existe la visita en la historia clínica
-	            boolean visitaEncontrada = false;
-	            List<Visita> visitasHC = hc.getRegistroVisitas(); // Supongo que tienes un getter para visitas en HistoriaClinica
-	            for (int j = 0; j < visitasHC.size() && !visitaEncontrada; j++) {
-	                if (visitasHC.get(j).getId() == visita.getId()) {
-	                    visitasHC.set(j, visita); // Reemplaza la visita editada
-	                    visitaEncontrada = true;
-	                }
-	            }
+				// Buscar si ya existe la visita en la historia clínica
+				boolean visitaEncontrada = false;
+				List<Visita> visitasHC = hc.getRegistroVisitas(); // Supongo que tienes un getter para visitas en
+																	// HistoriaClinica
+				for (int j = 0; j < visitasHC.size() && !visitaEncontrada; j++) {
+					if (visitasHC.get(j).getId() == visita.getId()) {
+						visitasHC.set(j, visita); // Reemplaza la visita editada
+						visitaEncontrada = true;
+					}
+				}
 
-	            // Si no se encontró, la agregamos
-	            if (!visitaEncontrada) {
-	                hc.agregarVisita(visita);
-	            }
+				// Si no se encontró, la agregamos
+				if (!visitaEncontrada) {
+					hc.agregarVisita(visita);
+				}
 
-	            encontrado = true;
-	        }
-	    }
+				encontrado = true;
+			}
+		}
 	}
 
 	public boolean editarVisita(int id, Visita nuevaVisita) {
@@ -292,38 +308,37 @@ public class CMF {
 			}
 		}
 	}
-	
+
 	// Obtener analisis
-	
+
 	public List<Analisis> obtenerTodosLosAnalisis() {
-	    List<Analisis> todosAnalisis = new ArrayList<>();
-	    if (visitas != null) {
-	        for (Visita visita : visitas) {
-	            if (visita.getAnalisis() != null) {
-	                todosAnalisis.addAll(visita.getAnalisis());
-	            }
-	        }
-	    }
-	    return todosAnalisis;
-	}
-	
-	public List<Analisis> obtenerAnalisisPendientesDeResultado() {
-	    List<Analisis> pendientes = new ArrayList<>();
-	    if (visitas != null) {
-	        for (Visita visita : visitas) {
-	            List<Analisis> analisisVisita = visita.getAnalisis();
-	            if (analisisVisita != null) {
-	                for (Analisis a : analisisVisita) {
-	                    if (a.getFechaResultado() == null) {
-	                        pendientes.add(a);
-	                    }
-	                }
-	            }
-	        }
-	    }
-	    return pendientes;
+		List<Analisis> todosAnalisis = new ArrayList<>();
+		if (visitas != null) {
+			for (Visita visita : visitas) {
+				if (visita.getAnalisis() != null) {
+					todosAnalisis.addAll(visita.getAnalisis());
+				}
+			}
+		}
+		return todosAnalisis;
 	}
 
+	public List<Analisis> obtenerAnalisisPendientesDeResultado() {
+		List<Analisis> pendientes = new ArrayList<>();
+		if (visitas != null) {
+			for (Visita visita : visitas) {
+				List<Analisis> analisisVisita = visita.getAnalisis();
+				if (analisisVisita != null) {
+					for (Analisis a : analisisVisita) {
+						if (a.getFechaResultado() == null) {
+							pendientes.add(a);
+						}
+					}
+				}
+			}
+		}
+		return pendientes;
+	}
 
 	// Hojas de cargo
 
@@ -374,7 +389,6 @@ public class CMF {
 		return response;
 	}
 
-
 	public int obtenerNuevoHistoriaClinicaID() {
 		int id = 1;
 		boolean encontrado = true;
@@ -392,7 +406,7 @@ public class CMF {
 		}
 		return id;
 	}
-	
+
 	public int obtenerNuevoVisitaID() {
 		int id = 1;
 		boolean encontrado = true;
@@ -629,7 +643,8 @@ public class CMF {
 		crearPacienteConDatos("Carlos", "Garces", "Fern\u00E1ndez", "89041312325", false, null, generarDireccionCuba());
 		crearPacienteConDatos("Daniela", "Su\u00E1rez", "Molina", "95011022314", false,
 				generarFechaRandomDesde(fechaBase), generarDireccionCuba());
-		crearPacienteConDatos("Esteban", "P\u00E9rez", "L\u00F3pez", "72051512365", false, null, generarDireccionCuba());
+		crearPacienteConDatos("Esteban", "P\u00E9rez", "L\u00F3pez", "72051512365", false, null,
+				generarDireccionCuba());
 		crearPacienteConDatos("Fernando", "G\u00F3mez", "Rivas", "85091212385", false, null, generarDireccionCuba());
 		crearPacienteConDatos("Gabriela", "Torres", "Mart\u00EDnez", "94040322374", true,
 				generarFechaRandomDesde(fechaBase), generarDireccionCuba());
@@ -668,65 +683,75 @@ public class CMF {
 		fechaBase = LocalDate.now().minusDays(3);
 		LocalDate fecha;
 
-		 fecha = generarFechaRandomDesde(fechaBase);
-		    int idVisita = obtenerNuevoVisitaID();
-		    agregarVisita(new Visita(idVisita, 1, fecha, "Resfriado común",
-		            "Paracetamol", generarAnalisisParaVisitaConIdVisita(fecha, idVisita,  1), generarEspecialidadesAleatorias(),
-		            generarDireccionCuba()));
+		fecha = generarFechaRandomDesde(fechaBase);
+		int idVisita = obtenerNuevoVisitaID();
+		agregarVisita(new Visita(idVisita, 1, fecha, "Resfriado común",
+				"Paracetamol", generarAnalisisParaVisitaConIdVisita(fecha, idVisita, 1),
+				generarEspecialidadesAleatorias(),
+				generarDireccionCuba()));
 
-		    fecha = generarFechaRandomDesde(fechaBase);
-		    idVisita = obtenerNuevoVisitaID();
-		    agregarVisita(new Visita(idVisita, 2, fecha, "Dolor de cabeza",
-		            "Ibuprofeno", generarAnalisisParaVisitaConIdVisita(fecha, idVisita, 2), generarEspecialidadesAleatorias(),
-		            generarDireccionCuba()));
+		fecha = generarFechaRandomDesde(fechaBase);
+		idVisita = obtenerNuevoVisitaID();
+		agregarVisita(new Visita(idVisita, 2, fecha, "Dolor de cabeza",
+				"Ibuprofeno", generarAnalisisParaVisitaConIdVisita(fecha, idVisita, 2),
+				generarEspecialidadesAleatorias(),
+				generarDireccionCuba()));
 
-		    fecha = generarFechaRandomDesde(fechaBase);
-		    idVisita = obtenerNuevoVisitaID();
-		    agregarVisita(new Visita(idVisita, 3, fecha, "Tos persistente",
-		            "Jarabe expectorante", generarAnalisisParaVisitaConIdVisita(fecha, idVisita, 3), generarEspecialidadesAleatorias(),
-		            generarDireccionCuba()));
+		fecha = generarFechaRandomDesde(fechaBase);
+		idVisita = obtenerNuevoVisitaID();
+		agregarVisita(new Visita(idVisita, 3, fecha, "Tos persistente",
+				"Jarabe expectorante", generarAnalisisParaVisitaConIdVisita(fecha, idVisita, 3),
+				generarEspecialidadesAleatorias(),
+				generarDireccionCuba()));
 
-		    fecha = generarFechaRandomDesde(fechaBase);
-		    idVisita = obtenerNuevoVisitaID();
-		    agregarVisita(new Visita(idVisita, 4, fecha, "Dolor abdominal",
-		            "Omeprazol", generarAnalisisParaVisitaConIdVisita(fecha, idVisita, 4), generarEspecialidadesAleatorias(),
-		            generarDireccionCuba()));
+		fecha = generarFechaRandomDesde(fechaBase);
+		idVisita = obtenerNuevoVisitaID();
+		agregarVisita(new Visita(idVisita, 4, fecha, "Dolor abdominal",
+				"Omeprazol", generarAnalisisParaVisitaConIdVisita(fecha, idVisita, 4),
+				generarEspecialidadesAleatorias(),
+				generarDireccionCuba()));
 
-		    fecha = generarFechaRandomDesde(fechaBase);
-		    idVisita = obtenerNuevoVisitaID();
-		    agregarVisita(new Visita(idVisita, 5, fecha, "Presión alta",
-		            "Enalapril", generarAnalisisParaVisitaConIdVisita(fecha, idVisita, 5), generarEspecialidadesAleatorias(),
-		            generarDireccionCuba()));
+		fecha = generarFechaRandomDesde(fechaBase);
+		idVisita = obtenerNuevoVisitaID();
+		agregarVisita(new Visita(idVisita, 5, fecha, "Presión alta",
+				"Enalapril", generarAnalisisParaVisitaConIdVisita(fecha, idVisita, 5),
+				generarEspecialidadesAleatorias(),
+				generarDireccionCuba()));
 
-		    fecha = generarFechaRandomDesde(fechaBase);
-		    idVisita = obtenerNuevoVisitaID();
-		    agregarVisita(new Visita(idVisita, 6, fecha, "Dolor muscular",
-		            "Diclofenaco", generarAnalisisParaVisitaConIdVisita(fecha, idVisita, 6), generarEspecialidadesAleatorias(),
-		            generarDireccionCuba()));
+		fecha = generarFechaRandomDesde(fechaBase);
+		idVisita = obtenerNuevoVisitaID();
+		agregarVisita(new Visita(idVisita, 6, fecha, "Dolor muscular",
+				"Diclofenaco", generarAnalisisParaVisitaConIdVisita(fecha, idVisita, 6),
+				generarEspecialidadesAleatorias(),
+				generarDireccionCuba()));
 
-		    fecha = generarFechaRandomDesde(fechaBase);
-		    idVisita = obtenerNuevoVisitaID();
-		    agregarVisita(new Visita(idVisita, 7, fecha, "Control prenatal",
-		            "Suplementos vitamínicos", generarAnalisisParaVisitaConIdVisita(fecha, idVisita, 7), generarEspecialidadesAleatorias(),
-		            generarDireccionCuba()));
+		fecha = generarFechaRandomDesde(fechaBase);
+		idVisita = obtenerNuevoVisitaID();
+		agregarVisita(new Visita(idVisita, 7, fecha, "Control prenatal",
+				"Suplementos vitamínicos", generarAnalisisParaVisitaConIdVisita(fecha, idVisita, 7),
+				generarEspecialidadesAleatorias(),
+				generarDireccionCuba()));
 
-		    fecha = generarFechaRandomDesde(fechaBase);
-		    idVisita = obtenerNuevoVisitaID();
-		    agregarVisita(new Visita(idVisita, 8, fecha, "Alergia estacional",
-		            "Antihistamínicos", generarAnalisisParaVisitaConIdVisita(fecha, idVisita, 8), generarEspecialidadesAleatorias(),
-		            generarDireccionCuba()));
+		fecha = generarFechaRandomDesde(fechaBase);
+		idVisita = obtenerNuevoVisitaID();
+		agregarVisita(new Visita(idVisita, 8, fecha, "Alergia estacional",
+				"Antihistamínicos", generarAnalisisParaVisitaConIdVisita(fecha, idVisita, 8),
+				generarEspecialidadesAleatorias(),
+				generarDireccionCuba()));
 
-		    fecha = generarFechaRandomDesde(fechaBase);
-		    idVisita = obtenerNuevoVisitaID();
-		    agregarVisita(new Visita(idVisita, 9, fecha, "Control prenatal",
-		            "Suplementos vitamínicos", generarAnalisisParaVisitaConIdVisita(fecha, idVisita, 9), generarEspecialidadesAleatorias(),
-		            generarDireccionCuba()));
+		fecha = generarFechaRandomDesde(fechaBase);
+		idVisita = obtenerNuevoVisitaID();
+		agregarVisita(new Visita(idVisita, 9, fecha, "Control prenatal",
+				"Suplementos vitamínicos", generarAnalisisParaVisitaConIdVisita(fecha, idVisita, 9),
+				generarEspecialidadesAleatorias(),
+				generarDireccionCuba()));
 
-		    fecha = generarFechaRandomDesde(fechaBase);
-		    idVisita = obtenerNuevoVisitaID();
-		    agregarVisita(new Visita(idVisita, 10, fecha, "Dolor lumbar",
-		            "Fisioterapia", generarAnalisisParaVisitaConIdVisita(fecha, idVisita, 10), generarEspecialidadesAleatorias(),
-		            generarDireccionCuba()));
+		fecha = generarFechaRandomDesde(fechaBase);
+		idVisita = obtenerNuevoVisitaID();
+		agregarVisita(new Visita(idVisita, 10, fecha, "Dolor lumbar",
+				"Fisioterapia", generarAnalisisParaVisitaConIdVisita(fecha, idVisita, 10),
+				generarEspecialidadesAleatorias(),
+				generarDireccionCuba()));
 	}
 
 	private void crearPacienteConDatos(String nombre, String primerApellido, String segundoApellido, String ci,
@@ -735,106 +760,108 @@ public class CMF {
 		List<String> vacunas = generarVacunasAleatorias();
 		agregarPaciente(nombre, primerApellido, segundoApellido, enfermedades, vacunas, ci, esMujer, fecha, direccion);
 	}
-	
+
 	private List<String> generarEspecialidadesAleatorias() {
-	    List<String> lista = new ArrayList<>();
-	    int cantidad = random.nextInt(ConstantesEspecialidades.ESPECIALIDADES_REMITIDAS.size() + 1); // de 0 a tamaño máximo
+		List<String> lista = new ArrayList<>();
+		int cantidad = random.nextInt(ConstantesEspecialidades.ESPECIALIDADES_REMITIDAS.size() + 1); // de 0 a tamaño
+																										// máximo
 
-	    // Para evitar repeticiones, tomamos una copia y la mezclamos
-	    List<String> copia = new ArrayList<>(ConstantesEspecialidades.ESPECIALIDADES_REMITIDAS);
-	    Collections.shuffle(copia, random);
+		// Para evitar repeticiones, tomamos una copia y la mezclamos
+		List<String> copia = new ArrayList<>(ConstantesEspecialidades.ESPECIALIDADES_REMITIDAS);
+		Collections.shuffle(copia, random);
 
-	    for (int i = 0; i < cantidad; i++) {
-	        lista.add(copia.get(i));
-	    }
-	    return lista;
-	}
-	
-	private List<Analisis> generarAnalisisParaVisitaConIdVisita(LocalDate fechaVisita, int idVisita, int IdHistoriaClinica) {
-	    List<Analisis> listaAnalisis = new ArrayList<>();
-
-	    if (random.nextDouble() > 0.4) {
-	        int cantAnalisis = 1 + random.nextInt(3);
-	        for (int i = 0; i < cantAnalisis; i++) {
-	            int idAnalisis = obtenerNuevoAnalisisID();
-	            String tipo = ConstantesAnalisis.TIPOS_ANALISIS.get(random.nextInt(ConstantesAnalisis.TIPOS_ANALISIS.size()));
-	            LocalDate fechaOrientado = fechaVisita;
-
-	            Analisis analisis = new Analisis(idAnalisis, tipo, fechaOrientado, idVisita, IdHistoriaClinica);
-
-	            if (random.nextBoolean()) {
-	                LocalDate fechaResultado = fechaOrientado.plusDays(1 + random.nextInt(10));
-	                if (fechaResultado.isAfter(LocalDate.now())) {
-	                    fechaResultado = LocalDate.now();
-	                }
-	                analisis.setFechaResultado(fechaResultado);
-	                analisis.setResultados("Resultados normales para " + tipo);
-	            }
-	            listaAnalisis.add(analisis);
-	        }
-	    }
-	    return listaAnalisis;
+		for (int i = 0; i < cantidad; i++) {
+			lista.add(copia.get(i));
+		}
+		return lista;
 	}
 
+	private List<Analisis> generarAnalisisParaVisitaConIdVisita(LocalDate fechaVisita, int idVisita,
+			int IdHistoriaClinica) {
+		List<Analisis> listaAnalisis = new ArrayList<>();
+
+		if (random.nextDouble() > 0.4) {
+			int cantAnalisis = 1 + random.nextInt(3);
+			for (int i = 0; i < cantAnalisis; i++) {
+				int idAnalisis = obtenerNuevoAnalisisID();
+				String tipo = ConstantesAnalisis.TIPOS_ANALISIS
+						.get(random.nextInt(ConstantesAnalisis.TIPOS_ANALISIS.size()));
+				LocalDate fechaOrientado = fechaVisita;
+
+				Analisis analisis = new Analisis(idAnalisis, tipo, fechaOrientado, idVisita, IdHistoriaClinica);
+
+				if (random.nextBoolean()) {
+					LocalDate fechaResultado = fechaOrientado.plusDays(1 + random.nextInt(10));
+					if (fechaResultado.isAfter(LocalDate.now())) {
+						fechaResultado = LocalDate.now();
+					}
+					analisis.setFechaResultado(fechaResultado);
+					analisis.setResultados("Resultados normales para " + tipo);
+				}
+				listaAnalisis.add(analisis);
+			}
+		}
+		return listaAnalisis;
+	}
 
 	// Metodos para randomizar datos
 
 	public static LocalDate generarFechaRandomDesde(LocalDate start) {
-	    Objects.requireNonNull(start, "La fecha inicial no puede ser nula");
+		Objects.requireNonNull(start, "La fecha inicial no puede ser nula");
 
-	    LocalDate end = LocalDate.now();
+		LocalDate end = LocalDate.now();
 
-	    if (start.isAfter(end)) {
-	        throw new IllegalArgumentException("La fecha inicial no puede ser posterior a la fecha actual");
-	    }
+		if (start.isAfter(end)) {
+			throw new IllegalArgumentException("La fecha inicial no puede ser posterior a la fecha actual");
+		}
 
-	    long daysBetween = ChronoUnit.DAYS.between(start, end);
-	    long randomDays = ThreadLocalRandom.current().nextLong(daysBetween + 1);
+		long daysBetween = ChronoUnit.DAYS.between(start, end);
+		long randomDays = ThreadLocalRandom.current().nextLong(daysBetween + 1);
 
-	    return start.plusDays(randomDays);
+		return start.plusDays(randomDays);
 	}
 
 	private static final Random random = new Random();
 
 	private static String generarDireccionCuba() {
-	    Map<String, String> calleMunicipio = new HashMap<>();
-	    calleMunicipio.put("Calle 23", "Plaza de la Revolución");
-	    calleMunicipio.put("Avenida Boyeros", "Boyeros");
-	    calleMunicipio.put("Calle Línea", "Plaza de la Revolución");
-	    calleMunicipio.put("Calle Monte", "Centro Habana");
-	    calleMunicipio.put("Avenida 5ta", "Playa");
-	    calleMunicipio.put("Calle Obispo", "La Habana Vieja");
-	    calleMunicipio.put("Calle Enramadas", "Habana del Este");
+		Map<String, String> calleMunicipio = new HashMap<>();
+		calleMunicipio.put("Calle 23", "Plaza de la Revolución");
+		calleMunicipio.put("Avenida Boyeros", "Boyeros");
+		calleMunicipio.put("Calle Línea", "Plaza de la Revolución");
+		calleMunicipio.put("Calle Monte", "Centro Habana");
+		calleMunicipio.put("Avenida 5ta", "Playa");
+		calleMunicipio.put("Calle Obispo", "La Habana Vieja");
+		calleMunicipio.put("Calle Enramadas", "Habana del Este");
 
-	    List<String> calles = new ArrayList<>(calleMunicipio.keySet());
-	    String calle = calles.get(random.nextInt(calles.size()));
-	    String municipio = calleMunicipio.get(calle);
-	    String provincia = "La Habana";
+		List<String> calles = new ArrayList<>(calleMunicipio.keySet());
+		String calle = calles.get(random.nextInt(calles.size()));
+		String municipio = calleMunicipio.get(calle);
+		String provincia = "La Habana";
 
-	    String direccion = calle + " #" + (100 + random.nextInt(900));
-	    return direccion + ", " + municipio + ", " + provincia;
+		String direccion = calle + " #" + (100 + random.nextInt(900));
+		return direccion + ", " + municipio + ", " + provincia;
 	}
 
 	private List<String> generarEnfermedadesCronicasAleatorias() {
-	    List<String> posiblesEnfermedades = Arrays.asList(
-	            "Diabetes",
-	            "Hipertensi\u00F3n",
-	            "Asma",
-	            "Obesidad",
-	            "Enfermedad card\u00EDaca",
-	            "Artritis",
-	            "EPOC");
+		List<String> posiblesEnfermedades = Arrays.asList(
+				"Diabetes",
+				"Hipertensi\u00F3n",
+				"Asma",
+				"Obesidad",
+				"Enfermedad card\u00EDaca",
+				"Artritis",
+				"EPOC");
 
-	    List<String> enfermedadesAsignadas = new ArrayList<>();
-	    int cantidad = random.nextInt(3); // 0, 1 o 2 enfermedades
+		List<String> enfermedadesAsignadas = new ArrayList<>();
+		int cantidad = random.nextInt(3); // 0, 1 o 2 enfermedades
 
-	    Collections.shuffle(posiblesEnfermedades, random); // Mejor usar tu instancia
+		Collections.shuffle(posiblesEnfermedades, random); // Mejor usar tu instancia
 
-	    for (int i = 0; i < cantidad; i++) {
-	        enfermedadesAsignadas.add(posiblesEnfermedades.get(i));
-	    }
+		for (int i = 0; i < cantidad; i++) {
+			enfermedadesAsignadas.add(posiblesEnfermedades.get(i));
+		}
 
-	    return enfermedadesAsignadas;
+		return enfermedadesAsignadas;
 	}
 
 	private List<String> generarVacunasAleatorias() {

@@ -30,6 +30,9 @@ import frontend.ui.dialogs.*;
 import javax.swing.SwingConstants;
 
 import entidades.CMF;
+import entidades.personal.Enfermera;
+import entidades.personal.Medico;
+import entidades.personal.Persona;
 import runner.Runner;
 import runner.Usuario;
 
@@ -193,29 +196,33 @@ public class Principal extends JFrame implements MouseListener, ConstantesFronte
             }
         });
 
-        Usuario usuario = cmf.getUsuario();
-        if (usuario != null) {
-            if (usuario.getRole() == Usuario.TipoDeRol.MÉDICO) {
+        Persona personaAutenticada = cmf.getEntitytyUsuario();
+        if (personaAutenticada != null) {
+            String nombre = personaAutenticada.getNombre();
+            String email = CMF.getInstance().getUsuario().getUserName();
+
+            if (personaAutenticada instanceof Medico) {
                 imagenUsuario.setIcon(new ImageIcon(Principal.class.getResource("/fotos/medico.png")));
                 botonVisitasOAnalisis.setText("VISITAS");
                 VentanaVisitas visitas = new VentanaVisitas();
                 panelVentanas.add(visitas, "VISITAS");
                 visitas.setLayout(null);
                 cartelRol.setText("MÉDICO");
-            } else if (usuario.getRole() == Usuario.TipoDeRol.ENFERMERA) {
+            } else if (personaAutenticada instanceof Enfermera) {
                 imagenUsuario.setIcon(new ImageIcon(Principal.class.getResource("/fotos/enfermera.png")));
                 botonVisitasOAnalisis.setText("ANÁLISIS");
                 VentanaAnalisis analisis = new VentanaAnalisis();
                 panelVentanas.add(analisis, "ANÁLISIS");
                 cartelRol.setText("ENFERMERA");
             }
+
+            cartelUsuario.setText(nombre + " - " + email);
         } else {
             System.err.println("Error: Usuario en sesión es null");
             new InfoDialog(
                     this,
                     "Error",
                     "No se ha iniciado sesión correctamente.\nLa aplicación se cerrará.").setVisible(true);
-            ;
             System.exit(1);
         }
     };
