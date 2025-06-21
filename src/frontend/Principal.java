@@ -72,7 +72,7 @@ public class Principal extends JFrame implements MouseListener, ConstantesFronte
         setTitle("Sistema de gesti\u00F3n del CMF");
         setResizable(false);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        setBounds(100, 100, 1100, 700);
+        setBounds(0, 0, 1100, 700);
         setLocationRelativeTo(null);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -165,7 +165,8 @@ public class Principal extends JFrame implements MouseListener, ConstantesFronte
         panelLateral.add(botonReportes);
 
         panelVentanas = new JPanel();
-        panelVentanas.setBounds(305, 0, 796, 673);
+        panelVentanas.setBackground(Color.WHITE);
+        panelVentanas.setBounds(305, 0, 795, 700);
         panelPrincipal.add(panelVentanas);
         panelVentanas.setLayout(new CardLayout(0, 0));
 

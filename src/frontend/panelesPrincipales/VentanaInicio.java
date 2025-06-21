@@ -25,7 +25,7 @@ public class VentanaInicio extends JPanel implements ConstantesFrontend {
 		
 		setBackground(Color.WHITE);
 		setLayout(null);
-		setBounds(0, 0, 796, 673);
+		setBounds(0, 0, 795, 675);
 		
 		// Barra superior
 		
@@ -46,20 +46,23 @@ public class VentanaInicio extends JPanel implements ConstantesFrontend {
 
         panelResumenPacientes = new PanelResumen("PACIENTES", false, 
         		new ImageIcon(VentanaInicio.class.getResource("/fotos/paciente.png")));
-        panelResumenPacientes.setLocation(46, 116);
+        panelResumenPacientes.setSize(310, 205);
+        panelResumenPacientes.setLocation(50, 115);
         add(panelResumenPacientes);
 		
 		// Cuadro de cantidad de visitas del día
 		
 		panelResumenVisitasDelDia = new PanelResumen("VISITAS DEL D\u00CDA", false,
 				new ImageIcon(VentanaInicio.class.getResource("/fotos/visitas.png")));
-		panelResumenVisitasDelDia.setLocation(420, 116);
+		panelResumenVisitasDelDia.setSize(310, 205);
+		panelResumenVisitasDelDia.setLocation(420, 115);
 		add(panelResumenVisitasDelDia);
 		
 		// Cuadro de cantidad de pacientes en riesgo
 		
 		panelResumenEnRiesgo = new PanelResumen("EN RIESGO", true, 
 				new ImageIcon(VentanaInicio.class.getResource("/fotos/riesgo.png")));
+		panelResumenEnRiesgo.setSize(310, 205);
 		panelResumenEnRiesgo.setLocation(420, 380);
 		add(panelResumenEnRiesgo);
 		panelResumenEnRiesgo.setLayout(null);
@@ -68,7 +71,8 @@ public class VentanaInicio extends JPanel implements ConstantesFrontend {
 		
 		panelResumenEmbarazadas = new PanelResumen("EMBARAZADAS", true, 
 				new ImageIcon(VentanaInicio.class.getResource("/fotos/embarazada.png")));
-		panelResumenEmbarazadas.setLocation(46, 380);
+		panelResumenEmbarazadas.setSize(310, 205);
+		panelResumenEmbarazadas.setLocation(50, 380);
 		add(panelResumenEmbarazadas);
 
 		actualizarDatos();
