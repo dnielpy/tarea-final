@@ -61,7 +61,7 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
     private DefaultListModel<String> modeloAnalisis;
     private JList<String> listaEspecialidades;
     private JList<String> listaAnalisis;
-    
+
     private CMF cmf;
     private JPopupMenu popupResultados;
     private DefaultListModel<String> modeloResultados;
@@ -107,6 +107,7 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
 
     /**
      * Constructor con visita y modo
+     * 
      * @wbp.parser.constructor
      */
     public FormularioVisitas(Window ancestor, Visita visita, ModoFormulario modo) {
@@ -114,7 +115,7 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
         this.visita = visita;
         initComponents();
         setModoActual(modo);
-        cargarDatosVisita(); 
+        cargarDatosVisita();
     }
 
     public void initComponents() {
@@ -171,28 +172,31 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
         lblTratamiento.setFont(new Font("Arial", Font.PLAIN, 16));
         lblTratamiento.setBounds(363, 23, 170, 19);
         panelRegistroVisita.add(lblTratamiento);
-    
+
         botonAgregarEspecialidad = new ImageButtonLabel((ImageIcon) null);
         botonAgregarEspecialidad.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
-                SelectorDialog dialog = new SelectorDialog(FormularioVisitas.this, "Seleccionar especialidad", "Seleccione una especialidad:", ConstantesEspecialidades.ESPECIALIDADES_REMITIDAS);
+                SelectorDialog dialog = new SelectorDialog(FormularioVisitas.this, "Seleccionar especialidad",
+                        "Seleccione una especialidad:", ConstantesEspecialidades.ESPECIALIDADES_REMITIDAS);
                 dialog.setVisible(true);
                 if (dialog.esConfirmado()) {
                     String seleccion = dialog.getSeleccionado();
                     if (!modeloEspecialidades.contains(seleccion)) {
                         modeloEspecialidades.addElement(seleccion);
                     } else {
-                        new InfoDialog(FormularioVisitas.this, "Información", "La especialidad ya fue añadida.").setVisible(true);
+                        new InfoDialog(FormularioVisitas.this, "Información", "La especialidad ya fue añadida.")
+                                .setVisible(true);
                     }
                 }
             }
         });
-        botonAgregarEspecialidad.setIcon(new ImageIcon(FormularioVisitas.class.getResource("/fotos/agregar-22x22.png")));
+        botonAgregarEspecialidad
+                .setIcon(new ImageIcon(FormularioVisitas.class.getResource("/fotos/agregar-22x22.png")));
         botonAgregarEspecialidad.setToolTipText("Clic para agregar nuevo elemento a la lista");
         botonAgregarEspecialidad.setBounds(616, 152, 22, 22);
         panelRegistroVisita.add(botonAgregarEspecialidad);
 
-        botonEliminarEspecialidad = new ImageButtonLabel((ImageIcon) null); 
+        botonEliminarEspecialidad = new ImageButtonLabel((ImageIcon) null);
         botonEliminarEspecialidad.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 List<String> seleccionados = listaEspecialidades.getSelectedValuesList();
@@ -225,14 +229,16 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
         botonAgregarAnalisis = new ImageButtonLabel((ImageIcon) null);
         botonAgregarAnalisis.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
-                SelectorDialog dialog = new SelectorDialog(FormularioVisitas.this, "Seleccionar análisis", "Seleccione un análisis:", ConstantesAnalisis.TIPOS_ANALISIS);
+                SelectorDialog dialog = new SelectorDialog(FormularioVisitas.this, "Seleccionar análisis",
+                        "Seleccione un análisis:", ConstantesAnalisis.TIPOS_ANALISIS);
                 dialog.setVisible(true);
                 if (dialog.esConfirmado()) {
                     String seleccion = dialog.getSeleccionado();
                     if (!modeloAnalisis.contains(seleccion)) {
                         modeloAnalisis.addElement(seleccion);
                     } else {
-                        new InfoDialog(FormularioVisitas.this, "Información", "El análisis ya fue añadido.").setVisible(true);
+                        new InfoDialog(FormularioVisitas.this, "Información", "El análisis ya fue añadido.")
+                                .setVisible(true);
                     }
                 }
             }
@@ -266,7 +272,7 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
         especialidadesScrollPane.setBorder(BORDE_COMPONENTE);
         especialidadesScrollPane.setBounds(363, 179, 300, 95);
         panelRegistroVisita.add(especialidadesScrollPane);
-     
+
         modeloEspecialidades = new DefaultListModel<>();
         listaEspecialidades = new JList<>(modeloEspecialidades);
         listaEspecialidades.setFont(new Font("Arial", Font.PLAIN, 16));
@@ -404,7 +410,7 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
                 }
             }
         });
-        
+
         botonGuardar.setToolTipText("Clic para guardar los datos actuales");
         botonGuardar.setFont(new Font("Arial", Font.PLAIN, 18));
         botonGuardar.setBounds(221, 99, 130, 30);
@@ -412,9 +418,9 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
 
         botonEditar = new BotonBlanco("EDITAR");
         botonEditar.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		setModoActual(ModoFormulario.EDICION);
-        	}
+            public void actionPerformed(ActionEvent e) {
+                setModoActual(ModoFormulario.EDICION);
+            }
         });
         botonEditar.setToolTipText("Clic para editar la visita");
         botonEditar.setFont(new Font("Arial", Font.PLAIN, 18));
@@ -424,9 +430,9 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
 
         BotonBlanco botonAtras = new BotonBlanco("ATRÁS");
         botonAtras.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		dispose(); // cerrar diálogo
-        	}
+            public void actionPerformed(ActionEvent e) {
+                dispose(); // cerrar diálogo
+            }
         });
         botonAtras.setToolTipText("Clic para volver a la ventana principal");
         botonAtras.setFont(new Font("Arial", Font.PLAIN, 18));
@@ -439,8 +445,9 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
         getContentPane().add(panelGris);
         panelGris.setLayout(null);
     }
-    
-    private List<Analisis> construirListaAnalisis(DefaultListModel<String> modeloAnalisis, int idVisita, int historiaClinicaId) {
+
+    private List<Analisis> construirListaAnalisis(DefaultListModel<String> modeloAnalisis, int idVisita,
+            int historiaClinicaId) {
         List<Analisis> lista = new ArrayList<>();
         LocalDate hoy = LocalDate.now();
         CMF cmf = CMF.getInstance();
@@ -458,12 +465,14 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
         return lista;
     }
 
-    // Construye la lista de especialidades remitidas a partir de una lista o modelo (ejemplo con List<String>)
+    // Construye la lista de especialidades remitidas a partir de una lista o modelo
+    // (ejemplo con List<String>)
     private List<String> construirListaEspecialidades() {
         List<String> lista = new ArrayList<>();
         for (int i = 0; i < modeloEspecialidades.size(); i++) {
             String esp = modeloEspecialidades.getElementAt(i);
-            if (esp != null && !esp.trim().isEmpty() && ConstantesEspecialidades.ESPECIALIDADES_REMITIDAS.contains(esp.trim())) {
+            if (esp != null && !esp.trim().isEmpty()
+                    && ConstantesEspecialidades.ESPECIALIDADES_REMITIDAS.contains(esp.trim())) {
                 lista.add(esp.trim());
             }
         }
@@ -474,7 +483,7 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
     public void agregarNuevaVisita() {
         try {
             int id = cmf.obtenerNuevoVisitaID(); // Método para generar id único
-            String str = cartelHistoriaClinica.getText().substring(18); 
+            String str = cartelHistoriaClinica.getText().substring(18);
             int historiaClinicaID = Integer.parseInt(str.trim());
             LocalDate fecha = LocalDate.now();
 
@@ -488,18 +497,19 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
 
             List<Analisis> listaAnalisis = construirListaAnalisis(modeloAnalisis, id, historiaClinicaID);
 
-            List<String> listaEspecialidades = construirListaEspecialidades(); 
-            // 'listaEspecialidadesSeleccionadas' es una lista que mantienes con las especialidades elegidas
+            List<String> listaEspecialidades = construirListaEspecialidades();
+            // 'listaEspecialidadesSeleccionadas' es una lista que mantienes con las
+            // especialidades elegidas
 
             Visita nuevaVisita = new Visita(
-                id,
-                historiaClinicaID,
-                fecha,
-                diagnostico,
-                tratamiento,
-                listaAnalisis,
-                listaEspecialidades,
-                direccion);
+                    id,
+                    historiaClinicaID,
+                    fecha,
+                    diagnostico,
+                    tratamiento,
+                    listaAnalisis,
+                    listaEspecialidades,
+                    direccion);
 
             cmf.agregarVisita(nuevaVisita);
 
@@ -521,7 +531,7 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
                 throw new IllegalArgumentException("No hay visita existente para editar.");
             }
 
-            String str = cartelHistoriaClinica.getText().substring(18); 
+            String str = cartelHistoriaClinica.getText().substring(18);
             int historiaClinicaID = Integer.parseInt(str.trim());
             LocalDate fecha = visitaExistente.getFecha(); // fecha no editable, se conserva
 
@@ -533,19 +543,20 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
                 throw new IllegalArgumentException("Diagnóstico, tratamiento y dirección no pueden estar vacíos.");
             }
 
-            List<Analisis> listaAnalisis = construirListaAnalisis(modeloAnalisis, visitaExistente.getId(), historiaClinicaID);
+            List<Analisis> listaAnalisis = construirListaAnalisis(modeloAnalisis, visitaExistente.getId(),
+                    historiaClinicaID);
             List<String> listaEspecialidades = construirListaEspecialidades();
 
             // Crear una nueva visita con los datos editados y el mismo ID
             Visita visitaEditada = new Visita(
-                visitaExistente.getId(),
-                historiaClinicaID,
-                fecha,
-                diagnostico,
-                tratamiento,
-                listaAnalisis,
-                listaEspecialidades,
-                direccion);
+                    visitaExistente.getId(),
+                    historiaClinicaID,
+                    fecha,
+                    diagnostico,
+                    tratamiento,
+                    listaAnalisis,
+                    listaEspecialidades,
+                    direccion);
 
             // Aquí en vez de eliminar y agregar, usar agregarVisita que reemplaza si existe
             cmf.agregarVisita(visitaEditada);
@@ -577,7 +588,7 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
 
         if (pacienteSeleccionado != null) {
             cartelHistoriaClinica.setText("Historia Clínica #" + pacienteSeleccionado.getHistoriaClinica().getId());
-            campoNombre.setText(pacienteSeleccionado.getNombreYApellidos());  
+            campoNombre.setText(pacienteSeleccionado.getNombreYApellidos());
         }
 
         popupResultados.setVisible(false);
@@ -617,7 +628,6 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
             popupResultados.setVisible(false);
         }
     }
-
 
     public ModoFormulario getModoActual() {
         return modoActual;
