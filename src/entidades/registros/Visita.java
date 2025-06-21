@@ -20,8 +20,8 @@ public class Visita {
     private List<String> especialidadesRemitidas;
 
     // Constructor
-    public Visita(int id, int pacienteHistoriaClinicaID, LocalDate fecha, String diagnostico, 
-                  String tratamiento, List<Analisis> analisis, List<String> especialidadesRemitidas, String direccion) {
+    public Visita(int id, int pacienteHistoriaClinicaID, LocalDate fecha, String diagnostico,
+            String tratamiento, List<Analisis> analisis, List<String> especialidadesRemitidas, String direccion) {
         setId(id);
         setPacienteHistoriaClinicaID(pacienteHistoriaClinicaID);
         setFecha(fecha);
@@ -31,15 +31,15 @@ public class Visita {
         setEspecialidadesRemitidas(especialidadesRemitidas);
         setDireccion(direccion);
     }
-    
-    public Visita(int id, int pacienteHistoriaClinicaID, LocalDate fecha, String diagnostico, 
-    		String tratamiento, String direccion) {
-    	setId(id);
-    	setPacienteHistoriaClinicaID(pacienteHistoriaClinicaID);
-    	setFecha(fecha);
-    	setDiagnostico(diagnostico);
-    	setTratamiento(tratamiento);
-    	setDireccion(direccion);
+
+    public Visita(int id, int pacienteHistoriaClinicaID, LocalDate fecha, String diagnostico,
+            String tratamiento, String direccion) {
+        setId(id);
+        setPacienteHistoriaClinicaID(pacienteHistoriaClinicaID);
+        setFecha(fecha);
+        setDiagnostico(diagnostico);
+        setTratamiento(tratamiento);
+        setDireccion(direccion);
     }
 
     // ID
@@ -134,15 +134,17 @@ public class Visita {
         }
         this.analisis = new ArrayList<>(analisis); // copia defensiva
     }
-    
+
     public String getResumenAnalisis() {
-        if (this.analisis == null || this.analisis.isEmpty()) {
-            return "Sin análisis";
-        }
         Set<String> tipos = new LinkedHashSet<>();
+
+        if (this.analisis == null || this.analisis.isEmpty()) {
+            tipos.add("Sin análisis");
+        }
         for (Analisis a : this.analisis) {
             tipos.add(a.getTipoDeAnalisis());
         }
+
         return String.join(", ", tipos);
     }
 
@@ -178,8 +180,10 @@ public class Visita {
     }
 
     public String getResumenEspecialidadesRemitidas() {
+        String response;
+
         if (especialidadesRemitidas == null || especialidadesRemitidas.isEmpty()) {
-            return "Sin especialidades remitidas";
+            response = "Sin especialidades remitidas";
         }
         return String.join(", ", especialidadesRemitidas);
     }
