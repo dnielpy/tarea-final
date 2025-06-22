@@ -9,6 +9,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
@@ -18,47 +19,46 @@ import frontend.ConstantesFrontend;
 import frontend.formularios.FormularioVisitas;
 import frontend.formularios.FormularioVisitas.ModoFormulario;
 import frontend.tablas.VisitaTableModel;
+import frontend.ui.BuscadorTabla;
 import frontend.ui.TablaPersonalizada;
 
 import javax.swing.JButton;
+import javax.swing.table.TableRowSorter;
 
 import java.awt.SystemColor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.time.LocalDate;
 
 public class VentanaVisitas extends JPanel implements ConstantesFrontend {
 	private CMF cmf;
 	private JTable table;
 	private VisitaTableModel model;
+	private TableRowSorter<VisitaTableModel> sorter;
 
 	public VentanaVisitas() {
 		this.cmf = CMF.getInstance();
-		model = new VisitaTableModel(cmf.obtenerListaVisitas());
-		model.setMostrarFecha(false);
+		this.model = new VisitaTableModel(cmf.obtenerVisitasDeUnDia(LocalDate.now()));
+		this.model.setMostrarFecha(false);
 		initComponents();
 	}
 
-	private void abrirFormulario() {
+	private void abrirFormulario(FormularioVisitas formulario) {
 		Window ventanaPrincipal = SwingUtilities.getWindowAncestor(this);
-		FormularioVisitas formularioVisitas = new FormularioVisitas(ventanaPrincipal);
-		formularioVisitas.setLocationRelativeTo(ventanaPrincipal);
-		formularioVisitas.setVisible(true);
+		formulario.setLocationRelativeTo(ventanaPrincipal);
+		formulario.setVisible(true);
 
-		// Actualizar la tabla después de guardar o editar una visita
-		model.setVisitas(cmf.obtenerListaVisitas());
-		model.fireTableDataChanged(); // Redibujar la tabla
+		model.setVisitas(cmf.obtenerVisitasDeUnDia(LocalDate.now()));
+		model.fireTableDataChanged();
 	}
-	
-	private void abrirFormulario(Visita visita) {
-		Window ventanaPrincipal = SwingUtilities.getWindowAncestor(this);
-		FormularioVisitas formularioVisitas = new FormularioVisitas(ventanaPrincipal, visita, ModoFormulario.VISUALIZACION);
-		formularioVisitas.setLocationRelativeTo(ventanaPrincipal);
-		formularioVisitas.setVisible(true);
 
-		// Actualizar la tabla después de guardar o editar una visita
-		model.setVisitas(cmf.obtenerListaVisitas());
-		model.fireTableDataChanged(); // Redibujar la tabla
+	private void abrirFormularioNuevaVisita() {
+		abrirFormulario(new FormularioVisitas(SwingUtilities.getWindowAncestor(this)));
+	}
+
+	private void abrirFormularioVisitaExistente(Visita visita) {
+		abrirFormulario(new FormularioVisitas(SwingUtilities.getWindowAncestor(this), visita, ModoFormulario.VISUALIZACION));
 	}
 
 	private void initComponents() {
@@ -66,11 +66,16 @@ public class VentanaVisitas extends JPanel implements ConstantesFrontend {
 		setLayout(null);
 		setBounds(305, 0, 796, 673);
 
-		JPanel panelSuperior = new JPanel();
+		add(crearPanelSuperior());
+		add(crearPanelTabla());
+		add(crearBotonAgregarVisita());
+		add(crearCartelListadoVisitas());		
+	}
+
+	private JPanel crearPanelSuperior() {
+		JPanel panelSuperior = new JPanel(null);
 		panelSuperior.setBounds(0, 0, 874, 51);
-		add(panelSuperior);
 		panelSuperior.setBackground(COLOR_AZUL);
-		panelSuperior.setLayout(null);
 
 		JLabel cartelPestanna = new JLabel("VISITAS");
 		cartelPestanna.setHorizontalAlignment(SwingConstants.LEFT);
@@ -79,46 +84,66 @@ public class VentanaVisitas extends JPanel implements ConstantesFrontend {
 		cartelPestanna.setBounds(25, 0, 107, 51);
 		panelSuperior.add(cartelPestanna);
 
+		return panelSuperior;
+	}
+
+	private JPanel crearPanelTabla() {
 		table = TablaPersonalizada.crearTablaPersonalizada(model);
-		JScrollPane scrollPane = TablaPersonalizada.envolverEnScroll(table, 0, 30, 630, 406);
-
-		JPanel panelTabla = new JPanel();
-		panelTabla.setBounds(80, 141, 630, 436);
-		add(panelTabla);
-		panelTabla.setBackground(Color.WHITE);
-		panelTabla.setLayout(null);
-		panelTabla.add(scrollPane);
-
-		JButton botonAgregarVisita = new JButton("AGREGAR VISITA");
-		botonAgregarVisita.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				abrirFormulario(); // Abrir formulario para agregar una nueva visita
-			}
-		});
-		botonAgregarVisita.setForeground(Color.BLACK);
-		botonAgregarVisita.setFont(new Font("Arial", Font.PLAIN, 16));
-		botonAgregarVisita.setBackground(SystemColor.menu);
-		botonAgregarVisita.setBounds(507, 585, 203, 33);
-		add(botonAgregarVisita);
-
-		JLabel cartelListadoVisitas = new JLabel("Listado de visitas de hoy:");
-		cartelListadoVisitas.setFont(new Font("Arial", Font.BOLD, 18));
-		cartelListadoVisitas.setBounds(80, 104, 241, 20);
-		add(cartelListadoVisitas);
+		sorter = new TableRowSorter<VisitaTableModel>(model);
+		table.setRowSorter(sorter);
 
 		table.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if (e.getClickCount() == 2) { // Double-click detected
-					int viewRow = table.getSelectedRow();
-					if (viewRow != -1) {
-						int modelRow = table.convertRowIndexToModel(viewRow);
+				if (e.getClickCount() == 2) {
+					int row = table.getSelectedRow();
+					if (row != -1) {
+						int modelRow = table.convertRowIndexToModel(row);
 						int id = (int) model.getValueAt(modelRow, model.findColumn("Historia Clinica"));
 						Visita visita = cmf.obtenerVisitaPorId(id);
-						abrirFormulario(visita); // Abrir formulario para editar la visita
+						abrirFormularioVisitaExistente(visita);
 					}
 				}
 			}
 		});
+
+		JScrollPane scrollPane = TablaPersonalizada.envolverEnScroll(table, 0, 30, 700, 405);
+
+		JPanel panelTabla = new JPanel(null);
+		panelTabla.setBounds(50, 140, 700, 435);
+		panelTabla.setBackground(Color.WHITE);
+		panelTabla.add(scrollPane);		
+		panelTabla.add(crearBuscadorTabla());
+
+		return panelTabla;
+	}
+
+	private JLabel crearCartelListadoVisitas() {
+		JLabel cartel = new JLabel("Listado de visitas de hoy:");
+		cartel.setFont(new Font("Arial", Font.BOLD, 18));
+		cartel.setBounds(50, 105, 241, 20);
+		return cartel;
+	}
+
+	private JTextField crearBuscadorTabla() {
+		BuscadorTabla buscador = new BuscadorTabla(sorter, "Buscar en la tabla...");
+		buscador.setBounds(0, 0, 700, 25);
+		return buscador;
+	}
+
+	private JButton crearBotonAgregarVisita() {
+		JButton boton = new JButton("AGREGAR VISITA");
+		boton.setBounds(547, 581, 203, 33); // ajustado por el desplazamiento del panelTabla
+		boton.setFont(new Font("Arial", Font.PLAIN, 16));
+		boton.setForeground(Color.BLACK);
+		boton.setBackground(SystemColor.menu);
+
+		boton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				abrirFormularioNuevaVisita();
+			}
+		});
+
+		return boton;
 	}
 }

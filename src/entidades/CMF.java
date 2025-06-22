@@ -226,6 +226,18 @@ public class CMF {
 
 		return listaVisitas;
 	}
+	
+	public List<Visita> obtenerVisitasDeUnDia(LocalDate fecha) {
+		List<Visita> listaVisitas = new ArrayList<>();
+
+		for (Visita visita : visitas) {
+			if (visita.getFecha().equals(fecha)) {
+				listaVisitas.add(visita);
+			}
+		}
+
+		return listaVisitas;
+	}
 
 	public int obtenerCantidadVisitasPorFecha(LocalDate fecha) {
 		if (fecha == null) {
@@ -400,6 +412,20 @@ public class CMF {
 		return pac;
 	}
 
+	public Paciente getPacientePorCI(String ci) {
+		Paciente pac = null;
+		boolean encontrado = false;
+
+		for (int i = 0; i < pacientes.size() && !encontrado; i++) {
+			if (pacientes.get(i).getCI().equals(ci)) {
+				pac = pacientes.get(i);
+				encontrado = true;
+			}
+		}
+
+		return pac;
+	}
+	
 	public boolean isCiRepited(String ci) {
 		if (ci == null || ci.trim().isEmpty()) {
 			throw new IllegalArgumentException("El CI no puede ser nulo o vacío");
@@ -506,6 +532,20 @@ public class CMF {
 
 	// Cantidades
 
+	public int obtenerCantVisitasDeUnDia(LocalDate fecha) {
+		int visitas = 0;
+		boolean encontrado = false;
+		
+		for (int i = 0; i < hojasCargoDiaria.size() && !encontrado; i++) {
+			if (hojasCargoDiaria.get(i).getFecha().equals(fecha)) {
+				visitas = hojasCargoDiaria.get(i).cantidadVisitas();
+				encontrado = true;
+			}
+		}
+		
+		return visitas;
+	}
+	
 	public int obtenerTotalPacientes() {
 		return this.pacientes.size();
 	}
@@ -635,7 +675,7 @@ public class CMF {
 		return pacientesEnRiesgo;
 	}
 
-	public int obtenerCantidadPacientesPorFecha(Date fecha) {
+	public int obtenerCantidadPacientesPorFecha(LocalDate fecha) {
 		if (fecha == null) {
 			throw new IllegalArgumentException("La fecha no puede ser nula o vac\u00eda");
 		}

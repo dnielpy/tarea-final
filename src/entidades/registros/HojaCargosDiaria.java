@@ -8,13 +8,15 @@ import java.util.Objects;
 public class HojaCargosDiaria {
     private LocalDate fecha;
     private List<Visita> visitas;
-    private static final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private static final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MMM/yyyy");
 
     public HojaCargosDiaria(LocalDate fecha) {
         setFecha(fecha);
         visitas = new ArrayList<>();
     }
 
+    // Fecha de la hoja
+    
     public LocalDate getFecha() {
         return fecha;
     }
@@ -34,6 +36,8 @@ public class HojaCargosDiaria {
     public String getFechaFormateada() {
         return fecha.format(dateFormat);
     }
+    
+    // Visitas
 
     public List<Visita> getVisitas() {
         return visitas;
@@ -42,5 +46,9 @@ public class HojaCargosDiaria {
     public void agregarVisita(Visita visita) {
         Objects.requireNonNull(visita, "El registro no puede ser nulo");
         visitas.add(visita);
+    }
+    
+    public int cantidadVisitas() {
+    	return visitas.size();
     }
 }

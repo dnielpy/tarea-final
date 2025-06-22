@@ -1,6 +1,13 @@
 package frontend.ui;
 
+import java.awt.AlphaComposite;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Insets;
 import java.text.Normalizer;
+
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.RowFilter;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -8,10 +15,16 @@ import javax.swing.table.*;
 
 public class BuscadorTabla extends PlaceholderTextField {
 
+    private Icon iconoLupa;
+    private final int espacioIcono = 20;
+
     public BuscadorTabla(final TableRowSorter<? extends TableModel> sorter, final String placeholder) {
         super(placeholder);
 
-        getDocument().addDocumentListener(new DocumentListener() {
+        iconoLupa = new ImageIcon(getClass().getResource("/fotos/lupa.png"));
+        setMargin(new Insets(2, espacioIcono + 4, 2, 4));
+
+        DocumentListener listener = new DocumentListener() {
             public void insertUpdate(DocumentEvent e) {
                 aplicarFiltro(sorter);
             }
@@ -23,7 +36,23 @@ public class BuscadorTabla extends PlaceholderTextField {
             public void changedUpdate(DocumentEvent e) {
                 aplicarFiltro(sorter);
             }
-        });
+        };
+
+        getDocument().addDocumentListener(listener);
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        if (iconoLupa != null) {
+            Graphics2D g2 = (Graphics2D) g.create();
+            boolean mostrarComoPlaceholder = getText().isEmpty();
+            float opacidad = mostrarComoPlaceholder ? 0.5f : 1.0f;
+            g2.setComposite(AlphaComposite.SrcOver.derive(opacidad));
+            int y = (getHeight() - iconoLupa.getIconHeight()) / 2;
+            iconoLupa.paintIcon(this, g2, 4, y);
+            g2.dispose();
+        }
     }
 
     private void aplicarFiltro(final TableRowSorter<? extends TableModel> sorter) {
@@ -34,34 +63,37 @@ public class BuscadorTabla extends PlaceholderTextField {
     }
 
     private RowFilter<TableModel, Integer> crearFiltro(final String texto) {
-        RowFilter<TableModel, Integer> filtro;
+        RowFilter<TableModel, Integer> filtroFinal = new RowFilter<TableModel, Integer>() {
+            public boolean include(Entry<? extends TableModel, ? extends Integer> entry) {
+                boolean coincide = false;
+                int total = entry.getValueCount();
+                int i = 0;
 
-        if (texto.isEmpty()) {
-            filtro = null;
-        } else {
-            filtro = new RowFilter<TableModel, Integer>() {
-                public boolean include(Entry<? extends TableModel, ? extends Integer> entry) {
-                    boolean encontrado = false;
-                    int i = 0;
-                    int totalColumnas = entry.getValueCount();
+                while (i < total) {
+                    Object valor = entry.getValue(i);
+                    String contenido = "";
 
-                    while (!encontrado && i < totalColumnas) {
-                        Object valor = entry.getValue(i);
-                        if (valor != null) {
-                            String contenido = normalizarTexto(valor.toString());
-                            if (contenido.contains(texto)) {
-                                encontrado = true;
-                            }
-                        }
-                        i = i + 1;
+                    if (valor != null) {
+                        contenido = normalizarTexto(valor.toString());
                     }
 
-                    return encontrado;
+                    if (!contenido.isEmpty() && contenido.contains(texto)) {
+                        coincide = true;
+                    }
+
+                    i++;
                 }
-            };
+
+                return coincide;
+            }
+        };
+
+        RowFilter<TableModel, Integer> resultado = filtroFinal;
+        if (texto.isEmpty()) {
+            resultado = null;
         }
 
-        return filtro;
+        return resultado;
     }
 
     private String normalizarTexto(String texto) {

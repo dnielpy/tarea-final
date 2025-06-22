@@ -136,13 +136,13 @@ public class VentanaPacientes extends JPanel implements ConstantesFrontend {
      panelTabla.add(scrollPane);
      add(panelTabla);
      
-     BuscadorTabla buscador = new BuscadorTabla(sorter, "Buscar paciente...");
+     BuscadorTabla buscador = new BuscadorTabla(sorter, "Buscar en la tabla...");
      buscador.setBounds(0, 0, 700, 25);
      panelTabla.add(buscador);
 
      JLabel cartelListadoPacientes = new JLabel("Listado de pacientes:");
      cartelListadoPacientes.setFont(new Font("Arial", Font.BOLD, 18));
-     cartelListadoPacientes.setBounds(50, 107, 203, 20);
+     cartelListadoPacientes.setBounds(50, 105, 203, 20);
      add(cartelListadoPacientes);
 
      JButton botonAgregarPaciente = new JButton("AGREGAR PACIENTE");

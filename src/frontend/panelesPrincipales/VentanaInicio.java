@@ -2,6 +2,7 @@ package frontend.panelesPrincipales;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.time.LocalDate;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -86,6 +87,7 @@ public class VentanaInicio extends JPanel implements ConstantesFrontend {
 		String textoEmbarazadas = String.valueOf(cmf.obtenerCantidadDeEmbarazadas() + 
 				" de " + String.valueOf(cmf.obtenerCantidadMujeres()));
 		panelResumenEmbarazadas.actualizarDatos(textoEmbarazadas, cmf.porcentajeEmbarazadasRespectoAMujeres());
+		panelResumenVisitasDelDia.actualizarDatos(String.valueOf(cmf.obtenerCantidadVisitasPorFecha(LocalDate.now())));
 	}
 	
 	@Override
