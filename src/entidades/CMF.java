@@ -322,7 +322,18 @@ public class CMF {
 			}
 		}
 	}
+	
 
+	public ArrayList<Integer> obtenerVisitasPorMes() {
+		ArrayList<Integer> visitasPorMes = new ArrayList<>(Collections.nCopies(12, 0));
+
+		for (Visita visita : visitas) {
+			int mes = visita.getFecha().getMonthValue();
+			visitasPorMes.set(mes - 1, visitasPorMes.get(mes - 1) + 1);
+		}
+
+		return visitasPorMes;
+	}
 	// Obtener analisis
 
 	public List<Analisis> obtenerTodosLosAnalisis() {
