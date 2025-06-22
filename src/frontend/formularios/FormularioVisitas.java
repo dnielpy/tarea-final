@@ -557,8 +557,6 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
         return lista;
     }
 
-    // Construye la lista de especialidades remitidas a partir de una lista o modelo
-    // (ejemplo con List<String>)
     private List<String> construirListaEspecialidades() {
         List<String> lista = new ArrayList<>();
         for (int i = 0; i < modeloEspecialidades.size(); i++) {
@@ -665,14 +663,7 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
     private void manejarSeleccionPaciente(String ciSeleccionado) {
         barraBuscarPacienteCI.setText(ciSeleccionado);
 
-        Paciente pacienteSeleccionado = null;
-        List<Paciente> lista = cmf.getPacientes();
-        for (Paciente actual : lista) {
-            if (actual.getCI().equals(ciSeleccionado)) {
-                pacienteSeleccionado = actual;
-                break;
-            }
-        }
+        Paciente pacienteSeleccionado = cmf.getPacientePorCI(ciSeleccionado);
 
         if (pacienteSeleccionado != null) {
             cartelHistoriaClinica.setText("Historia Clínica #" + pacienteSeleccionado.getHistoriaClinica().getId());
@@ -684,34 +675,31 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
 
 
     private void actualizarResultados() {
-        // Solo actualizar popup si el modo actual es CREACION
-        if (modoActual != ModoFormulario.CREACION) {
+        boolean esModoCreacion = modoActual == ModoFormulario.CREACION;
+
+        if (!esModoCreacion) {
             popupResultados.setVisible(false);
-            return;
-        }
+        } else {
+            String texto = barraBuscarPacienteCI.getText().trim();
+            modeloResultados.clear();
 
-        String texto = barraBuscarPacienteCI.getText().trim();
-        modeloResultados.clear();
-
-        if (!texto.isEmpty()) {
-            for (Paciente paciente : cmf.getPacientes()) {
-                if (paciente.getCI().contains(texto)) {
-                    modeloResultados.addElement(paciente.getCI());
+            if (!texto.isEmpty()) {
+                for (Paciente paciente : cmf.getPacientes()) {
+                    if (paciente.getCI().contains(texto)) {
+                        modeloResultados.addElement(paciente.getCI());
+                    }
                 }
             }
-        }
 
-        if (!modeloResultados.isEmpty()) {
-            listaResultados.setSelectedIndex(0);
+            if (!modeloResultados.isEmpty()) {
+                listaResultados.setSelectedIndex(0);
 
-            // Mostrar popup solo si no está visible
-            if (!popupResultados.isVisible()) {
-                popupResultados.show(barraBuscarPacienteCI, 0, barraBuscarPacienteCI.getHeight());
+                if (!popupResultados.isVisible()) {
+                    popupResultados.show(barraBuscarPacienteCI, 0, barraBuscarPacienteCI.getHeight());
+                }
+            } else {
+                popupResultados.setVisible(false);
             }
-
-            // No mover foco de vuelta al campo, se mantiene donde está
-        } else {
-            popupResultados.setVisible(false);
         }
     }
 
@@ -820,12 +808,11 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
     
     private void limpiarDatosSiNoCoincide() {
         String texto = barraBuscarPacienteCI.getText().trim();
-
         boolean existe = false;
+
         for (Paciente paciente : cmf.getPacientes()) {
-            if (paciente.getCI().equals(texto)) {
+            if (!existe && paciente.getCI().equals(texto)) {
                 existe = true;
-                break;
             }
         }
 

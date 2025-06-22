@@ -21,9 +21,12 @@ import java.util.List;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 import com.toedter.calendar.JDateChooser;
 
+import frontend.ui.BuscadorTabla;
 import frontend.ui.TablaPersonalizada;
 import entidades.CMF;
 import entidades.registros.HojaCargosDiaria;
@@ -35,103 +38,164 @@ import frontend.tablas.VisitaTableModel;
 
 public class VentanaHojasDeCargo extends JPanel implements ConstantesFrontend {
 
-	private CMF cmf;
-	private JTable table;
-	private VisitaTableModel model;
-	private JDateChooser fechaHojaDeCargo;
+    private CMF cmf;
+    private JTable table;
+    private VisitaTableModel model;
+    private JDateChooser fechaHojaDeCargo;
 
-	public VentanaHojasDeCargo() {
-		cmf = CMF.getInstance();
+    public VentanaHojasDeCargo() {
+        this.cmf = CMF.getInstance();
+        configurarPanel();
+        inicializarComponentes();
+        configurarEventos();
+    }
 
-		setBackground(Color.WHITE);
-		setLayout(null);
-		setBounds(305, 0, 796, 673);
+    private void configurarPanel() {
+        setBackground(Color.WHITE);
+        setLayout(null);
+        setBounds(305, 0, 796, 673);
+    }
 
-		JPanel panelSuperior = new JPanel();
-		panelSuperior.setBounds(0, 0, 796, 51);
-		add(panelSuperior);
-		panelSuperior.setBackground(COLOR_AZUL);
-		panelSuperior.setLayout(null);
+    private void inicializarComponentes() {
+        agregarPanelSuperior();
+        agregarEtiquetaFecha();
+        agregarSelectorFecha();
+        agregarPanelTabla();
+    }
 
-		JLabel cartelPestanna = new JLabel("HOJAS DE CARGO");
-		cartelPestanna.setHorizontalAlignment(SwingConstants.LEFT);
-		cartelPestanna.setForeground(Color.WHITE);
-		cartelPestanna.setFont(new Font("Arial", Font.PLAIN, 18));
-		cartelPestanna.setBounds(25, 0, 200, 51);
-		panelSuperior.add(cartelPestanna);
+    private void agregarPanelSuperior() {
+        JPanel panelSuperior = new JPanel();
+        panelSuperior.setBounds(0, 0, 796, 51);
+        panelSuperior.setBackground(COLOR_AZUL);
+        panelSuperior.setLayout(null);
 
-		// ---------- FECHA ----------
-		fechaHojaDeCargo = new JDateChooser();
-		fechaHojaDeCargo.setToolTipText("Introduzca la fecha o seleccione por el calendario");
-		fechaHojaDeCargo.setFont(new Font("Arial", Font.PLAIN, 16));
-		fechaHojaDeCargo.setDateFormatString("d/MMM/yyyy");
-		fechaHojaDeCargo.setBounds(278, 103, 140, 22);
-		fechaHojaDeCargo.setDate(new Date());
-		fechaHojaDeCargo.setMaxSelectableDate(new Date());
-		add(fechaHojaDeCargo);
+        JLabel cartelPestanna = new JLabel("HOJAS DE CARGO");
+        cartelPestanna.setHorizontalAlignment(SwingConstants.LEFT);
+        cartelPestanna.setForeground(Color.WHITE);
+        cartelPestanna.setFont(new Font("Arial", Font.PLAIN, 18));
+        cartelPestanna.setBounds(25, 0, 200, 51);
+        panelSuperior.add(cartelPestanna);
 
-		// ---------- MODELO Y TABLA ----------
-		HojaCargosDiaria hojaDeCargos = cmf.obtenerHojaDeCargosPorFecha(LocalDate.now());
-		List<Visita> visitasIniciales = (hojaDeCargos != null) ? hojaDeCargos.getVisitas() : null;
-		model = new VisitaTableModel(visitasIniciales);
-		model.setMostrarFecha(false);
+        add(panelSuperior);
+    }
 
-		table = TablaPersonalizada.crearTablaPersonalizada(model);
-		JScrollPane scrollPane = TablaPersonalizada.envolverEnScroll(table, 0, 30, 630, 406);
+    private void agregarEtiquetaFecha() {
+        JLabel cartelListadoVisitas = new JLabel("Hoja de cargo del día:");
+        cartelListadoVisitas.setFont(new Font("Arial", Font.BOLD, 18));
+        cartelListadoVisitas.setBounds(50, 105, 203, 20);
+        add(cartelListadoVisitas);
+    }
 
-		JPanel panelTabla = new JPanel();
-		panelTabla.setBounds(80, 141, 630, 436);
-		add(panelTabla);
-		panelTabla.setBackground(Color.WHITE);
-		panelTabla.setLayout(null);
-		panelTabla.add(scrollPane);
+    private void agregarSelectorFecha() {
+        fechaHojaDeCargo = new JDateChooser();
+        fechaHojaDeCargo.setToolTipText("Introduzca la fecha o seleccione por el calendario");
+        fechaHojaDeCargo.setFont(new Font("Arial", Font.PLAIN, 16));
+        fechaHojaDeCargo.setDateFormatString("d/MMM/yyyy");
+        fechaHojaDeCargo.setBounds(244, 105, 140, 22);
+        fechaHojaDeCargo.setDate(new Date());
+        fechaHojaDeCargo.setMaxSelectableDate(new Date());
 
-		// ---------- ETIQUETA ----------
-		JLabel cartelListadoVisitas = new JLabel("Hoja de cargo del d\u00EDa:");
-		cartelListadoVisitas.setFont(new Font("Arial", Font.BOLD, 18));
-		cartelListadoVisitas.setBounds(80, 104, 203, 20);
-		add(cartelListadoVisitas);
+        add(fechaHojaDeCargo);
+    }
 
-		// ---------- LISTENER FECHA ----------
-		fechaHojaDeCargo.addPropertyChangeListener("date", new PropertyChangeListener() {
-		    @Override
-		    public void propertyChange(PropertyChangeEvent evt) {
-		    	Date fechaSeleccionada = fechaHojaDeCargo.getDate();
-		    	if (fechaSeleccionada != null) {
-		    	    LocalDate fechaLocal = fechaSeleccionada.toInstant()
-		    	                                .atZone(ZoneId.systemDefault())
-		    	                                .toLocalDate();
-		    	    HojaCargosDiaria hoja = cmf.obtenerHojaDeCargosPorFecha(fechaLocal);
-		    	    if (hoja != null) {
-		    	        model.setVisitas(hoja.getVisitas());
-		    	    } else {
-		    	        model.setVisitas(new ArrayList<Visita>());
-		    	    }
-		    	}
-		    }
-		});
+    private void agregarPanelTabla() {
+        LocalDate hoy = LocalDate.now();
+        HojaCargosDiaria hojaDeCargos = cmf.obtenerHojaDeCargosPorFecha(hoy);
+        List<Visita> visitasIniciales = new ArrayList<>();
+        if (hojaDeCargos != null && hojaDeCargos.getVisitas() != null) {
+            visitasIniciales = hojaDeCargos.getVisitas();
+        }
 
-		// ---------- DOBLE CLIC EN TABLA ----------
-		table.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if (e.getClickCount() == 2) {
-					int viewRow = table.getSelectedRow();
-					if (viewRow != -1) {
-						int modelRow = table.convertRowIndexToModel(viewRow);
-						int id = (int) model.getValueAt(modelRow, model.findColumn("Historia Clinica"));
-						Visita visita = cmf.obtenerVisitaPorId(id);
-						abrirFormulario(visita); // Aunque sea solo lectura, puedes reutilizarlo
-					}
-				}
-			}
-		});
-	}
+        model = new VisitaTableModel(visitasIniciales);
+        model.setMostrarFecha(false);
 
-	private void abrirFormulario(Visita visita) {
-		Window ventanaPrincipal = SwingUtilities.getWindowAncestor(this);
-		FormularioVisitas formularioVisitas = new FormularioVisitas(ventanaPrincipal, visita, ModoFormulario.VISUALIZACION);
-		formularioVisitas.setLocationRelativeTo(ventanaPrincipal);
-		formularioVisitas.setVisible(true);
-	}
+        table = TablaPersonalizada.crearTablaPersonalizada(model);
+        TableRowSorter<VisitaTableModel> sorter = new TableRowSorter<>(model);
+        table.setRowSorter(sorter);
+
+        JScrollPane scrollPane = TablaPersonalizada.envolverEnScroll(table, 0, 30, 700, 405);
+
+        // Panel contenedor
+        JPanel panelTabla = new JPanel();
+        panelTabla.setBounds(50, 140, 700, 435);
+        panelTabla.setBackground(Color.WHITE);
+        panelTabla.setLayout(null);
+
+        // Buscador
+        BuscadorTabla buscador = new BuscadorTabla(sorter, "Buscar en la tabla...");
+        buscador.setBounds(0, 0, 700, 25);
+        panelTabla.add(buscador);
+
+        // Tabla con scroll
+        panelTabla.add(scrollPane);
+        add(panelTabla);
+    }
+
+    private void configurarEventos() {
+        configurarCambioFecha();
+        configurarDobleClickTabla();
+    }
+
+    private void configurarCambioFecha() {
+        fechaHojaDeCargo.addPropertyChangeListener("date", new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                actualizarVisitasPorFecha();
+            }
+        });
+    }
+
+    private void actualizarVisitasPorFecha() {
+        Date fechaSeleccionada = fechaHojaDeCargo.getDate();
+        if (fechaSeleccionada == null) {
+            return;
+        }
+
+        LocalDate fechaLocal = fechaSeleccionada.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
+
+        HojaCargosDiaria hoja = cmf.obtenerHojaDeCargosPorFecha(fechaLocal);
+        List<Visita> visitas = new ArrayList<>();
+        if (hoja != null && hoja.getVisitas() != null) {
+            visitas = hoja.getVisitas();
+        }
+        model.setVisitas(visitas);
+    }
+
+    private void configurarDobleClickTabla() {
+        table.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                manejarDobleClick(e);
+            }
+        });
+    }
+
+    private void manejarDobleClick(MouseEvent e) {
+        if (e.getClickCount() != 2) {
+            return;
+        }
+
+        int viewRow = table.getSelectedRow();
+        if (viewRow == -1) {
+            return;
+        }
+
+        int modelRow = table.convertRowIndexToModel(viewRow);
+        Object valorId = model.getValueAt(modelRow, model.findColumn("Historia Clinica"));
+
+        if (valorId instanceof Integer) {
+            int id = (Integer) valorId;
+            Visita visita = cmf.obtenerVisitaPorId(id);
+            abrirFormulario(visita);
+        }
+    }
+
+    private void abrirFormulario(Visita visita) {
+        Window ventanaPrincipal = SwingUtilities.getWindowAncestor(this);
+        FormularioVisitas formularioVisitas = new FormularioVisitas(ventanaPrincipal, visita, ModoFormulario.VISUALIZACION);
+        formularioVisitas.setLocationRelativeTo(ventanaPrincipal);
+        formularioVisitas.setVisible(true);
+    }
 }
