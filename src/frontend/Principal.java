@@ -198,8 +198,7 @@ public class Principal extends JFrame implements MouseListener, ConstantesFronte
 
         Persona personaAutenticada = cmf.getEntitytyUsuario();
         if (personaAutenticada != null) {
-            String nombre = personaAutenticada.getNombre();
-            String email = CMF.getInstance().getUsuario().getUserName();
+            String nombre = personaAutenticada.getNombre() + " " + personaAutenticada.getPrimerApellido();
 
             if (personaAutenticada instanceof Medico) {
                 imagenUsuario.setIcon(new ImageIcon(Principal.class.getResource("/fotos/medico.png")));
@@ -216,7 +215,7 @@ public class Principal extends JFrame implements MouseListener, ConstantesFronte
                 cartelRol.setText("ENFERMERA");
             }
 
-            cartelUsuario.setText(nombre + " - " + email);
+            cartelUsuario.setText(nombre);
         } else {
             System.err.println("Error: Usuario en sesión es null");
             new InfoDialog(

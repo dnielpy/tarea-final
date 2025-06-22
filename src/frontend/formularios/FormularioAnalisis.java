@@ -13,6 +13,7 @@ import entidades.registros.Analisis;
 import frontend.ConstantesFrontend;
 import frontend.ui.PlaceholderTextField;
 import frontend.ui.PlaceholderTextField.InputFormat;
+import frontend.ui.ScrollPaneModerno;
 import frontend.ui.botones.BotonBlanco;
 import frontend.ui.dialogs.InfoDialog;
 import frontend.ui.dialogs.QuestionDialog;
@@ -94,22 +95,18 @@ public class FormularioAnalisis extends JDialog implements ConstantesFrontend {
         panelResultados.setLayout(null);
         panelResultados.setBorder(BORDE_GRANDE);
         panelResultados.setBackground(Color.WHITE);
-        getContentPane().add(panelResultados);
-
-        JScrollPane resultadosScroll = new JScrollPane();
-        resultadosScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        resultadosScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-        resultadosScroll.setBorder(BORDE_COMPONENTE);
-        resultadosScroll.setBounds(24, 45, 537, 197);
-        panelResultados.add(resultadosScroll);
+        getContentPane().add(panelResultados); 
 
         textResultados = new JTextArea();
         textResultados.setLineWrap(true);
         textResultados.setWrapStyleWord(true);
         textResultados.setBorder(null);
         textResultados.setFont(new Font("Arial", Font.PLAIN, 16));
+        ScrollPaneModerno resultadosScroll = new ScrollPaneModerno(textResultados);
+        resultadosScroll.setBounds(24, 45, 537, 197);
         resultadosScroll.setViewportView(textResultados);
-
+        panelResultados.add(resultadosScroll);
+       
         JLabel cartelFechaActualizacion = new JLabel("Fecha de actualizado los resultados:");
         cartelFechaActualizacion.setFont(new Font("Arial", Font.PLAIN, 16));
         cartelFechaActualizacion.setBounds(201, 16, 253, 19);

@@ -1,7 +1,11 @@
 package frontend.formularios;
 
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,12 +19,15 @@ import entidades.registros.Visita;
 import frontend.ConstantesFrontend;
 import frontend.ui.PlaceholderTextField;
 import frontend.ui.PlaceholderTextField.InputFormat;
+import frontend.ui.ScrollPaneModerno;
 import frontend.ui.botones.ImageButtonLabel;
 import frontend.ui.botones.BotonBlanco;
 import frontend.ui.dialogs.InfoDialog;
+import frontend.ui.dialogs.QuestionDialog;
 import frontend.ui.dialogs.SelectorDialog;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Window;
@@ -36,6 +43,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JLabel;
 import javax.swing.JTextArea;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.ListSelectionModel;
@@ -54,8 +62,8 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
     private PlaceholderTextField campoDireccion;
     private PlaceholderTextField campoNombre;
 
-    private JTextArea textDiagnostico; // diagnóstico
-    private JTextArea textTratamiento; // tratamiento
+    private JTextArea textDiagnostico; 
+    private JTextArea textTratamiento; 
 
     private DefaultListModel<String> modeloEspecialidades;
     private DefaultListModel<String> modeloAnalisis;
@@ -76,6 +84,7 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
 
     private BotonBlanco botonGuardar;
     private BotonBlanco botonEditar;
+    private BotonBlanco botonAtras;
 
     private ModoFormulario modoActual;
 
@@ -121,7 +130,23 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
     public void initComponents() {
         setIconImage(java.awt.Toolkit.getDefaultToolkit()
                 .getImage(FormularioVisitas.class.getResource("/fotos/Logo peque.png")));
-        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                if (modoActual == ModoFormulario.CREACION || modoActual == ModoFormulario.EDICION) {
+                    QuestionDialog confirmacion = new QuestionDialog(FormularioVisitas.this,
+                        "Confirmar salida",
+                        "Está a punto de salir del formulario.\nSe perderán los cambios no guardados.\n¿Desea continuar?");
+                    confirmacion.setVisible(true);
+                    if (confirmacion.esConfirmado()) {
+                        dispose();
+                    }
+                } else {
+                    dispose();
+                }
+            }
+        });
         setResizable(false);
         getContentPane().setBackground(Color.WHITE);
         getContentPane().setLayout(null);
@@ -130,6 +155,7 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
         cmf = CMF.getInstance();
         modeloResultados = new DefaultListModel<>();
         popupResultados = new JPopupMenu();
+        popupResultados.setFocusable(false);
 
         JLabel cartelRegistroVisita = new JLabel("Registro de la visita");
         cartelRegistroVisita.setOpaque(true);
@@ -147,26 +173,29 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
         panelRegistroVisita.setBorder(BORDE_GRANDE);
         panelRegistroVisita.setBackground(Color.WHITE);
 
-        JScrollPane diagnosticoScrollPane = new JScrollPane();
+        textDiagnostico = new JTextArea();
+        textDiagnostico.setLineWrap(true); // Importante para evitar scroll horizontal en JTextArea
+        textDiagnostico.setWrapStyleWord(true);
+        textDiagnostico.setFont(new Font("Arial", Font.PLAIN, 16));
+        ScrollPaneModerno diagnosticoScrollPane = new ScrollPaneModerno(textDiagnostico);
+        diagnosticoScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         diagnosticoScrollPane.setBounds(24, 45, 300, 95);
         panelRegistroVisita.add(diagnosticoScrollPane);
-
-        textDiagnostico = new JTextArea();
-        textDiagnostico.setFont(new Font("Arial", Font.PLAIN, 16));
-        diagnosticoScrollPane.setViewportView(textDiagnostico);
 
         JLabel lblDiagnostico = new JLabel("Diagnóstico:");
         lblDiagnostico.setFont(new Font("Arial", Font.PLAIN, 16));
         lblDiagnostico.setBounds(24, 23, 170, 19);
         panelRegistroVisita.add(lblDiagnostico);
 
-        JScrollPane tratamientoScrollPane = new JScrollPane();
+        textTratamiento = new JTextArea();
+        textTratamiento.setLineWrap(true);
+        textTratamiento.setWrapStyleWord(true);
+        textTratamiento.setFont(new Font("Arial", Font.PLAIN, 16));
+        ScrollPaneModerno tratamientoScrollPane = new ScrollPaneModerno(textTratamiento);
+        tratamientoScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         tratamientoScrollPane.setBounds(363, 44, 300, 95);
         panelRegistroVisita.add(tratamientoScrollPane);
 
-        textTratamiento = new JTextArea();
-        textTratamiento.setFont(new Font("Arial", Font.PLAIN, 16));
-        tratamientoScrollPane.setViewportView(textTratamiento);
 
         JLabel lblTratamiento = new JLabel("Tratamiento:");
         lblTratamiento.setFont(new Font("Arial", Font.PLAIN, 16));
@@ -200,8 +229,16 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
         botonEliminarEspecialidad.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 List<String> seleccionados = listaEspecialidades.getSelectedValuesList();
-                for (String sel : seleccionados) {
-                    modeloEspecialidades.removeElement(sel);
+                if (!seleccionados.isEmpty()) {
+                    QuestionDialog confirmacion = new QuestionDialog(FormularioVisitas.this,
+                            "Confirmar eliminación",
+                            "¿Está seguro que desea eliminar las especialidades seleccionadas?");
+                    confirmacion.setVisible(true);
+                    if (confirmacion.esConfirmado()) {
+                        for (String sel : seleccionados) {
+                            modeloEspecialidades.removeElement(sel);
+                        }
+                    }
                 }
             }
         });
@@ -215,16 +252,12 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
         cartelAnalisis.setBounds(24, 152, 176, 22);
         panelRegistroVisita.add(cartelAnalisis);
 
-        JScrollPane analisisScrollPane = new JScrollPane();
-        analisisScrollPane.setFocusable(false);
-        analisisScrollPane.setBorder(BORDE_COMPONENTE);
-        analisisScrollPane.setBounds(24, 179, 300, 95);
-        panelRegistroVisita.add(analisisScrollPane);
-
         modeloAnalisis = new DefaultListModel<>();
         listaAnalisis = new JList<>(modeloAnalisis);
         listaAnalisis.setFont(new Font("Arial", Font.PLAIN, 16));
-        analisisScrollPane.setViewportView(listaAnalisis);
+        ScrollPaneModerno analisisScrollPane = new ScrollPaneModerno(listaAnalisis);
+        analisisScrollPane.setBounds(24, 179, 300, 95);
+        panelRegistroVisita.add(analisisScrollPane);
 
         botonAgregarAnalisis = new ImageButtonLabel((ImageIcon) null);
         botonAgregarAnalisis.addMouseListener(new MouseAdapter() {
@@ -252,8 +285,16 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
         botonEliminarAnalisis.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 List<String> seleccionados = listaAnalisis.getSelectedValuesList();
-                for (String sel : seleccionados) {
-                    modeloAnalisis.removeElement(sel);
+                if (!seleccionados.isEmpty()) {
+                    QuestionDialog confirmacion = new QuestionDialog(FormularioVisitas.this,
+                            "Confirmar eliminación",
+                            "¿Está seguro que desea eliminar los análisis seleccionados?");
+                    confirmacion.setVisible(true);
+                    if (confirmacion.esConfirmado()) {
+                        for (String sel : seleccionados) {
+                            modeloAnalisis.removeElement(sel);
+                        }
+                    }
                 }
             }
         });
@@ -267,16 +308,12 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
         cartelEspecialidades.setBounds(364, 152, 193, 22);
         panelRegistroVisita.add(cartelEspecialidades);
 
-        JScrollPane especialidadesScrollPane = new JScrollPane();
-        especialidadesScrollPane.setFocusable(false);
-        especialidadesScrollPane.setBorder(BORDE_COMPONENTE);
-        especialidadesScrollPane.setBounds(363, 179, 300, 95);
-        panelRegistroVisita.add(especialidadesScrollPane);
-
         modeloEspecialidades = new DefaultListModel<>();
         listaEspecialidades = new JList<>(modeloEspecialidades);
         listaEspecialidades.setFont(new Font("Arial", Font.PLAIN, 16));
-        especialidadesScrollPane.setViewportView(listaEspecialidades);
+        ScrollPaneModerno especialidadesScrollPane = new ScrollPaneModerno(listaEspecialidades);
+        especialidadesScrollPane.setBounds(363, 179, 300, 95);
+        panelRegistroVisita.add(especialidadesScrollPane);
 
         JLabel label = new JLabel("Información personal");
         label.setBounds(45, 25, 232, 26);
@@ -299,12 +336,43 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
         cartelPaciente.setBounds(30, 30, 76, 19);
         panelPersonal.add(cartelPaciente);
 
-        barraBuscarPacienteCI = new PlaceholderTextField();
+        barraBuscarPacienteCI = new PlaceholderTextField();      
         barraBuscarPacienteCI.setInputFormat(InputFormat.NUMERIC);
         barraBuscarPacienteCI.setCharacterLimit(11);
         barraBuscarPacienteCI.setBounds(104, 24, 142, 25);
         barraBuscarPacienteCI.setFont(new Font("Arial", Font.PLAIN, 16));
         panelPersonal.add(barraBuscarPacienteCI);
+        barraBuscarPacienteCI.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (popupResultados.isVisible()) {
+                    int index = listaResultados.getSelectedIndex();
+                    int size = modeloResultados.size();
+
+                    switch (e.getKeyCode()) {
+                        case KeyEvent.VK_DOWN:
+                            if (index < size - 1) {
+                                listaResultados.setSelectedIndex(index + 1);
+                                listaResultados.ensureIndexIsVisible(index + 1);
+                            }
+                            break;
+                        case KeyEvent.VK_UP:
+                            if (index > 0) {
+                                listaResultados.setSelectedIndex(index - 1);
+                                listaResultados.ensureIndexIsVisible(index - 1);
+                            }
+                            break;
+                        case KeyEvent.VK_ENTER:
+                            if (!listaResultados.isSelectionEmpty()) {
+                                String seleccionado = listaResultados.getSelectedValue();
+                                manejarSeleccionPaciente(seleccionado);
+                                e.consume();
+                            }
+                            break;
+                    }
+                }
+            }
+        });
 
         cartelHistoriaClinica = new JLabel("Historia Clínica #");
         cartelHistoriaClinica.setFont(new Font("Arial", Font.PLAIN, 16));
@@ -328,7 +396,7 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
         campoDireccion.setBounds(104, 100, 566, 25);
         panelPersonal.add(campoDireccion);
 
-        campoNombre = new PlaceholderTextField();
+        campoNombre = new PlaceholderTextField("Seleccione un CI para mostrar");
         campoNombre.setEditable(false);
         campoNombre.setBounds(104, 62, 566, 25);
         panelPersonal.add(campoNombre);
@@ -346,40 +414,42 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
         // JList para mostrar resultados en popup
         listaResultados = new JList<>(modeloResultados);
         listaResultados.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        listaResultados.setFont(new Font("Arial", Font.PLAIN, 14));
+        listaResultados.setFont(new Font("Arial", Font.PLAIN, 16));
         listaResultados.setVisibleRowCount(5);
         listaResultados.setFocusable(false);
-
-        JScrollPane scrollPopup = new JScrollPane(listaResultados);
-        scrollPopup.setPreferredSize(new Dimension(barraBuscarPacienteCI.getWidth(), 100));
-        scrollPopup.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-        popupResultados.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-        popupResultados.add(scrollPopup);
-
         listaResultados.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (!listaResultados.isSelectionEmpty()) {
                     String seleccionado = listaResultados.getSelectedValue();
-                    manejarSeleccionPaciente(seleccionado);
+                    manejarSeleccionPaciente(seleccionado);                 
                 }
             }
         });
 
+        ScrollPaneModerno scrollPopup = new ScrollPaneModerno(listaResultados);
+        scrollPopup.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPopup.setPreferredSize(new Dimension(barraBuscarPacienteCI.getWidth(), 100));
+        scrollPopup.setBorder(null);
+        popupResultados.add(scrollPopup);
+       
         barraBuscarPacienteCI.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
                 actualizarResultados();
+                limpiarDatosSiNoCoincide();
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
                 actualizarResultados();
+                limpiarDatosSiNoCoincide();
             }
 
             @Override
             public void changedUpdate(DocumentEvent e) {
                 actualizarResultados();
+                limpiarDatosSiNoCoincide();
             }
         });
 
@@ -405,6 +475,8 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
                         guardarEdicionVisita(visita);
                     }
                     setModoActual(ModoFormulario.VISUALIZACION);
+                    cargarDatosVisita();
+                    popupResultados.setVisible(false);
                 } catch (Exception ex) {
                     new InfoDialog(FormularioVisitas.this, "Error", ex.getMessage()).setVisible(true);
                 }
@@ -428,10 +500,30 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
         botonEditar.setVisible(false);
         panelAzul.add(botonEditar);
 
-        BotonBlanco botonAtras = new BotonBlanco("ATRÁS");
+        botonAtras = new BotonBlanco("ATRÁS");
         botonAtras.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                dispose(); // cerrar diálogo
+                if (modoActual == ModoFormulario.CREACION) {
+                    QuestionDialog confirmacion = new QuestionDialog(FormularioVisitas.this,
+                            "Confirmar salida",
+                            "Está a punto de salir del formulario.\nSe perderán los cambios no guardados.\n¿Desea continuar?");
+                    confirmacion.setVisible(true);
+                    if (confirmacion.esConfirmado()) {
+                        dispose();
+                    }
+                } else if (modoActual == ModoFormulario.EDICION) {
+                    QuestionDialog confirmacion = new QuestionDialog(FormularioVisitas.this,
+                            "Cancelar edición",
+                            "Está a punto de cancelar la edición.\nSe perderán los cambios no guardados.\n¿Desea continuar?");
+                    confirmacion.setVisible(true);
+                    if (confirmacion.esConfirmado()) {
+                    	setModoActual(ModoFormulario.VISUALIZACION);
+                    	cargarDatosVisita();
+                    	popupResultados.setVisible(false);
+                    }
+                } else {
+                    dispose();
+                }
             }
         });
         botonAtras.setToolTipText("Clic para volver a la ventana principal");
@@ -513,8 +605,7 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
 
             cmf.agregarVisita(nuevaVisita);
 
-            new InfoDialog(this, "Visita Agregada", "Visita guardada exitosamente.").setVisible(true);
-            dispose();
+            new InfoDialog(this, "Visita Agregada", "Visita guardada exitosamente.").setVisible(true);     
         } catch (NumberFormatException ex) {
             new InfoDialog(this, "Error", "El campo 'H. Clínica' debe contener un número válido.").setVisible(true);
         } catch (IllegalArgumentException ex) {
@@ -562,7 +653,6 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
             cmf.agregarVisita(visitaEditada);
 
             new InfoDialog(this, "Visita Guardada", "Visita editada exitosamente.").setVisible(true);
-            dispose();
         } catch (NumberFormatException ex) {
             new InfoDialog(this, "Error", "El campo 'H. Clínica' debe contener un número válido.").setVisible(true);
         } catch (IllegalArgumentException ex) {
@@ -576,14 +666,12 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
         barraBuscarPacienteCI.setText(ciSeleccionado);
 
         Paciente pacienteSeleccionado = null;
-        int i = 0;
         List<Paciente> lista = cmf.getPacientes();
-        while (i < lista.size() && pacienteSeleccionado == null) {
-            Paciente actual = lista.get(i);
+        for (Paciente actual : lista) {
             if (actual.getCI().equals(ciSeleccionado)) {
                 pacienteSeleccionado = actual;
+                break;
             }
-            i++;
         }
 
         if (pacienteSeleccionado != null) {
@@ -594,11 +682,12 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
         popupResultados.setVisible(false);
     }
 
+
     private void actualizarResultados() {
         // Solo actualizar popup si el modo actual es CREACION
         if (modoActual != ModoFormulario.CREACION) {
             popupResultados.setVisible(false);
-            return; // No hacer nada más
+            return;
         }
 
         String texto = barraBuscarPacienteCI.getText().trim();
@@ -606,7 +695,7 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
 
         if (!texto.isEmpty()) {
             for (Paciente paciente : cmf.getPacientes()) {
-                if (paciente.getCI().startsWith(texto)) {
+                if (paciente.getCI().contains(texto)) {
                     modeloResultados.addElement(paciente.getCI());
                 }
             }
@@ -614,16 +703,13 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
 
         if (!modeloResultados.isEmpty()) {
             listaResultados.setSelectedIndex(0);
-            popupResultados.setVisible(false); // reinicia posición
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    if (barraBuscarPacienteCI.isShowing()) {
-                        popupResultados.show(barraBuscarPacienteCI, 0, barraBuscarPacienteCI.getHeight());
-                    }
-                }
-            });
-            barraBuscarPacienteCI.requestFocus();
+
+            // Mostrar popup solo si no está visible
+            if (!popupResultados.isVisible()) {
+                popupResultados.show(barraBuscarPacienteCI, 0, barraBuscarPacienteCI.getHeight());
+            }
+
+            // No mover foco de vuelta al campo, se mantiene donde está
         } else {
             popupResultados.setVisible(false);
         }
@@ -641,20 +727,24 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
                 activarEdicion(true);
                 botonGuardar.setVisible(true);
                 botonEditar.setVisible(false);
+                botonAtras.setText("ATRÁS");
                 break;
             case EDICION:
                 setTitle("Editar visita");
                 activarEdicion(true);
                 botonGuardar.setVisible(true);
                 botonEditar.setVisible(false);
+                botonAtras.setText("CANCELAR");
                 break;
             case VISUALIZACION:
                 setTitle("Información de la visita");
                 activarEdicion(false);
                 botonGuardar.setVisible(false);
                 botonEditar.setVisible(true);
+                botonAtras.setText("ATRÁS");
                 break;
         }
+        popupResultados.setVisible(false);
     }
 
     public void activarEdicion(boolean activo) {
@@ -726,5 +816,28 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
             textTratamiento.setText("");
             cartelHistoriaClinica.setText("Historia Clínica #");
         }
+    }
+    
+    private void limpiarDatosSiNoCoincide() {
+        String texto = barraBuscarPacienteCI.getText().trim();
+
+        boolean existe = false;
+        for (Paciente paciente : cmf.getPacientes()) {
+            if (paciente.getCI().equals(texto)) {
+                existe = true;
+                break;
+            }
+        }
+
+        if (!existe) {
+            campoNombre.setText("");
+            cartelHistoriaClinica.setText("Historia Clínica #");
+        }
+    }
+    
+    @Override
+    public void dispose() {
+        popupResultados.setVisible(false);
+        super.dispose();
     }
 }
