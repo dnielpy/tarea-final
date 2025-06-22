@@ -28,6 +28,7 @@ import runner.Usuario;
 import service.Validations;
 import util.ConstantesAnalisis;
 import util.ConstantesEspecialidades;
+import util.MockDataGenerator;
 
 public class CMF {
 	private static CMF instance; // Instancia unica de CMF
@@ -263,9 +264,6 @@ public class CMF {
 		}
 		visitas.add(visita);
 
-		// agregar la visita a la historia clinica del paciente, y a la hoja de cargos
-		// Agregar visita a la Historia Clinica
-
 		actualizarVisitaHistoriaClinica(visita);
 
 		HojaCargosDiaria hojaDeCargo = obtenerHojaDeCargosPorFecha(visita.getFecha());
@@ -305,20 +303,30 @@ public class CMF {
 		}
 	}
 
-	public boolean editarVisita(int id, Visita nuevaVisita) {
+	public boolean editarVisita(int id, int historiaClinicaId, LocalDate fecha, String diagnostico,
+			String tratamiento, List<Analisis> analisis, List<String> especialidades,
+			String direccion) {
 		boolean response = false;
 
-		Objects.requireNonNull(nuevaVisita, "La nueva visita no puede ser nula");
 		if (visitas == null) {
 			throw new IllegalStateException("No hay visitas registradas");
 		}
-		for (int i = 0; i < visitas.size(); i++) {
-			if (visitas.get(i).getId() == id) {
-				visitas.set(i, nuevaVisita);
+
+		for (Visita visita : visitas) {
+			if (visita.getId() == id) {
+				visita.setPacienteHistoriaClinicaID(historiaClinicaId);
+				visita.setFecha(fecha);
+				visita.setDiagnostico(diagnostico);
+				visita.setTratamiento(tratamiento);
+				visita.setAnalisis(analisis);
+				visita.setEspecialidadesRemitidas(especialidades);
+				visita.setDireccion(direccion);
 				response = true;
+				break;
 			}
 		}
-		return response; // No se encontro la visita con el ID especificado
+
+		return response;
 	}
 
 	public void eliminarVisita(int id) {
@@ -330,11 +338,10 @@ public class CMF {
 		for (int i = 0; i < visitas.size() && !eliminada; i++) {
 			if (visitas.get(i).getId() == id) {
 				visitas.remove(i);
-				eliminada = true; // Detener el ciclo
+				eliminada = true;
 			}
 		}
 	}
-	
 
 	public ArrayList<Integer> obtenerVisitasPorMes() {
 		ArrayList<Integer> visitasPorMes = new ArrayList<>(Collections.nCopies(12, 0));
@@ -695,138 +702,17 @@ public class CMF {
 	// Datos cableados
 
 	public void cargarDatos() {
-		LocalDate fechaBase = LocalDate.of(1960, 1, 1);
-
-		crearMedico("Alfonso", "Rodr\u00EDguez", "Camela", 11321, "75060212345", generarFechaRandomDesde(fechaBase),
-				"medico@example.com", "12345678");
-		crearEnfermera("Maria", "Hernandez", "Rodriguez", 43, "98121296831", true, 4,
-				generarFechaRandomDesde(fechaBase), "enfermera@example.com", "12345678");
-
-		crearPacienteConDatos("Armando", "L\u00F3pez", "Toro", "78041312345", false, null, generarDireccionCuba());
-		crearPacienteConDatos("Amanda", "L\u00F3pez", "Garc\u00EDa", "03021178136", false,
-				generarFechaRandomDesde(fechaBase), generarDireccionCuba());
-		crearPacienteConDatos("Carlos", "Garces", "Fern\u00E1ndez", "89041312325", false, null, generarDireccionCuba());
-		crearPacienteConDatos("Daniela", "Su\u00E1rez", "Molina", "95011022314", false,
-				generarFechaRandomDesde(fechaBase), generarDireccionCuba());
-		crearPacienteConDatos("Esteban", "P\u00E9rez", "L\u00F3pez", "72051512365", false, null,
-				generarDireccionCuba());
-		crearPacienteConDatos("Fernando", "G\u00F3mez", "Rivas", "85091212385", false, null, generarDireccionCuba());
-		crearPacienteConDatos("Gabriela", "Torres", "Mart\u00EDnez", "94040322374", true,
-				generarFechaRandomDesde(fechaBase), generarDireccionCuba());
-		crearPacienteConDatos("H\u00E9ctor", "S\u00E1nchez", "L\u00F3pez", "96021512365", false, null,
-				generarDireccionCuba());
-		crearPacienteConDatos("Isabel", "Fern\u00E1ndez", "Cruz", "03050322394", true,
-				generarFechaRandomDesde(fechaBase), generarDireccionCuba());
-		crearPacienteConDatos("Javier", "Morales", "Castillo", "75060212345", false, null, generarDireccionCuba());
-		crearPacienteConDatos("Karla", "Ruiz", "Dom\u00EDnguez", "98062122314", true,
-				generarFechaRandomDesde(fechaBase), generarDireccionCuba());
-		crearPacienteConDatos("Luis", "Herrera", "P\u00E9rez", "92011412365", false, null, generarDireccionCuba());
-		crearPacienteConDatos("Mar\u00EDa Jos\u00E9", "Salazar", "Garc\u00EDa", "80031722354", true,
-				generarFechaRandomDesde(fechaBase), generarDireccionCuba());
-		crearPacienteConDatos("Nicol\u00E1s", "Vega", "Ortega", "84120512385", false, null, generarDireccionCuba());
-		crearPacienteConDatos("Olga", "D\u00EDaz", "Garc\u00EDa", "82082222334", false,
-				generarFechaRandomDesde(fechaBase), generarDireccionCuba());
-		crearPacienteConDatos("Pablo", "Mart\u00EDnez", "S\u00E1nchez", "91051912365", false, null,
-				generarDireccionCuba());
-		crearPacienteConDatos("Quetzal", "Rojas", "Castillo", "95071312365", false, null, generarDireccionCuba());
-		crearPacienteConDatos("Ra\u00FAl", "L\u00F3pez", "Fern\u00E1ndez", "81033012325", false, null,
-				generarDireccionCuba());
-		crearPacienteConDatos("Sof\u00EDa", "Medina", "Ramos", "97090922394", false,
-				generarFechaRandomDesde(fechaBase), generarDireccionCuba());
-		crearPacienteConDatos("Tom\u00E1s", "Aguilar", "Herrera", "87020112345", false, null, generarDireccionCuba());
-		crearPacienteConDatos("\u00DArsula", "Vargas", "Delgado", "92112322334", true,
-				generarFechaRandomDesde(fechaBase), generarDireccionCuba());
-		crearPacienteConDatos("V\u00EDctor", "Salinas", "Mora", "77062912385", false, null, generarDireccionCuba());
-		crearPacienteConDatos("Wendy", "Cruz", "L\u00F3pez", "89080722374", true,
-				generarFechaRandomDesde(fechaBase), generarDireccionCuba());
-		crearPacienteConDatos("Ximena", "Flores", "Castillo", "95041422334", true,
-				generarFechaRandomDesde(fechaBase), generarDireccionCuba());
-		crearPacienteConDatos("Yahir", "Castillo", "G\u00F3mez", "80100612365", false, null, generarDireccionCuba());
-		crearPacienteConDatos("Zulema", "Navarro", "Ruiz", "88101822374", true,
-				generarFechaRandomDesde(fechaBase), generarDireccionCuba());
-
-		fechaBase = LocalDate.now().minusDays(3);
-		LocalDate fecha;
-
-		fecha = generarFechaRandomDesde(fechaBase);
-		int idVisita = obtenerNuevoVisitaID();
-		agregarVisita(new Visita(idVisita, 1, fecha, "Resfriado común",
-				"Paracetamol", generarAnalisisParaVisitaConIdVisita(fecha, idVisita, 1),
-				generarEspecialidadesAleatorias(),
-				generarDireccionCuba()));
-
-		fecha = generarFechaRandomDesde(fechaBase);
-		idVisita = obtenerNuevoVisitaID();
-		agregarVisita(new Visita(idVisita, 2, fecha, "Dolor de cabeza",
-				"Ibuprofeno", generarAnalisisParaVisitaConIdVisita(fecha, idVisita, 2),
-				generarEspecialidadesAleatorias(),
-				generarDireccionCuba()));
-
-		fecha = generarFechaRandomDesde(fechaBase);
-		idVisita = obtenerNuevoVisitaID();
-		agregarVisita(new Visita(idVisita, 3, fecha, "Tos persistente",
-				"Jarabe expectorante", generarAnalisisParaVisitaConIdVisita(fecha, idVisita, 3),
-				generarEspecialidadesAleatorias(),
-				generarDireccionCuba()));
-
-		fecha = generarFechaRandomDesde(fechaBase);
-		idVisita = obtenerNuevoVisitaID();
-		agregarVisita(new Visita(idVisita, 4, fecha, "Dolor abdominal",
-				"Omeprazol", generarAnalisisParaVisitaConIdVisita(fecha, idVisita, 4),
-				generarEspecialidadesAleatorias(),
-				generarDireccionCuba()));
-
-		fecha = generarFechaRandomDesde(fechaBase);
-		idVisita = obtenerNuevoVisitaID();
-		agregarVisita(new Visita(idVisita, 5, fecha, "Presión alta",
-				"Enalapril", generarAnalisisParaVisitaConIdVisita(fecha, idVisita, 5),
-				generarEspecialidadesAleatorias(),
-				generarDireccionCuba()));
-
-		fecha = generarFechaRandomDesde(fechaBase);
-		idVisita = obtenerNuevoVisitaID();
-		agregarVisita(new Visita(idVisita, 6, fecha, "Dolor muscular",
-				"Diclofenaco", generarAnalisisParaVisitaConIdVisita(fecha, idVisita, 6),
-				generarEspecialidadesAleatorias(),
-				generarDireccionCuba()));
-
-		fecha = generarFechaRandomDesde(fechaBase);
-		idVisita = obtenerNuevoVisitaID();
-		agregarVisita(new Visita(idVisita, 7, fecha, "Control prenatal",
-				"Suplementos vitamínicos", generarAnalisisParaVisitaConIdVisita(fecha, idVisita, 7),
-				generarEspecialidadesAleatorias(),
-				generarDireccionCuba()));
-
-		fecha = generarFechaRandomDesde(fechaBase);
-		idVisita = obtenerNuevoVisitaID();
-		agregarVisita(new Visita(idVisita, 8, fecha, "Alergia estacional",
-				"Antihistamínicos", generarAnalisisParaVisitaConIdVisita(fecha, idVisita, 8),
-				generarEspecialidadesAleatorias(),
-				generarDireccionCuba()));
-
-		fecha = generarFechaRandomDesde(fechaBase);
-		idVisita = obtenerNuevoVisitaID();
-		agregarVisita(new Visita(idVisita, 9, fecha, "Control prenatal",
-				"Suplementos vitamínicos", generarAnalisisParaVisitaConIdVisita(fecha, idVisita, 9),
-				generarEspecialidadesAleatorias(),
-				generarDireccionCuba()));
-
-		fecha = generarFechaRandomDesde(fechaBase);
-		idVisita = obtenerNuevoVisitaID();
-		agregarVisita(new Visita(idVisita, 10, fecha, "Dolor lumbar",
-				"Fisioterapia", generarAnalisisParaVisitaConIdVisita(fecha, idVisita, 10),
-				generarEspecialidadesAleatorias(),
-				generarDireccionCuba()));
+		MockDataGenerator.mockData();
 	}
 
-	private void crearPacienteConDatos(String nombre, String primerApellido, String segundoApellido, String ci,
+	public void crearPacienteConDatos(String nombre, String primerApellido, String segundoApellido, String ci,
 			boolean esMujer, LocalDate fecha, String direccion) {
 		List<String> enfermedades = generarEnfermedadesCronicasAleatorias();
 		List<String> vacunas = generarVacunasAleatorias();
 		agregarPaciente(nombre, primerApellido, segundoApellido, enfermedades, vacunas, ci, esMujer, fecha, direccion);
 	}
 
-	private List<String> generarEspecialidadesAleatorias() {
+	public List<String> generarEspecialidadesAleatorias() {
 		List<String> lista = new ArrayList<>();
 		int cantidad = random.nextInt(ConstantesEspecialidades.ESPECIALIDADES_REMITIDAS.size() + 1); // de 0 a tamaño
 																										// máximo
@@ -841,7 +727,7 @@ public class CMF {
 		return lista;
 	}
 
-	private List<Analisis> generarAnalisisParaVisitaConIdVisita(LocalDate fechaVisita, int idVisita,
+	public List<Analisis> generarAnalisisParaVisitaConIdVisita(LocalDate fechaVisita, int idVisita,
 			int IdHistoriaClinica) {
 		List<Analisis> listaAnalisis = new ArrayList<>();
 
@@ -888,7 +774,7 @@ public class CMF {
 
 	private static final Random random = new Random();
 
-	private static String generarDireccionCuba() {
+	public static String generarDireccionCuba() {
 		Map<String, String> calleMunicipio = new HashMap<>();
 		calleMunicipio.put("Calle 23", "Plaza de la Revolución");
 		calleMunicipio.put("Avenida Boyeros", "Boyeros");

@@ -62,8 +62,8 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
     private PlaceholderTextField campoDireccion;
     private PlaceholderTextField campoNombre;
 
-    private JTextArea textDiagnostico; 
-    private JTextArea textTratamiento; 
+    private JTextArea textDiagnostico;
+    private JTextArea textTratamiento;
 
     private DefaultListModel<String> modeloEspecialidades;
     private DefaultListModel<String> modeloAnalisis;
@@ -136,8 +136,8 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
             public void windowClosing(WindowEvent e) {
                 if (modoActual == ModoFormulario.CREACION || modoActual == ModoFormulario.EDICION) {
                     QuestionDialog confirmacion = new QuestionDialog(FormularioVisitas.this,
-                        "Confirmar salida",
-                        "Está a punto de salir del formulario.\nSe perderán los cambios no guardados.\n¿Desea continuar?");
+                            "Confirmar salida",
+                            "Está a punto de salir del formulario.\nSe perderán los cambios no guardados.\n¿Desea continuar?");
                     confirmacion.setVisible(true);
                     if (confirmacion.esConfirmado()) {
                         dispose();
@@ -195,7 +195,6 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
         tratamientoScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         tratamientoScrollPane.setBounds(363, 44, 300, 95);
         panelRegistroVisita.add(tratamientoScrollPane);
-
 
         JLabel lblTratamiento = new JLabel("Tratamiento:");
         lblTratamiento.setFont(new Font("Arial", Font.PLAIN, 16));
@@ -336,7 +335,7 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
         cartelPaciente.setBounds(30, 30, 76, 19);
         panelPersonal.add(cartelPaciente);
 
-        barraBuscarPacienteCI = new PlaceholderTextField();      
+        barraBuscarPacienteCI = new PlaceholderTextField();
         barraBuscarPacienteCI.setInputFormat(InputFormat.NUMERIC);
         barraBuscarPacienteCI.setCharacterLimit(11);
         barraBuscarPacienteCI.setBounds(104, 24, 142, 25);
@@ -422,7 +421,7 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
             public void mouseClicked(MouseEvent e) {
                 if (!listaResultados.isSelectionEmpty()) {
                     String seleccionado = listaResultados.getSelectedValue();
-                    manejarSeleccionPaciente(seleccionado);                 
+                    manejarSeleccionPaciente(seleccionado);
                 }
             }
         });
@@ -432,7 +431,7 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
         scrollPopup.setPreferredSize(new Dimension(barraBuscarPacienteCI.getWidth(), 100));
         scrollPopup.setBorder(null);
         popupResultados.add(scrollPopup);
-       
+
         barraBuscarPacienteCI.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -517,9 +516,9 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
                             "Está a punto de cancelar la edición.\nSe perderán los cambios no guardados.\n¿Desea continuar?");
                     confirmacion.setVisible(true);
                     if (confirmacion.esConfirmado()) {
-                    	setModoActual(ModoFormulario.VISUALIZACION);
-                    	cargarDatosVisita();
-                    	popupResultados.setVisible(false);
+                        setModoActual(ModoFormulario.VISUALIZACION);
+                        cargarDatosVisita();
+                        popupResultados.setVisible(false);
                     }
                 } else {
                     dispose();
@@ -603,7 +602,7 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
 
             cmf.agregarVisita(nuevaVisita);
 
-            new InfoDialog(this, "Visita Agregada", "Visita guardada exitosamente.").setVisible(true);     
+            new InfoDialog(this, "Visita Agregada", "Visita guardada exitosamente.").setVisible(true);
         } catch (NumberFormatException ex) {
             new InfoDialog(this, "Error", "El campo 'H. Clínica' debe contener un número válido.").setVisible(true);
         } catch (IllegalArgumentException ex) {
@@ -636,8 +635,8 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
                     historiaClinicaID);
             List<String> listaEspecialidades = construirListaEspecialidades();
 
-            // Crear una nueva visita con los datos editados y el mismo ID
-            Visita visitaEditada = new Visita(
+            // Llamada actualizada al método editarVisita
+            boolean editada = cmf.editarVisita(
                     visitaExistente.getId(),
                     historiaClinicaID,
                     fecha,
@@ -647,8 +646,9 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
                     listaEspecialidades,
                     direccion);
 
-            // Aquí en vez de eliminar y agregar, usar agregarVisita que reemplaza si existe
-            cmf.agregarVisita(visitaEditada);
+            if (!editada) {
+                throw new IllegalStateException("No se pudo editar la visita.");
+            }
 
             new InfoDialog(this, "Visita Guardada", "Visita editada exitosamente.").setVisible(true);
         } catch (NumberFormatException ex) {
@@ -672,7 +672,6 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
 
         popupResultados.setVisible(false);
     }
-
 
     private void actualizarResultados() {
         boolean esModoCreacion = modoActual == ModoFormulario.CREACION;
@@ -805,7 +804,7 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
             cartelHistoriaClinica.setText("Historia Clínica #");
         }
     }
-    
+
     private void limpiarDatosSiNoCoincide() {
         String texto = barraBuscarPacienteCI.getText().trim();
         boolean existe = false;
@@ -821,7 +820,7 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
             cartelHistoriaClinica.setText("Historia Clínica #");
         }
     }
-    
+
     @Override
     public void dispose() {
         popupResultados.setVisible(false);
