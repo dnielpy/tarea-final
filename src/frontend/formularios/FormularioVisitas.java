@@ -27,19 +27,16 @@ import frontend.ui.dialogs.QuestionDialog;
 import frontend.ui.dialogs.SelectorDialog;
 
 import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Window;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.JDialog;
 import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JLabel;
 import javax.swing.JTextArea;
@@ -49,6 +46,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.ListSelectionModel;
 import javax.swing.ImageIcon;
 
+import runner.Usuario;
 import util.ConstantesAnalisis;
 import util.ConstantesEspecialidades;
 
@@ -57,7 +55,11 @@ import java.awt.event.ActionEvent;
 
 public class FormularioVisitas extends JDialog implements ConstantesFrontend {
 
-    private PlaceholderTextField barraBuscarPacienteCI;
+	private CMF cmf;
+	private Usuario usuarioActual;
+    private Visita visita;
+
+	private PlaceholderTextField barraBuscarPacienteCI;
     private PlaceholderTextField campoFecha;
     private PlaceholderTextField campoDireccion;
     private PlaceholderTextField campoNombre;
@@ -66,16 +68,14 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
     private JTextArea textTratamiento;
 
     private DefaultListModel<String> modeloEspecialidades;
-    private DefaultListModel<String> modeloAnalisis;
+    private DefaultListModel<String> modeloAnalisis;   
     private JList<String> listaEspecialidades;
     private JList<String> listaAnalisis;
-
-    private CMF cmf;
+    
     private JPopupMenu popupResultados;
     private DefaultListModel<String> modeloResultados;
     private JList<String> listaResultados;
     private JLabel cartelHistoriaClinica;
-    private Visita visita;
 
     private ImageButtonLabel botonAgregarEspecialidad;
     private ImageButtonLabel botonEliminarEspecialidad;
@@ -153,6 +153,7 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
         setSize(760, 640);
 
         cmf = CMF.getInstance();
+        usuarioActual = cmf.getUsuario();
         modeloResultados = new DefaultListModel<>();
         popupResultados = new JPopupMenu();
         popupResultados.setFocusable(false);
@@ -467,17 +468,10 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
         botonGuardar = new BotonBlanco("GUARDAR");
         botonGuardar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                try {
-                    if (modoActual == ModoFormulario.CREACION) {
-                        agregarNuevaVisita();
-                    } else if (modoActual == ModoFormulario.EDICION) {
-                        guardarEdicionVisita(visita);
-                    }
-                    setModoActual(ModoFormulario.VISUALIZACION);
-                    cargarDatosVisita();
-                    popupResultados.setVisible(false);
-                } catch (Exception ex) {
-                    new InfoDialog(FormularioVisitas.this, "Error", ex.getMessage()).setVisible(true);
+                if (modoActual == ModoFormulario.CREACION) {
+                    agregarNuevaVisita();
+                } else if (modoActual == ModoFormulario.EDICION) {
+                    guardarEdicionVisita(visita);
                 }
             }
         });
@@ -536,12 +530,19 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
         getContentPane().add(panelGris);
         panelGris.setLayout(null);
     }
+    
+    private boolean esMedico() {
+        boolean resultado = false;
+        if (usuarioActual != null && "MÉDICO".equalsIgnoreCase(usuarioActual.getRole().toString())) {
+            resultado = true;
+        }
+        return resultado;
+    }
 
     private List<Analisis> construirListaAnalisis(DefaultListModel<String> modeloAnalisis, int idVisita,
             int historiaClinicaId) {
         List<Analisis> lista = new ArrayList<>();
         LocalDate hoy = LocalDate.now();
-        CMF cmf = CMF.getInstance();
 
         for (int i = 0; i < modeloAnalisis.size(); i++) {
             String tipo = modeloAnalisis.getElementAt(i);
@@ -550,7 +551,7 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
                 Analisis a = new Analisis(idAnalisis, tipo, hoy, idVisita, historiaClinicaId);
                 lista.add(a);
             } catch (IllegalArgumentException ex) {
-                // Puedes mostrar error o simplemente ignorar análisis inválido
+                
             }
         }
         return lista;
@@ -570,93 +571,98 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
 
     // Método para agregar una nueva visita
     public void agregarNuevaVisita() {
-        try {
-            int id = cmf.obtenerNuevoVisitaID(); // Método para generar id único
-            String str = cartelHistoriaClinica.getText().substring(18);
-            int historiaClinicaID = Integer.parseInt(str.trim());
-            LocalDate fecha = LocalDate.now();
+        boolean accesoPermitido = esMedico();
+        if (!accesoPermitido) {
+            new InfoDialog(this, "Acceso denegado", "Solo el médico puede agregar visitas.").setVisible(true);
+        } else {
+            try {
+                String ci = barraBuscarPacienteCI.getText().trim();
+                if (ci.isEmpty()) throw new IllegalArgumentException("Debe ingresar el CI del paciente.");
 
-            String diagnostico = textDiagnostico.getText().trim();
-            String tratamiento = textTratamiento.getText().trim();
-            String direccion = campoDireccion.getText().trim();
+                Paciente paciente = cmf.getPacientePorCI(ci);
+                if (paciente == null) throw new IllegalArgumentException("Debe seleccionar un paciente válido.");
 
-            if (diagnostico.isEmpty() || tratamiento.isEmpty() || direccion.isEmpty()) {
-                throw new IllegalArgumentException("Diagnóstico, tratamiento y dirección no pueden estar vacíos.");
+                int historiaClinicaID = paciente.getHistoriaClinica().getId();
+                int id = cmf.obtenerNuevoVisitaID();
+                LocalDate fecha = LocalDate.now();
+
+                String diagnostico = textDiagnostico.getText().trim();
+                String tratamiento = textTratamiento.getText().trim();
+                String direccion = campoDireccion.getText().trim();
+
+                if (diagnostico.isEmpty() || tratamiento.isEmpty() || direccion.isEmpty()) {
+                    throw new IllegalArgumentException("Diagnóstico, tratamiento y dirección no pueden estar vacíos.");
+                }
+
+                List<Analisis> listaAnalisis = construirListaAnalisis(modeloAnalisis, id, historiaClinicaID);
+                List<String> listaEspecialidades = construirListaEspecialidades();
+
+                Visita nuevaVisita = new Visita(id, historiaClinicaID, fecha, diagnostico, tratamiento,
+                                                listaAnalisis, listaEspecialidades, direccion);
+
+                cmf.agregarVisita(nuevaVisita);
+                this.visita = nuevaVisita;
+
+                new InfoDialog(this, "Visita Agregada", "Visita guardada exitosamente.").setVisible(true);
+                mostrarVisitaGuardada();
+            } catch (Exception ex) {
+                new InfoDialog(this, "Error", ex.getMessage()).setVisible(true);
             }
-
-            List<Analisis> listaAnalisis = construirListaAnalisis(modeloAnalisis, id, historiaClinicaID);
-
-            List<String> listaEspecialidades = construirListaEspecialidades();
-            // 'listaEspecialidadesSeleccionadas' es una lista que mantienes con las
-            // especialidades elegidas
-
-            Visita nuevaVisita = new Visita(
-                    id,
-                    historiaClinicaID,
-                    fecha,
-                    diagnostico,
-                    tratamiento,
-                    listaAnalisis,
-                    listaEspecialidades,
-                    direccion);
-
-            cmf.agregarVisita(nuevaVisita);
-
-            new InfoDialog(this, "Visita Agregada", "Visita guardada exitosamente.").setVisible(true);
-        } catch (NumberFormatException ex) {
-            new InfoDialog(this, "Error", "El campo 'H. Clínica' debe contener un número válido.").setVisible(true);
-        } catch (IllegalArgumentException ex) {
-            new InfoDialog(this, "Error", ex.getMessage()).setVisible(true);
-        } catch (Exception ex) {
-            new InfoDialog(this, "Error inesperado", "Error al agregar la visita: " + ex.getMessage()).setVisible(true);
         }
     }
 
     // Método para guardar edición de visita existente
     public void guardarEdicionVisita(Visita visitaExistente) {
-        try {
-            if (visitaExistente == null) {
-                throw new IllegalArgumentException("No hay visita existente para editar.");
+        boolean accesoPermitido = esMedico();
+        if (!accesoPermitido) {
+            new InfoDialog(this, "Acceso denegado", "Solo el médico puede guardar cambios.").setVisible(true);
+        } else {
+            try {
+                boolean visitaValida = (visitaExistente != null);
+                if (!visitaValida) {
+                    throw new IllegalArgumentException("No hay visita existente para editar.");
+                }
+
+                String textoId = cartelHistoriaClinica.getText();
+                int historiaClinicaID = -1;
+
+                if (textoId.length() > 18) {
+                    String idStr = textoId.substring(18).trim();
+                    historiaClinicaID = Integer.parseInt(idStr);
+                }
+
+                LocalDate fecha = visitaExistente.getFecha();
+
+                String diagnostico = textDiagnostico.getText().trim();
+                String tratamiento = textTratamiento.getText().trim();
+                String direccion = campoDireccion.getText().trim();
+
+                boolean camposValidos = !(diagnostico.isEmpty() || tratamiento.isEmpty() || direccion.isEmpty());
+                if (!camposValidos) {
+                    throw new IllegalArgumentException("Diagnóstico, tratamiento y dirección no pueden estar vacíos.");
+                }
+
+                List<Analisis> listaAnalisis = construirListaAnalisis(modeloAnalisis, visitaExistente.getId(), historiaClinicaID);
+                List<String> listaEspecialidades = construirListaEspecialidades();
+
+                boolean editada = cmf.editarVisita(
+                    visitaExistente.getId(), historiaClinicaID, fecha,
+                    diagnostico, tratamiento, listaAnalisis, listaEspecialidades, direccion
+                );
+
+                if (!editada) {
+                    throw new IllegalStateException("No se pudo editar la visita.");
+                }
+
+                new InfoDialog(this, "Visita Guardada", "Visita editada exitosamente.").setVisible(true);
+                mostrarVisitaGuardada();
+            } catch (NumberFormatException ex) {
+                new InfoDialog(this, "Error", "El campo 'H. Clínica' debe contener un número válido.").setVisible(true);
+            } catch (IllegalArgumentException ex) {
+                new InfoDialog(this, "Error", ex.getMessage()).setVisible(true);
+            } catch (Exception ex) {
+                new InfoDialog(this, "Error inesperado", "Error al guardar la visita: " + ex.getMessage()).setVisible(true);
             }
-
-            String str = cartelHistoriaClinica.getText().substring(18);
-            int historiaClinicaID = Integer.parseInt(str.trim());
-            LocalDate fecha = visitaExistente.getFecha(); // fecha no editable, se conserva
-
-            String diagnostico = textDiagnostico.getText().trim();
-            String tratamiento = textTratamiento.getText().trim();
-            String direccion = campoDireccion.getText().trim();
-
-            if (diagnostico.isEmpty() || tratamiento.isEmpty() || direccion.isEmpty()) {
-                throw new IllegalArgumentException("Diagnóstico, tratamiento y dirección no pueden estar vacíos.");
-            }
-
-            List<Analisis> listaAnalisis = construirListaAnalisis(modeloAnalisis, visitaExistente.getId(),
-                    historiaClinicaID);
-            List<String> listaEspecialidades = construirListaEspecialidades();
-
-            // Llamada actualizada al método editarVisita
-            boolean editada = cmf.editarVisita(
-                    visitaExistente.getId(),
-                    historiaClinicaID,
-                    fecha,
-                    diagnostico,
-                    tratamiento,
-                    listaAnalisis,
-                    listaEspecialidades,
-                    direccion);
-
-            if (!editada) {
-                throw new IllegalStateException("No se pudo editar la visita.");
-            }
-
-            new InfoDialog(this, "Visita Guardada", "Visita editada exitosamente.").setVisible(true);
-        } catch (NumberFormatException ex) {
-            new InfoDialog(this, "Error", "El campo 'H. Clínica' debe contener un número válido.").setVisible(true);
-        } catch (IllegalArgumentException ex) {
-            new InfoDialog(this, "Error", ex.getMessage()).setVisible(true);
-        } catch (Exception ex) {
-            new InfoDialog(this, "Error inesperado", "Error al guardar la visita: " + ex.getMessage()).setVisible(true);
         }
     }
 
@@ -711,15 +717,15 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
         switch (modo) {
             case CREACION:
                 setTitle("Crear visita");
-                activarEdicion(true);
-                botonGuardar.setVisible(true);
+                activarEdicion(esMedico());
+                botonGuardar.setVisible(esMedico());
                 botonEditar.setVisible(false);
                 botonAtras.setText("ATRÁS");
                 break;
             case EDICION:
                 setTitle("Editar visita");
-                activarEdicion(true);
-                botonGuardar.setVisible(true);
+                activarEdicion(esMedico());
+                botonGuardar.setVisible(esMedico());
                 botonEditar.setVisible(false);
                 botonAtras.setText("CANCELAR");
                 break;
@@ -727,7 +733,7 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
                 setTitle("Información de la visita");
                 activarEdicion(false);
                 botonGuardar.setVisible(false);
-                botonEditar.setVisible(true);
+                botonEditar.setVisible(esMedico());
                 botonAtras.setText("ATRÁS");
                 break;
         }
@@ -735,89 +741,95 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
     }
 
     public void activarEdicion(boolean activo) {
-        boolean esVisualizacion = (modoActual == ModoFormulario.VISUALIZACION);
-        boolean esEdicion = (modoActual == ModoFormulario.EDICION);
+        boolean editar = activo;
+        if (!esMedico()) {
+            editar = false;
+        }
+        boolean esCreacion = (modoActual == ModoFormulario.CREACION);
+        barraBuscarPacienteCI.setEditable(esCreacion && esMedico());
+        campoDireccion.setEditable(editar);
+        textDiagnostico.setEditable(editar);
+        textTratamiento.setEditable(editar);
 
-        barraBuscarPacienteCI.setEditable(!esVisualizacion && !esEdicion);
-        campoFecha.setEditable(false); // no editable siempre, según tu código
-        campoNombre.setEditable(false);
-        campoDireccion.setEditable(activo);
+        boolean mostrarBotones = editar && (modoActual != ModoFormulario.VISUALIZACION);
+        botonAgregarEspecialidad.setVisible(mostrarBotones);
+        botonEliminarEspecialidad.setVisible(mostrarBotones);
+        botonAgregarAnalisis.setVisible(mostrarBotones);
+        botonEliminarAnalisis.setVisible(mostrarBotones);
 
-        textDiagnostico.setEditable(activo);
-        textTratamiento.setEditable(activo);
-
-        botonAgregarEspecialidad.setVisible(activo && !esVisualizacion);
-        botonEliminarEspecialidad.setVisible(activo && !esVisualizacion);
-        botonAgregarAnalisis.setVisible(activo && !esVisualizacion);
-        botonEliminarAnalisis.setVisible(activo && !esVisualizacion);
+        if (modoActual == ModoFormulario.CREACION) {
+            botonGuardar.setText("AGREGAR");
+        } else {
+            botonGuardar.setText("GUARDAR");
+        }
     }
 
     public void cargarDatosVisita() {
-        Paciente pacienteEncontrado = null;
-        if (visita != null) {
-            pacienteEncontrado = cmf.getPacientePorId(visita.getPacienteHistoriaClinicaID());
-        }
+        boolean hayVisita = visita != null;
 
-        if (pacienteEncontrado != null) {
-            campoNombre.setText(pacienteEncontrado.getNombreYApellidos());
-            barraBuscarPacienteCI.setText(pacienteEncontrado.getCI());
-            barraBuscarPacienteCI.setEditable(false); // desactivar edición del CI
-        } else {
-            campoNombre.setText("");
-            barraBuscarPacienteCI.setText("");
-            barraBuscarPacienteCI.setEditable(true);
-        }
-
-        if (visita != null) {
-            campoFecha.setText(visita.getFecha().format(DateTimeFormatter.ofPattern("dd/MMM/yyyy")));
-            campoFecha.setEditable(false);
-
-            campoDireccion.setText(visita.getDireccion());
-            textDiagnostico.setText(visita.getDiagnostico());
-            textTratamiento.setText(visita.getTratamiento());
-            cartelHistoriaClinica.setText("Historia Clínica #" + visita.getPacienteHistoriaClinicaID());
-
-            // Limpia modelos
-            modeloAnalisis.clear();
-            modeloEspecialidades.clear();
-
-            // Carga análisis
-            List<Analisis> analisisVisita = visita.getAnalisis();
-            if (analisisVisita != null) {
-                for (Analisis a : analisisVisita) {
-                    modeloAnalisis.addElement(a.getTipoDeAnalisis());
-                }
-            }
-
-            // Carga especialidades
-            List<String> espVisita = visita.getEspecialidadesRemitidas();
-            if (espVisita != null) {
-                for (String esp : espVisita) {
-                    modeloEspecialidades.addElement(esp);
-                }
-            }
-        } else {
+        if (!hayVisita) {
+            cargarDatosPaciente(null);
             campoFecha.setText("");
             campoDireccion.setText("");
             textDiagnostico.setText("");
             textTratamiento.setText("");
+            modeloAnalisis.clear();
+            modeloEspecialidades.clear();
+        } else {
+            Paciente pacienteEncontrado = cmf.getPacientePorId(visita.getPacienteHistoriaClinicaID());
+            cargarDatosPaciente(pacienteEncontrado);
+
+            campoFecha.setText(visita.getFecha().format(DateTimeFormatter.ofPattern("dd/MMM/yyyy")));
+            campoDireccion.setText(visita.getDireccion());
+            textDiagnostico.setText(visita.getDiagnostico());
+            textTratamiento.setText(visita.getTratamiento());
+
+            modeloAnalisis.clear();
+            List<Analisis> listaAnalisis = visita.getAnalisis();
+            if (listaAnalisis != null) {
+                for (Analisis a : listaAnalisis) {
+                    modeloAnalisis.addElement(a.getTipoDeAnalisis());
+                }
+            }
+
+            modeloEspecialidades.clear();
+            List<String> listaEsp = visita.getEspecialidadesRemitidas();
+            if (listaEsp != null) {
+                for (String esp : listaEsp) {
+                    modeloEspecialidades.addElement(esp);
+                }
+            }
+        }
+    }
+    
+    private void cargarDatosPaciente(Paciente paciente) {
+        if (paciente != null) {
+            campoNombre.setText(paciente.getNombreYApellidos());
+            barraBuscarPacienteCI.setText(paciente.getCI());
+            cartelHistoriaClinica.setText("Historia Clínica #" + paciente.getHistoriaClinica().getId());
+        } else {
+            campoNombre.setText("Paciente no encontrado");
+            barraBuscarPacienteCI.setText("");
             cartelHistoriaClinica.setText("Historia Clínica #");
         }
     }
+    
+    private void mostrarVisitaGuardada() {
+        setModoActual(ModoFormulario.VISUALIZACION);
+        cargarDatosVisita();
+        popupResultados.setVisible(false);
+    }
 
     private void limpiarDatosSiNoCoincide() {
-        String texto = barraBuscarPacienteCI.getText().trim();
-        boolean existe = false;
+        boolean enModoCreacion = (modoActual == ModoFormulario.CREACION);
+        boolean tieneFoco = barraBuscarPacienteCI.hasFocus();
 
-        for (Paciente paciente : cmf.getPacientes()) {
-            if (!existe && paciente.getCI().equals(texto)) {
-                existe = true;
+        if (enModoCreacion && tieneFoco) {
+            Paciente pac = cmf.getPacientePorCI(barraBuscarPacienteCI.getText().trim());
+            if (pac == null) {
+                campoNombre.setText("");
+                cartelHistoriaClinica.setText("Historia Clínica #");
             }
-        }
-
-        if (!existe) {
-            campoNombre.setText("");
-            cartelHistoriaClinica.setText("Historia Clínica #");
         }
     }
 
