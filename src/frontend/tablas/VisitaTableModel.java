@@ -14,12 +14,14 @@ public class VisitaTableModel extends AbstractTableModel {
     private List<Visita> visitas;
     private boolean mostrarFecha;
     private boolean mostrarHistoriaClinica;
+    private boolean mostrarIdVisita;
     private String[] columnNames;
 
     public VisitaTableModel(List<Visita> list) {
         this.visitas = list;
         this.mostrarFecha = false;
         this.mostrarHistoriaClinica = true;
+        this.mostrarIdVisita = true;
         actualizarColumnNames();
     }
 
@@ -39,9 +41,19 @@ public class VisitaTableModel extends AbstractTableModel {
         actualizarColumnNames();
         fireTableStructureChanged();
     }
+    
+    public void setMostrarIdVisita(boolean mostrarIdVisita) {
+        this.mostrarIdVisita = mostrarIdVisita;
+        actualizarColumnNames();
+        fireTableStructureChanged();
+    }
 
     private void actualizarColumnNames() {
         List<String> columnas = new ArrayList<>();
+
+        if (mostrarIdVisita) {
+            columnas.add("ID Visita");
+        }
 
         if (mostrarHistoriaClinica) {
             columnas.add("Historia Clinica");
@@ -77,26 +89,36 @@ public class VisitaTableModel extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        Object valor = null;
         Visita visita = visitas.get(rowIndex);
         int offset = 0;
 
-        if (mostrarHistoriaClinica) {
-            if (columnIndex == 0) {
-                valor = visita.getPacienteHistoriaClinicaID();
+        if (mostrarIdVisita) {
+            if (columnIndex == offset) {
+                return visita.getId();
             }
-            offset = 1;
+            offset++;
+        }
+
+        if (mostrarHistoriaClinica) {
+            if (columnIndex == offset) {
+                return visita.getPacienteHistoriaClinicaID();
+            }
+            offset++;
         }
 
         if (columnIndex == offset) {
-            valor = visita.getResumenEspecialidadesRemitidas();
-        } else if (columnIndex == offset + 1) {
-            valor = visita.getResumenAnalisis();
-        } else if (mostrarFecha && columnIndex == offset + 2) {
-            valor = visita.getFechaFormateada(); // Se asume formato String
+            return visita.getResumenEspecialidadesRemitidas();
         }
 
-        return valor;
+        if (columnIndex == offset + 1) {
+            return visita.getResumenAnalisis();
+        }
+
+        if (mostrarFecha && columnIndex == offset + 2) {
+            return visita.getFechaFormateada();
+        }
+
+        return null;
     }
 
     @Override

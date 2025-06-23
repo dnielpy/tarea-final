@@ -25,7 +25,7 @@ public class Validations {
 		boolean isValid = true;
 
 		if (ci == null || ci.length() != 11 || !ci.matches("\\d{11}")) {
-			throw new IllegalCiException("El CI debe tener 11 dígitos y solo contener números");
+			throw new IllegalCiException("El CI debe tener 11 d\u00ED�gitos y solo contener n\u00FAmeros");
 		} else {
 			String year = ci.substring(0, 2);
 			String month = ci.substring(2, 4);

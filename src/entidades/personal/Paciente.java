@@ -32,12 +32,12 @@ public class Paciente extends Persona {
     }
 
     public void setDireccion(String direccion) {
-        Objects.requireNonNull(direccion, "La dirección no puede ser nula");
+        Objects.requireNonNull(direccion, "La direcci\u00F3n no puede ser nula");
         if (direccion.trim().isEmpty()) {
-            throw new IllegalAddressException("La dirección no puede estar vacía");
+            throw new IllegalAddressException("La direcci\u00F3n no puede estar vac\u00ED�a");
         }
         if (direccion.length() > 300) {
-            throw new IllegalAddressException("La dirección no puede exceder 300 caracteres");
+            throw new IllegalAddressException("La direcci\u00F3n no puede exceder 300 caracteres");
         }
         this.direccion = direccion.trim();
     }
@@ -94,7 +94,7 @@ public class Paciente extends Persona {
     public void agregarVacuna(String vacuna) {
         Objects.requireNonNull(vacuna, "La vacuna no puede ser nula");
         if (vacuna.trim().isEmpty()) {
-            throw new IllegalVaccinationException("La vacuna no puede estar vacía");
+            throw new IllegalVaccinationException("La vacuna no puede estar vac\u00ED�a");
         }
         if (vacuna.length() > 100) {
             throw new IllegalVaccinationException("El nombre de la vacuna no puede exceder 100 caracteres");

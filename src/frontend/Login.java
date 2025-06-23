@@ -48,7 +48,7 @@ public class Login extends JDialog implements ConstantesFrontend{
 	private boolean auth;
 
 	public Login(Window parent) {
-        super(parent, "Autenticaci贸n", ModalityType.APPLICATION_MODAL); // Modal y con t铆tulo
+        super(parent, "Autenticaci\u00F3n", ModalityType.APPLICATION_MODAL); // Modal y con t\u00ED璽ulo
 		this.auth = false;
 		setBackground(Color.WHITE);
 		setFont(new Font("Arial", Font.PLAIN, 16));
@@ -62,17 +62,17 @@ public class Login extends JDialog implements ConstantesFrontend{
 		getContentPane().setLayout(null);
 		setLocationRelativeTo(parent);
 
-		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE); // Evita cierre autom谩tico
+		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE); // Evita cierre autom\u00EDico
 
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
 				QuestionDialog confirmacion = new QuestionDialog(Login.this,
-						"Confirmar salida", "驴Est谩s seguro de que deseas cerrar la aplicaci贸n?");
+						"Confirmar salida", "驴Est\u00ED seguro de que deseas cerrar la aplicaci\u00F3n?");
 				confirmacion.setVisible(true); // Espera respuesta
 
 				if (confirmacion.esConfirmado()) {
-					System.exit(0); // Cierra completamente la aplicaci贸n
+					System.exit(0); // Cierra completamente la aplicaci\u00F3n
 				}
 			}
 		});
@@ -83,11 +83,11 @@ public class Login extends JDialog implements ConstantesFrontend{
 	    String usuario = campoUsuario.getText();
 	    String contrasenna = new String(campoContrasenna.getPassword());
 
-	    if (contrasenna.equals("鈼忊棌鈼忊棌鈼忊棌鈼忊棌鈼忊棌") || contrasenna.trim().isEmpty()) {
+	    if (contrasenna.equals("鈼濃棟鈼濃棟鈼濃棟鈼濃棟鈼濃棟") || contrasenna.trim().isEmpty()) {
 	        InfoDialog dialogo = new InfoDialog(
 	            this.getOwner(),
-	            "Error de autenticaci贸n",
-	            "La contrase帽a no puede estar vac铆a"
+	            "Error de autenticaci\u00F3n",
+	            "La contrase\u00F1a no puede estar vac\u00ED璦"
 	        );
 	        dialogo.setVisible(true);
 	        return;
@@ -98,7 +98,7 @@ public class Login extends JDialog implements ConstantesFrontend{
 	    try {
 	        Usuario usuarioAutenticado = authManager.authUser(usuario, contrasenna);
 
-	        // Guardar en la sesi贸n (singleton CMF)
+	        // Guardar en la sesi\u00F3n (singleton CMF)
 	        CMF.getInstance().setUsuario(usuarioAutenticado);
 
 	        auth = true;
@@ -107,7 +107,7 @@ public class Login extends JDialog implements ConstantesFrontend{
 	    } catch (Auth.AuthenticationException ex) {
 	        InfoDialog dialogo = new InfoDialog(
 	            this.getOwner(),
-	            "Error de autenticaci贸n",
+	            "Error de autenticaci\u00F3n",
 	            ex.getMessage()
 	        );
 	        dialogo.setVisible(true);
@@ -302,8 +302,8 @@ public class Login extends JDialog implements ConstantesFrontend{
 	public void iniciarSesion() {
 		InfoDialog dialogo = new InfoDialog(
 				this.getOwner(),
-				"Inicio de sesi贸n",
-				"Inicio de sesi贸n exitoso"
+				"Inicio de sesi\u00F3n",
+				"Inicio de sesi\u00F3n exitoso"
 		);
 		dialogo.setVisible(true);
 		dispose(); 
