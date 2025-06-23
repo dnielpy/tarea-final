@@ -1,4 +1,4 @@
-# Compilación de Java
+# Compilaci\u00F3n de Java
 *.class
 
 # Archivos de logs
@@ -10,7 +10,7 @@
 /target/
 /out/
 
-# Configuración de IntelliJ IDEA
+# Configuraci\u00F3n de IntelliJ IDEA
 *.iml
 .idea/
 *.iws

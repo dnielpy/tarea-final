@@ -99,7 +99,7 @@ public class VentanaVisitas extends JPanel implements ConstantesFrontend {
 					int row = table.getSelectedRow();
 					if (row != -1) {
 						int modelRow = table.convertRowIndexToModel(row);
-						int id = (int) model.getValueAt(modelRow, model.findColumn("Historia Clinica"));
+						int id = (int) model.getValueAt(modelRow, model.findColumn("ID Visita"));
 						Visita visita = cmf.obtenerVisitaPorId(id);
 						abrirFormularioVisitaExistente(visita);
 					}

@@ -32,16 +32,6 @@ public class Visita {
         setDireccion(direccion);
     }
 
-    public Visita(int id, int pacienteHistoriaClinicaID, LocalDate fecha, String diagnostico,
-            String tratamiento, String direccion) {
-        setId(id);
-        setPacienteHistoriaClinicaID(pacienteHistoriaClinicaID);
-        setFecha(fecha);
-        setDiagnostico(diagnostico);
-        setTratamiento(tratamiento);
-        setDireccion(direccion);
-    }
-
     // ID
     public int getId() {
         return id;
