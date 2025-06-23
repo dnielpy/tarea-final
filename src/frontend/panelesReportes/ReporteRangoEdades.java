@@ -21,78 +21,93 @@ import frontend.ConstantesFrontend;
 
 public class ReporteRangoEdades extends JPanel implements ConstantesFrontend {
 
-	private CMF cmf;
-	private DefaultCategoryDataset dataset;
-	
-	public ReporteRangoEdades() {
-		cmf = CMF.getInstance();
-		
-		setBounds(0, 0, 796, 578);
-		setBackground(Color.WHITE);
-		
-		dataset = new DefaultCategoryDataset();
+    private CMF cmf;
+    private DefaultCategoryDataset dataset;
+    private ChartPanel panelGrafica;
 
-		JFreeChart graficoBarras = ChartFactory.createBarChart(
-				"Distribuci\u00F3n por Rango de Edad",
-				"Rango de Edad",
-				"Cantidad de Pacientes",
-				dataset
-		);
-		setLayout(null);
-		
-		// Acceder al plot
-		CategoryPlot plot = graficoBarras.getCategoryPlot();
-		plot.setBackgroundPaint(SystemColor.menu); // fondo claro
-		plot.setDomainGridlinePaint(SystemColor.controlShadow);           
-		plot.setRangeGridlinePaint(SystemColor.controlShadow);            
-		plot.setOutlineVisible(false); // Quitar bordes interiores
+    public ReporteRangoEdades() {
+        cmf = CMF.getInstance();
 
-		// Personalizar las barras
-		BarRenderer renderer = (BarRenderer) plot.getRenderer();
-		renderer.setSeriesPaint(0, COLOR_AZUL); // color plano azul
-		renderer.setDrawBarOutline(false);
-		renderer.setBarPainter(new StandardBarPainter()); // eliminar sombreado, dejarlo plano
+        setBounds(0, 0, 796, 578);
+        setBackground(Color.WHITE);
+        setLayout(null);
 
-		// Mostrar los valores encima de las barras
-		renderer.setBaseItemLabelsVisible(true);
-		renderer.setBaseItemLabelPaint(Color.BLACK);
-		renderer.setBaseItemLabelFont(new Font("Arial", Font.PLAIN, 16));
+        dataset = new DefaultCategoryDataset();
 
-		// Ejes
-		CategoryAxis domainAxis = plot.getDomainAxis();
-		domainAxis.setTickLabelFont(new Font("Arial", Font.PLAIN, 16));
-		domainAxis.setLabelFont(new Font("Arial", Font.BOLD, 18));
+        JFreeChart graficoBarras = ChartFactory.createBarChart(
+                "Distribución por Rango de Edad",
+                "Rango de Edad",
+                "Cantidad de Pacientes",
+                dataset
+        );
 
-		NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
-		rangeAxis.setTickLabelFont(new Font("Arial", Font.PLAIN, 16));
-		rangeAxis.setLabelFont(new Font("Arial", Font.BOLD, 18));
+        graficoBarras.removeLegend();
+        
+        // Configurar el plot
+        CategoryPlot plot = graficoBarras.getCategoryPlot();
+        plot.setBackgroundPaint(SystemColor.menu);
+        plot.setDomainGridlinePaint(SystemColor.controlShadow);
+        plot.setRangeGridlinePaint(SystemColor.controlShadow);
+        plot.setOutlineVisible(false);
 
-		ChartPanel panelGrafica = new ChartPanel(graficoBarras);
-		panelGrafica.setBounds(58, 43, 680, 473);
-		add(panelGrafica);
-		
-		actualizarDatos();
-	}
-	
-	public void actualizarDatos() {
-	    int[] nuevasEdades = cmf.obtenerRangosDeEdad();
-	    String serie = "Pacientes";
-	    String[] etiquetas = {
-	        "0-10", "11-20", "21-30", "31-40", "41-50",
-	        "51-60", "61-70", "71-80", "81-90", ">91"
-	    };
+        // Personalización de barras
+        BarRenderer renderer = (BarRenderer) plot.getRenderer();
+        renderer.setSeriesPaint(0, COLOR_AZUL);
+        renderer.setDrawBarOutline(false);
+        renderer.setBarPainter(new StandardBarPainter());
 
-	    dataset.clear(); // limpia los datos anteriores
+        // Mostrar los valores encima de las barras
+        renderer.setBaseItemLabelsVisible(true);
+        renderer.setBaseItemLabelPaint(Color.BLACK);
+        renderer.setBaseItemLabelFont(new Font("Arial", Font.PLAIN, 16));
 
-	    for (int i = 0; i < nuevasEdades.length && i < etiquetas.length; i++) {
-	        dataset.addValue(nuevasEdades[i], serie, etiquetas[i]);
-	    }
-	}
-	
-	@Override
-	public void show() {
-		super.show();
-		actualizarDatos();
-	}
+        // Ejes
+        CategoryAxis domainAxis = plot.getDomainAxis();
+        domainAxis.setTickLabelFont(new Font("Arial", Font.PLAIN, 16));
+        domainAxis.setLabelFont(new Font("Arial", Font.BOLD, 18));
 
+        NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
+        rangeAxis.setTickLabelFont(new Font("Arial", Font.PLAIN, 16));
+        rangeAxis.setLabelFont(new Font("Arial", Font.BOLD, 18));
+        rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+        rangeAxis.setLowerBound(0); // Siempre mostrar desde 0
+
+        // Crear panel del gráfico
+        panelGrafica = new ChartPanel(graficoBarras);
+        panelGrafica.setBounds(15, 50, 750, 490);
+        panelGrafica.setDomainZoomable(false);
+        panelGrafica.setRangeZoomable(false);
+        panelGrafica.setPopupMenu(null); // Desactivar clic derecho
+
+        add(panelGrafica);
+
+        // Cargar los datos al inicio
+        actualizarDatos();
+    }
+
+    public void actualizarDatos() {
+        int[] nuevasEdades = cmf.obtenerRangosDeEdad();
+        String serie = "Pacientes";
+        String[] etiquetas = {
+            "0-10", "11-20", "21-30", "31-40", "41-50",
+            "51-60", "61-70", "71-80", "81-90", ">91"
+        };
+
+        dataset.clear();
+
+        for (int i = 0; i < nuevasEdades.length && i < etiquetas.length; i++) {
+            dataset.addValue(nuevasEdades[i], serie, etiquetas[i]);
+        }
+
+        // Forzar redibujado y ajuste automático del gráfico
+        panelGrafica.restoreAutoBounds();
+        panelGrafica.revalidate();
+        panelGrafica.repaint();
+    }
+
+    @Override
+    public void show() {
+        super.show();
+        actualizarDatos();
+    }
 }

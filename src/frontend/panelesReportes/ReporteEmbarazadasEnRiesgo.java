@@ -9,63 +9,69 @@ import javax.swing.table.TableRowSorter;
 
 import entidades.CMF;
 import frontend.tablas.PacienteTableModel;
+import frontend.ui.BuscadorTabla;
 import frontend.ui.TablaPersonalizada;
 
 public class ReporteEmbarazadasEnRiesgo extends JPanel {
 
-	private CMF cmf;
-	private JTable table;
-	private PacienteTableModel model;
+    private CMF cmf;
+    private JTable table;
+    private PacienteTableModel model;
+    private TableRowSorter<PacienteTableModel> sorter;
 
-	public ReporteEmbarazadasEnRiesgo() {
-		cmf = CMF.getInstance();
+    public ReporteEmbarazadasEnRiesgo() {
+        cmf = CMF.getInstance();
 
-		setBounds(0, 0, 796, 578);
-		setBackground(Color.WHITE);
-		setLayout(null);
-		
-		model = new PacienteTableModel(cmf.obtenerEmbarazadasEnRiesgo()) {
-			@Override
-			public boolean isCellEditable(int row, int column) {
-				return false;
-			}
-		};
+        setBounds(0, 0, 796, 578);
+        setBackground(Color.WHITE);
+        setLayout(null);
 
-		table = TablaPersonalizada.crearTablaPersonalizada(model);
+        model = new PacienteTableModel(cmf.obtenerEmbarazadasEnRiesgo()) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
 
-		// Configuración de columnas (si quieres hacerla personalizada por tabla)
-		table.getColumnModel().getColumn(0).setPreferredWidth(200);
-		table.getColumnModel().getColumn(1).setPreferredWidth(30);
-		table.getColumnModel().getColumn(2).setPreferredWidth(70);
-		table.getColumnModel().getColumn(3).setPreferredWidth(30);
-		table.getColumnModel().getColumn(4).setPreferredWidth(10);
+        table = TablaPersonalizada.crearTablaPersonalizada(model);
 
-		// Filtro (si aplica)
-		TableRowSorter<PacienteTableModel> sorter = new TableRowSorter<>(model);
-		table.setRowSorter(sorter);
+        // Configuración de columnas (si quieres hacerla personalizada por tabla)
+        table.getColumnModel().getColumn(0).setPreferredWidth(200);
+        table.getColumnModel().getColumn(1).setPreferredWidth(30);
+        table.getColumnModel().getColumn(2).setPreferredWidth(70);
+        table.getColumnModel().getColumn(3).setPreferredWidth(30);
+        table.getColumnModel().getColumn(4).setPreferredWidth(10);
 
-		// ScrollPane con tabla
-		JScrollPane scrollPane = TablaPersonalizada.envolverEnScroll(table, 0, 30, 630, 406);
+        // Filtro
+        sorter = new TableRowSorter<>(model);
+        table.setRowSorter(sorter);
 
-		// Panel contenedor
-		JPanel panelTabla = new JPanel();
-		panelTabla.setBounds(79, 60, 630, 437);
-		add(panelTabla);
-		panelTabla.setBackground(Color.WHITE);
-		panelTabla.setLayout(null);
-		panelTabla.add(scrollPane);
-		
-	}
-	
-	public void actualizarDatos() {
-	    model.setPacientes(cmf.obtenerEmbarazadasEnRiesgo());
-	    model.fireTableDataChanged(); // Notifica que los datos han cambiado
-	}
-	
-	@Override
-	public void show() {
-		super.show();
-		actualizarDatos();
-	}
+        // ScrollPane con tabla
+        JScrollPane scrollPane = TablaPersonalizada.envolverEnScroll(table, 0, 30, 700, 405);
 
+        // Panel contenedor para tabla
+        JPanel panelTabla = new JPanel();
+        panelTabla.setBounds(50, 50, 700, 435); // bajamos un poco para dejar espacio al buscador
+        panelTabla.setBackground(Color.WHITE);
+        panelTabla.setLayout(null);
+        panelTabla.add(scrollPane);
+
+        add(panelTabla);
+
+        // Agregar buscador
+        BuscadorTabla buscador = new BuscadorTabla(sorter, "Buscar en la tabla...");
+        buscador.setBounds(0, 0, 700, 25);
+        panelTabla.add(buscador);
+    }
+
+    public void actualizarDatos() {
+        model.setPacientes(cmf.obtenerEmbarazadasEnRiesgo());
+        model.fireTableDataChanged(); // Notifica que los datos han cambiado
+    }
+
+    @Override
+    public void show() {
+        super.show();
+        actualizarDatos();
+    }
 }

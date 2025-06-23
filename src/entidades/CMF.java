@@ -513,11 +513,11 @@ public class CMF {
 
 	public HojaCargosDiaria obtenerHojaDeCargosPorFecha(LocalDate fecha) {
 		HojaCargosDiaria hojaDeCargo = null;
-		boolean ciclar = true;
-		for (int i = 0; i < hojasCargoDiaria.size() && ciclar; i++) {
+		boolean encontrado = false;
+		for (int i = 0; i < hojasCargoDiaria.size() && !encontrado; i++) {
 			if (hojasCargoDiaria.get(i).getFecha().equals(fecha)) {
 				hojaDeCargo = hojasCargoDiaria.get(i);
-				ciclar = false;
+				encontrado = true;
 			}
 		}
 		return hojaDeCargo;
@@ -525,16 +525,17 @@ public class CMF {
 
 	public Visita obtenerVisitaPorId(int id) {
 		Visita v = null;
+		boolean encontrado = false;
 
 		if (visitas == null) {
 			throw new IllegalStateException("No hay visitas registradas");
 		}
-		for (Visita visita : visitas) {
-			if (visita.getId() == id) {
-				v = visita;
+		for (int i = 0; i < visitas.size() && !encontrado; i++) {
+			if (visitas.get(i).getId() == id) {
+				v = visitas.get(i);
 			}
 		}
-		return v; // No se encontro la visita con el ID especificado
+		return v; 
 	}
 
 	// Cantidades
@@ -681,22 +682,24 @@ public class CMF {
 		}
 		return pacientesEnRiesgo;
 	}
+	
+	public int[] obtenerCantVisitasEnUnMes(int mes, int anio) {
+	    LocalDate fechaInicial = LocalDate.of(anio, mes, 1);
+	    int maximoDia = fechaInicial.lengthOfMonth();
+	    LocalDate fechaFinal = fechaInicial.withDayOfMonth(maximoDia);
 
-	public int obtenerCantidadPacientesPorFecha(LocalDate fecha) {
-		if (fecha == null) {
-			throw new IllegalArgumentException("La fecha no puede ser nula o vac\u00eda");
-		}
+	    int[] visitasPorDia = new int[maximoDia];
 
-		int visitas = 0;
+	    for (Visita visita : visitas) {
+	        LocalDate fechaVisita = visita.getFecha();
+	        
+	        if (!fechaVisita.isBefore(fechaInicial) && !fechaVisita.isAfter(fechaFinal)) {
+	            int dia = fechaVisita.getDayOfMonth(); // va del 1 al maximoDia
+	            visitasPorDia[dia - 1]++; // el índice es dia - 1
+	        }
+	    }
 
-		boolean ciclar = true;
-		for (int i = 0; i < hojasCargoDiaria.size() && ciclar; i++) {
-			if (hojasCargoDiaria.get(i).getFecha().equals(fecha)) {
-				visitas = hojasCargoDiaria.get(i).getVisitas().size();
-				ciclar = false;
-			}
-		}
-		return visitas;
+	    return visitasPorDia;
 	}
 
 	// Datos cableados
@@ -714,9 +717,7 @@ public class CMF {
 
 	public List<String> generarEspecialidadesAleatorias() {
 		List<String> lista = new ArrayList<>();
-		int cantidad = random.nextInt(ConstantesEspecialidades.ESPECIALIDADES_REMITIDAS.size() + 1); // de 0 a tamaño
-																										// máximo
-
+		int cantidad = random.nextInt(ConstantesEspecialidades.ESPECIALIDADES_REMITIDAS.size() + 1); 
 		// Para evitar repeticiones, tomamos una copia y la mezclamos
 		List<String> copia = new ArrayList<>(ConstantesEspecialidades.ESPECIALIDADES_REMITIDAS);
 		Collections.shuffle(copia, random);
