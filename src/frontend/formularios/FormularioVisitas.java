@@ -55,11 +55,11 @@ import java.awt.event.ActionEvent;
 
 public class FormularioVisitas extends JDialog implements ConstantesFrontend {
 
-	private CMF cmf;
-	private Usuario usuarioActual;
+    private CMF cmf;
+    private Usuario usuarioActual;
     private Visita visita;
 
-	private PlaceholderTextField barraBuscarPacienteCI;
+    private PlaceholderTextField barraBuscarPacienteCI;
     private PlaceholderTextField campoFecha;
     private PlaceholderTextField campoDireccion;
     private PlaceholderTextField campoNombre;
@@ -68,10 +68,10 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
     private JTextArea textTratamiento;
 
     private DefaultListModel<String> modeloEspecialidades;
-    private DefaultListModel<String> modeloAnalisis;   
+    private DefaultListModel<String> modeloAnalisis;
     private JList<String> listaEspecialidades;
     private JList<String> listaAnalisis;
-    
+
     private JPopupMenu popupResultados;
     private DefaultListModel<String> modeloResultados;
     private JList<String> listaResultados;
@@ -530,7 +530,7 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
         getContentPane().add(panelGris);
         panelGris.setLayout(null);
     }
-    
+
     private boolean esMedico() {
         boolean resultado = false;
         if (usuarioActual != null && "MÉDICO".equalsIgnoreCase(usuarioActual.getRole().toString())) {
@@ -551,7 +551,7 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
                 Analisis a = new Analisis(idAnalisis, tipo, hoy, idVisita, historiaClinicaId);
                 lista.add(a);
             } catch (IllegalArgumentException ex) {
-                
+
             }
         }
         return lista;
@@ -577,10 +577,12 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
         } else {
             try {
                 String ci = barraBuscarPacienteCI.getText().trim();
-                if (ci.isEmpty()) throw new IllegalArgumentException("Debe ingresar el CI del paciente.");
+                if (ci.isEmpty())
+                    throw new IllegalArgumentException("Debe ingresar el CI del paciente.");
 
                 Paciente paciente = cmf.getPacientePorCI(ci);
-                if (paciente == null) throw new IllegalArgumentException("Debe seleccionar un paciente válido.");
+                if (paciente == null)
+                    throw new IllegalArgumentException("Debe seleccionar un paciente válido.");
 
                 int historiaClinicaID = paciente.getHistoriaClinica().getId();
                 int id = cmf.obtenerNuevoVisitaID();
@@ -598,7 +600,7 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
                 List<String> listaEspecialidades = construirListaEspecialidades();
 
                 Visita nuevaVisita = new Visita(id, historiaClinicaID, fecha, diagnostico, tratamiento,
-                                                listaAnalisis, listaEspecialidades, direccion);
+                        listaAnalisis, listaEspecialidades, direccion);
 
                 cmf.agregarVisita(nuevaVisita);
                 this.visita = nuevaVisita;
@@ -642,13 +644,13 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
                     throw new IllegalArgumentException("Diagnóstico, tratamiento y dirección no pueden estar vacíos.");
                 }
 
-                List<Analisis> listaAnalisis = construirListaAnalisis(modeloAnalisis, visitaExistente.getId(), historiaClinicaID);
+                List<Analisis> listaAnalisis = construirListaAnalisis(modeloAnalisis, visitaExistente.getId(),
+                        historiaClinicaID);
                 List<String> listaEspecialidades = construirListaEspecialidades();
 
                 boolean editada = cmf.editarVisita(
-                    visitaExistente.getId(), historiaClinicaID, fecha,
-                    diagnostico, tratamiento, listaAnalisis, listaEspecialidades, direccion
-                );
+                        visitaExistente.getId(), fecha,
+                        diagnostico, tratamiento, listaAnalisis, listaEspecialidades, direccion);
 
                 if (!editada) {
                     throw new IllegalStateException("No se pudo editar la visita.");
@@ -661,7 +663,8 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
             } catch (IllegalArgumentException ex) {
                 new InfoDialog(this, "Error", ex.getMessage()).setVisible(true);
             } catch (Exception ex) {
-                new InfoDialog(this, "Error inesperado", "Error al guardar la visita: " + ex.getMessage()).setVisible(true);
+                new InfoDialog(this, "Error inesperado", "Error al guardar la visita: " + ex.getMessage())
+                        .setVisible(true);
             }
         }
     }
@@ -801,7 +804,7 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
             }
         }
     }
-    
+
     private void cargarDatosPaciente(Paciente paciente) {
         if (paciente != null) {
             campoNombre.setText(paciente.getNombreYApellidos());
@@ -813,7 +816,7 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
             cartelHistoriaClinica.setText("Historia Clínica #");
         }
     }
-    
+
     private void mostrarVisitaGuardada() {
         setModoActual(ModoFormulario.VISUALIZACION);
         cargarDatosVisita();

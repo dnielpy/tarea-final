@@ -255,14 +255,42 @@ public class CMF {
 		return cantidadVisitas;
 	}
 
+	public boolean editarVisita(int id, LocalDate fecha, String diagnostico, String tratamiento,
+			List<Analisis> analisis, List<String> especialidades, String direccion) {
+
+		boolean response = false;
+		if (visitas == null) {
+			throw new IllegalStateException("No hay visitas registradas");
+		}
+
+		Visita visitaEncontrada = obtenerVisitaPorId(id);
+
+		if (visitaEncontrada != null) {
+			visitaEncontrada.setFecha(fecha);
+			visitaEncontrada.setDiagnostico(diagnostico);
+			visitaEncontrada.setTratamiento(tratamiento);
+			visitaEncontrada.setAnalisis(analisis);
+			visitaEncontrada.setEspecialidadesRemitidas(especialidades);
+			visitaEncontrada.setDireccion(direccion);
+			response = true;
+		} else {
+			throw new IllegalArgumentException("Visita con ID " + id + " no encontrada");
+		}
+
+		actualizarVisitaHistoriaClinica(visitaEncontrada);
+		return response;
+	}
+
 	public void agregarVisita(Visita visita) {
 		Objects.requireNonNull(visita, "La visita no puede ser nula");
 		for (int i = 0; i < visitas.size(); i++) {
 			if (visitas.get(i).getId() == visita.getId()) {
 				visitas.set(i, visita);
-				return;
+				throw new IllegalArgumentException(
+						"Ya existe una visita con el ID " + visita.getId() + ". Por favor, use un ID diferente.");
 			}
 		}
+
 		visitas.add(visita);
 
 		actualizarVisitaHistoriaClinica(visita);
@@ -285,8 +313,7 @@ public class CMF {
 
 				// Buscar si ya existe la visita en la historia clínica
 				boolean visitaEncontrada = false;
-				List<Visita> visitasHC = hc.getRegistroVisitas(); // Supongo que tienes un getter para visitas en
-																	// HistoriaClinica
+				List<Visita> visitasHC = hc.getRegistroVisitas();
 				for (int j = 0; j < visitasHC.size() && !visitaEncontrada; j++) {
 					if (visitasHC.get(j).getId() == visita.getId()) {
 						visitasHC.set(j, visita); // Reemplaza la visita editada
@@ -302,32 +329,6 @@ public class CMF {
 				encontrado = true;
 			}
 		}
-	}
-
-	public boolean editarVisita(int id, int historiaClinicaId, LocalDate fecha, String diagnostico,
-			String tratamiento, List<Analisis> analisis, List<String> especialidades,
-			String direccion) {
-		boolean response = false;
-
-		if (visitas == null) {
-			throw new IllegalStateException("No hay visitas registradas");
-		}
-
-		for (Visita visita : visitas) {
-			if (visita.getId() == id) {
-				visita.setPacienteHistoriaClinicaID(historiaClinicaId);
-				visita.setFecha(fecha);
-				visita.setDiagnostico(diagnostico);
-				visita.setTratamiento(tratamiento);
-				visita.setAnalisis(analisis);
-				visita.setEspecialidadesRemitidas(especialidades);
-				visita.setDireccion(direccion);
-				response = true;
-				break;
-			}
-		}
-
-		return response;
 	}
 
 	public void eliminarVisita(int id) {
