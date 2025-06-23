@@ -774,7 +774,19 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 		try {
 			String[] datos = obtenerDatosBasicos(); // nombre, primerApellido, segundoApellido, ci, direccion
 			boolean embarazada = validarEmbarazo(datos[3], checkEmbarazada.isSelected());
-			LocalDate fechaUltima = obtenerFechaUltimaPrueba();
+			LocalDate fechaUltima;
+
+			if (paciente instanceof Mujer && ((Mujer) paciente).getFechaUltimaRevision() != null) {
+				fechaUltima = ((Mujer) paciente).getFechaUltimaRevision();
+			} else if (fechaUltimaPrueba == null || fechaUltimaPrueba.getDate() == null) {
+				fechaUltima = null;
+			} else {
+				fechaUltima = obtenerFechaUltimaPrueba();
+			}
+			if (fechaUltima != null && fechaUltima.isAfter(LocalDate.now())) {
+				throw new IllegalArgumentException("La fecha de la \u00FAltima prueba no puede ser futura.");
+			}
+
 			ArrayList<String> enfermedades = obtenerListaEnfermedades();
 			ArrayList<String> vacunas = obtenerListaVacunas();
 

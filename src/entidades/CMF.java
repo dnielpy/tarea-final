@@ -489,11 +489,18 @@ public class CMF {
 		}
 
 		boolean response = false;
-		for (int i = 0; i < pacientes.size() && !response; i++) {
-			if (pacientes.get(i).getCI().equals(ci)) {
-				response = true;
+
+		if (pacientes != null && !pacientes.isEmpty()) {
+			for (int i = 0; i < pacientes.size() && !response; i++) {
+				if (pacientes.get(i).getCI().equals(ci)) {
+					response = true;
+				}
 			}
+
+		} else {
+			response = false; // No hay pacientes, no puede haber repetidos
 		}
+
 		return response;
 	}
 
