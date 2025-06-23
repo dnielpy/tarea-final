@@ -16,9 +16,11 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
 import frontend.ui.TablaPersonalizada;
+import entidades.registros.Analisis;
 import entidades.registros.Visita;
 import entidades.registros.HistoriaClinica;
 import frontend.ConstantesFrontend;
+import frontend.tablas.AnalisisTableModel;
 import frontend.tablas.VisitaTableModel;
 
 public class FormularioHistoriaClinica extends JDialog implements ConstantesFrontend {
@@ -27,7 +29,9 @@ public class FormularioHistoriaClinica extends JDialog implements ConstantesFron
 	private JLabel cartelCantVisitas;
 	private JLabel cartelCantAnalisis;
 	private VisitaTableModel modeloVisitas;
+	private AnalisisTableModel modeloAnalisis;
 	private JTable tablaVisitas;
+	private JTable tablaAnalisis;
 
 	private HistoriaClinica hc;
 
@@ -102,8 +106,8 @@ public class FormularioHistoriaClinica extends JDialog implements ConstantesFron
 		modeloVisitas.setMostrarFecha(true);
 		modeloVisitas.setMostrarHistoriaClinica(false);
 		tablaVisitas = TablaPersonalizada.crearTablaPersonalizada(modeloVisitas);
-		JScrollPane scroll = TablaPersonalizada.envolverEnScroll(tablaVisitas, 20, 20, 510, 150);
-		panelVisitas.add(scroll);
+		JScrollPane scrollVisitas = TablaPersonalizada.envolverEnScroll(tablaVisitas, 20, 20, 510, 150);
+		panelVisitas.add(scrollVisitas);
 
 		// Análisis
 		JLabel cartelAnalisis = new JLabel("An\u00E1lisis orientados");
@@ -121,6 +125,15 @@ public class FormularioHistoriaClinica extends JDialog implements ConstantesFron
 		getContentPane().add(panelAnalisis);
 		panelAnalisis.setBackground(Color.WHITE);
 		panelAnalisis.setLayout(null);
+
+		modeloAnalisis = new AnalisisTableModel(new ArrayList<Analisis>());
+		modeloAnalisis.setMostrarResultados(false);
+		modeloAnalisis.setMostrarFechaOrientado(true);
+		modeloAnalisis.setMostrarEstado(true);
+		modeloAnalisis.setMostrarFechaResultado(true);
+		tablaAnalisis = TablaPersonalizada.crearTablaPersonalizada(modeloAnalisis);
+		JScrollPane scrollAnalisis = TablaPersonalizada.envolverEnScroll(tablaAnalisis, 20, 20, 510, 150);
+		panelAnalisis.add(scrollAnalisis);
 
 		// Fondo
 		JPanel panelVerde = new JPanel();
@@ -142,18 +155,32 @@ public class FormularioHistoriaClinica extends JDialog implements ConstantesFron
 	}
 
 	public void cargarDatos() {
-		if (hc != null) {
-			// Texto limpio sin acumulación
-			cartelIDHistoria.setText("Historia Clínica #" + hc.getId());
-			cartelCantAnalisis.setText("Análisis orientados: " + (hc.getAnalisis() != null ? hc.getAnalisis().size() : 0));
-			cartelCantVisitas.setText("Visitas: " + (hc.getRegistroVisitas() != null ? hc.getRegistroVisitas().size() : 0));
+		boolean datosValidos = (hc != null);
 
-			// Actualizar modelo de visitas
-			if (modeloVisitas != null) {
-				List<Visita> visitas = hc.getRegistroVisitas() != null ? hc.getRegistroVisitas() : new ArrayList<Visita>();
-				modeloVisitas.setVisitas(visitas);
-				modeloVisitas.fireTableDataChanged();
+		List<Visita> visitas = new ArrayList<>();
+		List<Analisis> analisis = new ArrayList<>();
+
+		if (datosValidos) {
+			if (hc.getRegistroVisitas() != null) {
+				visitas = hc.getRegistroVisitas();
 			}
+			if (hc.getAnalisis() != null) {
+				analisis = hc.getAnalisis();
+			}
+		}
+
+		cartelIDHistoria.setText("Historia Clínica #" + (datosValidos ? hc.getId() : ""));
+		cartelCantVisitas.setText("Visitas: " + visitas.size());
+		cartelCantAnalisis.setText("Análisis orientados: " + analisis.size());
+
+		if (modeloVisitas != null) {
+			modeloVisitas.setVisitas(visitas);
+			modeloVisitas.fireTableDataChanged();
+		}
+
+		if (modeloAnalisis != null) {
+			modeloAnalisis.setAnalisisList(analisis);
+			modeloAnalisis.fireTableDataChanged();
 		}
 	}
 }

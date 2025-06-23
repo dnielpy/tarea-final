@@ -1,178 +1,226 @@
 package frontend.tablas;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import entidades.registros.Analisis;
-import entidades.registros.Visita;
 
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public class AnalisisTableModel extends AbstractTableModel {
 
-    private List<Analisis> analisisList;
-    private boolean mostrarResultados;
+	private List<Analisis> analisisList;
 
-    private final String[] columnNamesBase = { "ID Visita", "Tipo de Análisis", "Fecha Orientado" };
-    private final String[] columnNamesConResultados = { "ID Visita", "Tipo de Análisis", "Fecha Orientado",
-            "Fecha Resultado", "Resultados", "Estado" };
+	private boolean mostrarFechaOrientado;
+	private boolean mostrarFechaResultado;
+	private boolean mostrarResultados;
+	private boolean mostrarEstado;
 
-    private final DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	private final DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("dd/MMM/yyyy");
 
-    public AnalisisTableModel(List<Analisis> lista) {
-        this.analisisList = lista;
-        this.mostrarResultados = false; // Por defecto no mostrar columnas de resultados
-    }
+	public AnalisisTableModel(List<Analisis> lista) {
+		if (lista != null) {
+			this.analisisList = lista;
+		} else {
+			this.analisisList = new ArrayList<>();
+		}
 
-    public void setMostrarResultados(boolean mostrar) {
-        this.mostrarResultados = mostrar;
-        fireTableStructureChanged();
-    }
+		// Por defecto solo mostrar base
+		mostrarFechaOrientado = true;
+		mostrarFechaResultado = false;
+		mostrarResultados = false;
+		mostrarEstado = false;
+	}
 
-    public void setAnalisisList(List<Analisis> lista) {
-        this.analisisList = lista;
-        fireTableDataChanged();
-    }
+	// Setters individuales
+	public void setMostrarFechaOrientado(boolean mostrar) {
+		this.mostrarFechaOrientado = mostrar;
+		fireTableStructureChanged();
+	}
 
-    @Override
-    public int getRowCount() {
-        int count;
-        if (analisisList != null) {
-            count = analisisList.size();
-        } else {
-            count = 0;
-        }
-        return count;
-    }
+	public void setMostrarFechaResultado(boolean mostrar) {
+		this.mostrarFechaResultado = mostrar;
+		fireTableStructureChanged();
+	}
 
-    @Override
-    public int getColumnCount() {
-        int count;
-        if (mostrarResultados) {
-            count = columnNamesConResultados.length;
-        } else {
-            count = columnNamesBase.length;
-        }
-        return count;
-    }
+	public void setMostrarResultados(boolean mostrar) {
+		this.mostrarResultados = mostrar;
+		fireTableStructureChanged();
+	}
 
-    @Override
-    public String getColumnName(int column) {
-        String name;
-        if (mostrarResultados) {
-            name = columnNamesConResultados[column];
-        } else {
-            name = columnNamesBase[column];
-        }
-        return name;
-    }
+	public void setMostrarEstado(boolean mostrar) {
+		this.mostrarEstado = mostrar;
+		fireTableStructureChanged();
+	}
 
-    @Override
-    public Class<?> getColumnClass(int columnIndex) {
-        Class<?> clase;
-        if (columnIndex == 0) {
-            clase = Integer.class;
-        } else if (columnIndex == 2 || (mostrarResultados && columnIndex == 3)) {
-            clase = String.class;
-        } else {
-            clase = String.class;
-        }
-        return clase;
-    }
+	public void setAnalisisList(List<Analisis> lista) {
+		if (lista != null) {
+			this.analisisList = lista;
+		} else {
+			this.analisisList = new ArrayList<>();
+		}
+		fireTableDataChanged();
+	}
 
-    public Analisis getAnalisisAt(int rowIndex) {
-        Analisis analisis;
-        if (rowIndex >= 0 && rowIndex < analisisList.size()) {
-            analisis = analisisList.get(rowIndex);
-        } else {
-            analisis = null;
-        }
-        return analisis;
-    }
+	@Override
+	public int getRowCount() {
+		int count = 0;
+		if (analisisList != null) {
+			count = analisisList.size();
+		}
+		return count;
+	}
 
-    @Override
-    public Object getValueAt(int rowIndex, int columnIndex) {
-        Object valor = null;
+	@Override
+	public int getColumnCount() {
+		int columnas = 2; // ID Visita y Tipo de Análisis
+		if (mostrarFechaOrientado) columnas++;
+		if (mostrarFechaResultado) columnas++;
+		if (mostrarResultados) columnas++;
+		if (mostrarEstado) columnas++;
+		return columnas;
+	}
 
-        if (analisisList != null && rowIndex >= 0 && rowIndex < analisisList.size()) {
-            Analisis analisis = analisisList.get(rowIndex);
+	@Override
+	public String getColumnName(int column) {
+		String nombre = "";
 
-            if (!mostrarResultados) {
-                if (columnIndex == 0) {
-                    valor = analisis.getVisitaId();
-                } else if (columnIndex == 1) {
-                    valor = analisis.getTipoDeAnalisis();
-                } else if (columnIndex == 2) {
-                    if (analisis.getFechaOrientado() != null) {
-                        valor = analisis.getFechaOrientado().format(formatoFecha);
-                    } else {
-                        valor = "";
-                    }
-                } else {
-                    valor = null;
-                }
-            } else {
-                if (columnIndex == 0) {
-                    valor = analisis.getVisitaId();
-                } else if (columnIndex == 1) {
-                    valor = analisis.getTipoDeAnalisis();
-                } else if (columnIndex == 2) {
-                    if (analisis.getFechaOrientado() != null) {
-                        valor = analisis.getFechaOrientado().format(formatoFecha);
-                    } else {
-                        valor = "";
-                    }
-                } else if (columnIndex == 3) {
-                    if (analisis.getFechaResultado() != null) {
-                        valor = analisis.getFechaResultado().format(formatoFecha);
-                    } else {
-                        valor = "";
-                    }
-                } else if (columnIndex == 4) {
-                    if (analisis.getResultados() != null) {
-                        valor = analisis.getResultados();
-                    } else {
-                        valor = "";
-                    }
-                } else if (columnIndex == 5) {
-                    valor = analisis.estaPendienteDeResultado() ? "Pendiente" : "Completado";
-                } else {
-                    valor = null;
-                }
-            }
-        }
-        return valor;
-    }
+		int index = 0;
 
-    public void eliminarAnalisisPorId(int id) {
-        if (analisisList != null) {
-            int index = -1;
-            int i = 0;
-            while (i < analisisList.size() && index == -1) {
-                if (analisisList.get(i).getVisitaId() == id) {
-                    index = i;
-                }
-                i++;
-            }
-            if (index != -1) {
-                analisisList.remove(index);
-                fireTableRowsDeleted(index, index);
-            }
-        }
-    }
+		if (column == index) {
+			nombre = "ID Visita";
+		}
 
-    public void aplicarCentrado(javax.swing.JTable table) {
-        javax.swing.table.DefaultTableCellRenderer renderer = new javax.swing.table.DefaultTableCellRenderer();
-        renderer.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        renderer.setVerticalAlignment(javax.swing.SwingConstants.CENTER);
+		index++;
+		if (column == index) {
+			nombre = "Tipo";
+		}
 
-        int columnas = getColumnCount();
-        for (int i = 0; i < columnas; i++) {
-            table.getColumnModel().getColumn(i).setCellRenderer(renderer);
-        }
-    }
+		index++;
+		if (mostrarFechaOrientado && column == index) {
+			nombre = "Orientado";
+		}
+
+		if (mostrarFechaOrientado) index++;
+		if (mostrarFechaResultado && column == index) {
+			nombre = "Actualizado";
+		}
+
+		if (mostrarFechaResultado) index++;
+		if (mostrarResultados && column == index) {
+			nombre = "Resultados";
+		}
+
+		if (mostrarResultados) index++;
+		if (mostrarEstado && column == index) {
+			nombre = "Estado";
+		}
+
+		return nombre;
+	}
+
+	@Override
+	public Class<?> getColumnClass(int columnIndex) {
+		if (columnIndex == 0) {
+			return Integer.class;
+		}
+		return String.class;
+	}
+
+	public Analisis getAnalisisAt(int rowIndex) {
+		Analisis resultado = null;
+
+		if (analisisList != null && rowIndex >= 0 && rowIndex < analisisList.size()) {
+			resultado = analisisList.get(rowIndex);
+		}
+		return resultado;
+	}
+
+	@Override
+	public Object getValueAt(int rowIndex, int columnIndex) {
+		Object valor = "";
+
+		if (analisisList != null && rowIndex >= 0 && rowIndex < analisisList.size()) {
+			Analisis a = analisisList.get(rowIndex);
+
+			int index = 0;
+
+			if (columnIndex == index) {
+				valor = a.getVisitaId();
+			}
+
+			index++;
+			if (columnIndex == index) {
+				valor = a.getTipoDeAnalisis();
+			}
+
+			index++;
+			if (mostrarFechaOrientado && columnIndex == index) {
+				valor = formatearFecha(a.getFechaOrientado());
+			}
+
+			if (mostrarFechaOrientado) index++;
+			if (mostrarFechaResultado && columnIndex == index) {
+				valor = formatearFecha(a.getFechaResultado());
+			}
+
+			if (mostrarFechaResultado) index++;
+			if (mostrarResultados && columnIndex == index) {
+				valor = a.getResultados() != null ? a.getResultados() : "";
+			}
+
+			if (mostrarResultados) index++;
+			if (mostrarEstado && columnIndex == index) {
+				valor = a.estaPendienteDeResultado() ? "Pendiente" : "Completado";
+			}
+		}
+
+		return valor;
+	}
+
+	private String formatearFecha(LocalDate fecha) {
+		String resultado = "";
+		if (fecha != null) {
+			resultado = fecha.format(formatoFecha);
+		}
+		return resultado;
+	}
+
+	public void eliminarAnalisisPorId(int id) {
+		if (analisisList != null) {
+			int index = -1;
+			int i = 0;
+
+			while (i < analisisList.size() && index == -1) {
+				Analisis actual = analisisList.get(i);
+				if (actual != null && actual.getVisitaId() == id) {
+					index = i;
+				}
+				i = i + 1;
+			}
+
+			if (index != -1) {
+				analisisList.remove(index);
+				fireTableRowsDeleted(index, index);
+			}
+		}
+	}
+
+	public void aplicarCentrado(javax.swing.JTable table) {
+		DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
+		renderer.setHorizontalAlignment(SwingConstants.CENTER);
+		renderer.setVerticalAlignment(SwingConstants.CENTER);
+
+		int total = getColumnCount();
+		int i = 0;
+		while (i < total) {
+			table.getColumnModel().getColumn(i).setCellRenderer(renderer);
+			i = i + 1;
+		}
+	}
 }
