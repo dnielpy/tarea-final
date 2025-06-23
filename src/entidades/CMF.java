@@ -170,8 +170,9 @@ public class CMF {
 
 	public boolean eliminarPaciente(int id) {
 		boolean response = false;
-		for (int i = 0; i < obtenerTotalPacientes() && !response; i++) {
+		for (int i = 0; i < pacientes.size() && !response; i++) {
 			if (getPacientes().get(i).getHistoriaClinica().getId() == id) {
+				limpiarRastroPaciente(id);
 				pacientes.remove(i);
 				response = true;
 			}
@@ -227,7 +228,7 @@ public class CMF {
 
 		return listaVisitas;
 	}
-	
+
 	public List<Visita> obtenerVisitasDeUnDia(LocalDate fecha) {
 		List<Visita> listaVisitas = new ArrayList<>();
 
@@ -432,7 +433,55 @@ public class CMF {
 
 		return pac;
 	}
-	
+
+	public void limpiarRastroPaciente(int id) {
+
+		Paciente paciente = getPacientePorId(id);
+		if (paciente == null) {
+			throw new IllegalArgumentException("No se encontró un paciente con el ID proporcionado");
+		}
+
+		// Eliminar visitas relacionadas con el paciente
+		for (int i = 0; i < visitas.size(); i++) {
+			if (visitas.get(i).getPacienteHistoriaClinicaID() == id) {
+				visitas.remove(i);
+				i--; // Ajustar índice tras eliminación
+			}
+		}
+
+		// Eliminar referencias en hojas de cargos diarias
+		for (int i = 0; i < hojasCargoDiaria.size(); i++) {
+			HojaCargosDiaria hoja = hojasCargoDiaria.get(i);
+			List<Visita> visitasHoja = hoja.getVisitas();
+			for (int j = 0; j < visitasHoja.size(); j++) {
+				if (visitasHoja.get(j).getPacienteHistoriaClinicaID() == id) {
+					visitasHoja.remove(j);
+					j--; // Ajustar índice tras eliminación
+				}
+			}
+		}
+
+		// Eliminar visitas y análisis de la historia clínica
+		HistoriaClinica historiaClinica = paciente.getHistoriaClinica();
+		if (historiaClinica != null) {
+			List<Visita> registroVisitas = historiaClinica.getRegistroVisitas();
+			for (int i = 0; i < registroVisitas.size(); i++) {
+				if (registroVisitas.get(i).getPacienteHistoriaClinicaID() == id) {
+					registroVisitas.remove(i);
+					i--; // Ajustar índice tras eliminación
+				}
+			}
+
+			List<Analisis> listaAnalisis = historiaClinica.getAnalisis();
+			for (int i = 0; i < listaAnalisis.size(); i++) {
+				if (listaAnalisis.get(i).getHistoriaClinicaId() == id) {
+					listaAnalisis.remove(i);
+					i--; // Ajustar índice tras eliminación
+				}
+			}
+		}
+	}
+
 	public boolean isCiRepited(String ci) {
 		if (ci == null || ci.trim().isEmpty()) {
 			throw new IllegalArgumentException("El CI no puede ser nulo o vacío");
@@ -535,7 +584,7 @@ public class CMF {
 				v = visitas.get(i);
 			}
 		}
-		return v; 
+		return v;
 	}
 
 	// Cantidades
@@ -543,17 +592,17 @@ public class CMF {
 	public int obtenerCantVisitasDeUnDia(LocalDate fecha) {
 		int visitas = 0;
 		boolean encontrado = false;
-		
+
 		for (int i = 0; i < hojasCargoDiaria.size() && !encontrado; i++) {
 			if (hojasCargoDiaria.get(i).getFecha().equals(fecha)) {
 				visitas = hojasCargoDiaria.get(i).cantidadVisitas();
 				encontrado = true;
 			}
 		}
-		
+
 		return visitas;
 	}
-	
+
 	public int obtenerTotalPacientes() {
 		return this.pacientes.size();
 	}
@@ -682,24 +731,24 @@ public class CMF {
 		}
 		return pacientesEnRiesgo;
 	}
-	
+
 	public int[] obtenerCantVisitasEnUnMes(int mes, int anio) {
-	    LocalDate fechaInicial = LocalDate.of(anio, mes, 1);
-	    int maximoDia = fechaInicial.lengthOfMonth();
-	    LocalDate fechaFinal = fechaInicial.withDayOfMonth(maximoDia);
+		LocalDate fechaInicial = LocalDate.of(anio, mes, 1);
+		int maximoDia = fechaInicial.lengthOfMonth();
+		LocalDate fechaFinal = fechaInicial.withDayOfMonth(maximoDia);
 
-	    int[] visitasPorDia = new int[maximoDia];
+		int[] visitasPorDia = new int[maximoDia];
 
-	    for (Visita visita : visitas) {
-	        LocalDate fechaVisita = visita.getFecha();
-	        
-	        if (!fechaVisita.isBefore(fechaInicial) && !fechaVisita.isAfter(fechaFinal)) {
-	            int dia = fechaVisita.getDayOfMonth(); // va del 1 al maximoDia
-	            visitasPorDia[dia - 1]++; // el índice es dia - 1
-	        }
-	    }
+		for (Visita visita : visitas) {
+			LocalDate fechaVisita = visita.getFecha();
 
-	    return visitasPorDia;
+			if (!fechaVisita.isBefore(fechaInicial) && !fechaVisita.isAfter(fechaFinal)) {
+				int dia = fechaVisita.getDayOfMonth(); // va del 1 al maximoDia
+				visitasPorDia[dia - 1]++; // el índice es dia - 1
+			}
+		}
+
+		return visitasPorDia;
 	}
 
 	// Datos cableados
@@ -717,7 +766,7 @@ public class CMF {
 
 	public List<String> generarEspecialidadesAleatorias() {
 		List<String> lista = new ArrayList<>();
-		int cantidad = random.nextInt(ConstantesEspecialidades.ESPECIALIDADES_REMITIDAS.size() + 1); 
+		int cantidad = random.nextInt(ConstantesEspecialidades.ESPECIALIDADES_REMITIDAS.size() + 1);
 		// Para evitar repeticiones, tomamos una copia y la mezclamos
 		List<String> copia = new ArrayList<>(ConstantesEspecialidades.ESPECIALIDADES_REMITIDAS);
 		Collections.shuffle(copia, random);
