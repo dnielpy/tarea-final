@@ -20,7 +20,6 @@ import frontend.formularios.FormularioPaciente;
 import frontend.formularios.FormularioPaciente.ModoFormulario;
 import frontend.tablas.PacienteTableModel;
 import frontend.ui.BuscadorTabla;
-import frontend.ui.ScrollPaneModerno;
 import frontend.ui.TablaPersonalizada;
 import frontend.ui.dialogs.InfoDialog;
 import frontend.ui.dialogs.QuestionDialog;

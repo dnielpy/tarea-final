@@ -7,6 +7,7 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 
 import frontend.ConstantesFrontend;
+import frontend.panelesReportes.ReporteCantVisitasEnUnMes;
 import frontend.panelesReportes.ReporteEmbarazadasEnRiesgo;
 import frontend.panelesReportes.ReportePorcentajeGenero;
 import frontend.panelesReportes.ReporteRangoEdades;
@@ -65,12 +66,12 @@ public class VentanaReportes extends JPanel implements MouseListener, Constantes
 		panelReportesGenerales.add(botonPocentajeGenero);
 		botonPocentajeGenero.addMouseListener(this);
 		
-		JPanel panel_5 = new JPanel();
-		panel_5.setBorder(new LineBorder(SystemColor.controlShadow, 1, true));
-		panel_5.setBackground(SystemColor.menu);
-		panel_5.setBounds(419, 189, 292, 149);
-		panelReportesGenerales.add(panel_5);
-		panel_5.setLayout(null);
+		BotonReporte botonReporteVisitasMes = new BotonReporte("VISITAS EN UN MES",
+				"Muestra una gráfica de línea de las visitas de un mes, permitiendo analizar comportamientos y patrones dentro de estas");
+		
+		botonReporteVisitasMes.setBounds(419, 189, 292, 149);
+		panelReportesGenerales.add(botonReporteVisitasMes);
+		botonReporteVisitasMes.addMouseListener(this);
 		
 		JPanel panel_7 = new JPanel();
 		panel_7.setBorder(new LineBorder(SystemColor.controlShadow, 1, true));
@@ -94,6 +95,9 @@ public class VentanaReportes extends JPanel implements MouseListener, Constantes
 		
 		ReportePorcentajeGenero panelPorcientoMujeres = new ReportePorcentajeGenero();
 		panelContenedor.add(panelPorcientoMujeres, "PORCENTAJE DE GÉNEROS");
+		
+		ReporteCantVisitasEnUnMes panelReporteCantVisitasEnUnMes = new ReporteCantVisitasEnUnMes();
+		panelContenedor.add(panelReporteCantVisitasEnUnMes, "VISITAS EN UN MES");
 		
 		panelEncabezado = new JPanel();
 		panelEncabezado.setBackground(Color.WHITE);
