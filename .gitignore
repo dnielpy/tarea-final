@@ -27,3 +27,7 @@ Thumbs.db
 *.bkp
 *~
 
+# Reporte HTML generado
+reporte_cmf.html
+
+
