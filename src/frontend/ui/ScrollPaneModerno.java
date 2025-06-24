@@ -23,6 +23,7 @@ public class ScrollPaneModerno extends JScrollPane implements ConstantesFrontend
         iniciarAnimaciones();
     }
 
+    // Configura las barras de desplazamiento
     private void configurarScrollBars() {
         JScrollBar vertical = getVerticalScrollBar();
         JScrollBar horizontal = getHorizontalScrollBar();
@@ -43,6 +44,7 @@ public class ScrollPaneModerno extends JScrollPane implements ConstantesFrontend
         horizontal.setVisible(true);
     }
 
+    // Configura los listeners para el hover
     private void configurarHoverListeners() {
         MouseAdapter hoverListener = new MouseAdapter() {
             @Override
@@ -64,12 +66,14 @@ public class ScrollPaneModerno extends JScrollPane implements ConstantesFrontend
         getViewport().getView().addMouseListener(hoverListener);
     }
 
+    // Inicia las animaciones de fade
     private void iniciarAnimaciones() {
         fadeInTimer = new Timer(30, new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (alpha < 1f) {
                     alpha += 0.1f;
-                    if (alpha > 1f) alpha = 1f;
+                    if (alpha > 1f)
+                        alpha = 1f;
                     repaint();
                 } else {
                     fadeInTimer.stop();
@@ -81,7 +85,8 @@ public class ScrollPaneModerno extends JScrollPane implements ConstantesFrontend
             public void actionPerformed(ActionEvent e) {
                 if (alpha > 0f) {
                     alpha -= 0.1f;
-                    if (alpha < 0f) alpha = 0f;
+                    if (alpha < 0f)
+                        alpha = 0f;
                     repaint();
                 } else {
                     fadeOutTimer.stop();
@@ -90,53 +95,60 @@ public class ScrollPaneModerno extends JScrollPane implements ConstantesFrontend
         });
     }
 
+    // Inicia el efecto de fade in
     private void iniciarFadeIn() {
         fadeOutTimer.stop();
         fadeInTimer.start();
     }
 
+    // Inicia el efecto de fade out
     private void iniciarFadeOut() {
         fadeInTimer.stop();
         fadeOutTimer.start();
     }
 
+    // Clase personalizada para la barra de desplazamiento
     private class ScrollBarModernoUI extends BasicScrollBarUI {
 
-        private final Color colorBarra = new Color(0, 171, 227);  // azul brillante
+        private final Color colorBarra = new Color(0, 171, 227); // azul brillante
         private final Color colorFondo = Color.WHITE;
 
+        // Pinta el "thumb" (la parte que se mueve) de la barra de desplazamiento
         @Override
         protected void paintThumb(Graphics g, JComponent c, Rectangle thumbBounds) {
             Graphics2D g2 = (Graphics2D) g.create();
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
             Color colorConAlpha = new Color(
-                colorBarra.getRed(),
-                colorBarra.getGreen(),
-                colorBarra.getBlue(),
-                (int) (alpha * 255)
-            );
+                    colorBarra.getRed(),
+                    colorBarra.getGreen(),
+                    colorBarra.getBlue(),
+                    (int) (alpha * 255));
             g2.setColor(colorConAlpha);
             g2.fillRoundRect(thumbBounds.x, thumbBounds.y, thumbBounds.width, thumbBounds.height, 10, 10);
             g2.dispose();
         }
 
+        // Pinta el fondo de la barra de desplazamiento
         @Override
         protected void paintTrack(Graphics g, JComponent c, Rectangle trackBounds) {
             g.setColor(colorFondo);
             g.fillRect(trackBounds.x, trackBounds.y, trackBounds.width, trackBounds.height);
         }
 
+        // Crea el botón para disminuir el desplazamiento
         @Override
         protected JButton createDecreaseButton(int orientation) {
             return crearBotonInvisible();
         }
 
+        // Crea el botón para aumentar el desplazamiento
         @Override
         protected JButton createIncreaseButton(int orientation) {
             return crearBotonInvisible();
         }
 
+        // Crea un botón invisible
         private JButton crearBotonInvisible() {
             JButton button = new JButton();
             button.setPreferredSize(new Dimension(0, 0));

@@ -7,6 +7,7 @@ import entidades.registros.Visita;
 
 public class MockDataGenerator {
 
+	// Genera datos de prueba para el sistema
 	public static void mockData() {
 		CMF cmf = CMF.getInstance();
 

@@ -41,13 +41,14 @@ public class VisitaTableModel extends AbstractTableModel {
         actualizarColumnNames();
         fireTableStructureChanged();
     }
-    
+
     public void setMostrarIdVisita(boolean mostrarIdVisita) {
         this.mostrarIdVisita = mostrarIdVisita;
         actualizarColumnNames();
         fireTableStructureChanged();
     }
 
+    // Dynamically updates column names based on configurations
     private void actualizarColumnNames() {
         List<String> columnas = new ArrayList<>();
 
@@ -87,6 +88,7 @@ public class VisitaTableModel extends AbstractTableModel {
         return columnas;
     }
 
+    // Returns the value for a specific cell in the table
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         Visita visita = visitas.get(rowIndex);

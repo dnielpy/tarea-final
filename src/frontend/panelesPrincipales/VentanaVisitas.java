@@ -58,8 +58,10 @@ public class VentanaVisitas extends JPanel implements ConstantesFrontend {
 		abrirFormulario(new FormularioVisitas(SwingUtilities.getWindowAncestor(this)));
 	}
 
+	// Abre el formulario para una visita existente
 	private void abrirFormularioVisitaExistente(Visita visita) {
-		abrirFormulario(new FormularioVisitas(SwingUtilities.getWindowAncestor(this), visita, ModoFormulario.VISUALIZACION));
+		abrirFormulario(
+				new FormularioVisitas(SwingUtilities.getWindowAncestor(this), visita, ModoFormulario.VISUALIZACION));
 	}
 
 	private void initComponents() {
@@ -70,7 +72,7 @@ public class VentanaVisitas extends JPanel implements ConstantesFrontend {
 		add(crearPanelSuperior());
 		add(crearPanelTabla());
 		add(crearBotonAgregarVisita());
-		add(crearCartelListadoVisitas());		
+		add(crearCartelListadoVisitas());
 	}
 
 	private JPanel crearPanelSuperior() {
@@ -88,6 +90,7 @@ public class VentanaVisitas extends JPanel implements ConstantesFrontend {
 		return panelSuperior;
 	}
 
+	// Crea un panel de tabla con una barra de búsqueda y un panel de desplazamiento
 	private JPanel crearPanelTabla() {
 		table = TablaPersonalizada.crearTablaPersonalizada(model);
 		sorter = new TableRowSorter<VisitaTableModel>(model);
@@ -113,12 +116,13 @@ public class VentanaVisitas extends JPanel implements ConstantesFrontend {
 		JPanel panelTabla = new JPanel(null);
 		panelTabla.setBounds(50, 140, 700, 435);
 		panelTabla.setBackground(Color.WHITE);
-		panelTabla.add(scrollPane);		
+		panelTabla.add(scrollPane);
 		panelTabla.add(crearBuscadorTabla());
 
 		return panelTabla;
 	}
 
+	// Crea un cartel para el listado de visitas
 	private JLabel crearCartelListadoVisitas() {
 		JLabel cartel = new JLabel("Listado de visitas de hoy:");
 		cartel.setFont(new Font("Arial", Font.BOLD, 18));
@@ -126,6 +130,7 @@ public class VentanaVisitas extends JPanel implements ConstantesFrontend {
 		return cartel;
 	}
 
+	// Crea un campo de texto para buscar en la tabla
 	private JTextField crearBuscadorTabla() {
 		BuscadorTabla buscador = new BuscadorTabla(sorter, "Buscar en la tabla...");
 		buscador.setBounds(0, 0, 700, 25);
@@ -148,6 +153,7 @@ public class VentanaVisitas extends JPanel implements ConstantesFrontend {
 		return boton;
 	}
 
+	// Actualiza los datos de la tabla
 	public void actualizarDatos() {
 		model.setVisitas(cmf.obtenerVisitasDeUnDia(LocalDate.now()));
 		model.fireTableDataChanged(); // Notifica que los datos han cambiado
