@@ -1,27 +1,21 @@
 package entidades;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
-import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 import entidades.personal.Enfermera;
 import entidades.personal.Medico;
 import entidades.personal.Mujer;
 import entidades.personal.Paciente;
-import entidades.personal.Persona;
 import entidades.personal.PersonalSanitario;
 import entidades.registros.Analisis;
 import entidades.registros.HistoriaClinica;
@@ -393,6 +387,19 @@ public class CMF {
 		return pendientes;
 	}
 
+	// Editar Analisis
+	
+	public void editarResultadosDeAnalisis(Analisis analisis, String nuevosResultados) {
+	    String anteriores = analisis.getResultados() != null ? analisis.getResultados().trim() : "";
+	    nuevosResultados = nuevosResultados.trim();
+
+	    if (!nuevosResultados.equals(anteriores)) {
+	        analisis.setResultados(nuevosResultados);
+	        analisis.setFechaResultado(LocalDate.now());
+	    }
+	}
+
+	
 	// Hojas de cargo
 
 	public void agregarHojaCargoDiaria(LocalDate fecha) {

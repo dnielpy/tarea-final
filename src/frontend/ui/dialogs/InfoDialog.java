@@ -48,5 +48,3 @@ public class InfoDialog extends JDialog {
     	getContentPane().add(botones, BorderLayout.SOUTH);
     }
 }
-
-
