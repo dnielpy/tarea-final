@@ -9,6 +9,10 @@ import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.Color;
 import java.awt.Window;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -152,6 +156,8 @@ public class FormularioHistoriaClinica extends JDialog implements ConstantesFron
 		panelGris.setBounds(0, 96, 620, 395);
 		getContentPane().add(panelGris);
 		panelGris.setLayout(null);
+		
+		configurarDobleClickAnalisis();
 	}
 
 	public void cargarDatos() {
@@ -183,4 +189,44 @@ public class FormularioHistoriaClinica extends JDialog implements ConstantesFron
 			modeloAnalisis.fireTableDataChanged();
 		}
 	}
+	
+	private void configurarDobleClickAnalisis() {
+		tablaAnalisis.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount() == 2 && tablaAnalisis.getSelectedRow() != -1) {
+					int fila = tablaAnalisis.getSelectedRow();
+					Analisis analisisSeleccionado = modeloAnalisis.getAnalisisAt(fila);
+
+					if (analisisSeleccionado != null) {
+						abrirFormularioAnalisisDesdeTabla(analisisSeleccionado);
+					}
+				}
+			}
+		});
+	}
+	
+	private void abrirFormularioAnalisisDesdeTabla(Analisis analisis) {
+		this.setVisible(false); // Ocultar historia clínica temporalmente
+
+		FormularioAnalisis formulario = new FormularioAnalisis(
+			FormularioHistoriaClinica.this,
+			analisis,
+			FormularioAnalisis.ModoFormulario.VISUALIZACION
+		);
+
+		// Posicionar en el mismo lugar que esta ventana
+		formulario.setLocation(this.getLocation());
+
+		// Al cerrar, volver a mostrar la historia clínica
+		formulario.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosed(WindowEvent e) {
+				FormularioHistoriaClinica.this.setVisible(true);
+			}
+		});
+
+		formulario.setVisible(true);
+	}
+
 }

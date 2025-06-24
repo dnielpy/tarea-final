@@ -9,15 +9,13 @@ import javax.swing.border.LineBorder;
 import util.ConstantesFrontend;
 import util.HTMLGenerator;
 import entidades.CMF;
-import entidades.personal.Paciente;
-import entidades.registros.Analisis;
-import entidades.registros.Visita;
 import frontend.panelesReportes.ReporteCantVisitasEnUnMes;
 import frontend.panelesReportes.ReporteEmbarazadasEnRiesgo;
 import frontend.panelesReportes.ReportePorcentajeGenero;
 import frontend.panelesReportes.ReporteRangoEdades;
 import frontend.ui.botones.BotonReporte;
 import frontend.ui.botones.ImageButtonLabel;
+import frontend.ui.dialogs.InfoDialog;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -87,13 +85,6 @@ public class VentanaReportes extends JPanel implements MouseListener, Constantes
 		panel_7.setBounds(419, 372, 292, 149);
 		panelReportesGenerales.add(panel_7);
 		panel_7.setLayout(null);
-
-		JPanel panel_8 = new JPanel();
-		panel_8.setBorder(new LineBorder(SystemColor.controlShadow, 1, true));
-		panel_8.setBackground(SystemColor.menu);
-		panel_8.setBounds(75, 372, 292, 149);
-		panelReportesGenerales.add(panel_8);
-		panel_8.setLayout(null);
 
 		ReporteRangoEdades panelGraficoRangoEdades = new ReporteRangoEdades();
 		panelContenedor.add(panelGraficoRangoEdades, "RANGO DE EDADES");
@@ -204,15 +195,19 @@ public class VentanaReportes extends JPanel implements MouseListener, Constantes
 	}
 
 	private void generarReporteHTML() {
-		CMF cmf = CMF.getInstance();
-		String html = HTMLGenerator.generarHTMLReporte(cmf);
+	    CMF cmf = CMF.getInstance();
+	    String html = HTMLGenerator.generarHTMLReporte(cmf);
 
-		try (FileWriter writer = new FileWriter("reporte_cmf.html")) {
-			writer.write(html);
-			JOptionPane.showMessageDialog(this, "Reporte generado exitosamente: reporte.html");
-		} catch (IOException ex) {
-			JOptionPane.showMessageDialog(this, "Error al generar el reporte: " + ex.getMessage());
-		}
+	    try (FileWriter writer = new FileWriter("reporte_cmf.html")) {
+	        writer.write(html);     
+	        Window parentWindow = SwingUtilities.getWindowAncestor(this);
+	        InfoDialog dialog = new InfoDialog(parentWindow, "Éxito", "Reporte generado exitosamente:\nreporte_cmf.html");
+	        dialog.setVisible(true);
+	    } catch (IOException ex) {
+	        Window parentWindow = SwingUtilities.getWindowAncestor(this);
+	        InfoDialog dialog = new InfoDialog(parentWindow, "Error", "Error al generar el reporte:\n" + ex.getMessage());
+	        dialog.setVisible(true);
+	    }
 	}
 
 	private void mostrarVentanaAboutUs() {

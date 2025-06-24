@@ -10,7 +10,7 @@
 /target/
 /out/
 
-# Configuraci\u00F3n de IntelliJ IDEA
+# Configuracion de IntelliJ IDEA
 *.iml
 .idea/
 *.iws
@@ -22,6 +22,7 @@ Thumbs.db
 
 # Archivos temporales
 *.tmp
+*.odt#
 *.swp
 *.bak
 *.bkp

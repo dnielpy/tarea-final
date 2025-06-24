@@ -177,7 +177,7 @@ public class TarjetaUsuario extends JDialog implements ConstantesFrontend {
 		getContentPane().add(panelVerde);
 		
 		JPanel panelAzul = new JPanel();
-		panelAzul.setBounds(0, 255, 514, 70);
+		panelAzul.setBounds(0, 255, 514, 86);
 		panelAzul.setBackground(COLOR_AZUL);
 		getContentPane().add(panelAzul);
 		
