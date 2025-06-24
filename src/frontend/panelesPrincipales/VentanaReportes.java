@@ -148,6 +148,17 @@ public class VentanaReportes extends JPanel implements MouseListener, Constantes
 				generarReporteHTML();
 			}
 		});
+
+		// Add "About Us" button
+		BotonReporte botonAboutUs = new BotonReporte("ABOUT US", "Información sobre el repositorio.");
+		botonAboutUs.setBounds(419, 372, 292, 149);
+		panelReportesGenerales.add(botonAboutUs);
+		botonAboutUs.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				mostrarVentanaAboutUs();
+			}
+		});
 	}
 
 	@Override
@@ -202,5 +213,62 @@ public class VentanaReportes extends JPanel implements MouseListener, Constantes
 		} catch (IOException ex) {
 			JOptionPane.showMessageDialog(this, "Error al generar el reporte: " + ex.getMessage());
 		}
+	}
+
+	private void mostrarVentanaAboutUs() {
+		JFrame ventanaAboutUs = new JFrame("About Us");
+		ventanaAboutUs.setSize(796, 673); // Match the size of other project windows
+		ventanaAboutUs.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		ventanaAboutUs.setLayout(new BorderLayout());
+
+		// Texto principal sobre el repositorio
+		JLabel textoRepo = new JLabel("<html><div style='text-align: center;'>"
+				+ "Este proyecto fue desarrollado como parte de la tarea final de la asignatura "
+				+ "<b>Diseño de Programación Orientada a Objetos</b>. Al momento de su entrega, "
+				+ "el repositorio estará disponible públicamente y abierto a contribuciones de la comunidad. "
+				+ "Se invita a los usuarios a realizar forks, sugerir mejoras y proponer cambios. "
+				+ "</div></html>", SwingConstants.CENTER);
+		textoRepo.setFont(new Font("Arial", Font.PLAIN, 14));
+		ventanaAboutUs.add(textoRepo, BorderLayout.NORTH);
+
+		// Panel central con los códigos QR y sus descripciones
+		JPanel panelCentral = new JPanel(new GridLayout(2, 2, 10, 10));
+		panelCentral.setBackground(Color.WHITE);
+
+		// Primer QR: Repositorio del proyecto
+		ImageIcon iconoRepo = new ImageIcon(getClass().getResource("/fotos/uDX0l6.jpg"));
+		Image imagenRepoEscalada = iconoRepo.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH); // Aumentado a
+																											// 200x200
+		JLabel imagenRepo = new JLabel(new ImageIcon(imagenRepoEscalada));
+		imagenRepo.setHorizontalAlignment(SwingConstants.CENTER);
+		panelCentral.add(imagenRepo);
+
+		JLabel textoRepoQR = new JLabel("<html><div style='text-align: left;'>"
+				+ "<b>Repositorio del Proyecto:</b><br>"
+				+ "Escanee este código QR para acceder al repositorio del proyecto y contribuir con mejoras."
+				+ "</div></html>", SwingConstants.LEFT);
+		textoRepoQR.setFont(new Font("Arial", Font.PLAIN, 14));
+		panelCentral.add(textoRepoQR);
+
+		// Segundo QR: Documentación del proyecto
+		ImageIcon iconoDoc = new ImageIcon(getClass().getResource("/fotos/web.jpg"));
+		Image imagenDocEscalada = iconoDoc.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH); // Aumentado a
+																										// 200x200
+		JLabel imagenDoc = new JLabel(new ImageIcon(imagenDocEscalada));
+		imagenDoc.setHorizontalAlignment(SwingConstants.CENTER);
+		panelCentral.add(imagenDoc);
+
+		JLabel textoDocQR = new JLabel("<html><div style='text-align: left;'>"
+				+ "<b>Documentación del Proyecto:</b><br>"
+				+ "Escanee este código QR para acceder a la documentación completa del proyecto."
+				+ "</div></html>", SwingConstants.LEFT);
+		textoDocQR.setFont(new Font("Arial", Font.PLAIN, 14));
+		panelCentral.add(textoDocQR);
+
+		ventanaAboutUs.add(panelCentral, BorderLayout.CENTER);
+
+		// Mostrar la ventana
+		ventanaAboutUs.setLocationRelativeTo(null);
+		ventanaAboutUs.setVisible(true);
 	}
 }
