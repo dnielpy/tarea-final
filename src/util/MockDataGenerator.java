@@ -272,7 +272,7 @@ public class MockDataGenerator {
 				CMF.generarFechaRandomDesde(fechaBase), CMF.generarDireccionCuba());
 
 		// Visitas
-		fechaBase = LocalDate.now().minusDays(3);
+		fechaBase = LocalDate.now().minusDays(60);
 		LocalDate fecha;
 
 		fecha = CMF.generarFechaRandomDesde(fechaBase);

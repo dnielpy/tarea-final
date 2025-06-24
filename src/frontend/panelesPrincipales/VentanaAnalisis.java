@@ -22,6 +22,7 @@ import frontend.tablas.AnalisisTableModel;
 import frontend.ui.TablaPersonalizada;
 
 import java.awt.event.MouseAdapter;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -101,5 +102,17 @@ public class VentanaAnalisis extends JPanel implements ConstantesFrontend {
                 }
             }
         });
+    }
+    
+    private void actualizarDatos() {
+        List<Analisis> actualizados = filtrarAnalisisPendientes();
+        model.setAnalisisList(actualizados);
+        model.fireTableDataChanged();
+    }
+
+    @Override
+    public void show() {
+    	super.show();
+    	actualizarDatos();
     }
 }

@@ -76,6 +76,7 @@ public class Principal extends JFrame implements MouseListener, ConstantesFronte
         
         inicializarComponentes();
         
+        cargarUsuario();
         // Solicitar foco después de que todo esté visible
         SwingUtilities.invokeLater(new Runnable() {
             @Override
@@ -83,8 +84,7 @@ public class Principal extends JFrame implements MouseListener, ConstantesFronte
                 botonCerrarSesion.requestFocusInWindow();
             }
         });
-        
-        cargarUsuario();
+              
     };
     
     private void inicializarComponentes() {

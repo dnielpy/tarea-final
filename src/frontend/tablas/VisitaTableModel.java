@@ -11,44 +11,57 @@ import javax.swing.table.DefaultTableCellRenderer;
 import entidades.registros.Visita;
 
 public class VisitaTableModel extends AbstractTableModel {
+
     private List<Visita> visitas;
     private boolean mostrarFecha;
     private boolean mostrarHistoriaClinica;
     private boolean mostrarIdVisita;
     private String[] columnNames;
 
-    public VisitaTableModel(List<Visita> list) {
-        this.visitas = list;
+    public VisitaTableModel(List<Visita> listaInicial) {
+        if (listaInicial == null) {
+            this.visitas = new ArrayList<>();
+        } else {
+            this.visitas = listaInicial;
+        }
+
         this.mostrarFecha = false;
         this.mostrarHistoriaClinica = true;
         this.mostrarIdVisita = true;
+
         actualizarColumnNames();
     }
 
-    public void setVisitas(List<Visita> visitas) {
-        this.visitas = visitas;
+    public void setVisitas(List<Visita> nuevasVisitas) {
+        if (nuevasVisitas == null) {
+            this.visitas = new ArrayList<>();
+        } else {
+            this.visitas = nuevasVisitas;
+        }
+
         fireTableDataChanged();
     }
 
-    public void setMostrarFecha(boolean mostrarFecha) {
-        this.mostrarFecha = mostrarFecha;
+    public void setMostrarFecha(boolean mostrar) {
+        this.mostrarFecha = mostrar;
+        actualizarEstructura();
+    }
+
+    public void setMostrarHistoriaClinica(boolean mostrar) {
+        this.mostrarHistoriaClinica = mostrar;
+        actualizarEstructura();
+    }
+
+    public void setMostrarIdVisita(boolean mostrar) {
+        this.mostrarIdVisita = mostrar;
+        actualizarEstructura();
+    }
+
+    private void actualizarEstructura() {
         actualizarColumnNames();
         fireTableStructureChanged();
     }
 
-    public void setMostrarHistoriaClinica(boolean mostrarHistoriaClinica) {
-        this.mostrarHistoriaClinica = mostrarHistoriaClinica;
-        actualizarColumnNames();
-        fireTableStructureChanged();
-    }
-
-    public void setMostrarIdVisita(boolean mostrarIdVisita) {
-        this.mostrarIdVisita = mostrarIdVisita;
-        actualizarColumnNames();
-        fireTableStructureChanged();
-    }
-
-    // Dynamically updates column names based on configurations
     private void actualizarColumnNames() {
         List<String> columnas = new ArrayList<>();
 
@@ -57,7 +70,7 @@ public class VisitaTableModel extends AbstractTableModel {
         }
 
         if (mostrarHistoriaClinica) {
-            columnas.add("Historia Clinica");
+            columnas.add("H. Clínica");
         }
 
         columnas.add("Remitido a");
@@ -72,71 +85,94 @@ public class VisitaTableModel extends AbstractTableModel {
 
     @Override
     public int getRowCount() {
-        int filas = 0;
+        int total = 0;
         if (visitas != null) {
-            filas = visitas.size();
+            total = visitas.size();
         }
-        return filas;
+        return total;
     }
 
     @Override
     public int getColumnCount() {
-        int columnas = 0;
+        int total = 0;
         if (columnNames != null) {
-            columnas = columnNames.length;
+            total = columnNames.length;
         }
-        return columnas;
+        return total;
     }
 
-    // Returns the value for a specific cell in the table
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        Visita visita = visitas.get(rowIndex);
-        int offset = 0;
+        Object valor = null;
+        boolean datosValidos = visitas != null && rowIndex >= 0 && rowIndex < visitas.size();
 
-        if (mostrarIdVisita) {
-            if (columnIndex == offset) {
-                return visita.getId();
+        if (datosValidos) {
+            Visita visita = visitas.get(rowIndex);
+            int col = 0;
+
+            boolean colAsignado = false;
+
+            if (!colAsignado && mostrarIdVisita) {
+                if (columnIndex == col) {
+                    valor = visita.getId();
+                    colAsignado = true;
+                }
+                col++;
             }
-            offset++;
-        }
 
-        if (mostrarHistoriaClinica) {
-            if (columnIndex == offset) {
-                return visita.getPacienteHistoriaClinicaID();
+            if (!colAsignado && mostrarHistoriaClinica) {
+                if (columnIndex == col) {
+                    valor = visita.getPacienteHistoriaClinicaID();
+                    colAsignado = true;
+                }
+                col++;
             }
-            offset++;
+
+            if (!colAsignado) {
+                if (columnIndex == col) {
+                    valor = visita.getResumenEspecialidadesRemitidas();
+                    colAsignado = true;
+                }
+                col++;
+            }
+
+            if (!colAsignado) {
+                if (columnIndex == col) {
+                    valor = visita.getResumenAnalisis();
+                    colAsignado = true;
+                }
+                col++;
+            }
+
+            if (!colAsignado && mostrarFecha) {
+                if (columnIndex == col) {
+                    valor = visita.getFechaFormateada();
+                    colAsignado = true;
+                }
+            }
         }
 
-        if (columnIndex == offset) {
-            return visita.getResumenEspecialidadesRemitidas();
-        }
-
-        if (columnIndex == offset + 1) {
-            return visita.getResumenAnalisis();
-        }
-
-        if (mostrarFecha && columnIndex == offset + 2) {
-            return visita.getFechaFormateada();
-        }
-
-        return null;
+        return valor;
     }
 
     @Override
     public String getColumnName(int column) {
         String nombre = "";
-        if (column >= 0 && column < columnNames.length) {
+        boolean valido = column >= 0 && columnNames != null && column < columnNames.length;
+
+        if (valido) {
             nombre = columnNames[column];
         }
+
         return nombre;
     }
 
     @Override
     public Class<?> getColumnClass(int columnIndex) {
         Class<?> clase = Object.class;
+        int filas = getRowCount();
 
-        if (getRowCount() > 0) {
+        if (filas > 0) {
             Object valor = getValueAt(0, columnIndex);
             if (valor != null) {
                 clase = valor.getClass();
@@ -147,17 +183,25 @@ public class VisitaTableModel extends AbstractTableModel {
     }
 
     public void eliminarVisitaPorId(int id) {
-        int index = -1;
+        int indice = -1;
+        int total = visitas.size();
+        int i = 0;
 
-        for (int i = 0; i < visitas.size(); i++) {
-            if (visitas.get(i).getId() == id && index == -1) {
-                index = i;
+        while (i < total) {
+            boolean coincide = visitas.get(i).getId() == id;
+
+            if (indice == -1 && coincide) {
+                indice = i;
             }
+
+            i++;
         }
 
-        if (index != -1) {
-            fireTableRowsDeleted(index, index);
-            visitas.remove(index);
+        boolean valido = indice >= 0 && indice < visitas.size();
+
+        if (valido) {
+            visitas.remove(indice);
+            fireTableRowsDeleted(indice, indice);
         }
     }
 
@@ -166,8 +210,12 @@ public class VisitaTableModel extends AbstractTableModel {
         renderer.setHorizontalAlignment(SwingConstants.CENTER);
         renderer.setVerticalAlignment(SwingConstants.CENTER);
 
-        for (int i = 0; i < getColumnCount(); i++) {
+        int total = getColumnCount();
+        int i = 0;
+
+        while (i < total) {
             table.getColumnModel().getColumn(i).setCellRenderer(renderer);
+            i++;
         }
     }
 }
