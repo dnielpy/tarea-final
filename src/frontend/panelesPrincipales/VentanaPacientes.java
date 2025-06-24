@@ -15,7 +15,6 @@ import javax.swing.table.TableRowSorter;
 
 import entidades.CMF;
 import entidades.personal.Paciente;
-import frontend.ConstantesFrontend;
 import frontend.formularios.FormularioPaciente;
 import frontend.formularios.FormularioPaciente.ModoFormulario;
 import frontend.tablas.PacienteTableModel;
@@ -29,6 +28,8 @@ import javax.swing.JButton;
 import java.awt.SystemColor;
 
 import javax.swing.ImageIcon;
+
+import util.ConstantesFrontend;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.ActionListener;

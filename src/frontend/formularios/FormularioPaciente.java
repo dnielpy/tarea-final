@@ -31,7 +31,6 @@ import com.toedter.calendar.JDateChooser;
 
 import javax.swing.JScrollPane;
 
-import frontend.ConstantesFrontend;
 import frontend.ui.PlaceholderTextField;
 import frontend.ui.PlaceholderTextField.InputFormat;
 import frontend.ui.botones.BotonBlanco;
@@ -46,6 +45,7 @@ import entidades.personal.Paciente;
 import javax.swing.JList;
 
 import service.Validations;
+import util.ConstantesFrontend;
 
 import java.awt.Point;
 import java.awt.Toolkit;

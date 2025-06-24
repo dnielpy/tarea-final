@@ -12,18 +12,26 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
-import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
+import util.ConstantesFrontend;
+
+import com.toedter.calendar.IDateEvaluator;
 import com.toedter.calendar.JDateChooser;
 
 import frontend.ui.BuscadorTabla;
@@ -31,7 +39,6 @@ import frontend.ui.TablaPersonalizada;
 import entidades.CMF;
 import entidades.registros.HojaCargosDiaria;
 import entidades.registros.Visita;
-import frontend.ConstantesFrontend;
 import frontend.formularios.FormularioVisitas;
 import frontend.formularios.FormularioVisitas.ModoFormulario;
 import frontend.tablas.VisitaTableModel;
@@ -92,10 +99,31 @@ public class VentanaHojasDeCargo extends JPanel implements ConstantesFrontend {
         fechaHojaDeCargo.setFont(new Font("Arial", Font.PLAIN, 16));
         fechaHojaDeCargo.setDateFormatString("d/MMM/yyyy");
         fechaHojaDeCargo.setBounds(244, 105, 140, 22);
-        fechaHojaDeCargo.setDate(new Date());
         fechaHojaDeCargo.setMaxSelectableDate(new Date());
 
+        List<LocalDate> fechasValidas = cmf.obtenerFechasDeHojasDeCargo();
+
+        // Conversión a Date para el evaluator
+        Date[] fechasValidasDate = new Date[fechasValidas.size()];
+        for (int i = 0; i < fechasValidas.size(); i++) {
+            fechasValidasDate[i] = convertirLocalDateASinDesfase(fechasValidas.get(i));
+        }
+
+        FechaPermitidaEvaluator evaluador = new FechaPermitidaEvaluator(fechasValidasDate);
+        fechaHojaDeCargo.getJCalendar().getDayChooser().addDateEvaluator(evaluador);
+
+        if (!fechasValidas.isEmpty()) {   
+            fechaHojaDeCargo.setDate(convertirLocalDateASinDesfase(LocalDate.now()));
+        }
+
         add(fechaHojaDeCargo);
+    }
+
+    private Date convertirLocalDateASinDesfase(LocalDate localDate) {
+        // Ponemos la hora a mediodía para evitar desfases
+        ZonedDateTime zonedDateTime = localDate.atTime(12, 0).atZone(ZoneId.systemDefault());
+        Instant instant = zonedDateTime.toInstant();
+        return Date.from(instant);
     }
 
     private void agregarPanelTabla() {
@@ -198,4 +226,36 @@ public class VentanaHojasDeCargo extends JPanel implements ConstantesFrontend {
         formularioVisitas.setLocationRelativeTo(ventanaPrincipal);
         formularioVisitas.setVisible(true);
     }
+}
+
+class FechaPermitidaEvaluator implements IDateEvaluator {
+    private Set<String> fechasPermitidas;
+    private SimpleDateFormat formato;
+
+    public FechaPermitidaEvaluator(Date[] fechas) {
+        fechasPermitidas = new HashSet<String>();
+        formato = new SimpleDateFormat("yyyyMMdd");
+        for (int i = 0; i < fechas.length; i++) {
+            if (fechas[i] != null) {
+                fechasPermitidas.add(formato.format(fechas[i]));
+            }
+        }
+    }
+
+    @Override
+    public boolean isInvalid(Date date) {
+        if (date == null) {
+            return true;
+        }
+        String clave = formato.format(date);
+        return !fechasPermitidas.contains(clave);
+    }
+
+    @Override public boolean isSpecial(Date date) { return false; }
+    @Override public String getInvalidTooltip() { return "Fecha no válida"; }
+    @Override public String getSpecialTooltip() { return null; }
+    @Override public Color getInvalidForegroundColor() { return Color.LIGHT_GRAY; }
+    @Override public Color getInvalidBackroundColor() { return Color.WHITE; }
+    @Override public Color getSpecialForegroundColor() { return null; }
+    @Override public Color getSpecialBackroundColor() { return null; }
 }

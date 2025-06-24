@@ -15,11 +15,11 @@ import java.util.List;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
+import util.ConstantesFrontend;
 import frontend.ui.TablaPersonalizada;
 import entidades.registros.Analisis;
 import entidades.registros.Visita;
 import entidades.registros.HistoriaClinica;
-import frontend.ConstantesFrontend;
 import frontend.tablas.AnalisisTableModel;
 import frontend.tablas.VisitaTableModel;
 

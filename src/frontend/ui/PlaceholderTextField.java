@@ -11,7 +11,7 @@ import java.awt.event.FocusEvent;
 
 import javax.swing.text.*;
 
-import frontend.ConstantesFrontend;
+import util.ConstantesFrontend;
 
 public class PlaceholderTextField extends JTextField implements ConstantesFrontend {
 
@@ -23,8 +23,9 @@ public class PlaceholderTextField extends JTextField implements ConstantesFronte
     private Color focusLineColor = COLOR_AZUL;
     private boolean showError = false;
     private InputFormat inputFormat = InputFormat.ANY;
-    private int characterLimit = -1; // -1 = sin lÌmite
-    
+    private int characterLimit = -1; 
+    private boolean permitirEspacios = true;
+
     private static final Color ERROR_COLOR = Color.RED;
     private static final String ERROR_PLACEHOLDER = "*Campo obligatorio";
 
@@ -84,7 +85,7 @@ public class PlaceholderTextField extends JTextField implements ConstantesFronte
     @Override
     public void setEditable(boolean editable) {
     	super.setEditable(editable);
-    	setFocusable(editable);
+    	setFocusable(true);
     };
     
     @Override
@@ -105,6 +106,10 @@ public class PlaceholderTextField extends JTextField implements ConstantesFronte
         g2.setColor(color);
         g2.fillRect(0, getHeight() - 1, getWidth(), 2);
         g2.dispose();
+    }
+    
+    public void setPermitirEspacios(boolean permitir) {
+        this.permitirEspacios = permitir;
     }
 
     // --- M…TODOS PERSONALIZADOS ---
@@ -177,20 +182,23 @@ public class PlaceholderTextField extends JTextField implements ConstantesFronte
 
         private boolean esValidoSegunFormato(String text) {
             String regex;
+            String espacio = permitirEspacios ? " " : "";
+
             switch (inputFormat) {
                 case NUMERIC:
-                    regex = "[0-9]*";
+                    regex = "[0-9" + espacio + "]*";
                     break;
                 case ALPHABETIC:
-                    regex = "[a-zA-Z·ÈÌÛ˙¡…Õ”⁄Ò— ]*";
+                    regex = "[a-zA-Z·ÈÌÛ˙¡…Õ”⁄Ò—" + espacio + "]*";
                     break;
                 case ALPHANUMERIC:
-                    regex = "[a-zA-Z0-9·ÈÌÛ˙¡…Õ”⁄Ò— ]*";
+                    regex = "[a-zA-Z0-9·ÈÌÛ˙¡…Õ”⁄Ò—" + espacio + "]*";
                     break;
                 case ANY:
                 default:
-                    regex = ".*"; // Permitir cualquier car·cter
+                    return permitirEspacios || !text.contains(" ");
             }
+
             return text.matches(regex);
         }
     }

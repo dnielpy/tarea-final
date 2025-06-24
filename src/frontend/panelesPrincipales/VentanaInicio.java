@@ -9,9 +9,9 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.ImageIcon;
 
+import util.ConstantesFrontend;
 import frontend.ui.PanelResumen;
 import entidades.CMF;
-import frontend.ConstantesFrontend;
 
 public class VentanaInicio extends JPanel implements ConstantesFrontend {
 	

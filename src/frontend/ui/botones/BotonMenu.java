@@ -3,9 +3,10 @@ package frontend.ui.botones;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
+
 import javax.swing.JButton;
 
-import frontend.ConstantesFrontend;
+import util.ConstantesFrontend;
 
 public class BotonMenu extends JButton implements ConstantesFrontend {
 	

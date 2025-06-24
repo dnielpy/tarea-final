@@ -3,7 +3,7 @@ package frontend.ui;
 import javax.swing.*;
 import javax.swing.table.*;
 
-import frontend.ConstantesFrontend;
+import util.ConstantesFrontend;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;

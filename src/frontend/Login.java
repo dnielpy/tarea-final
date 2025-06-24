@@ -31,6 +31,7 @@ import frontend.ui.botones.*;
 import frontend.ui.dialogs.*;
 import runner.Auth;
 import runner.Usuario;
+import util.ConstantesFrontend;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -40,7 +41,7 @@ import javax.swing.border.LineBorder;
 
 import entidades.CMF;
 
-public class Login extends JDialog implements ConstantesFrontend{
+public class Login extends JDialog implements ConstantesFrontend {
 	private boolean contrasenaVisible;
 	private JTextField campoUsuario;
 	private JPasswordField campoContrasenna;
@@ -48,7 +49,7 @@ public class Login extends JDialog implements ConstantesFrontend{
 	private boolean auth;
 
 	public Login(Window parent) {
-        super(parent, "Autenticaci\u00F3n", ModalityType.APPLICATION_MODAL); // Modal y con t\u00ED­tulo
+        super(parent, "Autenticaci\u00F3n", ModalityType.APPLICATION_MODAL); // Modal y con t\u00EDï¿½tulo
 		this.auth = false;
 		setBackground(Color.WHITE);
 		setFont(new Font("Arial", Font.PLAIN, 16));
@@ -62,13 +63,13 @@ public class Login extends JDialog implements ConstantesFrontend{
 		getContentPane().setLayout(null);
 		setLocationRelativeTo(parent);
 
-		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE); // Evita cierre autom\u00ED¡tico
+		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE); // Evita cierre autom\u00EDï¿½tico
 
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
 				QuestionDialog confirmacion = new QuestionDialog(Login.this,
-						"Confirmar salida", "Â¿Est\u00ED¡s seguro de que deseas cerrar la aplicaci\u00F3n?");
+						"Confirmar salida", "Â¿Est\u00EDï¿½s seguro de que deseas cerrar la aplicaci\u00F3n?");
 				confirmacion.setVisible(true); // Espera respuesta
 
 				if (confirmacion.esConfirmado()) {
@@ -87,7 +88,7 @@ public class Login extends JDialog implements ConstantesFrontend{
 	        InfoDialog dialogo = new InfoDialog(
 	            this.getOwner(),
 	            "Error de autenticaci\u00F3n",
-	            "La contrase\u00F1a no puede estar vac\u00ED­a"
+	            "La contrase\u00F1a no puede estar vac\u00EDï¿½a"
 	        );
 	        dialogo.setVisible(true);
 	        return;

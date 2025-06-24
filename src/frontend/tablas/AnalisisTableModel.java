@@ -88,40 +88,27 @@ public class AnalisisTableModel extends AbstractTableModel {
 
 	@Override
 	public String getColumnName(int column) {
-		String nombre = "";
+	    String nombre = "";
+	    int index = 0;
 
-		int index = 0;
+	    if (column == index) nombre = "ID Visita";
+	    index++;
 
-		if (column == index) {
-			nombre = "ID Visita";
-		}
+	    if (column == index) nombre = "Tipo";
+	    index++;
 
-		index++;
-		if (column == index) {
-			nombre = "Tipo";
-		}
+	    if (mostrarFechaOrientado && column == index) nombre = "Orientado";
+	    if (mostrarFechaOrientado) index++;
 
-		index++;
-		if (mostrarFechaOrientado && column == index) {
-			nombre = "Orientado";
-		}
+	    if (mostrarEstado && column == index) nombre = "Estado";
+	    if (mostrarEstado) index++;
 
-		if (mostrarFechaOrientado) index++;
-		if (mostrarFechaResultado && column == index) {
-			nombre = "Actualizado";
-		}
+	    if (mostrarFechaResultado && column == index) nombre = "Actualizado";
+	    if (mostrarFechaResultado) index++;
 
-		if (mostrarFechaResultado) index++;
-		if (mostrarResultados && column == index) {
-			nombre = "Resultados";
-		}
+	    if (mostrarResultados && column == index) nombre = "Resultados";
 
-		if (mostrarResultados) index++;
-		if (mostrarEstado && column == index) {
-			nombre = "Estado";
-		}
-
-		return nombre;
+	    return nombre;
 	}
 
 	@Override
@@ -143,44 +130,31 @@ public class AnalisisTableModel extends AbstractTableModel {
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		Object valor = "";
+	    Object valor = "";
 
-		if (analisisList != null && rowIndex >= 0 && rowIndex < analisisList.size()) {
-			Analisis a = analisisList.get(rowIndex);
+	    if (analisisList != null && rowIndex >= 0 && rowIndex < analisisList.size()) {
+	        Analisis a = analisisList.get(rowIndex);
+	        int index = 0;
 
-			int index = 0;
+	        if (columnIndex == index) valor = a.getVisitaId();
+	        index++;
 
-			if (columnIndex == index) {
-				valor = a.getVisitaId();
-			}
+	        if (columnIndex == index) valor = a.getTipoDeAnalisis();
+	        index++;
 
-			index++;
-			if (columnIndex == index) {
-				valor = a.getTipoDeAnalisis();
-			}
+	        if (mostrarFechaOrientado && columnIndex == index) valor = formatearFecha(a.getFechaOrientado());
+	        if (mostrarFechaOrientado) index++;
 
-			index++;
-			if (mostrarFechaOrientado && columnIndex == index) {
-				valor = formatearFecha(a.getFechaOrientado());
-			}
+	        if (mostrarEstado && columnIndex == index) valor = a.estaPendienteDeResultado() ? "Pendiente" : "Completado";
+	        if (mostrarEstado) index++;
 
-			if (mostrarFechaOrientado) index++;
-			if (mostrarFechaResultado && columnIndex == index) {
-				valor = formatearFecha(a.getFechaResultado());
-			}
+	        if (mostrarFechaResultado && columnIndex == index) valor = a.getFechaResultado() == null ? "Pendiente" : a.getFechaResultado();
+	        if (mostrarFechaResultado) index++;
 
-			if (mostrarFechaResultado) index++;
-			if (mostrarResultados && columnIndex == index) {
-				valor = a.getResultados() != null ? a.getResultados() : "";
-			}
+	        if (mostrarResultados && columnIndex == index) valor = a.getResultados() != null ? a.getResultados() : "";
+	    }
 
-			if (mostrarResultados) index++;
-			if (mostrarEstado && columnIndex == index) {
-				valor = a.estaPendienteDeResultado() ? "Pendiente" : "Completado";
-			}
-		}
-
-		return valor;
+	    return valor;
 	}
 
 	private String formatearFecha(LocalDate fecha) {

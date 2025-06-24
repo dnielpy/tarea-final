@@ -12,10 +12,10 @@ import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
+import util.ConstantesFrontend;
 import entidades.CMF;
 import entidades.registros.Analisis;
 import entidades.registros.Visita;
-import frontend.ConstantesFrontend;
 import frontend.formularios.FormularioAnalisis;
 import frontend.formularios.FormularioAnalisis.ModoFormulario;
 import frontend.tablas.AnalisisTableModel;
@@ -35,7 +35,7 @@ public class VentanaAnalisis extends JPanel implements ConstantesFrontend {
         this.cmf = CMF.getInstance();
         List<Analisis> analisisPendientes = filtrarAnalisisPendientes();
         model = new AnalisisTableModel(analisisPendientes);
-        model.setMostrarResultados(false); // Mostrar solo las columnas básicas
+        model.setMostrarResultados(false); 
         initComponents();
     }
 

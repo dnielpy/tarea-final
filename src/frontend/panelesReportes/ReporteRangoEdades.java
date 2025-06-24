@@ -16,8 +16,8 @@ import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.chart.renderer.category.StandardBarPainter;
 import org.jfree.data.category.DefaultCategoryDataset;
 
+import util.ConstantesFrontend;
 import entidades.CMF;
-import frontend.ConstantesFrontend;
 
 public class ReporteRangoEdades extends JPanel implements ConstantesFrontend {
 

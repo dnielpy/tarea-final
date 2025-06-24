@@ -6,7 +6,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 
-import frontend.ConstantesFrontend;
+import util.ConstantesFrontend;
 import frontend.panelesReportes.ReporteCantVisitasEnUnMes;
 import frontend.panelesReportes.ReporteEmbarazadasEnRiesgo;
 import frontend.panelesReportes.ReportePorcentajeGenero;
