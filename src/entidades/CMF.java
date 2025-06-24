@@ -36,7 +36,8 @@ import util.ConstantesEspecialidades;
 import util.MockDataGenerator;
 
 public class CMF {
-	private static CMF instance; // Instancia unica de CMF
+	// Instancia única de CMF
+	private static CMF instance;
 
 	private int id;
 	private String nombreDelPoliclinico;
@@ -50,7 +51,7 @@ public class CMF {
 	private RegistroGeneral registroGeneral;
 	private RegistroHistorico registroHistorico;
 
-	// Constructor privado para evitar instanciacion directa
+	// Constructor privado para evitar instanciación directa
 	private CMF(int id, String nombre, String nombreDirector) {
 		setId(id);
 		setNombrePoliclinico(nombre);
@@ -79,8 +80,6 @@ public class CMF {
 			throw new IllegalArgumentException("ID debe ser positivo");
 		this.id = id;
 	}
-
-	// Nombre del Policlinico
 
 	public String getNombrePoliclinico() {
 		return nombreDelPoliclinico;
@@ -234,6 +233,7 @@ public class CMF {
 		return listaVisitas;
 	}
 
+	// Filtra visitas por una fecha específica
 	public List<Visita> obtenerVisitasDeUnDia(LocalDate fecha) {
 		List<Visita> listaVisitas = new ArrayList<>();
 
@@ -286,6 +286,7 @@ public class CMF {
 		return response;
 	}
 
+	// Agrega una nueva visita y actualiza registros relacionados
 	public void agregarVisita(Visita visita) {
 		Objects.requireNonNull(visita, "La visita no puede ser nula");
 		for (int i = 0; i < visitas.size(); i++) {
@@ -310,6 +311,7 @@ public class CMF {
 		}
 	}
 
+	// Actualiza la historia clínica con una visita
 	public void actualizarVisitaHistoriaClinica(Visita visita) {
 		boolean encontrado = false;
 		for (int i = 0; i < getPacientes().size() && !encontrado; i++) {
@@ -397,17 +399,17 @@ public class CMF {
 		HojaCargosDiaria hoja = new HojaCargosDiaria(fecha);
 		hojasCargoDiaria.add(hoja);
 	}
-	
+
 	public List<LocalDate> obtenerFechasDeHojasDeCargo() {
-	    List<LocalDate> fechas = new ArrayList<>();
-	    if (hojasCargoDiaria != null) {
-	        for (HojaCargosDiaria hoja : hojasCargoDiaria) {
-	            if (hoja != null && hoja.getFecha() != null && !fechas.contains(hoja.getFecha())) {
-	                fechas.add(hoja.getFecha());
-	            }
-	        }
-	    }
-	    return fechas;
+		List<LocalDate> fechas = new ArrayList<>();
+		if (hojasCargoDiaria != null) {
+			for (HojaCargosDiaria hoja : hojasCargoDiaria) {
+				if (hoja != null && hoja.getFecha() != null && !fechas.contains(hoja.getFecha())) {
+					fechas.add(hoja.getFecha());
+				}
+			}
+		}
+		return fechas;
 	}
 
 	// Registro General
@@ -452,6 +454,7 @@ public class CMF {
 		return pac;
 	}
 
+	// Elimina todas las referencias de un paciente eliminado
 	public void limpiarRastroPaciente(int id) {
 
 		Paciente paciente = getPacientePorId(id);
@@ -558,6 +561,7 @@ public class CMF {
 		return id;
 	}
 
+	// Genera un ID único para un nuevo análisis
 	public int obtenerNuevoAnalisisID() {
 		int id = 1;
 		boolean encontrado = true;
@@ -757,6 +761,7 @@ public class CMF {
 		return pacientesEnRiesgo;
 	}
 
+	// Cuenta visitas por día en un mes específico
 	public int[] obtenerCantVisitasEnUnMes(int mes, int anio) {
 		LocalDate fechaInicial = LocalDate.of(anio, mes, 1);
 		int maximoDia = fechaInicial.lengthOfMonth();
@@ -802,6 +807,7 @@ public class CMF {
 		return lista;
 	}
 
+	// Genera análisis aleatorios para una visita
 	public List<Analisis> generarAnalisisParaVisitaConIdVisita(LocalDate fechaVisita, int idVisita,
 			int IdHistoriaClinica) {
 		List<Analisis> listaAnalisis = new ArrayList<>();
@@ -881,7 +887,7 @@ public class CMF {
 		List<String> enfermedadesAsignadas = new ArrayList<>();
 		int cantidad = random.nextInt(3); // 0, 1 o 2 enfermedades
 
-		Collections.shuffle(posiblesEnfermedades, random); // Mejor usar tu instancia
+		Collections.shuffle(posiblesEnfermedades, random);
 
 		for (int i = 0; i < cantidad; i++) {
 			enfermedadesAsignadas.add(posiblesEnfermedades.get(i));
