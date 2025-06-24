@@ -305,6 +305,7 @@ public class FormularioAnalisis extends JDialog implements ConstantesFrontend {
     private void guardarResultados() {
         String texto = textResultados.getText().trim();
         boolean puedeGuardar = true;
+        boolean hayCambios = false;
 
         if (texto.isEmpty()) {
             InfoDialog errorDialog = new InfoDialog(this, "Error", "El campo de resultados no puede estar vacío.");
@@ -312,20 +313,28 @@ public class FormularioAnalisis extends JDialog implements ConstantesFrontend {
             puedeGuardar = false;
         }
 
-        if (puedeGuardar) {
+        String anteriores = analisis.getResultados() != null ? analisis.getResultados().trim() : "";
+        if (texto.equals(anteriores)) {
+            InfoDialog sinCambiosDialog = new InfoDialog(this, "Sin cambios", "No se han realizado modificaciones en los resultados.");
+            sinCambiosDialog.setVisible(true);
+            puedeGuardar = false;
+        } else {
+            hayCambios = true;
+        }
+
+        if (puedeGuardar && hayCambios) {
             QuestionDialog confirmacion = new QuestionDialog(this, "Confirmar guardado", "¿Está seguro de que desea guardar los resultados?");
             confirmacion.setVisible(true);
 
             if (confirmacion.esConfirmado()) {
-                analisis.setResultados(texto);
-                analisis.setFechaResultado(LocalDate.now());
+                cmf.editarResultadosDeAnalisis(analisis, texto);
 
                 InfoDialog exitoDialog = new InfoDialog(this, "Resultados guardados", "Los resultados se han guardado exitosamente.");
                 exitoDialog.setVisible(true);
-
-                setModo(ModoFormulario.VISUALIZACION);
-                cargarDatos();
             }
         }
+
+        setModo(ModoFormulario.VISUALIZACION);
+        cargarDatos();
     }
 }
