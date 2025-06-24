@@ -10,7 +10,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
-import frontend.ConstantesFrontend;
+
+import util.ConstantesFrontend;
 
 public class BotonReporte extends JPanel implements MouseListener, ConstantesFrontend {
 

@@ -15,7 +15,6 @@ import javax.swing.SwingUtilities;
 
 import entidades.CMF;
 import entidades.registros.Visita;
-import frontend.ConstantesFrontend;
 import frontend.formularios.FormularioVisitas;
 import frontend.formularios.FormularioVisitas.ModoFormulario;
 import frontend.tablas.VisitaTableModel;
@@ -24,6 +23,8 @@ import frontend.ui.TablaPersonalizada;
 
 import javax.swing.JButton;
 import javax.swing.table.TableRowSorter;
+
+import util.ConstantesFrontend;
 
 import java.awt.SystemColor;
 import java.awt.event.MouseAdapter;

@@ -8,9 +8,9 @@ import java.awt.event.WindowEvent;
 
 import javax.swing.*;
 
+import util.ConstantesFrontend;
 import entidades.CMF;
 import entidades.registros.Analisis;
-import frontend.ConstantesFrontend;
 import frontend.ui.PlaceholderTextField;
 import frontend.ui.PlaceholderTextField.InputFormat;
 import frontend.ui.ScrollPaneModerno;

@@ -8,7 +8,7 @@ import java.awt.event.MouseListener;
 
 import javax.swing.JButton;
 
-import frontend.ConstantesFrontend;
+import util.ConstantesFrontend;
 
 import java.awt.event.*;
 

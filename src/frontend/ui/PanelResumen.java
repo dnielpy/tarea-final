@@ -1,7 +1,8 @@
 package frontend.ui;
 
 import javax.swing.*;
-import frontend.ConstantesFrontend;
+
+import util.ConstantesFrontend;
 
 import java.awt.*;
 

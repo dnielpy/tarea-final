@@ -1,9 +1,8 @@
 package frontend;
 
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
 import java.awt.Toolkit;
@@ -32,19 +31,25 @@ import javax.swing.SwingConstants;
 import entidades.CMF;
 import entidades.personal.Enfermera;
 import entidades.personal.Medico;
-import entidades.personal.Persona;
+import entidades.personal.PersonalSanitario;
 import runner.Runner;
-import runner.Usuario;
+import util.ConstantesFrontend;
 
 import java.awt.CardLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
 
 public class Principal extends JFrame implements MouseListener, ConstantesFrontend {
 
-    private JPanel panelVentanas;
+	private JLabel imagenUsuario;
+	private JLabel cartelRol;
+	private JLabel cartelUsuario;
+	private JPanel panelVentanas;
     private BotonMenu botonActivo;
     private JPanel contentPane;
+    private BotonBlanco botonCerrarSesion;
+    private BotonMenu botonVisitasOAnalisis;
     private CMF cmf;
 
     public BotonMenu getBotonActivo() {
@@ -54,20 +59,7 @@ public class Principal extends JFrame implements MouseListener, ConstantesFronte
     public void setBotonActivo(BotonMenu botonActivo) {
         this.botonActivo = botonActivo;
     }
-
-    public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    Principal frame = new Principal();
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-
+    
     public Principal() {
         cmf = CMF.getInstance();
 
@@ -81,35 +73,57 @@ public class Principal extends JFrame implements MouseListener, ConstantesFronte
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
         contentPane.setLayout(null);
-
-        JPanel panelUsuario = new JPanel();
+        
+        inicializarComponentes();
+        
+        // Solicitar foco después de que todo esté visible
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                botonCerrarSesion.requestFocusInWindow();
+            }
+        });
+        
+        cargarUsuario();
+    };
+    
+    private void inicializarComponentes() {
+    	JPanel panelUsuario = new JPanel();
         panelUsuario.setBounds(0, 0, 300, 254);
         contentPane.add(panelUsuario);
         panelUsuario.setBackground(COLOR_VERDE);
         panelUsuario.setLayout(null);
 
-        JLabel imagenUsuario = new JLabel("");
-        imagenUsuario.setIcon(new ImageIcon(Principal.class.getResource("/fotos/Logo peque.png")));
+        imagenUsuario = new ImageButtonLabel(new ImageIcon(Principal.class.getResource("/fotos/Logo peque.png")));
+        imagenUsuario.setToolTipText("Clic para acceder a su informaci\u00F3n personal");
+        imagenUsuario.addMouseListener(new MouseAdapter() {
+        	@Override
+        	public void mouseClicked(MouseEvent e) {
+        		TarjetaUsuario tarjeta = new TarjetaUsuario(Principal.this, imagenUsuario.getIcon(), cmf.getEntitytyUsuario());
+        		tarjeta.setLocationRelativeTo(Principal.this);
+        		tarjeta.setVisible(true);
+        	}
+        });
 
         imagenUsuario.setHorizontalAlignment(SwingConstants.CENTER);
-        imagenUsuario.setBounds(0, 27, 300, 122);
+        imagenUsuario.setBounds(92, 30, 110, 110);
         panelUsuario.add(imagenUsuario);
-
-        JLabel cartelUsuario = new JLabel("USUARIO");
+        
+        cartelUsuario = new JLabel("USUARIO");
         cartelUsuario.setHorizontalAlignment(SwingConstants.CENTER);
         cartelUsuario.setForeground(Color.WHITE);
         cartelUsuario.setFont(new Font("Arial", Font.PLAIN, 18));
         cartelUsuario.setBounds(31, 147, 237, 26);
         panelUsuario.add(cartelUsuario);
 
-        JLabel cartelRol = new JLabel("ROL");
+        cartelRol = new JLabel("ROL");
         cartelRol.setHorizontalAlignment(SwingConstants.CENTER);
         cartelRol.setForeground(Color.WHITE);
         cartelRol.setFont(new Font("Arial", Font.PLAIN, 16));
         cartelRol.setBounds(31, 168, 237, 26);
         panelUsuario.add(cartelRol);
 
-        BotonBlanco botonCerrarSesion = new BotonBlanco("CERRAR SESI\u00D3N");
+        botonCerrarSesion = new BotonBlanco("CERRAR SESIÓN");
         botonCerrarSesion.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 cerrarSesion();
@@ -130,9 +144,8 @@ public class Principal extends JFrame implements MouseListener, ConstantesFronte
         panelLateral.setBackground(COLOR_AZUL);
         panelLateral.setLayout(null);
 
-        BotonMenu botonInicio = new BotonMenu((String) null);
+        BotonMenu botonInicio = new BotonMenu("INICIO");
         botonInicio.setToolTipText("Clic para ver datos generales del consultorio");
-        botonInicio.setText("INICIO");
         botonInicio.setBounds(0, 16, 300, 75);
         botonInicio.addMouseListener(this);
         botonInicio.setActivo(true);
@@ -140,29 +153,26 @@ public class Principal extends JFrame implements MouseListener, ConstantesFronte
 
         setBotonActivo(botonInicio);
 
-        BotonMenu botonPacientes = new BotonMenu((String) null);
+        BotonMenu botonPacientes = new BotonMenu("PACIENTES");
         botonPacientes.setActivo(false);
-        botonPacientes.setText("PACIENTES");
         botonPacientes.setBounds(0, 90, 300, 75);
         botonPacientes.addMouseListener(this);
         panelLateral.add(botonPacientes);
 
-        BotonMenu botonHojaCargo = new BotonMenu((String) null);
+        BotonMenu botonHojaCargo = new BotonMenu("HOJAS DE CARGO");
         botonHojaCargo.setActivo(false);
-        botonHojaCargo.setText("HOJAS DE CARGO");
         botonHojaCargo.setBounds(0, 164, 300, 75);
         botonHojaCargo.addMouseListener(this);
         panelLateral.add(botonHojaCargo);
 
-        BotonMenu botonVisitasOAnalisis = new BotonMenu((String) null);
+        botonVisitasOAnalisis = new BotonMenu((String) null);
         botonVisitasOAnalisis.setActivo(false);
         botonVisitasOAnalisis.setBounds(0, 237, 300, 75);
         botonVisitasOAnalisis.addMouseListener(this);
         panelLateral.add(botonVisitasOAnalisis);
 
-        BotonMenu botonReportes = new BotonMenu((String) null);
+        BotonMenu botonReportes = new BotonMenu("REPORTES");
         botonReportes.setActivo(false);
-        botonReportes.setText("REPORTES");
         botonReportes.setBounds(0, 311, 300, 75);
         botonReportes.addMouseListener(this);
         panelLateral.add(botonReportes);
@@ -188,15 +198,16 @@ public class Principal extends JFrame implements MouseListener, ConstantesFronte
         VentanaReportes reportes = new VentanaReportes();
         panelVentanas.add(reportes, "REPORTES");
 
-        // Escuchar el evento de cierre de ventana
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
                 mostrarConfirmacionSalida();
             }
         });
-
-        Persona personaAutenticada = cmf.getEntitytyUsuario();
+    }
+    
+    private void cargarUsuario() {
+    	PersonalSanitario personaAutenticada = cmf.getEntitytyUsuario();
         if (personaAutenticada != null) {
             String nombre = personaAutenticada.getNombre() + " " + personaAutenticada.getPrimerApellido();
 
@@ -214,7 +225,6 @@ public class Principal extends JFrame implements MouseListener, ConstantesFronte
                 panelVentanas.add(analisis, "ANÁLISIS");
                 cartelRol.setText("ENFERMERA");
             }
-
             cartelUsuario.setText(nombre);
         } else {
             System.err.println("Error: Usuario en sesión es null");
@@ -224,7 +234,7 @@ public class Principal extends JFrame implements MouseListener, ConstantesFronte
                     "No se ha iniciado sesión correctamente.\nLa aplicación se cerrará.").setVisible(true);
             System.exit(1);
         }
-    };
+    }
 
     private void mostrarConfirmacionSalida() {
         QuestionDialog dialogo = new QuestionDialog(
@@ -262,9 +272,7 @@ public class Principal extends JFrame implements MouseListener, ConstantesFronte
 
             CardLayout card = (CardLayout) (panelVentanas.getLayout());
             card.show(panelVentanas, boton.getText());
-
         }
-
     }
 
     public void mouseEntered(MouseEvent e) {

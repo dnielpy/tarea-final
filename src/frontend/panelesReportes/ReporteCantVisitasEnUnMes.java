@@ -5,13 +5,11 @@ import java.awt.Color;
 import javax.swing.JPanel;
 
 import entidades.CMF;
-import frontend.ConstantesFrontend;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.category.DefaultCategoryDataset;
-
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.PlotOrientation;
@@ -30,9 +28,13 @@ import java.util.Date;
 
 import org.jfree.chart.axis.CategoryAxis;
 
+import util.ConstantesFrontend;
+
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
 import frontend.ui.botones.ImageButtonLabel;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 

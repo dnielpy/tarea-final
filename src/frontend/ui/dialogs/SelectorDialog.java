@@ -2,20 +2,14 @@ package frontend.ui.dialogs;
 
 import javax.swing.*;
 
+import util.ConstantesFrontend;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-import frontend.ConstantesFrontend;
 import frontend.ui.botones.BotonBlanco;
-
-import javax.swing.*;
-
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.List;
 
 public class SelectorDialog extends JDialog implements ConstantesFrontend {
 

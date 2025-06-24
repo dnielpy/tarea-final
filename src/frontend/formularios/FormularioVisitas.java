@@ -16,7 +16,6 @@ import entidades.CMF;
 import entidades.personal.Paciente;
 import entidades.registros.Analisis;
 import entidades.registros.Visita;
-import frontend.ConstantesFrontend;
 import frontend.ui.PlaceholderTextField;
 import frontend.ui.PlaceholderTextField.InputFormat;
 import frontend.ui.ScrollPaneModerno;
@@ -49,6 +48,7 @@ import javax.swing.ImageIcon;
 import runner.Usuario;
 import util.ConstantesAnalisis;
 import util.ConstantesEspecialidades;
+import util.ConstantesFrontend;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;

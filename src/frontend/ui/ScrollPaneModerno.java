@@ -6,7 +6,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 
-import frontend.ConstantesFrontend;
+import util.ConstantesFrontend;
 
 public class ScrollPaneModerno extends JScrollPane implements ConstantesFrontend {
 
