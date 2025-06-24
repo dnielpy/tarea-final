@@ -204,13 +204,29 @@ public class ReporteCantVisitasEnUnMes extends JPanel implements ConstantesFront
         int[] visitasPorDia = cmf.obtenerCantVisitasEnUnMes(mes, anio);
 
         dataset.clear();
+        int max = 0;
+
         if (visitasPorDia != null) {
             for (int i = 0; i < visitasPorDia.length; i++) {
-                dataset.addValue(visitasPorDia[i], "Visitas", String.valueOf(i + 1));
+                int valor = visitasPorDia[i];
+                dataset.addValue(valor, "Visitas", String.valueOf(i + 1));
+                if (valor > max) {
+                    max = valor;
+                }
             }
         }
 
-        panelGrafico.restoreAutoBounds();
+        // Escalamos el eje Y
+        NumberAxis rangeAxis = (NumberAxis) panelGrafico.getChart().getCategoryPlot().getRangeAxis();
+        rangeAxis.setLowerBound(0);
+        if (max > 0) {
+            // Factor de escala: ajusta si quieres más o menos espacio
+            int upperBound = (int) Math.ceil(max * 1.4);
+            rangeAxis.setUpperBound(upperBound);
+        } else {
+            rangeAxis.setUpperBound(1); // evitar escala 0
+        }
+
         panelGrafico.revalidate();
         panelGrafico.repaint();
     }

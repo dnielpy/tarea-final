@@ -17,7 +17,6 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -102,8 +101,6 @@ public class VentanaHojasDeCargo extends JPanel implements ConstantesFrontend {
         fechaHojaDeCargo.setMaxSelectableDate(new Date());
 
         List<LocalDate> fechasValidas = cmf.obtenerFechasDeHojasDeCargo();
-
-        // Conversión a Date para el evaluator
         Date[] fechasValidasDate = new Date[fechasValidas.size()];
         for (int i = 0; i < fechasValidas.size(); i++) {
             fechasValidasDate[i] = convertirLocalDateASinDesfase(fechasValidas.get(i));
@@ -112,7 +109,7 @@ public class VentanaHojasDeCargo extends JPanel implements ConstantesFrontend {
         FechaPermitidaEvaluator evaluador = new FechaPermitidaEvaluator(fechasValidasDate);
         fechaHojaDeCargo.getJCalendar().getDayChooser().addDateEvaluator(evaluador);
 
-        if (!fechasValidas.isEmpty()) {   
+        if (!fechasValidas.isEmpty()) {
             fechaHojaDeCargo.setDate(convertirLocalDateASinDesfase(LocalDate.now()));
         }
 
@@ -120,7 +117,6 @@ public class VentanaHojasDeCargo extends JPanel implements ConstantesFrontend {
     }
 
     private Date convertirLocalDateASinDesfase(LocalDate localDate) {
-        // Ponemos la hora a mediodía para evitar desfases
         ZonedDateTime zonedDateTime = localDate.atTime(12, 0).atZone(ZoneId.systemDefault());
         Instant instant = zonedDateTime.toInstant();
         return Date.from(instant);
@@ -128,11 +124,7 @@ public class VentanaHojasDeCargo extends JPanel implements ConstantesFrontend {
 
     private void agregarPanelTabla() {
         LocalDate hoy = LocalDate.now();
-        HojaCargosDiaria hojaDeCargos = cmf.obtenerHojaDeCargosPorFecha(hoy);
-        List<Visita> visitasIniciales = new ArrayList<>();
-        if (hojaDeCargos != null && hojaDeCargos.getVisitas() != null) {
-            visitasIniciales = hojaDeCargos.getVisitas();
-        }
+        List<Visita> visitasIniciales = obtenerVisitasPorFecha(hoy);
 
         model = new VisitaTableModel(visitasIniciales);
         model.setMostrarFecha(false);
@@ -143,20 +135,29 @@ public class VentanaHojasDeCargo extends JPanel implements ConstantesFrontend {
 
         JScrollPane scrollPane = TablaPersonalizada.envolverEnScroll(table, 0, 30, 700, 405);
 
-        // Panel contenedor
         JPanel panelTabla = new JPanel();
         panelTabla.setBounds(50, 140, 700, 435);
         panelTabla.setBackground(Color.WHITE);
         panelTabla.setLayout(null);
 
-        // Buscador
         BuscadorTabla buscador = new BuscadorTabla(sorter, "Buscar en la tabla...");
         buscador.setBounds(0, 0, 700, 25);
         panelTabla.add(buscador);
-
-        // Tabla con scroll
         panelTabla.add(scrollPane);
+
         add(panelTabla);
+    }
+
+    private List<Visita> obtenerVisitasPorFecha(LocalDate fecha) {
+        List<Visita> visitas = new ArrayList<>();
+        HojaCargosDiaria hoja = cmf.obtenerHojaDeCargosPorFecha(fecha);
+        if (hoja != null) {
+            List<Visita> visitasHoja = hoja.getVisitas();
+            if (visitasHoja != null) {
+                visitas.addAll(visitasHoja);
+            }
+        }
+        return visitas;
     }
 
     private void configurarEventos() {
@@ -168,25 +169,29 @@ public class VentanaHojasDeCargo extends JPanel implements ConstantesFrontend {
         fechaHojaDeCargo.addPropertyChangeListener("date", new PropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
-                actualizarVisitasPorFecha();
+                cargarDatos();
             }
         });
     }
 
-    private void actualizarVisitasPorFecha() {
+    private void cargarDatos() {
         Date fechaSeleccionada = fechaHojaDeCargo.getDate();
-        if (fechaSeleccionada == null) {
-            return;
+        boolean tieneFecha = (fechaSeleccionada != null);
+
+        if (tieneFecha) {
+            LocalDate fecha = fechaSeleccionada.toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
+            actualizarModeloVisitasPorFecha(fecha);
+        } else {
+            actualizarModeloVisitasPorFecha(null);
         }
+    }
 
-        LocalDate fechaLocal = fechaSeleccionada.toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate();
-
-        HojaCargosDiaria hoja = cmf.obtenerHojaDeCargosPorFecha(fechaLocal);
+    private void actualizarModeloVisitasPorFecha(LocalDate fecha) {
         List<Visita> visitas = new ArrayList<>();
-        if (hoja != null && hoja.getVisitas() != null) {
-            visitas = hoja.getVisitas();
+        if (fecha != null) {
+            visitas = obtenerVisitasPorFecha(fecha);
         }
         model.setVisitas(visitas);
     }
@@ -201,30 +206,38 @@ public class VentanaHojasDeCargo extends JPanel implements ConstantesFrontend {
     }
 
     private void manejarDobleClick(MouseEvent e) {
-        if (e.getClickCount() != 2) {
-            return;
-        }
-
+        boolean esDobleClick = (e.getClickCount() == 2);
         int viewRow = table.getSelectedRow();
-        if (viewRow == -1) {
-            return;
-        }
+        boolean filaValida = (viewRow != -1);
 
-        int modelRow = table.convertRowIndexToModel(viewRow);
-        Object valorId = model.getValueAt(modelRow, model.findColumn("Historia Clinica"));
-
-        if (valorId instanceof Integer) {
-            int id = (Integer) valorId;
-            Visita visita = cmf.obtenerVisitaPorId(id);
-            abrirFormulario(visita);
+        if (esDobleClick && filaValida) {
+            int modelRow = table.convertRowIndexToModel(viewRow);
+            Object valorId = model.getValueAt(modelRow, model.findColumn("ID Visita"));
+            boolean idValido = (valorId instanceof Integer);
+            if (idValido) {
+                int id = (Integer) valorId;
+                Visita visita = cmf.obtenerVisitaPorId(id);
+                abrirFormulario(visita);
+            }
         }
     }
 
     private void abrirFormulario(Visita visita) {
         Window ventanaPrincipal = SwingUtilities.getWindowAncestor(this);
-        FormularioVisitas formularioVisitas = new FormularioVisitas(ventanaPrincipal, visita, ModoFormulario.VISUALIZACION);
+        FormularioVisitas formularioVisitas = new FormularioVisitas(
+                ventanaPrincipal, visita, ModoFormulario.VISUALIZACION);
         formularioVisitas.setLocationRelativeTo(ventanaPrincipal);
         formularioVisitas.setVisible(true);
+    }
+
+    public void actualizarDatos() {
+        cargarDatos();
+    }
+
+    @Override
+    public void show() {
+        super.show();
+        actualizarDatos();
     }
 }
 
