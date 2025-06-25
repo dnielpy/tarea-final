@@ -147,7 +147,7 @@ public class VentanaReportes extends JPanel implements MouseListener, Constantes
 		});
 
 		// Add "About Us" button
-		BotonReporte botonAboutUs = new BotonReporte("ABOUT US", "Información sobre el repositorio.");
+		BotonReporte botonAboutUs = new BotonReporte("ACERCA DE NOSOTROS", "Información sobre el repositorio.");
 		botonAboutUs.setBounds(419, 372, 292, 149);
 		panelReportesGenerales.add(botonAboutUs);
 		botonAboutUs.addMouseListener(new MouseAdapter() {
