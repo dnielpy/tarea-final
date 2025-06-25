@@ -1,34 +1,23 @@
 package entidades;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-import java.util.Random;
-import java.util.Set;
-import java.util.concurrent.ThreadLocalRandom;
-
 import entidades.personal.Enfermera;
 import entidades.personal.Medico;
 import entidades.personal.Mujer;
 import entidades.personal.Paciente;
 import entidades.personal.PersonalSanitario;
+import entidades.personal.Usuario;
 import entidades.registros.Analisis;
 import entidades.registros.HistoriaClinica;
 import entidades.registros.HojaCargosDiaria;
 import entidades.registros.RegistroGeneral;
 import entidades.registros.RegistroHistorico;
 import entidades.registros.Visita;
-import runner.Usuario;
 import service.Validations;
-import util.ConstantesAnalisis;
-import util.ConstantesEspecialidades;
 import util.MockDataGenerator;
 
 public class CMF {

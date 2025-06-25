@@ -1,8 +1,6 @@
 package entidades.personal;
 
-import runner.Usuario;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 public class Medico extends PersonalSanitario {
 

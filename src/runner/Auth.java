@@ -1,6 +1,7 @@
 package runner;
 
 import entidades.CMF;
+import entidades.personal.Usuario;
 
 public class Auth {
 

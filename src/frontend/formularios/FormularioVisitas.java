@@ -14,6 +14,7 @@ import javax.swing.event.DocumentListener;
 
 import entidades.CMF;
 import entidades.personal.Paciente;
+import entidades.personal.Usuario;
 import entidades.registros.Analisis;
 import entidades.registros.Visita;
 import frontend.ui.PlaceholderTextField;
@@ -45,7 +46,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.ListSelectionModel;
 import javax.swing.ImageIcon;
 
-import runner.Usuario;
 import util.ConstantesAnalisis;
 import util.ConstantesEspecialidades;
 import util.ConstantesFrontend;

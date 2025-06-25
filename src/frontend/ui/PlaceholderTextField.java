@@ -69,7 +69,7 @@ public class PlaceholderTextField extends JTextField implements ConstantesFronte
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        if (getText().isEmpty()) {
+        if (getText().isEmpty() && !isFocusOwner()) {  
             Graphics2D g2 = (Graphics2D) g.create();
             g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
