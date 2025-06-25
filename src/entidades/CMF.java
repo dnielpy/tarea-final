@@ -6,10 +6,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 import entidades.personal.Enfermera;
@@ -843,135 +845,4 @@ public class CMF {
 		MockDataGenerator.mockData();
 	}
 
-	public void crearPacienteConDatos(String nombre, String primerApellido, String segundoApellido, String ci,
-			boolean esMujer, LocalDate fecha, String direccion) {
-		List<String> enfermedades = generarEnfermedadesCronicasAleatorias();
-		List<String> vacunas = generarVacunasAleatorias();
-		agregarPaciente(nombre, primerApellido, segundoApellido, enfermedades, vacunas, ci, esMujer, fecha, direccion);
-	}
-
-	public List<String> generarEspecialidadesAleatorias() {
-		List<String> lista = new ArrayList<>();
-		int cantidad = random.nextInt(ConstantesEspecialidades.ESPECIALIDADES_REMITIDAS.size() + 1);
-		// Para evitar repeticiones, tomamos una copia y la mezclamos
-		List<String> copia = new ArrayList<>(ConstantesEspecialidades.ESPECIALIDADES_REMITIDAS);
-		Collections.shuffle(copia, random);
-
-		for (int i = 0; i < cantidad; i++) {
-			lista.add(copia.get(i));
-		}
-		return lista;
-	}
-
-	// Genera análisis aleatorios para una visita
-	public List<Analisis> generarAnalisisParaVisitaConIdVisita(LocalDate fechaVisita, int idVisita,
-			int IdHistoriaClinica) {
-		List<Analisis> listaAnalisis = new ArrayList<>();
-
-		if (random.nextDouble() > 0.4) {
-			int cantAnalisis = 1 + random.nextInt(3);
-			for (int i = 0; i < cantAnalisis; i++) {
-				int idAnalisis = obtenerNuevoAnalisisID();
-				String tipo = ConstantesAnalisis.TIPOS_ANALISIS
-						.get(random.nextInt(ConstantesAnalisis.TIPOS_ANALISIS.size()));
-				LocalDate fechaOrientado = fechaVisita;
-
-				Analisis analisis = new Analisis(idAnalisis, tipo, fechaOrientado, idVisita, IdHistoriaClinica);
-
-				if (random.nextBoolean()) {
-					LocalDate fechaResultado = fechaOrientado.plusDays(1 + random.nextInt(10));
-					if (fechaResultado.isAfter(LocalDate.now())) {
-						fechaResultado = LocalDate.now();
-					}
-					analisis.setFechaResultado(fechaResultado);
-					analisis.setResultados("Resultados normales para " + tipo);
-				}
-				listaAnalisis.add(analisis);
-			}
-		}
-		return listaAnalisis;
-	}
-
-	// Metodos para randomizar datos
-
-	public static LocalDate generarFechaRandomDesde(LocalDate start) {
-		Objects.requireNonNull(start, "La fecha inicial no puede ser nula");
-
-		LocalDate end = LocalDate.now();
-
-		if (start.isAfter(end)) {
-			throw new IllegalArgumentException("La fecha inicial no puede ser posterior a la fecha actual");
-		}
-
-		long daysBetween = ChronoUnit.DAYS.between(start, end);
-		long randomDays = ThreadLocalRandom.current().nextLong(daysBetween + 1);
-
-		return start.plusDays(randomDays);
-	}
-
-	private static final Random random = new Random();
-
-	public static String generarDireccionCuba() {
-		Map<String, String> calleMunicipio = new HashMap<>();
-		calleMunicipio.put("Calle 23", "Plaza de la Revolución");
-		calleMunicipio.put("Avenida Boyeros", "Boyeros");
-		calleMunicipio.put("Calle Línea", "Plaza de la Revolución");
-		calleMunicipio.put("Calle Monte", "Centro Habana");
-		calleMunicipio.put("Avenida 5ta", "Playa");
-		calleMunicipio.put("Calle Obispo", "La Habana Vieja");
-		calleMunicipio.put("Calle Enramadas", "Habana del Este");
-
-		List<String> calles = new ArrayList<>(calleMunicipio.keySet());
-		String calle = calles.get(random.nextInt(calles.size()));
-		String municipio = calleMunicipio.get(calle);
-		String provincia = "La Habana";
-
-		String direccion = calle + " #" + (100 + random.nextInt(900));
-		return direccion + ", " + municipio + ", " + provincia;
-	}
-
-	private List<String> generarEnfermedadesCronicasAleatorias() {
-		List<String> posiblesEnfermedades = Arrays.asList(
-				"Diabetes",
-				"Hipertensi\u00F3n",
-				"Asma",
-				"Obesidad",
-				"Enfermedad card\u00EDaca",
-				"Artritis",
-				"EPOC");
-
-		List<String> enfermedadesAsignadas = new ArrayList<>();
-		int cantidad = random.nextInt(3); // 0, 1 o 2 enfermedades
-
-		Collections.shuffle(posiblesEnfermedades, random);
-
-		for (int i = 0; i < cantidad; i++) {
-			enfermedadesAsignadas.add(posiblesEnfermedades.get(i));
-		}
-
-		return enfermedadesAsignadas;
-	}
-
-	private List<String> generarVacunasAleatorias() {
-		List<String> posiblesVacunas = Arrays.asList(
-				"Antipolio",
-				"Antitet\u00E1nica",
-				"Antigripal",
-				"Hepatitis B");
-
-		List<String> vacunasAsignadas = new ArrayList<>();
-		int cantidad = random.nextInt(3); // 0, 1 o 2 vacunas
-
-		Collections.shuffle(posiblesVacunas);
-
-		for (int i = 0; i < cantidad; i++) {
-			String vacuna = posiblesVacunas.get(i);
-			int anio = 2015 + random.nextInt(9);
-			int mes = 1 + random.nextInt(12);
-			int dia = 1 + random.nextInt(28);
-			vacunasAsignadas.add(vacuna + ": " + dia + "/" + mes + "/" + anio);
-		}
-
-		return vacunasAsignadas;
-	}
 }
