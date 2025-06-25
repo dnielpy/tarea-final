@@ -1,28 +1,22 @@
 package frontend;
 
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Toolkit;
 import java.awt.Window;
 
 import javax.swing.Icon;
 import javax.swing.JDialog;
-
-import java.awt.Toolkit;
-import java.awt.Color;
-
 import javax.swing.JLabel;
-
-import entidades.personal.Enfermera;
-import entidades.personal.PersonalSanitario;
-import frontend.ui.PlaceholderTextField;
-
-import java.awt.Font;
-
-import frontend.ui.PlaceholderTextField.InputFormat;
-
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 import javax.swing.JSeparator;
+import javax.swing.SwingConstants;
 
 import util.ConstantesFrontend;
+import entidades.personal.Enfermera;
+import entidades.personal.PersonalSanitario;
+import frontend.ui.placeholders.PlaceholderTextField;
+import frontend.ui.placeholders.PlaceholderTextField.InputFormat;
 
 public class TarjetaUsuario extends JDialog implements ConstantesFrontend {
 

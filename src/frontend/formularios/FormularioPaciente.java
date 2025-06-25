@@ -1,23 +1,16 @@
 package frontend.formularios;
 
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-
 import java.awt.Color;
-
-import javax.swing.DefaultListModel;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.ImageIcon;
-import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
-
+import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.Point;
+import java.awt.SystemColor;
+import java.awt.Toolkit;
+import java.awt.Window;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -25,38 +18,38 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
+import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.border.EmptyBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
+import service.Validations;
+import util.ConstantesFrontend;
 
 import com.toedter.calendar.JDateChooser;
 
-import javax.swing.JScrollPane;
-
-import frontend.ui.PlaceholderTextField;
-import frontend.ui.PlaceholderTextField.InputFormat;
-import frontend.ui.botones.BotonBlanco;
-import frontend.ui.botones.ImageButtonLabel;
-import frontend.ui.dialogs.InfoDialog;
-import frontend.ui.dialogs.QuestionDialog;
-import frontend.ui.dialogs.TextDialog;
 import entidades.CMF;
 import entidades.personal.Mujer;
 import entidades.personal.Paciente;
 import entidades.personal.Usuario;
 import entidades.personal.Usuario.TipoDeRol;
-
-import javax.swing.JList;
-
-import service.Validations;
-import util.ConstantesFrontend;
-
-import java.awt.Point;
-import java.awt.Toolkit;
-import java.awt.Window;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.SystemColor;
+import frontend.ui.botones.BotonBlanco;
+import frontend.ui.botones.ImageButtonLabel;
+import frontend.ui.dialogs.InfoDialog;
+import frontend.ui.dialogs.QuestionDialog;
+import frontend.ui.dialogs.TextDialog;
+import frontend.ui.placeholders.PlaceholderTextField;
+import frontend.ui.placeholders.PlaceholderTextField.InputFormat;
 
 public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 

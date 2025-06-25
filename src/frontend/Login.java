@@ -1,31 +1,20 @@
 package frontend;
 
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-
 import java.awt.Color;
-
-import javax.swing.JLabel;
-
-import java.awt.Toolkit;
-
-import javax.swing.ImageIcon;
 import java.awt.Font;
+import java.awt.Toolkit;
 import java.awt.Window;
-
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import frontend.ui.PlaceholderTextField;
-import frontend.ui.botones.*;
-import frontend.ui.dialogs.*;
-import frontend.ui.placeholders.PlaceholderAndToggle;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-
+import javax.swing.ImageIcon;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 
@@ -33,7 +22,14 @@ import runner.Auth;
 import util.ConstantesFrontend;
 import entidades.CMF;
 import entidades.personal.Usuario;
-import frontend.ui.PlaceholderTextField.InputFormat;
+import frontend.ui.botones.BotonBlanco;
+import frontend.ui.botones.ImageButtonLabel;
+import frontend.ui.dialogs.CopyDialog;
+import frontend.ui.dialogs.InfoDialog;
+import frontend.ui.dialogs.QuestionDialog;
+import frontend.ui.placeholders.PlaceholderAndToggle;
+import frontend.ui.placeholders.PlaceholderTextField;
+import frontend.ui.placeholders.PlaceholderTextField.InputFormat;
 
 public class Login extends JDialog implements ConstantesFrontend {
 
@@ -138,6 +134,7 @@ public class Login extends JDialog implements ConstantesFrontend {
         campoUsuario = new PlaceholderTextField("Ingrese el nombre de usuario");
         campoUsuario.setInputFormat(InputFormat.ANY);
         campoUsuario.setFont(new Font("Arial", Font.PLAIN, 16));
+        campoUsuario.setPermitirEspacios(false);
         campoUsuario.setBackground(Color.WHITE);
         campoUsuario.setBounds(325, 172, 379, 26);
         campoUsuario.setColumns(10);

@@ -2,11 +2,6 @@ package frontend.panelesPrincipales;
 
 import java.awt.Color;
 import java.awt.Font;
-
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
-
 import java.awt.Window;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -17,14 +12,17 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.Date;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.table.TableRowSorter;
 
@@ -33,14 +31,14 @@ import util.ConstantesFrontend;
 import com.toedter.calendar.IDateEvaluator;
 import com.toedter.calendar.JDateChooser;
 
-import frontend.ui.BuscadorTabla;
-import frontend.ui.TablaPersonalizada;
 import entidades.CMF;
 import entidades.registros.HojaCargosDiaria;
 import entidades.registros.Visita;
 import frontend.formularios.FormularioVisitas;
 import frontend.formularios.FormularioVisitas.ModoFormulario;
 import frontend.tablas.VisitaTableModel;
+import frontend.ui.TablaPersonalizada;
+import frontend.ui.placeholders.BuscadorTabla;
 
 public class VentanaHojasDeCargo extends JPanel implements ConstantesFrontend {
 

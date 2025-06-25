@@ -3,9 +3,17 @@ package frontend.panelesPrincipales;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
+import java.awt.SystemColor;
 import java.awt.Window;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -13,29 +21,16 @@ import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import javax.swing.table.TableRowSorter;
 
+import util.ConstantesFrontend;
 import entidades.CMF;
 import entidades.personal.Paciente;
 import frontend.formularios.FormularioPaciente;
 import frontend.formularios.FormularioPaciente.ModoFormulario;
 import frontend.tablas.PacienteTableModel;
-import frontend.ui.BuscadorTabla;
 import frontend.ui.TablaPersonalizada;
 import frontend.ui.dialogs.InfoDialog;
 import frontend.ui.dialogs.QuestionDialog;
-
-import javax.swing.JButton;
-
-import java.awt.SystemColor;
-
-import javax.swing.ImageIcon;
-
-import util.ConstantesFrontend;
-
-import java.awt.event.MouseAdapter;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.List;
+import frontend.ui.placeholders.BuscadorTabla;
 
 public class VentanaPacientes extends JPanel implements ConstantesFrontend {
 
