@@ -10,23 +10,24 @@ import excepciones.Excepciones.IllegalVaccinationException;
 import service.Validations;
 
 public class Paciente extends Persona {
-	
-	protected String direccion;
+
+    protected String direccion;
     protected List<String> enfermedadesCronicas;
     protected List<String> vacunacion;
     protected HistoriaClinica historiaClinica;
-    
+
     // Constructor
-    public Paciente(int historiaClinicaID, String nombre, String primerApellido, String segundoApellido, String ci, String direccion) {
-    	super(nombre, primerApellido, segundoApellido, ci);
-    	setDireccion(direccion);
-    	historiaClinica = new HistoriaClinica(historiaClinicaID);  
+    public Paciente(int historiaClinicaID, String nombre, String primerApellido, String segundoApellido, String ci,
+            String direccion) {
+        super(nombre, primerApellido, segundoApellido, ci);
+        setDireccion(direccion);
+        historiaClinica = new HistoriaClinica(historiaClinicaID);
         vacunacion = new ArrayList<>();
         enfermedadesCronicas = new ArrayList<>();
     }
 
     // Direccion
-    
+
     public String getDireccion() {
         return direccion;
     }
@@ -34,7 +35,7 @@ public class Paciente extends Persona {
     public void setDireccion(String direccion) {
         Objects.requireNonNull(direccion, "La direcci\u00F3n no puede ser nula");
         if (direccion.trim().isEmpty()) {
-            throw new IllegalAddressException("La direcci\u00F3n no puede estar vac\u00ED­a");
+            throw new IllegalAddressException("La direcci\u00F3n no puede estar vacia");
         }
         if (direccion.length() > 300) {
             throw new IllegalAddressException("La direcci\u00F3n no puede exceder 300 caracteres");
@@ -43,13 +44,13 @@ public class Paciente extends Persona {
     }
 
     // Historia clinica
-    
+
     public HistoriaClinica getHistoriaClinica() {
-    	return historiaClinica;
+        return historiaClinica;
     }
 
     // Edad y genero
-    
+
     public int getEdad() {
         return Validations.getAgeFromCI(ci);
     }
@@ -58,21 +59,21 @@ public class Paciente extends Persona {
         int decimoDigito = Character.getNumericValue(ci.charAt(9));
         return (decimoDigito % 2 == 0) ? "Masculino" : "Femenino";
     }
-    
+
     // Enfermedades cronicas
 
     public List<String> getEnfermedadesCronicas() {
         return new ArrayList<>(enfermedadesCronicas);
     }
-    
+
     public void setEnfermedadesCronicas(List<String> enfermedades) {
         enfermedadesCronicas = new ArrayList<>();
 
         if (enfermedades != null) {
-        	for (String enfermedad : enfermedades) {
-                agregarEnfermedadCronica(enfermedad); 
+            for (String enfermedad : enfermedades) {
+                agregarEnfermedadCronica(enfermedad);
             }
-        }     
+        }
     }
 
     public void agregarEnfermedadCronica(String enfermedad) {
@@ -87,7 +88,7 @@ public class Paciente extends Persona {
     }
 
     // Vacunacion
-    
+
     public List<String> getVacunacion() {
         return new ArrayList<>(vacunacion);
     }
@@ -99,7 +100,7 @@ public class Paciente extends Persona {
             agregarVacuna(vacuna);
         }
     }
-    
+
     public void agregarVacuna(String vacuna) {
         Objects.requireNonNull(vacuna, "La vacuna no puede ser nula");
         if (vacuna.trim().isEmpty()) {
@@ -110,7 +111,7 @@ public class Paciente extends Persona {
         }
         this.vacunacion.add(vacuna.trim());
     }
-    
+
     // En riesgo
 
     public boolean estaEnRiesgo() {
