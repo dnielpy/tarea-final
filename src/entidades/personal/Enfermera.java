@@ -2,8 +2,6 @@ package entidades.personal;
 
 import java.time.LocalDate;
 
-import runner.Usuario;
-
 public class Enfermera extends PersonalSanitario {   
     private boolean licenciatura;
     private int experiencia;

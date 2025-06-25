@@ -5,8 +5,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.Objects;
 
-import runner.Usuario;
-
 public abstract class PersonalSanitario extends Persona {
 
     protected Usuario user;

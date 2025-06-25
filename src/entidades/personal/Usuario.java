@@ -1,4 +1,4 @@
-package runner;
+package entidades.personal;
 
 public class Usuario {
 	private String userName;

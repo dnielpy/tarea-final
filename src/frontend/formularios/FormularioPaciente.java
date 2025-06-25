@@ -41,11 +41,11 @@ import frontend.ui.dialogs.TextDialog;
 import entidades.CMF;
 import entidades.personal.Mujer;
 import entidades.personal.Paciente;
+import entidades.personal.Usuario;
+import entidades.personal.Usuario.TipoDeRol;
 
 import javax.swing.JList;
 
-import runner.Usuario;
-import runner.Usuario.TipoDeRol;
 import service.Validations;
 import util.ConstantesFrontend;
 
