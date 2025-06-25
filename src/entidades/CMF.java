@@ -186,11 +186,11 @@ public class CMF {
 		// Si es una mujer, se permite editar embarazo y fecha de revisión
 		if (paciente instanceof Mujer) {
 			if (nuevoEstadoEmbarazo != null) {
-				((Mujer)paciente).setEmbarazada(nuevoEstadoEmbarazo);
+				((Mujer) paciente).setEmbarazada(nuevoEstadoEmbarazo);
 			}
 
 			if (nuevaFechaCitologia != null) {
-				((Mujer)paciente).setFechaUltimaRevision(nuevaFechaCitologia);
+				((Mujer) paciente).setFechaUltimaRevision(nuevaFechaCitologia);
 			}
 		}
 
@@ -204,7 +204,6 @@ public class CMF {
 			paciente.setVacunacion(new ArrayList<>(nuevasVacunas)); // Usa tu método con validación
 		}
 	}
-
 
 	public boolean eliminarPaciente(int id) {
 		boolean response = false;
@@ -428,18 +427,17 @@ public class CMF {
 	}
 
 	// Editar Analisis
-	
-	public void editarResultadosDeAnalisis(Analisis analisis, String nuevosResultados) {
-	    String anteriores = analisis.getResultados() != null ? analisis.getResultados().trim() : "";
-	    nuevosResultados = nuevosResultados.trim();
 
-	    if (!nuevosResultados.equals(anteriores)) {
-	        analisis.setResultados(nuevosResultados);
-	        analisis.setFechaResultado(LocalDate.now());
-	    }
+	public void editarResultadosDeAnalisis(Analisis analisis, String nuevosResultados) {
+		String anteriores = analisis.getResultados() != null ? analisis.getResultados().trim() : "";
+		nuevosResultados = nuevosResultados.trim();
+
+		if (!nuevosResultados.equals(anteriores)) {
+			analisis.setResultados(nuevosResultados);
+			analisis.setFechaResultado(LocalDate.now());
+		}
 	}
 
-	
 	// Hojas de cargo
 
 	public void agregarHojaCargoDiaria(LocalDate fecha) {
@@ -606,6 +604,15 @@ public class CMF {
 			}
 		}
 		return id;
+	}
+
+	public void agregarAnalisisAVisita(int visitaId, Analisis analisis) {
+		Visita visita = obtenerVisitaPorId(visitaId);
+		if (visita != null) {
+			visita.agregarAnalisis(analisis);
+		} else {
+			throw new IllegalArgumentException("Visita no encontrada con ID: " + visitaId);
+		}
 	}
 
 	// Genera un ID único para un nuevo análisis

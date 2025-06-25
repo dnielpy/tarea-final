@@ -209,7 +209,8 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
                     if (!modeloEspecialidades.contains(seleccion)) {
                         modeloEspecialidades.addElement(seleccion);
                     } else {
-                        new InfoDialog(FormularioVisitas.this, "Informaci\u00F3n", "La especialidad ya fue a\u00F1adida.")
+                        new InfoDialog(FormularioVisitas.this, "Informaci\u00F3n",
+                                "La especialidad ya fue a\u00F1adida.")
                                 .setVisible(true);
                     }
                 }
@@ -266,7 +267,8 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
                     if (!modeloAnalisis.contains(seleccion)) {
                         modeloAnalisis.addElement(seleccion);
                     } else {
-                        new InfoDialog(FormularioVisitas.this, "Informaci\u00F3n", "El an\u00E1lisis ya fue a\u00F1adido.")
+                        new InfoDialog(FormularioVisitas.this, "Informaci\u00F3n",
+                                "El an\u00E1lisis ya fue a\u00F1adido.")
                                 .setVisible(true);
                     }
                 }
@@ -590,17 +592,29 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
                 String direccion = campoDireccion.getText().trim();
 
                 if (diagnostico.isEmpty() || tratamiento.isEmpty() || direccion.isEmpty()) {
-                    throw new IllegalArgumentException("Diagn\u00F3stico, tratamiento y direcci\u00F3n no pueden estar vac\u00ED­os.");
+                    throw new IllegalArgumentException(
+                            "Diagn\u00F3stico, tratamiento y direcci\u00F3n no pueden estar vac\u00ED­os.");
                 }
 
-                List<Analisis> listaAnalisis = construirListaAnalisis(modeloAnalisis, id, historiaClinicaID);
-                List<String> listaEspecialidades = construirListaEspecialidades();
-
+                // Crear la visita con lista de análisis vacía
                 Visita nuevaVisita = new Visita(id, historiaClinicaID, fecha, diagnostico, tratamiento,
-                        listaAnalisis, listaEspecialidades, direccion);
+                        new ArrayList<Analisis>(), construirListaEspecialidades(), direccion);
 
                 cmf.agregarVisita(nuevaVisita);
                 this.visita = nuevaVisita;
+
+                // Agregar análisis uno por uno
+                for (int i = 0; i < modeloAnalisis.size(); i++) {
+                    String tipo = modeloAnalisis.getElementAt(i);
+                    try {
+                        int idAnalisis = cmf.obtenerNuevoAnalisisID();
+                        Analisis analisis = new Analisis(idAnalisis, tipo, fecha, id, historiaClinicaID);
+                        cmf.agregarAnalisisAVisita(nuevaVisita.getId(), analisis); // Método para agregar análisis a la
+                                                                                   // visita
+                    } catch (IllegalArgumentException ex) {
+                        new InfoDialog(this, "Error al agregar análisis", ex.getMessage()).setVisible(true);
+                    }
+                }
 
                 new InfoDialog(this, "Visita Agregada", "Visita guardada exitosamente.").setVisible(true);
                 mostrarVisitaGuardada();
@@ -638,7 +652,8 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
 
                 boolean camposValidos = !(diagnostico.isEmpty() || tratamiento.isEmpty() || direccion.isEmpty());
                 if (!camposValidos) {
-                    throw new IllegalArgumentException("Diagn\u00F3stico, tratamiento y direcci\u00F3n no pueden estar vac\u00ED­os.");
+                    throw new IllegalArgumentException(
+                            "Diagn\u00F3stico, tratamiento y direcci\u00F3n no pueden estar vac\u00ED­os.");
                 }
 
                 List<Analisis> listaAnalisis = construirListaAnalisis(modeloAnalisis, visitaExistente.getId(),
@@ -656,7 +671,8 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
                 new InfoDialog(this, "Visita Guardada", "Visita editada exitosamente.").setVisible(true);
                 mostrarVisitaGuardada();
             } catch (NumberFormatException ex) {
-                new InfoDialog(this, "Error", "El campo 'H. Clínica' debe contener un n\u00FAmero v\u00E1lido.").setVisible(true);
+                new InfoDialog(this, "Error", "El campo 'H. Clínica' debe contener un n\u00FAmero v\u00E1lido.")
+                        .setVisible(true);
             } catch (IllegalArgumentException ex) {
                 new InfoDialog(this, "Error", ex.getMessage()).setVisible(true);
             } catch (Exception ex) {

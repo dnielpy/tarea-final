@@ -180,4 +180,14 @@ public class Visita {
         }
         return response;
     }
+
+    public void agregarAnalisis(Analisis analisis) {
+        if (analisis == null) {
+            throw new IllegalArgumentException("El análisis no puede ser nulo");
+        }
+        if (this.analisis == null) {
+            this.analisis = new ArrayList<>();
+        }
+        this.analisis.add(analisis);
+    }
 }
