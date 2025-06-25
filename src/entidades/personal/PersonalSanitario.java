@@ -10,9 +10,9 @@ import runner.Usuario;
 public abstract class PersonalSanitario extends Persona {
 
     protected Usuario user;
-    private int identificador;
-    private LocalDate fechaInicioCMF;
-    private static final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("d 'de' MMMM 'de' yyyy", new Locale("es", "ES"));
+    protected int identificador;
+    protected LocalDate fechaInicioCMF;
+    protected static final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("d 'de' MMMM 'de' yyyy", new Locale("es", "ES"));
 
     // Constructor
     public PersonalSanitario(String nombre, String primerApellido, String segundoApellido, int identificador, String ci,
