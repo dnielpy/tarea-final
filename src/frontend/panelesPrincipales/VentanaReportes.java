@@ -79,13 +79,6 @@ public class VentanaReportes extends JPanel implements MouseListener, Constantes
 		panelReportesGenerales.add(botonReporteVisitasMes);
 		botonReporteVisitasMes.addMouseListener(this);
 
-		JPanel panel_7 = new JPanel();
-		panel_7.setBorder(new LineBorder(SystemColor.controlShadow, 1, true));
-		panel_7.setBackground(SystemColor.menu);
-		panel_7.setBounds(419, 372, 292, 149);
-		panelReportesGenerales.add(panel_7);
-		panel_7.setLayout(null);
-
 		ReporteRangoEdades panelGraficoRangoEdades = new ReporteRangoEdades();
 		panelContenedor.add(panelGraficoRangoEdades, "RANGO DE EDADES");
 
@@ -214,7 +207,7 @@ public class VentanaReportes extends JPanel implements MouseListener, Constantes
 		JFrame ventanaAboutUs = new JFrame("About Us");
 		ventanaAboutUs.setSize(796, 673); // Match the size of other project windows
 		ventanaAboutUs.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		ventanaAboutUs.setLayout(new BorderLayout());
+		ventanaAboutUs.getContentPane().setLayout(new BorderLayout());
 
 		// Texto principal sobre el repositorio
 		JLabel textoRepo = new JLabel("<html><div style='text-align: center;'>"
@@ -224,7 +217,7 @@ public class VentanaReportes extends JPanel implements MouseListener, Constantes
 				+ "Se invita a los usuarios a realizar forks, sugerir mejoras y proponer cambios. "
 				+ "</div></html>", SwingConstants.CENTER);
 		textoRepo.setFont(new Font("Arial", Font.PLAIN, 14));
-		ventanaAboutUs.add(textoRepo, BorderLayout.NORTH);
+		ventanaAboutUs.getContentPane().add(textoRepo, BorderLayout.NORTH);
 
 		// Panel central con los códigos QR y sus descripciones
 		JPanel panelCentral = new JPanel(new GridLayout(2, 2, 10, 10));
@@ -260,7 +253,7 @@ public class VentanaReportes extends JPanel implements MouseListener, Constantes
 		textoDocQR.setFont(new Font("Arial", Font.PLAIN, 14));
 		panelCentral.add(textoDocQR);
 
-		ventanaAboutUs.add(panelCentral, BorderLayout.CENTER);
+		ventanaAboutUs.getContentPane().add(panelCentral, BorderLayout.CENTER);
 
 		// Mostrar la ventana
 		ventanaAboutUs.setLocationRelativeTo(null);

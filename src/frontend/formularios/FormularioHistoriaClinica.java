@@ -158,6 +158,7 @@ public class FormularioHistoriaClinica extends JDialog implements ConstantesFron
 		panelGris.setLayout(null);
 		
 		configurarDobleClickAnalisis();
+		configurarDobleClickVisitas();
 	}
 
 	public void cargarDatos() {
@@ -206,6 +207,23 @@ public class FormularioHistoriaClinica extends JDialog implements ConstantesFron
 		});
 	}
 	
+	private void configurarDobleClickVisitas() {
+		tablaVisitas.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount() == 2 && tablaVisitas.getSelectedRow() != -1) {
+					int fila = tablaVisitas.getSelectedRow();
+					Visita visitaSeleccionada = modeloVisitas.getVisitaAt(fila);
+
+					if (visitaSeleccionada != null) {
+						abrirFormularioVisitaDesdeTabla(visitaSeleccionada);
+					}
+				}
+			}
+		});
+	}
+
+	
 	private void abrirFormularioAnalisisDesdeTabla(Analisis analisis) {
 		this.setVisible(false); // Ocultar historia clínica temporalmente
 
@@ -215,7 +233,6 @@ public class FormularioHistoriaClinica extends JDialog implements ConstantesFron
 			FormularioAnalisis.ModoFormulario.VISUALIZACION
 		);
 
-		// Posicionar en el mismo lugar que esta ventana
 		formulario.setLocation(this.getLocation());
 
 		// Al cerrar, volver a mostrar la historia clínica
@@ -229,4 +246,26 @@ public class FormularioHistoriaClinica extends JDialog implements ConstantesFron
 		formulario.setVisible(true);
 	}
 
+	private void abrirFormularioVisitaDesdeTabla(Visita visita) {
+		this.setVisible(false); // Ocultar historia clínica temporalmente
+
+		FormularioVisitas formulario = new FormularioVisitas(
+			FormularioHistoriaClinica.this,
+			visita,
+			FormularioVisitas.ModoFormulario.VISUALIZACION		
+		);
+
+		formulario.setLocation(this.getLocation());
+
+		formulario.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosed(WindowEvent e) {
+				FormularioHistoriaClinica.this.setVisible(true);
+				cargarDatos(); 
+			}
+		});
+
+		formulario.setVisible(true);
+	}
+	
 }

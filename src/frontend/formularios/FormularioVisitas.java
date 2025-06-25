@@ -84,7 +84,7 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
 
     private BotonBlanco botonGuardar;
     private BotonBlanco botonEditar;
-    private BotonBlanco botonAtras;
+    private BotonBlanco botonCancelar;
 
     private ModoFormulario modoActual;
 
@@ -489,40 +489,41 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
         });
         botonEditar.setToolTipText("Clic para editar la visita");
         botonEditar.setFont(new Font("Arial", Font.PLAIN, 18));
-        botonEditar.setBounds(221, 99, 130, 30);
+        botonEditar.setBounds(300, 99, 130, 30);
         botonEditar.setVisible(false);
         panelAzul.add(botonEditar);
 
-        botonAtras = new BotonBlanco("ATR\u00C1S");
-        botonAtras.addActionListener(new ActionListener() {
+        botonCancelar = new BotonBlanco("CANCELAR");
+        botonCancelar.setToolTipText("Cancelar y salir o volver a modo visualización");
+        botonCancelar.setFont(new Font("Arial", Font.PLAIN, 18));
+        botonCancelar.setBounds(388, 99, 130, 30);
+        panelAzul.add(botonCancelar);
+
+        botonCancelar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if (modoActual == ModoFormulario.CREACION) {
-                    QuestionDialog confirmacion = new QuestionDialog(FormularioVisitas.this,
-                            "Confirmar salida",
-                            "Est\u00E1 a punto de salir del formulario.\nSe perder\u00E1n los cambios no guardados.\n¿Desea continuar?");
+                boolean esCreacion = modoActual == ModoFormulario.CREACION;
+                boolean esEdicion = modoActual == ModoFormulario.EDICION;
+
+                if (esCreacion || esEdicion) {
+                    String titulo = esCreacion ? "Confirmar salida" : "Cancelar edición";
+                    String mensaje = esCreacion
+                            ? "Está a punto de salir del formulario.\nSe perderán los cambios no guardados.\n¿Desea continuar?"
+                            : "Está a punto de cancelar la edición.\nSe perderán los cambios no guardados.\n¿Desea continuar?";
+                    QuestionDialog confirmacion = new QuestionDialog(FormularioVisitas.this, titulo, mensaje);
                     confirmacion.setVisible(true);
+
                     if (confirmacion.esConfirmado()) {
-                        dispose();
+                        if (esCreacion) {
+                            dispose();
+                        } else {
+                            setModoActual(ModoFormulario.VISUALIZACION);
+                            cargarDatosVisita();
+                            popupResultados.setVisible(false);
+                        }
                     }
-                } else if (modoActual == ModoFormulario.EDICION) {
-                    QuestionDialog confirmacion = new QuestionDialog(FormularioVisitas.this,
-                            "Cancelar edici\u00F3n",
-                            "Est\u00E1 a punto de cancelar la edici\u00F3n.\nSe perder\u00E1n los cambios no guardados.\n¿Desea continuar?");
-                    confirmacion.setVisible(true);
-                    if (confirmacion.esConfirmado()) {
-                        setModoActual(ModoFormulario.VISUALIZACION);
-                        cargarDatosVisita();
-                        popupResultados.setVisible(false);
-                    }
-                } else {
-                    dispose();
                 }
             }
         });
-        botonAtras.setToolTipText("Clic para volver a la ventana principal");
-        botonAtras.setFont(new Font("Arial", Font.PLAIN, 18));
-        botonAtras.setBounds(388, 99, 130, 30);
-        panelAzul.add(botonAtras);
 
         JPanel panelGris = new JPanel();
         panelGris.setBackground(COLOR_GRIS_CLARO);
@@ -569,7 +570,7 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
         return lista;
     }
 
-    // M\u00E9todo para agregar una nueva visita
+    // Metodo para agregar una nueva visita
     public void agregarNuevaVisita() {
         boolean accesoPermitido = esMedico();
         if (!accesoPermitido) {
@@ -717,29 +718,32 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
 
     public void setModoActual(ModoFormulario modo) {
         this.modoActual = modo;
+        boolean esMedico = esMedico();
+
         switch (modo) {
             case CREACION:
                 setTitle("Crear visita");
-                activarEdicion(esMedico());
-                botonGuardar.setVisible(esMedico());
+                activarEdicion(esMedico);
+                botonGuardar.setVisible(esMedico);
                 botonEditar.setVisible(false);
-                botonAtras.setText("ATR\u00C1S");
+                botonCancelar.setVisible(true);
                 break;
             case EDICION:
                 setTitle("Editar visita");
-                activarEdicion(esMedico());
-                botonGuardar.setVisible(esMedico());
+                activarEdicion(esMedico);
+                botonGuardar.setVisible(esMedico);
                 botonEditar.setVisible(false);
-                botonAtras.setText("CANCELAR");
+                botonCancelar.setVisible(true);
                 break;
             case VISUALIZACION:
-                setTitle("Informaci\u00F3n de la visita");
+                setTitle("Información de la visita");
                 activarEdicion(false);
                 botonGuardar.setVisible(false);
-                botonEditar.setVisible(esMedico());
-                botonAtras.setText("ATR\u00C1S");
+                botonEditar.setVisible(esMedico);
+                botonCancelar.setVisible(false);
                 break;
         }
+
         popupResultados.setVisible(false);
     }
 

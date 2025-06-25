@@ -156,7 +156,7 @@ public class VentanaVisitas extends JPanel implements ConstantesFrontend {
 	// Actualiza los datos de la tabla
 	public void actualizarDatos() {
 		model.setVisitas(cmf.obtenerVisitasDeUnDia(LocalDate.now()));
-		model.fireTableDataChanged(); // Notifica que los datos han cambiado
+		model.fireTableDataChanged(); 
 	}
 
 	@Override
