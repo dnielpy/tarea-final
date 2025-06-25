@@ -9,6 +9,7 @@ public class Mujer extends Paciente {
     private LocalDate fechaUltimaRevision;
     private boolean embarazada;
 
+    // Constructor
     public Mujer(int historiaClinicaID, String nombre, String primerApellido, String segundoApellido, String id,
                  String direccion, LocalDate fechaUltimaRevision, boolean embarazada) {
         super(historiaClinicaID, nombre, primerApellido, segundoApellido, id, direccion);
@@ -16,6 +17,7 @@ public class Mujer extends Paciente {
         setEmbarazada(embarazada);
     }
 
+    // Fecha de la ultima prueba citologica
     public LocalDate getFechaUltimaRevision() {
         return fechaUltimaRevision;
     }
@@ -33,6 +35,8 @@ public class Mujer extends Paciente {
         this.fechaUltimaRevision = fechaUltimaRevision;
     }
 
+    // Embarazada
+    
     public boolean isEmbarazada() {
         return embarazada;
     }
@@ -51,14 +55,20 @@ public class Mujer extends Paciente {
         this.embarazada = embarazada;
     }
 
+    // En riesgo
+    
+    @Override
     public boolean estaEnRiesgo() {
-    	boolean enRiesgo;
-    	if (fechaUltimaRevision == null) {
-    		enRiesgo = true;
-    	} else {
-    		Period periodo = Period.between(fechaUltimaRevision, LocalDate.now());
-    		enRiesgo = periodo.getYears() > 3;
-    	}
-    	return enRiesgo;
+        boolean muchasEnfermedades = super.estaEnRiesgo();
+        
+        boolean citologiaVencida = false;
+        if (fechaUltimaRevision != null) {
+            LocalDate ahora = LocalDate.now();
+            citologiaVencida = fechaUltimaRevision.plusYears(3).isBefore(ahora);
+        } else {
+            citologiaVencida = true; // Nunca se la ha hecho - en riesgo
+        }
+
+        return muchasEnfermedades || citologiaVencida;
     }
 }

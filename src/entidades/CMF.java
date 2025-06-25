@@ -166,15 +166,64 @@ public class CMF {
 		return true;
 	}
 
-	public boolean eliminarPaciente(int id) {
-		boolean response = false;
-		for (int i = 0; i < pacientes.size() && !response; i++) {
-			if (getPacientes().get(i).getHistoriaClinica().getId() == id) {
-				limpiarRastroPaciente(id);
-				pacientes.remove(i);
-				response = true;
+	public void editarPaciente(Paciente paciente,
+			String nuevoNombre,
+			String nuevoPrimerApellido,
+			String nuevoSegundoApellido,
+			String nuevaDireccion,
+			Boolean nuevoEstadoEmbarazo,
+			LocalDate nuevaFechaCitologia,
+			List<String> nuevasEnfermedadesCronicas,
+			List<String> nuevasVacunas) {
+
+		if (nuevoNombre != null && !nuevoNombre.isEmpty()) {
+			paciente.setNombre(nuevoNombre);
+		}
+
+		if (nuevoPrimerApellido != null && !nuevoPrimerApellido.isEmpty()) {
+			paciente.setPrimerApellido(nuevoPrimerApellido);
+		}
+
+		if (nuevoSegundoApellido != null && !nuevoSegundoApellido.isEmpty()) {
+			paciente.setSegundoApellido(nuevoSegundoApellido);
+		}
+
+		if (nuevaDireccion != null && !nuevaDireccion.isEmpty()) {
+			paciente.setDireccion(nuevaDireccion);
+		}
+
+		// Si es una mujer, se permite editar embarazo y fecha de revisión
+		if (paciente instanceof Mujer) {
+			if (nuevoEstadoEmbarazo != null) {
+				((Mujer)paciente).setEmbarazada(nuevoEstadoEmbarazo);
+			}
+
+			if (nuevaFechaCitologia != null) {
+				((Mujer)paciente).setFechaUltimaRevision(nuevaFechaCitologia);
 			}
 		}
+
+		// Reemplazar enfermedades crónicas si la lista no es nula
+		if (nuevasEnfermedadesCronicas != null) {
+			paciente.setEnfermedadesCronicas(nuevasEnfermedadesCronicas);
+		}
+
+		// Reemplazar lista de vacunas
+		if (nuevasVacunas != null) {
+			paciente.setVacunacion(new ArrayList<>(nuevasVacunas)); // Usa tu método con validación
+		}
+	}
+
+
+	public boolean eliminarPaciente(int id) {
+		boolean response = false;
+		Paciente pacienteAEliminar = getPacientePorId(id);
+		if (pacienteAEliminar != null) {
+			limpiarRastroPaciente(id);
+			pacientes.remove(getPacientePorId(id));
+			response = true;
+		}
+
 		return response;
 	}
 
