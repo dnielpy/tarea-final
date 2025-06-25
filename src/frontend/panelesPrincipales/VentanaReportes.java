@@ -3,10 +3,12 @@ package frontend.panelesPrincipales;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -15,6 +17,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import javax.swing.ImageIcon;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -25,6 +28,7 @@ import javax.swing.SwingUtilities;
 import util.ConstantesFrontend;
 import util.HTMLGenerator;
 import entidades.CMF;
+import frontend.formularios.FormularioAnalisis;
 import frontend.panelesReportes.ReporteCantVisitasEnUnMes;
 import frontend.panelesReportes.ReporteEmbarazadasEnRiesgo;
 import frontend.panelesReportes.ReportePorcentajeGenero;
@@ -217,7 +221,9 @@ public class VentanaReportes extends JPanel implements MouseListener, Constantes
 	}
 
 	private void mostrarVentanaAboutUs() {
-		JFrame ventanaAboutUs = new JFrame("About Us");
+		Window parentWindow = SwingUtilities.getWindowAncestor(this);
+		JDialog ventanaAboutUs = new JDialog(parentWindow, "Acerca de nosotros", ModalityType.APPLICATION_MODAL);
+		ventanaAboutUs.setIconImage(Toolkit.getDefaultToolkit().getImage(FormularioAnalisis.class.getResource("/fotos/Logo peque.png")));
 		ventanaAboutUs.setSize(796, 673); // Match the size of other project windows
 		ventanaAboutUs.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		ventanaAboutUs.getContentPane().setLayout(new BorderLayout());
@@ -229,7 +235,7 @@ public class VentanaReportes extends JPanel implements MouseListener, Constantes
 				+ "el repositorio estará disponible públicamente y abierto a contribuciones de la comunidad. "
 				+ "Se invita a los usuarios a realizar forks, sugerir mejoras y proponer cambios. "
 				+ "</div></html>", SwingConstants.CENTER);
-		textoRepo.setFont(new Font("Arial", Font.PLAIN, 14));
+		textoRepo.setFont(new Font("Arial", Font.PLAIN, 16));
 		ventanaAboutUs.getContentPane().add(textoRepo, BorderLayout.NORTH);
 
 		// Panel central con los códigos QR y sus descripciones
@@ -263,7 +269,7 @@ public class VentanaReportes extends JPanel implements MouseListener, Constantes
 				+ "<b>Documentación del Proyecto:</b><br>"
 				+ "Escanee este código QR para acceder a la documentación completa del proyecto."
 				+ "</div></html>", SwingConstants.LEFT);
-		textoDocQR.setFont(new Font("Arial", Font.PLAIN, 14));
+		textoDocQR.setFont(new Font("Arial", Font.PLAIN, 16));
 		panelCentral.add(textoDocQR);
 
 		ventanaAboutUs.getContentPane().add(panelCentral, BorderLayout.CENTER);
