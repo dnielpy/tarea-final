@@ -15,15 +15,12 @@ import javax.swing.SwingUtilities;
 import util.ConstantesFrontend;
 import entidades.CMF;
 import entidades.registros.Analisis;
-import entidades.registros.Visita;
 import frontend.formularios.FormularioAnalisis;
 import frontend.formularios.FormularioAnalisis.ModoFormulario;
 import frontend.tablas.AnalisisTableModel;
 import frontend.ui.TablaPersonalizada;
 
 import java.awt.event.MouseAdapter;
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 public class VentanaAnalisis extends JPanel implements ConstantesFrontend {

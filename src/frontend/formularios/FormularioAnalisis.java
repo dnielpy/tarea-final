@@ -18,7 +18,6 @@ import frontend.ui.botones.BotonBlanco;
 import frontend.ui.dialogs.InfoDialog;
 import frontend.ui.dialogs.QuestionDialog;
 
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public class FormularioAnalisis extends JDialog implements ConstantesFrontend {
@@ -66,9 +65,9 @@ public class FormularioAnalisis extends JDialog implements ConstantesFrontend {
 
                     if (confirmacion.esConfirmado()) {
                         dispose();
-                    } // si no confirma, no se cierra
+                    }
                 } else {
-                    dispose(); // cerrar normalmente si no está editando
+                    dispose();
                 }
             }
         });
@@ -280,7 +279,6 @@ public class FormularioAnalisis extends JDialog implements ConstantesFrontend {
         botonGuardar.setVisible(esEdicion);
         botonCancelar.setVisible(esEdicion);
 
-        // Mostrar botón editar SOLO si es modo visualización y el usuario es enfermera
         if (!esEdicion) {
             String rol = cmf.getUsuario().getRole().toString();
             botonEditar.setVisible("ENFERMERA".equalsIgnoreCase(rol));
@@ -294,7 +292,6 @@ public class FormularioAnalisis extends JDialog implements ConstantesFrontend {
     private void setModo(ModoFormulario nuevoModo) {
         if (modoActual != nuevoModo) {
             if (modoActual == ModoFormulario.EDICION && nuevoModo == ModoFormulario.VISUALIZACION) {
-                // Restaurar los datos originales al cancelar edición
                 textResultados.setText(analisis.getResultados() != null ? analisis.getResultados() : "");
             }
             modoActual = nuevoModo;

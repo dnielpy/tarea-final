@@ -48,7 +48,6 @@ public class Paciente extends Persona {
     	return historiaClinica;
     }
 
-
     // Edad y genero
     
     public int getEdad() {
@@ -64,6 +63,16 @@ public class Paciente extends Persona {
 
     public List<String> getEnfermedadesCronicas() {
         return new ArrayList<>(enfermedadesCronicas);
+    }
+    
+    public void setEnfermedadesCronicas(List<String> enfermedades) {
+        enfermedadesCronicas = new ArrayList<>();
+
+        if (enfermedades != null) {
+        	for (String enfermedad : enfermedades) {
+                agregarEnfermedadCronica(enfermedad); 
+            }
+        }     
     }
 
     public void agregarEnfermedadCronica(String enfermedad) {
@@ -105,6 +114,6 @@ public class Paciente extends Persona {
     // En riesgo
 
     public boolean estaEnRiesgo() {
-        return enfermedadesCronicas != null && enfermedadesCronicas.size() >= 3;
+        return enfermedadesCronicas != null && enfermedadesCronicas.size() > 3;
     }
 }

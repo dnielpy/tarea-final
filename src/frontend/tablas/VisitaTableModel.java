@@ -101,6 +101,17 @@ public class VisitaTableModel extends AbstractTableModel {
         return total;
     }
 
+    public Visita getVisitaAt(int fila) {
+        Visita visita = null;
+
+        boolean filaValida = visitas != null && fila >= 0 && fila < visitas.size();
+        if (filaValida) {
+            visita = visitas.get(fila);
+        }
+
+        return visita;
+    }
+    
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         Object valor = null;
