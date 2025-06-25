@@ -1,4 +1,4 @@
-package frontend.ui;
+package frontend.ui.placeholders;
 
 import java.awt.*;
 

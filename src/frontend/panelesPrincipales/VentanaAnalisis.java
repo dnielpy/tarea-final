@@ -3,7 +3,9 @@ package frontend.panelesPrincipales;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Window;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.List;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -19,11 +21,8 @@ import entidades.registros.Analisis;
 import frontend.formularios.FormularioAnalisis;
 import frontend.formularios.FormularioAnalisis.ModoFormulario;
 import frontend.tablas.AnalisisTableModel;
-import frontend.ui.BuscadorTabla;
 import frontend.ui.TablaPersonalizada;
-
-import java.awt.event.MouseAdapter;
-import java.util.List;
+import frontend.ui.placeholders.BuscadorTabla;
 
 public class VentanaAnalisis extends JPanel implements ConstantesFrontend {
 

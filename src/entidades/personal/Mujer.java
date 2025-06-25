@@ -3,7 +3,6 @@ package entidades.personal;
 import excepciones.Excepciones.IllegalDateException;
 
 import java.time.LocalDate;
-import java.time.Period;
 
 public class Mujer extends Paciente {
     private LocalDate fechaUltimaRevision;

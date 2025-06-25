@@ -9,8 +9,8 @@ import javax.swing.table.TableRowSorter;
 
 import entidades.CMF;
 import frontend.tablas.PacienteTableModel;
-import frontend.ui.BuscadorTabla;
 import frontend.ui.TablaPersonalizada;
+import frontend.ui.placeholders.BuscadorTabla;
 
 public class ReporteEmbarazadasEnRiesgo extends JPanel {
 

@@ -1,10 +1,26 @@
 package frontend.panelesPrincipales;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.Window;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.io.FileWriter;
+import java.io.IOException;
 
-import javax.swing.*;
-import javax.swing.border.LineBorder;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JSeparator;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 
 import util.ConstantesFrontend;
 import util.HTMLGenerator;
@@ -16,9 +32,6 @@ import frontend.panelesReportes.ReporteRangoEdades;
 import frontend.ui.botones.BotonReporte;
 import frontend.ui.botones.ImageButtonLabel;
 import frontend.ui.dialogs.InfoDialog;
-
-import java.io.FileWriter;
-import java.io.IOException;
 
 public class VentanaReportes extends JPanel implements MouseListener, ConstantesFrontend {
 

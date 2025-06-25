@@ -2,9 +2,15 @@ package frontend.panelesPrincipales;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.SystemColor;
 import java.awt.Window;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.time.LocalDate;
 
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -12,25 +18,16 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.table.TableRowSorter;
 
+import util.ConstantesFrontend;
 import entidades.CMF;
 import entidades.registros.Visita;
 import frontend.formularios.FormularioVisitas;
 import frontend.formularios.FormularioVisitas.ModoFormulario;
 import frontend.tablas.VisitaTableModel;
-import frontend.ui.BuscadorTabla;
 import frontend.ui.TablaPersonalizada;
-
-import javax.swing.JButton;
-import javax.swing.table.TableRowSorter;
-
-import util.ConstantesFrontend;
-
-import java.awt.SystemColor;
-import java.awt.event.MouseAdapter;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.time.LocalDate;
+import frontend.ui.placeholders.BuscadorTabla;
 
 public class VentanaVisitas extends JPanel implements ConstantesFrontend {
 	private CMF cmf;

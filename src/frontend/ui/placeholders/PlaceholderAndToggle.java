@@ -1,7 +1,6 @@
 package frontend.ui.placeholders;
 
 import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -241,9 +240,13 @@ public class PlaceholderAndToggle extends JPanel implements ConstantesFrontend {
 
                 boolean longitudValida = characterLimit < 0 || nuevoTexto.length() <= characterLimit;
 
-                if (longitudValida) {
+                // Validar caracteres permitidos (sin espacios)
+                boolean caracteresValidos = nuevoTexto.matches("^[a-zA-Z0-9!@#$%^&*()\\-_=+\\[\\]{};:'\",.<>?/|\\\\]*$");
+
+                if (longitudValida && caracteresValidos) {
                     super.replace(fb, offset, length, text, attr);
                 }
+                // si no es válido, no hace nada (rechaza la entrada)
             }
         }
     }
