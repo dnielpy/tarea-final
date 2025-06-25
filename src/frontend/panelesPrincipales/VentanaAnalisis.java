@@ -11,6 +11,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.table.TableRowSorter;
 
 import util.ConstantesFrontend;
 import entidades.CMF;
@@ -18,6 +19,7 @@ import entidades.registros.Analisis;
 import frontend.formularios.FormularioAnalisis;
 import frontend.formularios.FormularioAnalisis.ModoFormulario;
 import frontend.tablas.AnalisisTableModel;
+import frontend.ui.BuscadorTabla;
 import frontend.ui.TablaPersonalizada;
 
 import java.awt.event.MouseAdapter;
@@ -28,12 +30,13 @@ public class VentanaAnalisis extends JPanel implements ConstantesFrontend {
     private CMF cmf;
     private JTable table;
     private AnalisisTableModel model;
+    private TableRowSorter<AnalisisTableModel> sorter; 
 
     public VentanaAnalisis() {
         this.cmf = CMF.getInstance();
         List<Analisis> analisisPendientes = filtrarAnalisisPendientes();
         model = new AnalisisTableModel(analisisPendientes);
-        model.setMostrarResultados(false); 
+        model.setMostrarResultados(false);
         initComponents();
     }
 
@@ -43,13 +46,12 @@ public class VentanaAnalisis extends JPanel implements ConstantesFrontend {
 
     private void abrirFormulario(Analisis analisis) {
         Window ventanaPrincipal = SwingUtilities.getWindowAncestor(this);
-        
+
         FormularioAnalisis formularioAnalisis = new FormularioAnalisis(ventanaPrincipal, analisis, ModoFormulario.VISUALIZACION);
         formularioAnalisis.setLocationRelativeTo(ventanaPrincipal);
         formularioAnalisis.setVisible(true);
 
-        model.setAnalisisList(filtrarAnalisisPendientes());
-        model.fireTableDataChanged();
+        actualizarDatos();
     }
 
     private void initComponents() {
@@ -70,20 +72,29 @@ public class VentanaAnalisis extends JPanel implements ConstantesFrontend {
         cartelPestanna.setBounds(25, 0, 150, 51);
         panelSuperior.add(cartelPestanna);
 
+        // Crear sorter y asociarlo al modelo y tabla
+        sorter = new TableRowSorter<>(model);
+
         table = TablaPersonalizada.crearTablaPersonalizada(model);
-        JScrollPane scrollPane = TablaPersonalizada.envolverEnScroll(table, 0, 30, 630, 406);
+        table.setRowSorter(sorter); 
+
+        JScrollPane scrollPane = TablaPersonalizada.envolverEnScroll(table, 0, 30, 700, 405);
 
         JPanel panelTabla = new JPanel();
-        panelTabla.setBounds(80, 141, 630, 436);
+        panelTabla.setBounds(50, 140, 700, 435);
         panelTabla.setBackground(Color.WHITE);
         panelTabla.setLayout(null);
         panelTabla.add(scrollPane);
 
         add(panelTabla);
 
+        BuscadorTabla buscador = new BuscadorTabla(sorter, "Buscar en análisis...");
+        buscador.setBounds(0, 0, 700, 25);
+        panelTabla.add(buscador);
+
         JLabel cartelListadoVisitas = new JLabel("Listado de análisis pendientes:");
         cartelListadoVisitas.setFont(new Font("Arial", Font.BOLD, 18));
-        cartelListadoVisitas.setBounds(80, 104, 300, 20);
+        cartelListadoVisitas.setBounds(50, 105, 300, 20);
         add(cartelListadoVisitas);
 
         table.addMouseListener(new MouseAdapter() {
@@ -94,13 +105,15 @@ public class VentanaAnalisis extends JPanel implements ConstantesFrontend {
                     if (viewRow != -1) {
                         int modelRow = table.convertRowIndexToModel(viewRow);
                         Analisis analisis = model.getAnalisisAt(modelRow);
-                        abrirFormulario(analisis);
+                        if (analisis != null) {
+                            abrirFormulario(analisis);
+                        }
                     }
                 }
             }
         });
     }
-    
+
     private void actualizarDatos() {
         List<Analisis> actualizados = filtrarAnalisisPendientes();
         model.setAnalisisList(actualizados);
@@ -109,7 +122,7 @@ public class VentanaAnalisis extends JPanel implements ConstantesFrontend {
 
     @Override
     public void show() {
-    	super.show();
-    	actualizarDatos();
+        super.show();
+        actualizarDatos();
     }
 }

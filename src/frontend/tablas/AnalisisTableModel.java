@@ -76,8 +76,8 @@ public class AnalisisTableModel extends AbstractTableModel {
     }
 
     @Override
-    public int getColumnCount() {
-        int columnas = 2;
+    public int getColumnCount() {   
+        int columnas = 1 + 2; 
         if (mostrarFechaOrientado) columnas++;
         if (mostrarEstado) columnas++;
         if (mostrarFechaResultado) columnas++;
@@ -89,6 +89,11 @@ public class AnalisisTableModel extends AbstractTableModel {
     public String getColumnName(int column) {
         String nombre = "";
         int indice = 0;
+
+        if (column == indice) {
+            nombre = "ID Análisis";
+        }
+        indice++;
 
         if (column == indice) {
             nombre = "ID Visita";
@@ -155,57 +160,52 @@ public class AnalisisTableModel extends AbstractTableModel {
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         Object valor = "";
-
-        boolean datosValidos = analisisList != null && rowIndex >= 0 && rowIndex < analisisList.size();
-
-        if (datosValidos) {
+        if (analisisList != null && rowIndex >= 0 && rowIndex < analisisList.size()) {
             Analisis a = analisisList.get(rowIndex);
             int indice = 0;
 
-            boolean asignado = false;
+            if (columnIndex == indice) {
+                valor = a.getId();
+            }
+            indice++;
 
-            if (!asignado && columnIndex == indice) {
+            if (columnIndex == indice) {
                 valor = a.getVisitaId();
-                asignado = true;
             }
             indice++;
 
-            if (!asignado && columnIndex == indice) {
+            if (columnIndex == indice) {
                 valor = a.getTipoDeAnalisis();
-                asignado = true;
             }
             indice++;
 
-            if (!asignado && mostrarFechaOrientado && columnIndex == indice) {
-                valor = formatearFecha(a.getFechaOrientado());
-                asignado = true;
-            }
             if (mostrarFechaOrientado) {
+                if (columnIndex == indice) {
+                    valor = formatearFecha(a.getFechaOrientado());
+                }
                 indice++;
             }
 
-            if (!asignado && mostrarEstado && columnIndex == indice) {
-                valor = a.estaPendienteDeResultado() ? "Pendiente" : "Completado";
-                asignado = true;
-            }
             if (mostrarEstado) {
+                if (columnIndex == indice) {
+                    valor = a.estaPendienteDeResultado() ? "Pendiente" : "Completado";
+                }
                 indice++;
             }
 
-            if (!asignado && mostrarFechaResultado && columnIndex == indice) {
-                valor = (a.getFechaResultado() == null) ? "Pendiente" : formatearFecha(a.getFechaResultado());
-                asignado = true;
-            }
             if (mostrarFechaResultado) {
+                if (columnIndex == indice) {
+                    valor = (a.getFechaResultado() == null) ? "Pendiente" : formatearFecha(a.getFechaResultado());
+                }
                 indice++;
             }
 
-            if (!asignado && mostrarResultados && columnIndex == indice) {
-                valor = (a.getResultados() != null) ? a.getResultados() : "";
-                asignado = true;
+            if (mostrarResultados) {
+                if (columnIndex == indice) {
+                    valor = (a.getResultados() != null) ? a.getResultados() : "";
+                }
             }
         }
-
         return valor;
     }
 
