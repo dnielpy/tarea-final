@@ -9,15 +9,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
+import frontend.ui.ScrollPaneModerno;
 import frontend.ui.botones.BotonBlanco;
 
 public class SelectorDialog extends JDialog implements ConstantesFrontend {
 
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private boolean confirmado = false;
+    private static final long serialVersionUID = 1L;
+    private boolean confirmado = false;
     private String seleccionado;
     private JComboBox<String> comboBox;
 
@@ -38,20 +36,28 @@ public class SelectorDialog extends JDialog implements ConstantesFrontend {
         mensaje.setBounds(0, 0, 494, 40);
         mensaje.setFont(new Font("Arial", Font.PLAIN, 16));
         mensaje.setHorizontalAlignment(SwingConstants.CENTER);
-
         getContentPane().add(mensaje);
 
-        comboBox = new JComboBox<>();
+        comboBox = new JComboBox<String>();
         comboBox.setBackground(SystemColor.menu);
         comboBox.setOpaque(true);
         comboBox.setBorder(BORDE_COMPONENTE);
         comboBox.setFocusable(false);
         comboBox.setBounds(68, 53, 351, 40);
-        for (String opcion : opciones) {
-            comboBox.addItem(opcion);
-        }
         comboBox.setFont(new Font("Arial", Font.PLAIN, 16));
+
+        for (int i = 0; i < opciones.size(); i++) {
+            comboBox.addItem(opciones.get(i));
+        }
+
         getContentPane().add(comboBox);
+
+        // Ejecuta la personalización después de la creación de UI
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                personalizarScrollCombo(comboBox);
+            }
+        });
 
         JPanel botones = new JPanel();
         botones.setBounds(0, 124, 494, 40);
@@ -79,6 +85,38 @@ public class SelectorDialog extends JDialog implements ConstantesFrontend {
         botones.add(btnAceptar);
         botones.add(btnCancelar);
         getContentPane().add(botones);
+    }
+
+    private void personalizarScrollCombo(JComboBox<String> comboBox) {
+        Object comp = comboBox.getUI().getAccessibleChild(comboBox, 0);
+
+        boolean scrollEncontrado = false;
+        JScrollPane scrollOriginal = null;
+
+        if (comp instanceof JPopupMenu) {
+            JPopupMenu popup = (JPopupMenu) comp;
+
+            // Fuerza el tamaño del popup al del comboBox
+            popup.setPreferredSize(new Dimension(comboBox.getWidth(), popup.getPreferredSize().height));
+            popup.setMaximumSize(new Dimension(comboBox.getWidth(), Integer.MAX_VALUE));
+
+            Component[] hijos = popup.getComponents();
+
+            for (int i = 0; i < hijos.length; i++) {
+                if (!scrollEncontrado && hijos[i] instanceof JScrollPane) {
+                    scrollOriginal = (JScrollPane) hijos[i];
+                    scrollEncontrado = true;
+                }
+            }
+
+            if (scrollOriginal != null) {
+                Component vista = scrollOriginal.getViewport().getView();
+                ScrollPaneModerno personalizado = new ScrollPaneModerno(vista);
+                personalizado.setBorder(scrollOriginal.getBorder());
+                popup.remove(scrollOriginal);
+                popup.add(personalizado);
+            }
+        }
     }
 
     public boolean esConfirmado() {

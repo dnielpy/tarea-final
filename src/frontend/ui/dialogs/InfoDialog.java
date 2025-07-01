@@ -65,7 +65,7 @@ public class InfoDialog extends JDialog implements ConstantesFrontend {
 
         JLabel mensaje = new JLabel("<html><div style='text-align: center;'>" + mensajeTexto.replaceAll("\n", "<br>") + "</div></html>");
         mensaje.setHorizontalAlignment(SwingConstants.CENTER);
-        mensaje.setBounds(91, 20, 305, 82);
+        mensaje.setBounds(105, 20, 293, 82);
         mensaje.setFont(new Font("Arial", Font.PLAIN, 16));
         mensaje.setForeground(Color.BLACK);
         panelCentral.setLayout(null);

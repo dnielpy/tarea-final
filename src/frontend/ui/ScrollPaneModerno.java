@@ -67,7 +67,11 @@ public class ScrollPaneModerno extends JScrollPane implements ConstantesFrontend
         };
 
         this.addMouseListener(hoverListener);
-        getViewport().getView().addMouseListener(hoverListener);
+
+        Component view = getViewport().getView();
+        if (view != null) {
+            view.addMouseListener(hoverListener);
+        }
     }
 
     // Inicia las animaciones de fade

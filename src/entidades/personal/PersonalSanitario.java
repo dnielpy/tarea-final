@@ -3,6 +3,8 @@ package entidades.personal;
 import java.time.LocalDate;
 import java.util.Objects;
 
+import excepciones.FechaInvalidaException;
+
 public abstract class PersonalSanitario extends Persona {
 
     protected Usuario user;
@@ -47,7 +49,7 @@ public abstract class PersonalSanitario extends Persona {
     public void setFechaInicioCMF(LocalDate fecha) {
         Objects.requireNonNull(fecha, "La fecha de inicio no puede ser nula");
         if (fecha.isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException("La fecha de inicio no puede ser futura");
+            throw new FechaInvalidaException("La fecha de inicio no puede ser futura");
         }
         this.fechaInicioCMF = fecha;
     }

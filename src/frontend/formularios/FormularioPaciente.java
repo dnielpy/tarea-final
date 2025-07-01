@@ -31,7 +31,9 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import util.CIUtil;
+import util.ConstantesEnfermedades;
 import util.ConstantesFrontend;
+import util.ConstantesVacunas;
 import util.UtilFecha;
 import util.UtilSonido;
 import util.UtilString;
@@ -45,11 +47,13 @@ import entidades.personal.Usuario;
 import entidades.personal.Usuario.TipoDeRol;
 import excepciones.EmbarazoInvalidoException;
 import excepciones.FechaInvalidaException;
+import frontend.ui.ScrollPaneModerno;
 import frontend.ui.botones.BotonBlanco;
 import frontend.ui.botones.ImageButtonLabel;
 import frontend.ui.dialogs.InfoDialog;
 import frontend.ui.dialogs.InfoDialog.Estado;
 import frontend.ui.dialogs.QuestionDialog;
+import frontend.ui.dialogs.SelectorDialog;
 import frontend.ui.dialogs.TextDialog;
 import frontend.ui.placeholders.PlaceholderTextField;
 import frontend.ui.placeholders.PlaceholderTextField.InputFormat;
@@ -344,9 +348,8 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 		cartelEnfermedadesCronicas.setFont(new Font("Arial", Font.PLAIN, 16));
 		panelAgrupador2.add(cartelEnfermedadesCronicas);
 
-		JScrollPane scrollPaneEnfermedades = new JScrollPane();
+		ScrollPaneModerno scrollPaneEnfermedades = new ScrollPaneModerno(listaEnfermedades);
 		scrollPaneEnfermedades.setBounds(40, 91, 240, 122);
-		scrollPaneEnfermedades.setBorder(BORDE_COMPONENTE);
 		scrollPaneEnfermedades.setFocusable(false);
 		panelAgrupador2.add(scrollPaneEnfermedades);
 
@@ -398,10 +401,9 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 		cartelVacunas.setFont(new Font("Arial", Font.PLAIN, 16));
 		panelAgrupador2.add(cartelVacunas);
 
-		JScrollPane scrollPaneVacunas = new JScrollPane();
-		scrollPaneVacunas.setFocusable(false);
+		ScrollPaneModerno scrollPaneVacunas = new ScrollPaneModerno(listaVacunas);
 		scrollPaneVacunas.setBounds(308, 91, 240, 122);
-		scrollPaneVacunas.setBorder(BORDE_COMPONENTE);
+		scrollPaneVacunas.setFocusable(false);
 		panelAgrupador2.add(scrollPaneVacunas);
 
 		listModelVacunas = new DefaultListModel<>();
@@ -632,45 +634,113 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 	}
 
 	protected void agregarEnfermedadCronica() {
-		TextDialog dialogo = new TextDialog((JDialog) this,
-				"Agregar enfermedad cr\u00F3nica",
-				"Introduzca una enfermedad cr\u00F3nica para agregar");
-		dialogo.setVisible(true);
+	    SelectorDialog selector = new SelectorDialog(this,
+	            "Seleccionar enfermedad crónica",
+	            "Seleccione una enfermedad crónica para agregar:",
+	            ConstantesEnfermedades.ENFERMEDADES);
+	    selector.setVisible(true);
 
-		if (dialogo.isConfirmado()) {
-			String texto = dialogo.getTextoIngresado();
-			if (!texto.isEmpty()) {
-				listModelEnfermedades.addElement(texto);
-			}
-		}
+	    if (selector.esConfirmado()) {
+	        String seleccion = selector.getSeleccionado();
+
+	        boolean yaExiste = false;
+	        int i = 0;
+	        while (i < listModelEnfermedades.size()) {
+	            String existente = listModelEnfermedades.get(i);
+	            if (existente.equals(seleccion)) {
+	                yaExiste = true;
+	            }
+	            i++;
+	        }
+
+	        if (yaExiste) {
+	            new InfoDialog(this,
+	                    "Ya añadida",
+	                    "La enfermedad \"" + seleccion + "\" ya está en la lista.",
+	                    Estado.WARNING).setVisible(true);
+	        } else {
+	            listModelEnfermedades.addElement(seleccion);
+	        }
+	    }
 	}
 
 	protected void agregarVacuna() {
-		TextDialog dialogo = new TextDialog((JDialog) this,
-				"Agregar vacuna aplicada",
-				"Introduzca una vacuna aplicada para agregar");
-		dialogo.setVisible(true);
+	    SelectorDialog selector = new SelectorDialog(this,
+	            "Seleccionar vacuna aplicada",
+	            "Seleccione una vacuna aplicada para agregar:",
+	            ConstantesVacunas.VACUNAS);
+	    selector.setVisible(true);
 
-		if (dialogo.isConfirmado()) {
-			String texto = dialogo.getTextoIngresado();
-			if (!texto.isEmpty()) {
-				listModelVacunas.addElement(texto);
-			}
-		}
+	    if (selector.esConfirmado()) {
+	        String seleccion = selector.getSeleccionado();
+
+	        boolean yaExiste = false;
+	        int i = 0;
+	        while (i < listModelVacunas.size()) {
+	            String existente = listModelVacunas.get(i);
+	            if (existente.equals(seleccion)) {
+	                yaExiste = true;
+	            }
+	            i++;
+	        }
+
+	        if (yaExiste) {
+	            new InfoDialog(this,
+	                    "Ya añadida",
+	                    "La vacuna \"" + seleccion + "\" ya está en la lista.",
+	                    Estado.WARNING).setVisible(true);
+	        } else {
+	            listModelVacunas.addElement(seleccion);
+	        }
+	    }
 	}
 
 	private void eliminarEnfermedadesSeleccionadas() {
-		int[] indices = listaEnfermedades.getSelectedIndices();
-		for (int i = indices.length - 1; i >= 0; i--) {
-			listModelEnfermedades.remove(indices[i]);
-		}
+	    Window parent = SwingUtilities.getWindowAncestor(this);
+	    int[] indices = listaEnfermedades.getSelectedIndices();
+	    boolean tieneSeleccion = indices != null && indices.length > 0;
+	    boolean confirmado = false;
+
+	    if (!tieneSeleccion) {
+	        InfoDialog info = new InfoDialog(parent, "Atención", "No hay ninguna enfermedad seleccionada para eliminar.", Estado.WARNING);
+	        info.setVisible(true);
+	    } else {
+	        QuestionDialog pregunta = new QuestionDialog(parent, "Confirmar borrado", "¿Está seguro que desea borrar la(s) enfermedad(es) seleccionada(s)?");
+	        pregunta.setVisible(true);
+	        confirmado = pregunta.esConfirmado();
+	    }
+
+	    if (confirmado) {
+	        for (int i = indices.length - 1; i >= 0; i--) {
+	            listModelEnfermedades.remove(indices[i]);
+	        }
+	        InfoDialog info = new InfoDialog(parent, "Éxito", "Enfermedad(es) eliminada(s) correctamente.", Estado.EXITO);
+	        info.setVisible(true);
+	    }
 	}
 
 	private void eliminarVacunasSeleccionadas() {
-		int[] indices = listaVacunas.getSelectedIndices();
-		for (int i = indices.length - 1; i >= 0; i--) {
-			listModelVacunas.remove(indices[i]);
-		}
+	    Window parent = SwingUtilities.getWindowAncestor(this);
+	    int[] indices = listaVacunas.getSelectedIndices();
+	    boolean tieneSeleccion = indices != null && indices.length > 0;
+	    boolean confirmado = false;
+
+	    if (!tieneSeleccion) {
+	        InfoDialog info = new InfoDialog(parent, "Atención", "No hay ninguna vacuna seleccionada para eliminar.", Estado.WARNING);
+	        info.setVisible(true);
+	    } else {
+	        QuestionDialog pregunta = new QuestionDialog(parent, "Confirmar borrado", "¿Está seguro que desea borrar la(s) vacuna(s) seleccionada(s)?");
+	        pregunta.setVisible(true);
+	        confirmado = pregunta.esConfirmado();
+	    }
+
+	    if (confirmado) {
+	        for (int i = indices.length - 1; i >= 0; i--) {
+	            listModelVacunas.remove(indices[i]);
+	        }
+	        InfoDialog info = new InfoDialog(parent, "Éxito", "Vacuna(s) eliminada(s) correctamente.", Estado.EXITO);
+	        info.setVisible(true);
+	    }
 	}
 
 	private void calcularGenero() {

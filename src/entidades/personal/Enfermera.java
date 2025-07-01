@@ -1,8 +1,10 @@
 package entidades.personal;
 
+import interfaces.ConExperiencia;
+
 import java.time.LocalDate;
 
-public class Enfermera extends PersonalSanitario {   
+public class Enfermera extends PersonalSanitario implements ConExperiencia {   
     private boolean licenciatura;
     private int experiencia;
 
@@ -24,6 +26,7 @@ public class Enfermera extends PersonalSanitario {
     }
 
     // Anios de experiencia
+    @Override
     public int getExperiencia() {
         return experiencia;
     }

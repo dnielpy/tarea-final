@@ -27,6 +27,7 @@ import frontend.formularios.FormularioVisitas;
 import frontend.formularios.FormularioVisitas.ModoFormulario;
 import frontend.tablas.VisitaTableModel;
 import frontend.ui.TablaPersonalizada;
+import frontend.ui.botones.BotonBlanco;
 import frontend.ui.placeholders.BuscadorTabla;
 
 public class VentanaVisitas extends JPanel implements ConstantesFrontend {
@@ -138,13 +139,9 @@ public class VentanaVisitas extends JPanel implements ConstantesFrontend {
 		return buscador;
 	}
 
-	private JButton crearBotonAgregarVisita() {
-		JButton boton = new JButton("AGREGAR VISITA");
-		boton.setBounds(547, 581, 203, 33); // ajustado por el desplazamiento del panelTabla
-		boton.setFont(new Font("Arial", Font.PLAIN, 16));
-		boton.setForeground(Color.BLACK);
-		boton.setBackground(SystemColor.menu);
-
+	private BotonBlanco crearBotonAgregarVisita() {
+		BotonBlanco boton = new BotonBlanco("AGREGAR VISITA");
+		boton.setBounds(547, 581, 203, 33); 
 		boton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				abrirFormularioNuevaVisita();

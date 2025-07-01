@@ -1,5 +1,7 @@
 package entidades.personal;
 
+import interfaces.EvaluadorDeRiesgo;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -8,7 +10,7 @@ import entidades.registros.HistoriaClinica;
 import excepciones.DireccionInvalidaException;
 import util.CIUtil;
 
-public class Paciente extends Persona {
+public class Paciente extends Persona implements EvaluadorDeRiesgo {
 
     protected String direccion;
     protected List<String> enfermedadesCronicas;
@@ -103,13 +105,13 @@ public class Paciente extends Persona {
     public void agregarVacuna(String vacuna) {
         Objects.requireNonNull(vacuna, "La vacuna no puede ser nula");
         if (vacuna.trim().isEmpty()) {
-            throw new IllegalArgumentException("La vacuna no puede estar vac\u00ED­a");
+            throw new IllegalArgumentException("La vacuna no puede estar vac\u00EDa");
         }
         this.vacunacion.add(vacuna.trim());
     }
 
     // En riesgo
-
+    @Override
     public boolean estaEnRiesgo() {
         return enfermedadesCronicas != null && enfermedadesCronicas.size() > 3;
     }

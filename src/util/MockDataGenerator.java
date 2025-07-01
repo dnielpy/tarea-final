@@ -119,48 +119,37 @@ public class MockDataGenerator {
 	}
 
 	private static List<String> generarEnfermedadesCronicasAleatorias() {
-		List<String> posiblesEnfermedades = Arrays.asList(
-				"Diabetes",
-				"Hipertensi\u00F3n",
-				"Asma",
-				"Obesidad",
-				"Enfermedad card\u00EDaca",
-				"Artritis",
-				"EPOC");
+	    List<String> posibles = new ArrayList<>(ConstantesEnfermedades.ENFERMEDADES); // usar la constante si está
+	    Collections.shuffle(posibles, random);
 
-		List<String> enfermedadesAsignadas = new ArrayList<>();
-		int cantidad = random.nextInt(3); // 0, 1 o 2 enfermedades
+	    int maximoPermitido = 4; // Permite hasta 4 enfermedades distintas
+	    int cantidad = random.nextInt(Math.min(posibles.size(), maximoPermitido) + 1);
+	    List<String> resultado = new ArrayList<>();
 
-		Collections.shuffle(posiblesEnfermedades, random);
+	    int i = 0;
+	    while (i < cantidad) {
+	        resultado.add(posibles.get(i));
+	        i++;
+	    }
 
-		for (int i = 0; i < cantidad; i++) {
-			enfermedadesAsignadas.add(posiblesEnfermedades.get(i));
-		}
-
-		return enfermedadesAsignadas;
+	    return resultado;
 	}
 
 	private static List<String> generarVacunasAleatorias() {
-		List<String> posiblesVacunas = Arrays.asList(
-				"Antipolio",
-				"Antitet\u00E1nica",
-				"Antigripal",
-				"Hepatitis B");
+	    List<String> posibles = new ArrayList<>(ConstantesVacunas.VACUNAS); // lista constante con nombres
+	    Collections.shuffle(posibles, random);
 
-		List<String> vacunasAsignadas = new ArrayList<>();
-		int cantidad = random.nextInt(3); // 0, 1 o 2 vacunas
+	    int maximoPermitido = 4; // Permite hasta 4 vacunas distintas
+	    int cantidad = random.nextInt(Math.min(posibles.size(), maximoPermitido) + 1);
+	    List<String> resultado = new ArrayList<>();
 
-		Collections.shuffle(posiblesVacunas);
+	    int i = 0;
+	    while (i < cantidad) {
+	        resultado.add(posibles.get(i));
+	        i++;
+	    }
 
-		for (int i = 0; i < cantidad; i++) {
-			String vacuna = posiblesVacunas.get(i);
-			int anio = 2015 + random.nextInt(9);
-			int mes = 1 + random.nextInt(12);
-			int dia = 1 + random.nextInt(28);
-			vacunasAsignadas.add(vacuna + ": " + dia + "/" + mes + "/" + anio);
-		}
-
-		return vacunasAsignadas;
+	    return resultado;
 	}
 
 	// Genera datos de prueba para el sistema
