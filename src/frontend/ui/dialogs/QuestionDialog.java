@@ -13,6 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
+import util.UtilSonido;
 import frontend.ui.botones.BotonBlanco;
 
 import java.awt.Toolkit;
@@ -25,6 +26,7 @@ public class QuestionDialog extends JDialog {
 		super(parent, titulo, DEFAULT_MODALITY_TYPE);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(QuestionDialog.class.getResource("/fotos/Logo peque.png")));
         initUI(mensaje);
+        UtilSonido.reproducir("sonidos/question.wav");
 	}
 	
 	private void initUI(String mensajeTexto) {

@@ -1,7 +1,6 @@
 package frontend.formularios;
 
 import java.awt.Color;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Point;
 import java.awt.SystemColor;
@@ -35,6 +34,7 @@ import javax.swing.event.DocumentListener;
 
 import service.Validations;
 import util.ConstantesFrontend;
+import util.UtilSonido;
 
 import com.toedter.calendar.JDateChooser;
 
@@ -101,20 +101,6 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 		VISUALIZACION,
 		EDICION,
 		CREACION
-	}
-
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					FormularioPaciente frame = new FormularioPaciente(null, CMF.getInstance().getPacientes().get(1),
-							ModoFormulario.VISUALIZACION);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
 	}
 
 	public FormularioPaciente(Window ancestro) {
@@ -549,6 +535,8 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 		});
 		botonEditar.setToolTipText("Clic para editar los datos del formulario");
 		botonEditar.setFont(new Font("Arial", Font.PLAIN, 18));
+		
+		UtilSonido.reproducir("sonidos/ventana.wav");
 	}
 
 	public void pedirConfirmacion() {

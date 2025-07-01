@@ -28,6 +28,8 @@ import frontend.formularios.FormularioPaciente;
 import frontend.formularios.FormularioPaciente.ModoFormulario;
 import frontend.tablas.PacienteTableModel;
 import frontend.ui.TablaPersonalizada;
+import frontend.ui.botones.BotonBlanco;
+import frontend.ui.botones.ImageButtonLabel;
 import frontend.ui.dialogs.InfoDialog;
 import frontend.ui.dialogs.QuestionDialog;
 import frontend.ui.placeholders.BuscadorTabla;
@@ -38,7 +40,7 @@ public class VentanaPacientes extends JPanel implements ConstantesFrontend {
     private JTable table;
     private PacienteTableModel model;
     private TableRowSorter<PacienteTableModel> sorter;
-    private JButton botonAgregarPaciente;
+    private BotonBlanco botonAgregarPaciente;
     private JLabel botonEliminar;
 
     public VentanaPacientes() {
@@ -146,7 +148,7 @@ public class VentanaPacientes extends JPanel implements ConstantesFrontend {
         cartelListadoPacientes.setBounds(50, 105, 203, 20);
         add(cartelListadoPacientes);
 
-        botonAgregarPaciente = new JButton("AGREGAR PACIENTE");
+        botonAgregarPaciente = new BotonBlanco("AGREGAR PACIENTE");
         botonAgregarPaciente.setBounds(547, 582, 203, 33);
         botonAgregarPaciente.setFont(new Font("Arial", Font.PLAIN, 16));
         botonAgregarPaciente.setForeground(Color.BLACK);
@@ -158,9 +160,8 @@ public class VentanaPacientes extends JPanel implements ConstantesFrontend {
         });
         add(botonAgregarPaciente);
 
-        botonEliminar = new JLabel();
+        botonEliminar = new ImageButtonLabel(new ImageIcon(VentanaPacientes.class.getResource("/fotos/trash.png")));
         botonEliminar.setBounds(502, 582, 33, 33);
-        botonEliminar.setIcon(new ImageIcon(VentanaPacientes.class.getResource("/fotos/trash.png")));
         botonEliminar.setToolTipText("Eliminar selección");
         botonEliminar.setCursor(new Cursor(Cursor.HAND_CURSOR));
         botonEliminar.addMouseListener(new MouseAdapter() {

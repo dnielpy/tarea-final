@@ -259,7 +259,7 @@ public class Principal extends JFrame implements MouseListener, ConstantesFronte
 
         if (dialogo.esConfirmado()) {
             dispose(); // Cierra la ventana
-            Runner.login();
+            Runner.logout();
         }
     }
 

@@ -13,6 +13,7 @@ import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 
 import util.ConstantesFrontend;
+import util.UtilSonido;
 import entidades.personal.Enfermera;
 import entidades.personal.PersonalSanitario;
 import frontend.ui.placeholders.PlaceholderTextField;
@@ -44,6 +45,7 @@ public class TarjetaUsuario extends JDialog implements ConstantesFrontend {
 		
 		this.usuario = usuario;
 		iniciarComponentes(foto);
+		UtilSonido.reproducir("sonidos/ventana.wav");
 		cargarDatos();
 	}
 	

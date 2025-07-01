@@ -19,6 +19,7 @@ import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 
 import util.ConstantesFrontend;
+import util.UtilSonido;
 import entidades.CMF;
 import entidades.registros.Analisis;
 import frontend.ui.ScrollPaneModerno;
@@ -83,6 +84,7 @@ public class FormularioAnalisis extends JDialog implements ConstantesFrontend {
         getContentPane().setLayout(null);
 
         initComponents();
+        UtilSonido.reproducir("sonidos/ventana.wav");
         cargarDatos();
         configurarModo();
     }

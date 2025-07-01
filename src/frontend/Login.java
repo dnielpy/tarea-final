@@ -20,6 +20,7 @@ import javax.swing.border.LineBorder;
 
 import runner.Auth;
 import util.ConstantesFrontend;
+import util.UtilSonido;
 import entidades.CMF;
 import entidades.personal.Usuario;
 import frontend.ui.botones.BotonBlanco;
@@ -63,6 +64,7 @@ public class Login extends JDialog implements ConstantesFrontend {
         });
 
         inicializarInterfaz();
+        UtilSonido.reproducir("sonidos/ventana.wav");
     }
 
     public boolean authenticado() {

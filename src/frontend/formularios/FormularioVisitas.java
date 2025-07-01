@@ -35,6 +35,7 @@ import javax.swing.event.DocumentListener;
 import util.ConstantesAnalisis;
 import util.ConstantesEspecialidades;
 import util.ConstantesFrontend;
+import util.UtilSonido;
 import entidades.CMF;
 import entidades.personal.Paciente;
 import entidades.personal.Usuario;
@@ -528,6 +529,8 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
         panelGris.setBounds(0, 120, 816, 322);
         getContentPane().add(panelGris);
         panelGris.setLayout(null);
+        
+        UtilSonido.reproducir("sonidos/ventana.wav");
     }
 
     private boolean esMedico() {

@@ -76,6 +76,7 @@ public class VentanaAnalisis extends JPanel implements ConstantesFrontend {
 
         table = TablaPersonalizada.crearTablaPersonalizada(model);
         table.setRowSorter(sorter); 
+        model.aplicarEstilosCeldas(table);
 
         JScrollPane scrollPane = TablaPersonalizada.envolverEnScroll(table, 0, 30, 700, 405);
 

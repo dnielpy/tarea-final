@@ -20,6 +20,7 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
 import util.ConstantesFrontend;
+import util.UtilSonido;
 import frontend.ui.TablaPersonalizada;
 import entidades.registros.Analisis;
 import entidades.registros.Visita;
@@ -52,6 +53,7 @@ public class FormularioHistoriaClinica extends JDialog implements ConstantesFron
 		getContentPane().setLayout(null);
 
 		initComponents();
+		UtilSonido.reproducir("sonidos/ventana.wav");
 		cargarDatos();
 	}
 
@@ -134,9 +136,10 @@ public class FormularioHistoriaClinica extends JDialog implements ConstantesFron
 		modeloAnalisis.setMostrarResultados(false);
 		modeloAnalisis.setMostrarFechaOrientado(true);
 		modeloAnalisis.setMostrarEstado(true);
-		modeloAnalisis.setMostrarFechaResultado(true);
+		modeloAnalisis.setMostrarFechaResultado(true);	
 		tablaAnalisis = TablaPersonalizada.crearTablaPersonalizada(modeloAnalisis);
 		JScrollPane scrollAnalisis = TablaPersonalizada.envolverEnScroll(tablaAnalisis, 20, 20, 510, 150);
+		modeloAnalisis.aplicarEstilosCeldas(tablaAnalisis);
 		panelAnalisis.add(scrollAnalisis);
 
 		// Fondo
