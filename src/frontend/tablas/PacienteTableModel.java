@@ -2,7 +2,6 @@ package frontend.tablas;
 
 import javax.swing.table.AbstractTableModel;
 
-import entidades.CMF;
 import entidades.personal.Paciente;
 import java.util.List;
 

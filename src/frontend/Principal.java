@@ -35,6 +35,7 @@ import entidades.personal.Medico;
 import entidades.personal.PersonalSanitario;
 import runner.Runner;
 import util.ConstantesFrontend;
+import util.UtilSonido;
 
 import java.awt.CardLayout;
 import java.awt.event.ActionListener;
@@ -80,6 +81,8 @@ public class Principal extends JFrame implements MouseListener, ConstantesFronte
         contentPane.setLayout(null);
         
         inicializarComponentes();
+        
+        UtilSonido.reproducir("sonidos/ventana.wav");
         
         cargarUsuario();
         // Solicitar foco después de que todo esté visible

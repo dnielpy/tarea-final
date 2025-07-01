@@ -43,6 +43,8 @@ import entidades.personal.Mujer;
 import entidades.personal.Paciente;
 import entidades.personal.Usuario;
 import entidades.personal.Usuario.TipoDeRol;
+import excepciones.EmbarazoInvalidoException;
+import excepciones.FechaInvalidaException;
 import frontend.ui.botones.BotonBlanco;
 import frontend.ui.botones.ImageButtonLabel;
 import frontend.ui.dialogs.InfoDialog;
@@ -734,9 +736,11 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 	}
 
 	private LocalDate obtenerFechaUltimaPrueba() {
-		Date fecha = fechaUltimaPrueba.getDate();
-
-		return fecha.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+	    LocalDate resultado = null;
+	    if (fechaUltimaPrueba != null && fechaUltimaPrueba.getDate() != null) {
+	        resultado = UtilFecha.convertirALocalDate(fechaUltimaPrueba.getDate());
+	    }
+	    return resultado;
 	}
 
 	private ArrayList<String> obtenerListaEnfermedades() {
@@ -756,58 +760,45 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 	}
 
 	public void agregarPaciente() {
-		CMF cmf = CMF.getInstance();
+	    CMF cmf = CMF.getInstance();
 
-		try {
-			String[] datos = obtenerDatosBasicos(); // nombre, primerApellido, segundoApellido, ci, direccion
-			boolean embarazada = validarEmbarazo(datos[3], checkEmbarazada.isSelected());
-			LocalDate fechaUltima;
+	    try {
+	        String[] datos = obtenerDatosBasicos(); // nombre, primerApellido, segundoApellido, ci, direccion
+	        boolean embarazada = validarEmbarazo(datos[3], checkEmbarazada.isSelected());
+	        LocalDate fechaUltima = obtenerFechaUltimaPrueba();
 
-			if (paciente instanceof Mujer && ((Mujer) paciente).getFechaUltimaRevision() != null) {
-				fechaUltima = ((Mujer) paciente).getFechaUltimaRevision();
-			} else if (fechaUltimaPrueba == null || fechaUltimaPrueba.getDate() == null) {
-				fechaUltima = null;
-			} else {
-				fechaUltima = obtenerFechaUltimaPrueba();
-			}
-			if (fechaUltima != null && fechaUltima.isAfter(LocalDate.now())) {
-				throw new IllegalArgumentException("La fecha de la \u00FAltima prueba no puede ser futura.");
-			}
+	        if (cmf.isCiRepited(datos[3])) {
+	            throw new IllegalArgumentException("El CI proporcionado ya est\u00E1 registrado.");
+	        }
 
-			ArrayList<String> enfermedades = obtenerListaEnfermedades();
-			ArrayList<String> vacunas = obtenerListaVacunas();
+	        ArrayList<String> enfermedades = obtenerListaEnfermedades();
+	        ArrayList<String> vacunas = obtenerListaVacunas();
 
-			if (cmf.isCiRepited(datos[3])) {
-				throw new IllegalArgumentException("El CI proporcionado ya est\u00E1 registrado.");
-			}
+	        cmf.agregarPaciente(
+	            datos[0], datos[1], datos[2],
+	            enfermedades, vacunas,
+	            datos[3], embarazada, fechaUltima, datos[4]
+	        );
 
-			boolean agregado = cmf.agregarPaciente(
-					datos[0], datos[1], datos[2], enfermedades, vacunas,
-					datos[3], embarazada, fechaUltima, datos[4]);
+	        new InfoDialog(SwingUtilities.getWindowAncestor(contentPane),
+	                "\u00C9xito",
+	                "Paciente agregado exitosamente.",
+	                Estado.EXITO).setVisible(true);
+	        dispose();
 
-			if (agregado) {
-				new InfoDialog(SwingUtilities.getWindowAncestor(contentPane),
-						"\u00C9xito",
-						"Paciente agregado exitosamente.", Estado.EXITO).setVisible(true);
-				dispose();
-			} else {
-				new InfoDialog(SwingUtilities.getWindowAncestor(contentPane),
-						"Error",
-						"No se pudo agregar el paciente.", Estado.ERROR).setVisible(true);
-			}
-		} catch (IllegalArgumentException ex) {
-			new InfoDialog(SwingUtilities.getWindowAncestor(contentPane),
-					"Error",
-					ex.getMessage(),
-					Estado.ERROR).setVisible(true);
-		} catch (Exception ex) {
-			new InfoDialog(SwingUtilities.getWindowAncestor(contentPane),
-					"Error",
-					"Ocurri\u00F3 un error inesperado: " + ex.getMessage(),
-					Estado.ERROR).setVisible(true);
-		}
+	    } catch (IllegalArgumentException | FechaInvalidaException | EmbarazoInvalidoException ex) {
+	        new InfoDialog(SwingUtilities.getWindowAncestor(contentPane),
+	                "Error",
+	                ex.getMessage(),
+	                Estado.ERROR).setVisible(true);
+	    } catch (Exception ex) {
+	        new InfoDialog(SwingUtilities.getWindowAncestor(contentPane),
+	                "Error",
+	                "Ocurri\u00F3 un error inesperado: " + ex.getMessage(),
+	                Estado.ERROR).setVisible(true);
+	    }
 	}
-	
+
 	private void guardarEdicionPaciente() {
 	    try {
 	        String[] datos = obtenerDatosBasicos(); // nombre, primerApellido, segundoApellido, ci, direccion
@@ -819,13 +810,7 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 
 	        if (paciente instanceof Mujer) {
 	            estadoEmbarazo = validarEmbarazo(datos[3], checkEmbarazada.isSelected());
-
-	            if (fechaUltimaPrueba != null && fechaUltimaPrueba.getDate() != null) {
-	                fechaCitologia = obtenerFechaUltimaPrueba();
-	                if (fechaCitologia.isAfter(LocalDate.now())) {
-	                    throw new IllegalArgumentException("La fecha de la última prueba no puede ser futura.");
-	                }
-	            }
+	            fechaCitologia = obtenerFechaUltimaPrueba();
 	        }
 
 	        CMF.getInstance().editarPaciente(
@@ -847,13 +832,16 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 
 	        setModoActual(ModoFormulario.VISUALIZACION);
 
-	    } catch (IllegalArgumentException ex) {
-	        new InfoDialog(FormularioPaciente.this, "Error", ex.getMessage(), Estado.ERROR).setVisible(true);
+	    } catch (IllegalArgumentException | FechaInvalidaException | EmbarazoInvalidoException ex) {
+	        new InfoDialog(FormularioPaciente.this,
+	                "Error",
+	                ex.getMessage(),
+	                Estado.ERROR).setVisible(true);
 	    } catch (Exception ex) {
 	        new InfoDialog(FormularioPaciente.this,
-	            "Error",
-	            "Ocurrió un error inesperado: " + ex.getMessage(),
-	            Estado.ERROR).setVisible(true);
+	                "Error",
+	                "Ocurrió un error inesperado: " + ex.getMessage(),
+	                Estado.ERROR).setVisible(true);
 	    }
 	}
 

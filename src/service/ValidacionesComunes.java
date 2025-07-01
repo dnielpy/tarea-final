@@ -3,6 +3,7 @@ package service;
 import excepciones.*;
 
 import java.time.LocalDate;
+import util.CIUtil;
 
 public class ValidacionesComunes {
 
@@ -36,6 +37,8 @@ public class ValidacionesComunes {
     public static void validarCI(String ci) throws CIInvalidoException {
         if (ci == null || !ci.matches("^\\d{11}$")) {
             throw new CIInvalidoException("El carné de identidad debe tener exactamente 11 dígitos.");
+        } else if (!CIUtil.esCIValido(ci)) {
+        	throw new CIInvalidoException("El carné de identidad introducido no es correcto.");
         }
     }
 
@@ -59,5 +62,7 @@ public class ValidacionesComunes {
             throw new DatoInvalidoException("El campo '" + campo + "' no debe superar los 200 caracteres.");
         }
     }
+    
 }
+
 
