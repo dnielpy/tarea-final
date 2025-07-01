@@ -446,15 +446,21 @@ public class CMF {
 	}
 
 	public List<LocalDate> obtenerFechasDeHojasDeCargo() {
-		List<LocalDate> fechas = new ArrayList<>();
-		if (hojasCargoDiaria != null) {
-			for (HojaCargosDiaria hoja : hojasCargoDiaria) {
-				if (hoja != null && hoja.getFecha() != null && !fechas.contains(hoja.getFecha())) {
-					fechas.add(hoja.getFecha());
-				}
-			}
-		}
-		return fechas;
+	    List<LocalDate> fechas = new ArrayList<>();
+	    if (hojasCargoDiaria != null) {
+	        for (HojaCargosDiaria hoja : hojasCargoDiaria) {
+	            if (
+	                hoja != null &&
+	                hoja.getFecha() != null &&
+	                hoja.getVisitas() != null &&
+	                !hoja.getVisitas().isEmpty() &&
+	                !fechas.contains(hoja.getFecha())
+	            ) {
+	                fechas.add(hoja.getFecha());
+	            }
+	        }
+	    }
+	    return fechas;
 	}
 
 	// Registro General

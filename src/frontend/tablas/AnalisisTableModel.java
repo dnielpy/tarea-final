@@ -16,6 +16,8 @@ import java.time.format.DateTimeFormatter;
 
 import javax.swing.*;
 
+import util.UtilFecha;
+
 public class AnalisisTableModel extends AbstractTableModel {
 
     private List<Analisis> analisisList;
@@ -23,7 +25,6 @@ public class AnalisisTableModel extends AbstractTableModel {
     private boolean mostrarFechaResultado;
     private boolean mostrarResultados;
     private boolean mostrarEstado;
-    private final DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("dd/MMM/yyyy");
 
     public AnalisisTableModel(List<Analisis> lista) {
         if (lista == null) {
@@ -253,7 +254,7 @@ public class AnalisisTableModel extends AbstractTableModel {
     private String formatearFecha(LocalDate fecha) {
         String texto = "";
         if (fecha != null) {
-            texto = fecha.format(formatoFecha);
+            texto = UtilFecha.formatearCorto(fecha);
         }
         return texto;
     }

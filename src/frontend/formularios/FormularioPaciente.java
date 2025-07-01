@@ -10,13 +10,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Locale;
-
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
@@ -34,6 +31,7 @@ import javax.swing.event.DocumentListener;
 
 import service.Validations;
 import util.ConstantesFrontend;
+import util.UtilFecha;
 import util.UtilSonido;
 
 import com.toedter.calendar.JDateChooser;
@@ -584,23 +582,19 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 
 	    boolean esMujer = paciente instanceof Mujer;
 
-	    // Mostrar componentes relevantes para mostrar información
 	    cartelUltimaPrueba.setVisible(esMujer);
 	    cartelFecha.setVisible(esMujer);
 	    cartelEmbarazada.setVisible(esMujer && ((Mujer) paciente).isEmbarazada());
-
-	    // Fecha y checkbox para editar solo se manejan en activarEdicion()
 
 	    if (esMujer) {
 	        Mujer mujer = (Mujer) paciente;
 	        LocalDate fecha = mujer.getFechaUltimaRevision();
 
-	        if (fecha != null) {
-	            Date fechaConvertida = Date.from(fecha.atStartOfDay(ZoneId.systemDefault()).toInstant());
+	        Date fechaConvertida = UtilFecha.convertirALegacyDate(fecha);
+	        if (fechaConvertida != null) {
 	            fechaUltimaPrueba.setDate(fechaConvertida);
-
-	            SimpleDateFormat formato = new SimpleDateFormat("d 'de' MMMM 'de' yyyy", new Locale("es", "ES"));
-	            cartelFecha.setText(formato.format(fechaConvertida));
+	            String textoFecha = UtilFecha.formatearLargoEsp(fecha);
+	            cartelFecha.setText(textoFecha);
 	        } else {
 	            cartelFecha.setText("Nunca realizada");
 	        }

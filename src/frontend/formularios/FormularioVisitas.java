@@ -13,7 +13,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,13 +27,13 @@ import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import util.ConstantesAnalisis;
 import util.ConstantesEspecialidades;
 import util.ConstantesFrontend;
+import util.UtilFecha;
 import util.UtilSonido;
 import entidades.CMF;
 import entidades.personal.Paciente;
@@ -92,24 +91,12 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
         CREACION
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                FormularioVisitas dialogo = new FormularioVisitas(null);
-                dialogo.setLocationRelativeTo(null);
-                dialogo.setModal(true);
-                dialogo.setVisible(true);
-            }
-        });
-    }
-
     public FormularioVisitas(Window ancestor) {
         super(ancestor, ModalityType.APPLICATION_MODAL);
         initComponents();
         setModoActual(ModoFormulario.CREACION);
-        // Poner fecha actual en modo creaci\u00F3n por defecto sin visita
-        campoFecha.setText(LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MMM/yyyy")));
+        // Poner fecha actual en modo creacion por defecto sin visita
+        campoFecha.setText(UtilFecha.formatearCorto(LocalDate.now()));
     }
 
     /**
@@ -173,7 +160,7 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
         panelRegistroVisita.setBackground(Color.WHITE);
 
         textDiagnostico = new JTextArea();
-        textDiagnostico.setLineWrap(true); // Importante para evitar scroll horizontal en JTextArea
+        textDiagnostico.setLineWrap(true); 
         textDiagnostico.setWrapStyleWord(true);
         textDiagnostico.setFont(new Font("Arial", Font.PLAIN, 16));
         ScrollPaneModerno diagnosticoScrollPane = new ScrollPaneModerno(textDiagnostico);
@@ -381,15 +368,14 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
 
         JLabel cartelFecha = new JLabel("Fecha:");
         cartelFecha.setFont(new Font("Arial", Font.PLAIN, 16));
-        cartelFecha.setBounds(469, 27, 59, 19);
+        cartelFecha.setBounds(437, 27, 48, 19);
         panelPersonal.add(cartelFecha);
 
         campoFecha = new PlaceholderTextField();
         campoFecha.setEditable(false);
         campoFecha.setInputFormat(InputFormat.ANY);
         campoFecha.setFont(new Font("Arial", Font.PLAIN, 16));
-        campoFecha.setCharacterLimit(11);
-        campoFecha.setBounds(521, 24, 149, 25);
+        campoFecha.setBounds(492, 24, 178, 25);
         panelPersonal.add(campoFecha);
 
         campoDireccion = new PlaceholderTextField();
@@ -802,7 +788,7 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
             Paciente pacienteEncontrado = cmf.getPacientePorId(visita.getPacienteHistoriaClinicaID());
             cargarDatosPaciente(pacienteEncontrado);
 
-            campoFecha.setText(visita.getFecha().format(DateTimeFormatter.ofPattern("dd/MMM/yyyy")));
+            campoFecha.setText(UtilFecha.formatearLargoEsp(visita.getFecha()));
             campoDireccion.setText(visita.getDireccion());
             textDiagnostico.setText(visita.getDiagnostico());
             textTratamiento.setText(visita.getTratamiento());

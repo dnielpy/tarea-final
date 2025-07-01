@@ -9,8 +9,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.time.format.DateTimeFormatter;
-
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -19,6 +17,7 @@ import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 
 import util.ConstantesFrontend;
+import util.UtilFecha;
 import util.UtilSonido;
 import entidades.CMF;
 import entidades.registros.Analisis;
@@ -238,7 +237,8 @@ public class FormularioAnalisis extends JDialog implements ConstantesFrontend {
                     setModo(ModoFormulario.EDICION);
 
                     InfoDialog info = new InfoDialog(FormularioAnalisis.this, "Modo edición",
-                            "Ahora puede editar el campo de resultados.\nHaga clic en GUARDAR para confirmar los cambios.", Estado.INFORMACION);
+                            "Ahora puede editar el campo de resultados.\nHaga clic en GUARDAR para confirmar los cambios.", 
+                            Estado.INFORMACION);
                     info.setVisible(true);
                 }
             }
@@ -275,10 +275,12 @@ public class FormularioAnalisis extends JDialog implements ConstantesFrontend {
 
     private void cargarDatos() {
         campoNombre.setText(cmf.getPacientePorId(analisis.getHistoriaClinicaId()).getNombreYApellidos());
-        campoFechaOrientado.setText(analisis.getFechaOrientado() != null ? analisis.getFechaOrientado().format(DateTimeFormatter.ofPattern("dd/MMM/yyyy")) : "");
+        campoFechaOrientado.setText(analisis.getFechaOrientado() != null ? 
+        		UtilFecha.formatearCorto(analisis.getFechaOrientado()) : "");
         campoTipoAnalisis.setText(analisis.getTipoDeAnalisis());
         campoEstado.setText(analisis.getFechaResultado() != null ? "Completado" : "Pendiente");
-        campoFechaActualizacion.setText(analisis.getFechaResultado() != null ? analisis.getFechaResultado().format(DateTimeFormatter.ofPattern("dd/MMM/yyyy")) : "");
+        campoFechaActualizacion.setText(analisis.getFechaResultado() != null ? 
+        		UtilFecha.formatearCorto(analisis.getFechaResultado()) : "");
         textResultados.setText(analisis.getResultados() != null ? analisis.getResultados() : "");
         cartelHistoriaClinica.setText("Historia Clínica #" + analisis.getHistoriaClinicaId());
     }

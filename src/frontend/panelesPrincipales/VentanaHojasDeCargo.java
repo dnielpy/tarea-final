@@ -8,10 +8,7 @@ import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -27,6 +24,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.TableRowSorter;
 
 import util.ConstantesFrontend;
+import util.UtilFecha;
 
 import com.toedter.calendar.IDateEvaluator;
 import com.toedter.calendar.JDateChooser;
@@ -46,6 +44,7 @@ public class VentanaHojasDeCargo extends JPanel implements ConstantesFrontend {
     private JTable table;
     private VisitaTableModel model;
     private JDateChooser fechaHojaDeCargo;
+    private FechaPermitidaEvaluator evaluadorFechas;
 
     public VentanaHojasDeCargo() {
         this.cmf = CMF.getInstance();
@@ -101,23 +100,17 @@ public class VentanaHojasDeCargo extends JPanel implements ConstantesFrontend {
         List<LocalDate> fechasValidas = cmf.obtenerFechasDeHojasDeCargo();
         Date[] fechasValidasDate = new Date[fechasValidas.size()];
         for (int i = 0; i < fechasValidas.size(); i++) {
-            fechasValidasDate[i] = convertirLocalDateASinDesfase(fechasValidas.get(i));
+            fechasValidasDate[i] = UtilFecha.convertirALegacyDate(fechasValidas.get(i));
         }
 
-        FechaPermitidaEvaluator evaluador = new FechaPermitidaEvaluator(fechasValidasDate);
-        fechaHojaDeCargo.getJCalendar().getDayChooser().addDateEvaluator(evaluador);
+        evaluadorFechas = new FechaPermitidaEvaluator(fechasValidasDate);
+        fechaHojaDeCargo.getJCalendar().getDayChooser().addDateEvaluator(evaluadorFechas);
 
         if (!fechasValidas.isEmpty()) {
-            fechaHojaDeCargo.setDate(convertirLocalDateASinDesfase(LocalDate.now()));
+            fechaHojaDeCargo.setDate(UtilFecha.convertirALegacyDate(LocalDate.now()));
         }
 
         add(fechaHojaDeCargo);
-    }
-
-    private Date convertirLocalDateASinDesfase(LocalDate localDate) {
-        ZonedDateTime zonedDateTime = localDate.atTime(12, 0).atZone(ZoneId.systemDefault());
-        Instant instant = zonedDateTime.toInstant();
-        return Date.from(instant);
     }
 
     private void agregarPanelTabla() {
@@ -177,9 +170,7 @@ public class VentanaHojasDeCargo extends JPanel implements ConstantesFrontend {
         boolean tieneFecha = (fechaSeleccionada != null);
 
         if (tieneFecha) {
-            LocalDate fecha = fechaSeleccionada.toInstant()
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalDate();
+            LocalDate fecha = UtilFecha.convertirALocalDate(fechaSeleccionada);
             actualizarModeloVisitasPorFecha(fecha);
         } else {
             actualizarModeloVisitasPorFecha(null);
@@ -228,14 +219,28 @@ public class VentanaHojasDeCargo extends JPanel implements ConstantesFrontend {
         formularioVisitas.setVisible(true);
     }
 
-    public void actualizarDatos() {
-        cargarDatos();
+    private void actualizarFechasPermitidas() {
+        List<LocalDate> fechasValidas = cmf.obtenerFechasDeHojasDeCargo();
+        Date[] fechasValidasDate = new Date[fechasValidas.size()];
+        for (int i = 0; i < fechasValidas.size(); i++) {
+            fechasValidasDate[i] = UtilFecha.convertirALegacyDate(fechasValidas.get(i));
+        }
+
+        if (evaluadorFechas != null) {
+            fechaHojaDeCargo.getJCalendar().getDayChooser().removeDateEvaluator(evaluadorFechas);
+        }
+
+        evaluadorFechas = new FechaPermitidaEvaluator(fechasValidasDate);
+        fechaHojaDeCargo.getJCalendar().getDayChooser().addDateEvaluator(evaluadorFechas);
+
+        fechaHojaDeCargo.setDate(UtilFecha.convertirALegacyDate(LocalDate.now()));
     }
 
     @Override
     public void show() {
         super.show();
-        actualizarDatos();
+        actualizarFechasPermitidas();
+        cargarDatos();
     }
 }
 
@@ -255,11 +260,16 @@ class FechaPermitidaEvaluator implements IDateEvaluator {
 
     @Override
     public boolean isInvalid(Date date) {
-        if (date == null) {
-            return true;
+        boolean esInvalida = true;
+
+        if (date != null) {
+            String clave = formato.format(date);
+            if (fechasPermitidas.contains(clave)) {
+                esInvalida = false;
+            }
         }
-        String clave = formato.format(date);
-        return !fechasPermitidas.contains(clave);
+
+        return esInvalida;
     }
 
     @Override public boolean isSpecial(Date date) { return false; }
@@ -270,3 +280,4 @@ class FechaPermitidaEvaluator implements IDateEvaluator {
     @Override public Color getSpecialForegroundColor() { return null; }
     @Override public Color getSpecialBackroundColor() { return null; }
 }
+

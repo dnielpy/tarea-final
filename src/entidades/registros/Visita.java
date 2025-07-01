@@ -69,14 +69,6 @@ public class Visita {
         this.fecha = fecha;
     }
 
-    public String getFechaFormateada() {
-        if (fecha == null) {
-            return "";
-        }
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MMM/yyyy");
-        return fecha.format(formatter);
-    }
-
     // Diagnóstico
     public String getDiagnostico() {
         return diagnostico;

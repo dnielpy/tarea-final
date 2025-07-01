@@ -8,6 +8,7 @@ import javax.swing.SwingConstants;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import util.UtilFecha;
 import entidades.registros.Visita;
 
 public class VisitaTableModel extends AbstractTableModel {
@@ -157,7 +158,7 @@ public class VisitaTableModel extends AbstractTableModel {
 
             if (!colAsignado && mostrarFecha) {
                 if (columnIndex == col) {
-                    valor = visita.getFechaFormateada();
+                    valor = UtilFecha.formatearCorto(visita.getFecha());
                     colAsignado = true;
                 }
             }

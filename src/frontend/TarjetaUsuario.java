@@ -13,6 +13,7 @@ import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 
 import util.ConstantesFrontend;
+import util.UtilFecha;
 import util.UtilSonido;
 import entidades.personal.Enfermera;
 import entidades.personal.PersonalSanitario;
@@ -189,7 +190,7 @@ public class TarjetaUsuario extends JDialog implements ConstantesFrontend {
 		campoNombre.setText(usuario.getNombreYApellidos());
 		campoRol.setText(usuario.getUser().getRole().toString().toLowerCase());
 		campoUsuario.setText(usuario.getUser().getUserName());
-		campoFechaInicio.setText(usuario.getFechaInicioCMFFormateada());
+		campoFechaInicio.setText(UtilFecha.formatearLargoEsp(usuario.getFechaInicioCMF()));
 		
 		if (usuario instanceof Enfermera) {
 			campoLicenciatura.setText(((Enfermera)usuario).getLicenciatura() ? "Tiene" : "No tiene");

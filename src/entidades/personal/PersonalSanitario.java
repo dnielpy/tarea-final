@@ -10,7 +10,6 @@ public abstract class PersonalSanitario extends Persona {
     protected Usuario user;
     protected int identificador;
     protected LocalDate fechaInicioCMF;
-    protected static final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("d 'de' MMMM 'de' yyyy", new Locale("es", "ES"));
 
     // Constructor
     public PersonalSanitario(String nombre, String primerApellido, String segundoApellido, int identificador, String ci,
@@ -45,10 +44,6 @@ public abstract class PersonalSanitario extends Persona {
     // Fecha en la que empezo a trabajar en el CMF
     public LocalDate getFechaInicioCMF() {
         return fechaInicioCMF;
-    }
-
-    public String getFechaInicioCMFFormateada() { 
-        return fechaInicioCMF == null ? null : fechaInicioCMF.format(dateFormat);
     }
   
     public void setFechaInicioCMF(LocalDate fecha) {
