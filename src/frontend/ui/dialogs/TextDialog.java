@@ -19,6 +19,10 @@ import java.awt.Toolkit;
 
 public class TextDialog extends JDialog {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JTextArea textArea;
 	private boolean confirmado;
 

@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -37,7 +36,11 @@ import frontend.ui.placeholders.BuscadorTabla;
 
 public class VentanaPacientes extends JPanel implements ConstantesFrontend {
 
-    private CMF cmf;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private CMF cmf;
     private JTable table;
     private PacienteTableModel model;
     private TableRowSorter<PacienteTableModel> sorter;
@@ -60,16 +63,24 @@ public class VentanaPacientes extends JPanel implements ConstantesFrontend {
 
             if (confirmDialog.esConfirmado()) {
                 List<Integer> idsAEliminar = new ArrayList<>();
+
+                // PRIMER PASO: recoger todos los IDs sin eliminar aún
                 for (int i = 0; i < selectedRows.length; i++) {
                     int viewRow = selectedRows[i];
-                    int modelRow = table.convertRowIndexToModel(viewRow);
-                    int id = (int) model.getValueAt(modelRow, model.findColumn("H. Clínica"));
-                    idsAEliminar.add(id);
+                    if (viewRow >= 0 && viewRow < table.getRowCount()) {
+                        int modelRow = table.convertRowIndexToModel(viewRow);
+                        int id = (int) model.getValueAt(modelRow, model.findColumn("H. Clínica"));
+                        idsAEliminar.add(id);
+                    }
                 }
 
+                // eliminar todos los pacientes
                 for (Integer id : idsAEliminar) {
-                    model.eliminarPacientePorId(id);
+                    cmf.eliminarPaciente(id);
                 }
+
+                // recargar el modelo
+                model.setPacientes(cmf.getPacientes());
 
                 seElimino = true;
             } else {
@@ -116,7 +127,12 @@ public class VentanaPacientes extends JPanel implements ConstantesFrontend {
         panelSuperior.add(cartelPestanna);
 
         model = new PacienteTableModel(cmf.getPacientes()) {
-            @Override
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }

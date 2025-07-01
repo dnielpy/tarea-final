@@ -13,7 +13,12 @@ import java.util.HashMap;
 
 public class InfoDialog extends JDialog implements ConstantesFrontend {
 
-    public enum Estado {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public enum Estado {
         INFORMACION,
         ERROR,
         WARNING,

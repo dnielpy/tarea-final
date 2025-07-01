@@ -30,6 +30,10 @@ import frontend.ui.TablaPersonalizada;
 import frontend.ui.placeholders.BuscadorTabla;
 
 public class VentanaVisitas extends JPanel implements ConstantesFrontend {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private CMF cmf;
 	private JTable table;
 	private VisitaTableModel model;

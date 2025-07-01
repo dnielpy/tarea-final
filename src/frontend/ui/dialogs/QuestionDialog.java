@@ -20,6 +20,10 @@ import java.awt.Toolkit;
 
 public class QuestionDialog extends JDialog {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private boolean confirmado = false;
 
 	public QuestionDialog(Window parent, String titulo, String mensaje) {

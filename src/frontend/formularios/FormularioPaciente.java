@@ -14,6 +14,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
+
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
@@ -29,10 +30,11 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import service.Validations;
+import util.CIUtil;
 import util.ConstantesFrontend;
 import util.UtilFecha;
 import util.UtilSonido;
+import util.UtilString;
 
 import com.toedter.calendar.JDateChooser;
 
@@ -52,6 +54,10 @@ import frontend.ui.placeholders.PlaceholderTextField.InputFormat;
 
 public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JPanel panelGris;
 	private JPanel panelAzul;
@@ -248,14 +254,21 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 			}
 
 			private void manejarCambio() {
-				final String ci = campoCI.getText().trim();
-				if (ci.length() >= 6) {
-					actualizarEdad();
-				} else {
-					edadCalculada = false;
-					campoEdad.setText("");
-				}
-				calcularGenero();
+			    final String ci = campoCI.getText().trim();
+
+			    if (ci.length() >= 6) {
+			        actualizarEdad();
+			    } else {
+			        edadCalculada = false;
+			        campoEdad.setText("");
+			    }
+
+			    if (ci.length() >= 10) { // Solo calcular género si hay 10+ caracteres
+			        calcularGenero();
+			    } else {
+			        campoGenero.setText("");  // Limpiar si es menor que 10
+			        actualizarGenero(false);  // Desactivar controles dependientes
+			    }
 			}
 		});
 
@@ -659,13 +672,16 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 	}
 
 	private void calcularGenero() {
-		String ci = campoCI.getText();
-		if (ci.length() >= 10 && Character.isDigit(ci.charAt(9))) {
-			int digito = Character.getNumericValue(ci.charAt(9));
-			boolean femenino = digito % 2 != 0;
-			campoGenero.setText(femenino ? "Femenino" : "Masculino");
-			actualizarGenero(femenino);
-		}
+	    String ci = campoCI.getText();
+	    if (ci.length() >= 10 && Character.isDigit(ci.charAt(9))) {
+	        int digito = Character.getNumericValue(ci.charAt(9));
+	        boolean femenino = digito % 2 != 0;
+	        campoGenero.setText(femenino ? "Femenino" : "Masculino");
+	        actualizarGenero(femenino);
+	    } else {
+	        campoGenero.setText("");
+	        actualizarGenero(false);
+	    }
 	}
 
 	private void actualizarGenero(boolean activo) {
@@ -685,7 +701,7 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 	private void actualizarEdad() {
 		String ci = campoCI.getText();
 		if (ci.length() >= 6 && !edadCalculada) {
-			int edad = Validations.getYearsFromString(ci);
+			int edad = UtilFecha.obtenerAniosDesdeString(ci.substring(0, 6));
 			if (edad == -1) {
 				campoEdad.setText("inválida");
 				new InfoDialog(this, "Error", "La fecha de nacimiento es inválida.", Estado.ERROR).setVisible(true);
@@ -697,9 +713,9 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 	}
 
 	private String[] obtenerDatosBasicos() {
-		String nombre = Validations.capitalize(campoNombre.getText().trim());
-		String primerApellido = Validations.capitalize(campoPrimerApellido.getText().trim());
-		String segundoApellido = Validations.capitalize(campoSegundoApellido.getText().trim());
+		String nombre = UtilString.capitalizarNombre(campoNombre.getText().trim());
+		String primerApellido = UtilString.capitalizarNombre(campoPrimerApellido.getText().trim());
+		String segundoApellido = UtilString.capitalizarNombre(campoSegundoApellido.getText().trim());
 		String ci = campoCI.getText().trim();
 		String direccion = campoDireccion.getText().trim();
 
@@ -711,7 +727,7 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 	}
 
 	private boolean validarEmbarazo(String ci, boolean embarazada) {
-		if (!Validations.isFemale(ci) && embarazada) {
+		if (!CIUtil.esMujer(ci) && embarazada) {
 			throw new IllegalArgumentException("Un paciente masculino no puede estar embarazado.");
 		}
 		return embarazada;

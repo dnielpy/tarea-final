@@ -35,7 +35,11 @@ import frontend.ui.placeholders.PlaceholderTextField.InputFormat;
 
 public class Login extends JDialog implements ConstantesFrontend {
 
-    private PlaceholderTextField campoUsuario;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private PlaceholderTextField campoUsuario;
     private PlaceholderAndToggle campoContrasenna;
     private boolean auth;
 
@@ -79,10 +83,10 @@ public class Login extends JDialog implements ConstantesFrontend {
     }
 
     public void autenticar() {
-        String usuario = campoUsuario.getText();
-        String contrasenna = new String(campoContrasenna.getPassword());
+        String usuario = campoUsuario.getText().trim();
+        String contrasenna = new String(campoContrasenna.getPassword()).trim();
 
-        boolean campoVacio = contrasenna.trim().isEmpty();
+        boolean campoVacio = contrasenna.isEmpty();
 
         if (campoVacio) {
             InfoDialog dialogo = new InfoDialog(this.getOwner(), "Error de autenticación", 

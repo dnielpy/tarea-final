@@ -12,15 +12,17 @@ import entidades.registros.Analisis;
 
 import java.awt.Component;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-
 import javax.swing.*;
 
 import util.UtilFecha;
 
 public class AnalisisTableModel extends AbstractTableModel {
 
-    private List<Analisis> analisisList;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private List<Analisis> analisisList;
     private boolean mostrarFechaOrientado;
     private boolean mostrarFechaResultado;
     private boolean mostrarResultados;
@@ -294,7 +296,12 @@ public class AnalisisTableModel extends AbstractTableModel {
         centrado.setVerticalAlignment(SwingConstants.CENTER);
 
         DefaultTableCellRenderer izquierdaConMargen = new DefaultTableCellRenderer() {
-            @Override
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
             public Component getTableCellRendererComponent(JTable table, Object value,
                     boolean isSelected, boolean hasFocus, int row, int column) {
 
@@ -306,7 +313,12 @@ public class AnalisisTableModel extends AbstractTableModel {
         };
 
         DefaultTableCellRenderer fechaRenderer = new DefaultTableCellRenderer() {
-            @Override
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
             protected void setValue(Object value) {
                 String texto = "";
                 if (value instanceof LocalDate) {
@@ -348,20 +360,6 @@ public class AnalisisTableModel extends AbstractTableModel {
             }
 
             indice++;
-        }
-    }
-    
-    public void aplicarCentrado(JTable table) {
-        DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
-        renderer.setHorizontalAlignment(SwingConstants.CENTER);
-        renderer.setVerticalAlignment(SwingConstants.CENTER);
-
-        int columnas = getColumnCount();
-        int i = 0;
-
-        while (i < columnas) {
-            table.getColumnModel().getColumn(i).setCellRenderer(renderer);
-            i++;
         }
     }
 }

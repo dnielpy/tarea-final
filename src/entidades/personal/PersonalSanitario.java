@@ -1,8 +1,6 @@
 package entidades.personal;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Locale;
 import java.util.Objects;
 
 public abstract class PersonalSanitario extends Persona {

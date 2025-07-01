@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+
 import entidades.personal.Enfermera;
 import entidades.personal.Medico;
 import entidades.personal.Mujer;
@@ -17,7 +18,7 @@ import entidades.registros.HojaCargosDiaria;
 import entidades.registros.RegistroGeneral;
 import entidades.registros.RegistroHistorico;
 import entidades.registros.Visita;
-import service.Validations;
+import util.CIUtil;
 import util.MockDataGenerator;
 
 public class CMF {
@@ -125,13 +126,13 @@ public class CMF {
 	public boolean agregarPaciente(String nombre, String primerApellido, String segundoApellido,
 			List<String> enfermedadesCronicas, List<String> vacunacion,
 			String CI, boolean estaEmbarazada, LocalDate fechaUltimaRevision, String direccion) {
-		if (!Validations.isValidCI(CI)) {
+		if (!CIUtil.esCIValido(CI)) {
 			throw new IllegalArgumentException("CI inv\u00e1lido: " + CI);
 		}
 
 		int nuevoID = obtenerNuevoHistoriaClinicaID();
 
-		boolean esMujer = Validations.isFemale(CI);
+		boolean esMujer = CIUtil.esMujer(CI);
 		Paciente newPaciente;
 
 		if (esMujer) {

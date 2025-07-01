@@ -40,7 +40,11 @@ import frontend.ui.placeholders.BuscadorTabla;
 
 public class VentanaHojasDeCargo extends JPanel implements ConstantesFrontend {
 
-    private CMF cmf;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private CMF cmf;
     private JTable table;
     private VisitaTableModel model;
     private JDateChooser fechaHojaDeCargo;
@@ -122,7 +126,7 @@ public class VentanaHojasDeCargo extends JPanel implements ConstantesFrontend {
 
         table = TablaPersonalizada.crearTablaPersonalizada(model);
         TableRowSorter<VisitaTableModel> sorter = new TableRowSorter<>(model);
-        table.setRowSorter(sorter);
+        table.setRowSorter(sorter);       
 
         JScrollPane scrollPane = TablaPersonalizada.envolverEnScroll(table, 0, 30, 700, 405);
 

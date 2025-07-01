@@ -22,6 +22,10 @@ import frontend.ui.placeholders.PlaceholderTextField.InputFormat;
 
 public class TarjetaUsuario extends JDialog implements ConstantesFrontend {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private PlaceholderTextField campoId;
 	private PlaceholderTextField campoFechaInicio;
 	private PlaceholderTextField campoCI;

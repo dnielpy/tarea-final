@@ -1,71 +1,72 @@
 package entidades.personal;
 
-import service.Validations;
+import excepciones.CIInvalidoException;
+import service.ValidacionesComunes;
+import util.CIUtil;
 
 public abstract class Persona {
 
-	protected String nombre;
-	protected String primerApellido;
-	protected String segundoApellido;
-	protected String ci;
+    protected String nombre;
+    protected String primerApellido;
+    protected String segundoApellido;
+    protected String ci;
 
-	public Persona(String nombre, String primerApellido, String segundoApellido, String ci) {
-		setNombre(nombre);
-		setPrimerApellido(primerApellido);
-		setSegundoApellido(segundoApellido);
-		setCI(ci);
-	}
-	
-	public String getCI(){
-		return ci;
-	}
+    public Persona(String nombre, String primerApellido, String segundoApellido, String ci) {
+        setNombre(nombre);
+        setPrimerApellido(primerApellido);
+        setSegundoApellido(segundoApellido);
+        setCI(ci);
+    }
 
-	public void setCI(String carnet) {
-        if(Validations.isValidCI(carnet.trim())) {
+    // Carne de identidad
+    public String getCI() {
+        return ci;
+    }
+
+    public void setCI(String carnet) {
+        if (CIUtil.esCIValido(carnet.trim())) {
             this.ci = carnet.trim();
         } else {
-            throw new IllegalArgumentException("Carnet de identidad inv\u00E1lido" + carnet);
+            throw new CIInvalidoException("Carnet de identidad inválido: " + carnet);
         }
     }
 
-	public String getNombre() {
-		return nombre;
-	}
+    
+    // Nombre
+    public String getNombre() {
+        return nombre;
+    }
 
-	public String getPrimerApellido() {
-		return primerApellido;
-	}
+    public void setNombre(String nombre) {
+        ValidacionesComunes.validarNombre(nombre); // lanza excepción si inválido
+        this.nombre = nombre.trim();
+    }
 
-	public String getSegundoApellido() {
-		return segundoApellido;
-	}
+    // Primer apellido
+    public String getPrimerApellido() {
+        return primerApellido;
+    }
 
-	public String getNombreYApellidos() {
-		return nombre + " " + primerApellido + " " + segundoApellido;
-	}
+    public void setPrimerApellido(String primerApellido) {
+        ValidacionesComunes.validarPrimerApellido(primerApellido); // lanza excepción si inválido
+        this.primerApellido = primerApellido.trim();
+    }
 
-	public void setNombre(String nombre) {
-		if(Validations.validateName(nombre)){
-		    this.nombre = nombre.trim();
-        } 
-        else{
-            throw new IllegalArgumentException("Nombre inv\u00E1lido");
+    // Segundo apellido
+    public String getSegundoApellido() {
+        return segundoApellido;
+    }
+
+    public void setSegundoApellido(String segundoApellido) {
+        if (segundoApellido == null || segundoApellido.trim().isEmpty()) {
+            this.segundoApellido = "";
+        } else {
+            ValidacionesComunes.validarSegundoApellido(segundoApellido); // lanza excepción si inválido
+            this.segundoApellido = segundoApellido.trim();
         }
-	}
+    }
 
-	public void setPrimerApellido(String primerApellido) {
-		if (Validations.validateName(primerApellido)) {
-			this.primerApellido = primerApellido.trim();
-		} else {
-			throw new IllegalArgumentException("Apellido inv\u00E1lido: " + (primerApellido == null ? "null" : primerApellido));
-		}
-	}
-	
-	public void setSegundoApellido(String segundoApellido) {
-		if (Validations.validateName(segundoApellido)) {
-			this.segundoApellido = segundoApellido.trim();
-		} else {
-			throw new IllegalArgumentException("Apellido inv\u00E1lido: " + (segundoApellido == null ? "null" : segundoApellido));
-		}
-	}
+    public String getNombreYApellidos() {
+        return nombre + " " + primerApellido + " " + segundoApellido;
+    }
 }

@@ -31,7 +31,11 @@ import frontend.ui.placeholders.PlaceholderTextField.InputFormat;
 
 public class FormularioAnalisis extends JDialog implements ConstantesFrontend {
 
-    private PlaceholderTextField campoFechaOrientado;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private PlaceholderTextField campoFechaOrientado;
     private PlaceholderTextField campoNombre;
     private PlaceholderTextField campoTipoAnalisis;
     private PlaceholderTextField campoEstado;

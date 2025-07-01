@@ -52,7 +52,11 @@ import frontend.ui.placeholders.PlaceholderTextField.InputFormat;
 
 public class FormularioVisitas extends JDialog implements ConstantesFrontend {
 
-    private CMF cmf;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private CMF cmf;
     private Usuario usuarioActual;
     private Visita visita;
 

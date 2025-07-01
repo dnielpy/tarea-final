@@ -21,7 +21,11 @@ import javax.swing.*;
 
 public class Splash extends JDialog implements ConstantesFrontend {
 
-    private final JPanel contentPanel = new JPanel();
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private final JPanel contentPanel = new JPanel();
     private float opacity = 0f;
     private Timer fadeInTimer;
     private Timer displayTimer;

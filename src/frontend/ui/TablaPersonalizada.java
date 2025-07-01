@@ -20,7 +20,12 @@ public class TablaPersonalizada implements ConstantesFrontend {
 
     public static JTable crearTablaPersonalizada(TableModel modelo) {
         final JTable tabla = new JTable(modelo) {
-            @Override
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
             public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
                 Component c = super.prepareRenderer(renderer, row, column);
 

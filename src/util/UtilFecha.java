@@ -1,6 +1,7 @@
 package util;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
@@ -51,5 +52,61 @@ public class UtilFecha {
         }
         return resultado;
     }
+    
+    public static boolean esFechaValida(String fecha) {
+        boolean esValida = true;
+
+        if (fecha == null || !fecha.matches("\\d{6}")) {
+            esValida = false;
+        } else {
+            try {
+                int anio = Integer.parseInt(fecha.substring(0, 2));
+                int mes = Integer.parseInt(fecha.substring(2, 4));
+                int dia = Integer.parseInt(fecha.substring(4, 6));
+
+                int anioActual = LocalDate.now().getYear() % 100;
+                int siglo = (anio > anioActual) ? 1900 : 2000;
+                int anioCompleto = siglo + anio;
+
+                LocalDate.of(anioCompleto, mes, dia); // Validación real
+            } catch (Exception e) {
+                esValida = false;
+            }
+        }
+
+        return esValida;
+    }
+
+    public static int obtenerAniosDesdeString(String fecha) {
+        int anios = -1;
+        boolean esValida = true;
+
+        if (fecha == null || !fecha.matches("\\d{6}")) {
+            esValida = false;
+        } else {
+            esValida = esFechaValida(fecha);
+        }
+
+        if (esValida) {
+            try {
+                int anio = Integer.parseInt(fecha.substring(0, 2));
+                int mes = Integer.parseInt(fecha.substring(2, 4));
+                int dia = Integer.parseInt(fecha.substring(4, 6));
+
+                int anioActual = LocalDate.now().getYear() % 100;
+                int siglo = (anio > anioActual) ? 1900 : 2000;
+                int anioCompleto = siglo + anio;
+
+                LocalDate fechaNacimiento = LocalDate.of(anioCompleto, mes, dia);
+                LocalDate hoy = LocalDate.now();
+                anios = Period.between(fechaNacimiento, hoy).getYears();
+            } catch (Exception e) {
+            	anios = -1;
+            }
+        }
+
+        return anios;
+    }
 }
+
 

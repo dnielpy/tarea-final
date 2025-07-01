@@ -13,7 +13,11 @@ import entidades.registros.Visita;
 
 public class VisitaTableModel extends AbstractTableModel {
 
-    private List<Visita> visitas;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private List<Visita> visitas;
     private boolean mostrarFecha;
     private boolean mostrarHistoriaClinica;
     private boolean mostrarIdVisita;

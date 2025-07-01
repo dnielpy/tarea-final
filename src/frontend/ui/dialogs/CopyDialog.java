@@ -20,7 +20,12 @@ import frontend.ui.botones.BotonBlanco;
 
 public class CopyDialog extends JDialog {
 
-    public CopyDialog(Window parent, String titulo, String mensaje) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public CopyDialog(Window parent, String titulo, String mensaje) {
         super(parent, titulo, DEFAULT_MODALITY_TYPE);
         setIconImage(Toolkit.getDefaultToolkit().getImage(CopyDialog.class.getResource("/fotos/Logo peque.png")));
         initUI(mensaje);

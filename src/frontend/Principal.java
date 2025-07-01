@@ -43,6 +43,10 @@ import java.awt.event.MouseAdapter;
 
 public class Principal extends JFrame implements MouseListener, ConstantesFrontend {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JLabel imagenUsuario;
 	private JLabel cartelRol;
 	private JLabel cartelUsuario;

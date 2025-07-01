@@ -56,7 +56,12 @@ public class Auth {
     }
 
     public static class AuthenticationException extends Exception {
-        public AuthenticationException(String message) {
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		public AuthenticationException(String message) {
             super(message);
         }
     }

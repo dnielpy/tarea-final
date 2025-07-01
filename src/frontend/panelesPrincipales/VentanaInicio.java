@@ -15,6 +15,10 @@ import entidades.CMF;
 
 public class VentanaInicio extends JPanel implements ConstantesFrontend {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private CMF cmf;
 	private PanelResumen panelResumenPacientes;
 	private PanelResumen panelResumenEnRiesgo;

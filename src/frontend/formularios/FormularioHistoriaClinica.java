@@ -30,6 +30,10 @@ import frontend.tablas.VisitaTableModel;
 
 public class FormularioHistoriaClinica extends JDialog implements ConstantesFrontend {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JLabel cartelIDHistoria;
 	private JLabel cartelCantVisitas;
 	private JLabel cartelCantAnalisis;

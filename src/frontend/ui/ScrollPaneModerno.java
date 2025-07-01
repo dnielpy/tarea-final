@@ -10,7 +10,11 @@ import util.ConstantesFrontend;
 
 public class ScrollPaneModerno extends JScrollPane implements ConstantesFrontend {
 
-    private float alpha = 0f;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private float alpha = 0f;
     private Timer fadeInTimer;
     private Timer fadeOutTimer;
 

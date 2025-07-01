@@ -15,6 +15,11 @@ import util.ConstantesFrontend;
 
 public class PlaceholderTextField extends JTextField implements ConstantesFrontend {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public enum InputFormat {ANY, NUMERIC, ALPHABETIC, ALPHANUMERIC}
 
     private String placeholder;

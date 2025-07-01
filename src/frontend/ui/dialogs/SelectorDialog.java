@@ -13,7 +13,11 @@ import frontend.ui.botones.BotonBlanco;
 
 public class SelectorDialog extends JDialog implements ConstantesFrontend {
 
-    private boolean confirmado = false;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private boolean confirmado = false;
     private String seleccionado;
     private JComboBox<String> comboBox;
 

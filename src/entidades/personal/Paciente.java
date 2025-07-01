@@ -7,7 +7,7 @@ import java.util.Objects;
 import entidades.registros.HistoriaClinica;
 import excepciones.Excepciones.IllegalAddressException;
 import excepciones.Excepciones.IllegalVaccinationException;
-import service.Validations;
+import util.CIUtil;
 
 public class Paciente extends Persona {
 
@@ -52,7 +52,7 @@ public class Paciente extends Persona {
     // Edad y genero
 
     public int getEdad() {
-        return Validations.getAgeFromCI(ci);
+        return CIUtil.obtenerEdadDesdeCI(ci);
     }
 
     public String getGenero() {

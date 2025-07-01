@@ -14,7 +14,11 @@ import frontend.ui.placeholders.BuscadorTabla;
 
 public class ReporteEmbarazadasEnRiesgo extends JPanel {
 
-    private CMF cmf;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private CMF cmf;
     private JTable table;
     private PacienteTableModel model;
     private TableRowSorter<PacienteTableModel> sorter;
@@ -27,7 +31,12 @@ public class ReporteEmbarazadasEnRiesgo extends JPanel {
         setLayout(null);
 
         model = new PacienteTableModel(cmf.obtenerEmbarazadasEnRiesgo()) {
-            @Override
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }

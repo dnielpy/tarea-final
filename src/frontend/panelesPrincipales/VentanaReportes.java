@@ -40,6 +40,10 @@ import frontend.ui.dialogs.InfoDialog.Estado;
 
 public class VentanaReportes extends JPanel implements MouseListener, ConstantesFrontend {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JPanel panelContenedor;
 	private JPanel panelEncabezado;
 	private JLabel cartelEncabezado;

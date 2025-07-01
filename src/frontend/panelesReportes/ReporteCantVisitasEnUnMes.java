@@ -40,7 +40,11 @@ import java.awt.event.MouseEvent;
 
 public class ReporteCantVisitasEnUnMes extends JPanel implements ConstantesFrontend {
 
-    private CMF cmf;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private CMF cmf;
     private JSpinner spinnerFecha;
     private ChartPanel panelGrafico;
     private DefaultCategoryDataset dataset;
@@ -148,7 +152,12 @@ public class ReporteCantVisitasEnUnMes extends JPanel implements ConstantesFront
         rangeAxis.setLabel("");
 
         renderer = new LineAndShapeRenderer(true, true) {
-            @Override
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
             public boolean getItemShapeVisible(int row, int column) {
                 Number val = dataset.getValue(row, column);
                 return val != null && val.intValue() > 0;

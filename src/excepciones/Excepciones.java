@@ -3,31 +3,56 @@ package excepciones;
 public class Excepciones {
 
     public static class IllegalCiException extends IllegalArgumentException {
-        public IllegalCiException(String message) {
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		public IllegalCiException(String message) {
             super(message);
         }
     }
 
     public static class IllegalAddressException extends IllegalArgumentException {
-        public IllegalAddressException(String message) {
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		public IllegalAddressException(String message) {
             super(message);
         }
     }
 
     public static class IllegalNameException extends IllegalArgumentException {
-        public IllegalNameException(String message) {
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		public IllegalNameException(String message) {
             super(message);
         }
     }
 
     public static class IllegalDateException extends IllegalArgumentException {
-        public IllegalDateException(String message) {
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		public IllegalDateException(String message) {
             super(message);
         }
     }
 
     public static class IllegalVaccinationException extends IllegalArgumentException {
-        public IllegalVaccinationException(String message) {
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		public IllegalVaccinationException(String message) {
             super(message);
         }
     }
