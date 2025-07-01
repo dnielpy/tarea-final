@@ -46,6 +46,7 @@ import entidades.personal.Usuario.TipoDeRol;
 import frontend.ui.botones.BotonBlanco;
 import frontend.ui.botones.ImageButtonLabel;
 import frontend.ui.dialogs.InfoDialog;
+import frontend.ui.dialogs.InfoDialog.Estado;
 import frontend.ui.dialogs.QuestionDialog;
 import frontend.ui.dialogs.TextDialog;
 import frontend.ui.placeholders.PlaceholderTextField;
@@ -693,7 +694,7 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 			int edad = Validations.getYearsFromString(ci);
 			if (edad == -1) {
 				campoEdad.setText("inválida");
-				new InfoDialog(this, "Error", "La fecha de nacimiento es inválida.").setVisible(true);
+				new InfoDialog(this, "Error", "La fecha de nacimiento es inválida.", Estado.ERROR).setVisible(true);
 			} else {
 				campoEdad.setText(String.valueOf(edad));
 				edadCalculada = true;
@@ -777,21 +778,23 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 			if (agregado) {
 				new InfoDialog(SwingUtilities.getWindowAncestor(contentPane),
 						"\u00C9xito",
-						"Paciente agregado exitosamente.").setVisible(true);
+						"Paciente agregado exitosamente.", Estado.EXITO).setVisible(true);
 				dispose();
 			} else {
 				new InfoDialog(SwingUtilities.getWindowAncestor(contentPane),
 						"Error",
-						"No se pudo agregar el paciente.").setVisible(true);
+						"No se pudo agregar el paciente.", Estado.ERROR).setVisible(true);
 			}
 		} catch (IllegalArgumentException ex) {
 			new InfoDialog(SwingUtilities.getWindowAncestor(contentPane),
 					"Error",
-					ex.getMessage()).setVisible(true);
+					ex.getMessage(),
+					Estado.ERROR).setVisible(true);
 		} catch (Exception ex) {
 			new InfoDialog(SwingUtilities.getWindowAncestor(contentPane),
 					"Error",
-					"Ocurri\u00F3 un error inesperado: " + ex.getMessage()).setVisible(true);
+					"Ocurri\u00F3 un error inesperado: " + ex.getMessage(),
+					Estado.ERROR).setVisible(true);
 		}
 	}
 	
@@ -829,16 +832,18 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 
 	        new InfoDialog(FormularioPaciente.this,
 	            "Éxito",
-	            "Paciente actualizado exitosamente.").setVisible(true);
+	            "Paciente actualizado exitosamente.",
+	            Estado.EXITO).setVisible(true);
 
 	        setModoActual(ModoFormulario.VISUALIZACION);
 
 	    } catch (IllegalArgumentException ex) {
-	        new InfoDialog(FormularioPaciente.this, "Error", ex.getMessage()).setVisible(true);
+	        new InfoDialog(FormularioPaciente.this, "Error", ex.getMessage(), Estado.ERROR).setVisible(true);
 	    } catch (Exception ex) {
 	        new InfoDialog(FormularioPaciente.this,
 	            "Error",
-	            "Ocurrió un error inesperado: " + ex.getMessage()).setVisible(true);
+	            "Ocurrió un error inesperado: " + ex.getMessage(),
+	            Estado.ERROR).setVisible(true);
 	    }
 	}
 

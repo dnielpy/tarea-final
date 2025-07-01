@@ -15,6 +15,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.ScrollPaneConstants;
 
+import util.UtilSonido;
 import frontend.ui.botones.BotonBlanco;
 
 public class CopyDialog extends JDialog {
@@ -23,6 +24,7 @@ public class CopyDialog extends JDialog {
         super(parent, titulo, DEFAULT_MODALITY_TYPE);
         setIconImage(Toolkit.getDefaultToolkit().getImage(CopyDialog.class.getResource("/fotos/Logo peque.png")));
         initUI(mensaje);
+        UtilSonido.reproducir("sonidos/info.wav");
     }
 
     private void initUI(String mensajeTexto) {
@@ -40,7 +42,7 @@ public class CopyDialog extends JDialog {
         mensaje.setEditable(false);
         mensaje.setOpaque(false);
         mensaje.setBorder(BorderFactory.createEmptyBorder(20, 20, 10, 20));
-        mensaje.setCaretPosition(0); // empieza desde el principio
+        mensaje.setCaretPosition(0);
 
         JScrollPane scroll = new JScrollPane(mensaje);
         scroll.setBorder(null);

@@ -45,6 +45,7 @@ import frontend.ui.ScrollPaneModerno;
 import frontend.ui.botones.BotonBlanco;
 import frontend.ui.botones.ImageButtonLabel;
 import frontend.ui.dialogs.InfoDialog;
+import frontend.ui.dialogs.InfoDialog.Estado;
 import frontend.ui.dialogs.QuestionDialog;
 import frontend.ui.dialogs.SelectorDialog;
 import frontend.ui.placeholders.PlaceholderTextField;
@@ -211,7 +212,7 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
                         modeloEspecialidades.addElement(seleccion);
                     } else {
                         new InfoDialog(FormularioVisitas.this, "Informaci\u00F3n",
-                                "La especialidad ya fue a\u00F1adida.")
+                                "La especialidad ya fue a\u00F1adida.", Estado.INFORMACION)
                                 .setVisible(true);
                     }
                 }
@@ -269,7 +270,7 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
                         modeloAnalisis.addElement(seleccion);
                     } else {
                         new InfoDialog(FormularioVisitas.this, "Informaci\u00F3n",
-                                "El an\u00E1lisis ya fue a\u00F1adido.")
+                                "El an\u00E1lisis ya fue a\u00F1adido.", Estado.INFORMACION)
                                 .setVisible(true);
                     }
                 }
@@ -575,7 +576,7 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
     public void agregarNuevaVisita() {
         boolean accesoPermitido = esMedico();
         if (!accesoPermitido) {
-            new InfoDialog(this, "Acceso denegado", "Solo el m\u00E9dico puede agregar visitas.").setVisible(true);
+            new InfoDialog(this, "Acceso denegado", "Solo el m\u00E9dico puede agregar visitas.", Estado.WARNING).setVisible(true);
         } else {
             try {
                 String ci = barraBuscarPacienteCI.getText().trim();
@@ -615,14 +616,14 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
                         cmf.agregarAnalisisAVisita(nuevaVisita.getId(), analisis); // Método para agregar análisis a la
                                                                                    // visita
                     } catch (IllegalArgumentException ex) {
-                        new InfoDialog(this, "Error al agregar análisis", ex.getMessage()).setVisible(true);
+                        new InfoDialog(this, "Error al agregar análisis", ex.getMessage(), Estado.ERROR).setVisible(true);
                     }
                 }
 
-                new InfoDialog(this, "Visita Agregada", "Visita guardada exitosamente.").setVisible(true);
+                new InfoDialog(this, "Visita Agregada", "Visita guardada exitosamente.", Estado.EXITO).setVisible(true);
                 mostrarVisitaGuardada();
             } catch (Exception ex) {
-                new InfoDialog(this, "Error", ex.getMessage()).setVisible(true);
+                new InfoDialog(this, "Error", ex.getMessage(), Estado.ERROR).setVisible(true);
             }
         }
     }
@@ -631,7 +632,7 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
     public void guardarEdicionVisita(Visita visitaExistente) {
         boolean accesoPermitido = esMedico();
         if (!accesoPermitido) {
-            new InfoDialog(this, "Acceso denegado", "Solo el m\u00E9dico puede guardar cambios.").setVisible(true);
+            new InfoDialog(this, "Acceso denegado", "Solo el m\u00E9dico puede guardar cambios.", Estado.WARNING).setVisible(true);
         } else {
             try {
                 boolean visitaValida = (visitaExistente != null);
@@ -671,15 +672,15 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
                     throw new IllegalStateException("No se pudo editar la visita.");
                 }
 
-                new InfoDialog(this, "Visita Guardada", "Visita editada exitosamente.").setVisible(true);
+                new InfoDialog(this, "Visita Guardada", "Visita editada exitosamente.", Estado.EXITO).setVisible(true);
                 mostrarVisitaGuardada();
             } catch (NumberFormatException ex) {
-                new InfoDialog(this, "Error", "El campo 'H. Clínica' debe contener un n\u00FAmero v\u00E1lido.")
+                new InfoDialog(this, "Error", "El campo 'H. Clínica' debe contener un n\u00FAmero v\u00E1lido.", Estado.ERROR)
                         .setVisible(true);
             } catch (IllegalArgumentException ex) {
-                new InfoDialog(this, "Error", ex.getMessage()).setVisible(true);
+                new InfoDialog(this, "Error", ex.getMessage(), Estado.ERROR).setVisible(true);
             } catch (Exception ex) {
-                new InfoDialog(this, "Error inesperado", "Error al guardar la visita: " + ex.getMessage())
+                new InfoDialog(this, "Error inesperado", "Error al guardar la visita: " + ex.getMessage(), Estado.ERROR)
                         .setVisible(true);
             }
         }

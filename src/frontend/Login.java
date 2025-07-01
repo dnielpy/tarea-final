@@ -27,6 +27,7 @@ import frontend.ui.botones.BotonBlanco;
 import frontend.ui.botones.ImageButtonLabel;
 import frontend.ui.dialogs.CopyDialog;
 import frontend.ui.dialogs.InfoDialog;
+import frontend.ui.dialogs.InfoDialog.Estado;
 import frontend.ui.dialogs.QuestionDialog;
 import frontend.ui.placeholders.PlaceholderAndToggle;
 import frontend.ui.placeholders.PlaceholderTextField;
@@ -72,7 +73,7 @@ public class Login extends JDialog implements ConstantesFrontend {
     }
 
     public void iniciarSesion() {
-        InfoDialog dialogo = new InfoDialog(this.getOwner(), "Inicio de sesión", "Inicio de sesión exitoso");
+        InfoDialog dialogo = new InfoDialog(this.getOwner(), "Inicio de sesión", "Inicio de sesión exitoso", Estado.EXITO);
         dialogo.setVisible(true);
         dispose();
     }
@@ -84,7 +85,8 @@ public class Login extends JDialog implements ConstantesFrontend {
         boolean campoVacio = contrasenna.trim().isEmpty();
 
         if (campoVacio) {
-            InfoDialog dialogo = new InfoDialog(this.getOwner(), "Error de autenticación", "La contraseña no puede estar vacía");
+            InfoDialog dialogo = new InfoDialog(this.getOwner(), "Error de autenticación", 
+            		"La contraseña no puede estar vacía", Estado.ERROR);
             dialogo.setVisible(true);
         } else {
             Auth authManager = new Auth();
@@ -94,7 +96,7 @@ public class Login extends JDialog implements ConstantesFrontend {
                 auth = true;
                 iniciarSesion();
             } catch (Auth.AuthenticationException ex) {
-                InfoDialog dialogo = new InfoDialog(this.getOwner(), "Error de autenticación", ex.getMessage());
+                InfoDialog dialogo = new InfoDialog(this.getOwner(), "Error de autenticación", ex.getMessage(), Estado.ERROR);
                 dialogo.setVisible(true);
             }
         }

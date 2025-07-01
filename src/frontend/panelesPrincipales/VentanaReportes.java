@@ -36,6 +36,7 @@ import frontend.panelesReportes.ReporteRangoEdades;
 import frontend.ui.botones.BotonReporte;
 import frontend.ui.botones.ImageButtonLabel;
 import frontend.ui.dialogs.InfoDialog;
+import frontend.ui.dialogs.InfoDialog.Estado;
 
 public class VentanaReportes extends JPanel implements MouseListener, ConstantesFrontend {
 
@@ -211,11 +212,11 @@ public class VentanaReportes extends JPanel implements MouseListener, Constantes
 	    try (FileWriter writer = new FileWriter("reporte_cmf.html")) {
 	        writer.write(html);     
 	        Window parentWindow = SwingUtilities.getWindowAncestor(this);
-	        InfoDialog dialog = new InfoDialog(parentWindow, "Éxito", "Reporte generado exitosamente:\nreporte_cmf.html");
+	        InfoDialog dialog = new InfoDialog(parentWindow, "Éxito", "Reporte generado exitosamente:\nreporte_cmf.html", Estado.EXITO);
 	        dialog.setVisible(true);
 	    } catch (IOException ex) {
 	        Window parentWindow = SwingUtilities.getWindowAncestor(this);
-	        InfoDialog dialog = new InfoDialog(parentWindow, "Error", "Error al generar el reporte:\n" + ex.getMessage());
+	        InfoDialog dialog = new InfoDialog(parentWindow, "Error", "Error al generar el reporte:\n" + ex.getMessage(), Estado.ERROR);
 	        dialog.setVisible(true);
 	    }
 	}

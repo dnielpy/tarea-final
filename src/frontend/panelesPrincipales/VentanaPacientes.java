@@ -31,6 +31,7 @@ import frontend.ui.TablaPersonalizada;
 import frontend.ui.botones.BotonBlanco;
 import frontend.ui.botones.ImageButtonLabel;
 import frontend.ui.dialogs.InfoDialog;
+import frontend.ui.dialogs.InfoDialog.Estado;
 import frontend.ui.dialogs.QuestionDialog;
 import frontend.ui.placeholders.BuscadorTabla;
 
@@ -72,14 +73,14 @@ public class VentanaPacientes extends JPanel implements ConstantesFrontend {
 
                 seElimino = true;
             } else {
-                new InfoDialog(null, "Cancelado", "La eliminación fue cancelada.").setVisible(true);
+                new InfoDialog(null, "Cancelado", "La eliminación fue cancelada.", Estado.INFORMACION).setVisible(true);
             }
         } else {
-            new InfoDialog(null, "Advertencia", "No se ha seleccionado ninguna fila.").setVisible(true);
+            new InfoDialog(null, "Advertencia", "No se ha seleccionado ninguna fila.", Estado.WARNING).setVisible(true);
         }
 
         if (seElimino) {
-            new InfoDialog(null, "Eliminación exitosa", "La selección fue eliminada correctamente.").setVisible(true);
+            new InfoDialog(null, "Eliminación exitosa", "La selección fue eliminada correctamente.", Estado.EXITO).setVisible(true);
         }
     }
 

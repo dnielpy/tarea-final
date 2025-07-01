@@ -25,6 +25,7 @@ import entidades.registros.Analisis;
 import frontend.ui.ScrollPaneModerno;
 import frontend.ui.botones.BotonBlanco;
 import frontend.ui.dialogs.InfoDialog;
+import frontend.ui.dialogs.InfoDialog.Estado;
 import frontend.ui.dialogs.QuestionDialog;
 import frontend.ui.placeholders.PlaceholderTextField;
 import frontend.ui.placeholders.PlaceholderTextField.InputFormat;
@@ -237,7 +238,7 @@ public class FormularioAnalisis extends JDialog implements ConstantesFrontend {
                     setModo(ModoFormulario.EDICION);
 
                     InfoDialog info = new InfoDialog(FormularioAnalisis.this, "Modo edición",
-                            "Ahora puede editar el campo de resultados.\nHaga clic en GUARDAR para confirmar los cambios.");
+                            "Ahora puede editar el campo de resultados.\nHaga clic en GUARDAR para confirmar los cambios.", Estado.INFORMACION);
                     info.setVisible(true);
                 }
             }
@@ -315,14 +316,14 @@ public class FormularioAnalisis extends JDialog implements ConstantesFrontend {
         boolean hayCambios = false;
 
         if (texto.isEmpty()) {
-            InfoDialog errorDialog = new InfoDialog(this, "Error", "El campo de resultados no puede estar vacío.");
+            InfoDialog errorDialog = new InfoDialog(this, "Error", "El campo de resultados no puede estar vacío.", Estado.ERROR);
             errorDialog.setVisible(true);
             puedeGuardar = false;
         }
 
         String anteriores = analisis.getResultados() != null ? analisis.getResultados().trim() : "";
         if (texto.equals(anteriores)) {
-            InfoDialog sinCambiosDialog = new InfoDialog(this, "Sin cambios", "No se han realizado modificaciones en los resultados.");
+            InfoDialog sinCambiosDialog = new InfoDialog(this, "Sin cambios", "No se han realizado modificaciones en los resultados.", Estado.INFORMACION);
             sinCambiosDialog.setVisible(true);
             puedeGuardar = false;
         } else {
@@ -336,7 +337,7 @@ public class FormularioAnalisis extends JDialog implements ConstantesFrontend {
             if (confirmacion.esConfirmado()) {
                 cmf.editarResultadosDeAnalisis(analisis, texto);
 
-                InfoDialog exitoDialog = new InfoDialog(this, "Resultados guardados", "Los resultados se han guardado exitosamente.");
+                InfoDialog exitoDialog = new InfoDialog(this, "Resultados guardados", "Los resultados se han guardado exitosamente.", Estado.EXITO);
                 exitoDialog.setVisible(true);
             }
         }

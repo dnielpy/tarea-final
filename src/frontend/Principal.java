@@ -25,6 +25,7 @@ import frontend.panelesPrincipales.VentanaReportes;
 import frontend.panelesPrincipales.VentanaVisitas;
 import frontend.ui.botones.*;
 import frontend.ui.dialogs.*;
+import frontend.ui.dialogs.InfoDialog.Estado;
 
 import javax.swing.SwingConstants;
 
@@ -228,10 +229,8 @@ public class Principal extends JFrame implements MouseListener, ConstantesFronte
             cartelUsuario.setText(nombre);
         } else {
             System.err.println("Error: Usuario en sesión es null");
-            new InfoDialog(
-                    this,
-                    "Error",
-                    "No se ha iniciado sesión correctamente.\nLa aplicación se cerrará.").setVisible(true);
+            new InfoDialog(this, "Error", "No se ha iniciado sesión correctamente.\nLa aplicación se cerrará.", 
+                    Estado.ERROR).setVisible(true);
             System.exit(1);
         }
     }
@@ -251,9 +250,7 @@ public class Principal extends JFrame implements MouseListener, ConstantesFronte
     }
 
     public void cerrarSesion() {
-        QuestionDialog dialogo = new QuestionDialog(
-                this,
-                "Confirmar cierre de sesi\u00F3n",
+        QuestionDialog dialogo = new QuestionDialog(this, "Confirmar cierre de sesi\u00F3n",
                 "\u00BFSeguro que desea cerrar su sesi\u00F3n?");
         dialogo.setVisible(true);
 
