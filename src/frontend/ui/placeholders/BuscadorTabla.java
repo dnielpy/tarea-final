@@ -15,7 +15,11 @@ import javax.swing.table.*;
 
 public class BuscadorTabla extends PlaceholderTextField {
 
-    private Icon iconoLupa;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private Icon iconoLupa;
     private final int espacioIcono = 20;
 
     public BuscadorTabla(final TableRowSorter<? extends TableModel> sorter, final String placeholder) {

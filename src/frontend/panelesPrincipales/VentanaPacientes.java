@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -28,17 +27,24 @@ import frontend.formularios.FormularioPaciente;
 import frontend.formularios.FormularioPaciente.ModoFormulario;
 import frontend.tablas.PacienteTableModel;
 import frontend.ui.TablaPersonalizada;
+import frontend.ui.botones.BotonBlanco;
+import frontend.ui.botones.ImageButtonLabel;
 import frontend.ui.dialogs.InfoDialog;
+import frontend.ui.dialogs.InfoDialog.Estado;
 import frontend.ui.dialogs.QuestionDialog;
 import frontend.ui.placeholders.BuscadorTabla;
 
 public class VentanaPacientes extends JPanel implements ConstantesFrontend {
 
-    private CMF cmf;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private CMF cmf;
     private JTable table;
     private PacienteTableModel model;
     private TableRowSorter<PacienteTableModel> sorter;
-    private JButton botonAgregarPaciente;
+    private BotonBlanco botonAgregarPaciente;
     private JLabel botonEliminar;
 
     public VentanaPacientes() {
@@ -57,27 +63,35 @@ public class VentanaPacientes extends JPanel implements ConstantesFrontend {
 
             if (confirmDialog.esConfirmado()) {
                 List<Integer> idsAEliminar = new ArrayList<>();
+
+                // PRIMER PASO: recoger todos los IDs sin eliminar aún
                 for (int i = 0; i < selectedRows.length; i++) {
                     int viewRow = selectedRows[i];
-                    int modelRow = table.convertRowIndexToModel(viewRow);
-                    int id = (int) model.getValueAt(modelRow, model.findColumn("H. Clínica"));
-                    idsAEliminar.add(id);
+                    if (viewRow >= 0 && viewRow < table.getRowCount()) {
+                        int modelRow = table.convertRowIndexToModel(viewRow);
+                        int id = (int) model.getValueAt(modelRow, model.findColumn("H. Clínica"));
+                        idsAEliminar.add(id);
+                    }
                 }
 
+                // eliminar todos los pacientes
                 for (Integer id : idsAEliminar) {
-                    model.eliminarPacientePorId(id);
+                    cmf.eliminarPaciente(id);
                 }
+
+                // recargar el modelo
+                model.setPacientes(cmf.getPacientes());
 
                 seElimino = true;
             } else {
-                new InfoDialog(null, "Cancelado", "La eliminación fue cancelada.").setVisible(true);
+                new InfoDialog(null, "Cancelado", "La eliminación fue cancelada.", Estado.INFORMACION).setVisible(true);
             }
         } else {
-            new InfoDialog(null, "Advertencia", "No se ha seleccionado ninguna fila.").setVisible(true);
+            new InfoDialog(null, "Advertencia", "No se ha seleccionado ninguna fila.", Estado.WARNING).setVisible(true);
         }
 
         if (seElimino) {
-            new InfoDialog(null, "Eliminación exitosa", "La selección fue eliminada correctamente.").setVisible(true);
+            new InfoDialog(null, "Eliminación exitosa", "La selección fue eliminada correctamente.", Estado.EXITO).setVisible(true);
         }
     }
 
@@ -113,7 +127,12 @@ public class VentanaPacientes extends JPanel implements ConstantesFrontend {
         panelSuperior.add(cartelPestanna);
 
         model = new PacienteTableModel(cmf.getPacientes()) {
-            @Override
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
@@ -146,7 +165,7 @@ public class VentanaPacientes extends JPanel implements ConstantesFrontend {
         cartelListadoPacientes.setBounds(50, 105, 203, 20);
         add(cartelListadoPacientes);
 
-        botonAgregarPaciente = new JButton("AGREGAR PACIENTE");
+        botonAgregarPaciente = new BotonBlanco("AGREGAR PACIENTE");
         botonAgregarPaciente.setBounds(547, 582, 203, 33);
         botonAgregarPaciente.setFont(new Font("Arial", Font.PLAIN, 16));
         botonAgregarPaciente.setForeground(Color.BLACK);
@@ -158,9 +177,8 @@ public class VentanaPacientes extends JPanel implements ConstantesFrontend {
         });
         add(botonAgregarPaciente);
 
-        botonEliminar = new JLabel();
+        botonEliminar = new ImageButtonLabel(new ImageIcon(VentanaPacientes.class.getResource("/fotos/trash.png")));
         botonEliminar.setBounds(502, 582, 33, 33);
-        botonEliminar.setIcon(new ImageIcon(VentanaPacientes.class.getResource("/fotos/trash.png")));
         botonEliminar.setToolTipText("Eliminar selección");
         botonEliminar.setCursor(new Cursor(Cursor.HAND_CURSOR));
         botonEliminar.addMouseListener(new MouseAdapter() {

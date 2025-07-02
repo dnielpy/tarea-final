@@ -15,6 +15,10 @@ import util.ConstantesFrontend;
 
 public class BotonReporte extends JPanel implements MouseListener, ConstantesFrontend {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String titulo;
 	
 	public BotonReporte(String titulo, String texto) {

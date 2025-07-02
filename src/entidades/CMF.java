@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+
 import entidades.personal.Enfermera;
 import entidades.personal.Medico;
 import entidades.personal.Mujer;
@@ -17,7 +18,8 @@ import entidades.registros.HojaCargosDiaria;
 import entidades.registros.RegistroGeneral;
 import entidades.registros.RegistroHistorico;
 import entidades.registros.Visita;
-import service.Validations;
+import service.ValidadorPaciente;
+import util.CIUtil;
 import util.MockDataGenerator;
 
 public class CMF {
@@ -122,99 +124,105 @@ public class CMF {
 		return pacientes;
 	}
 
-	public boolean agregarPaciente(String nombre, String primerApellido, String segundoApellido,
-			List<String> enfermedadesCronicas, List<String> vacunacion,
-			String CI, boolean estaEmbarazada, LocalDate fechaUltimaRevision, String direccion) {
-		if (!Validations.isValidCI(CI)) {
-			throw new IllegalArgumentException("CI inv\u00e1lido: " + CI);
-		}
+	public void agregarPaciente(String nombre, String primerApellido, String segundoApellido,
+	        List<String> enfermedadesCronicas, List<String> vacunacion,
+	        String CI, boolean estaEmbarazada, LocalDate fechaUltimaRevision, String direccion) {
 
-		int nuevoID = obtenerNuevoHistoriaClinicaID();
+		boolean esMujer = CIUtil.esMujer(CI);
+		
+	    // Validación completa del paciente
+	    ValidadorPaciente.validarPaciente(
+	        nombre, primerApellido, segundoApellido, CI, direccion,
+	        esMujer, estaEmbarazada, fechaUltimaRevision, enfermedadesCronicas, vacunacion
+	    );
 
-		boolean esMujer = Validations.isFemale(CI);
-		Paciente newPaciente;
+	    int nuevoID = obtenerNuevoHistoriaClinicaID();
+	    Paciente nuevoPaciente;
 
-		if (esMujer) {
-			newPaciente = new Mujer(nuevoID, nombre, primerApellido, segundoApellido, CI, direccion,
-					fechaUltimaRevision, estaEmbarazada);
-		} else {
-			newPaciente = new Paciente(nuevoID, nombre, primerApellido, segundoApellido, CI, direccion);
-		}
+	    if (esMujer) {
+	        nuevoPaciente = new Mujer(nuevoID, nombre, primerApellido, segundoApellido, CI, direccion,
+	                fechaUltimaRevision, estaEmbarazada);
+	    } else {
+	        nuevoPaciente = new Paciente(nuevoID, nombre, primerApellido, segundoApellido, CI, direccion);
+	    }
 
-		if (enfermedadesCronicas != null) {
-			for (String enfermedad : enfermedadesCronicas) {
-				newPaciente.agregarEnfermedadCronica(enfermedad);
-			}
-		}
+	    if (enfermedadesCronicas != null) {
+	        for (String enfermedad : enfermedadesCronicas) {
+	            nuevoPaciente.agregarEnfermedadCronica(enfermedad);
+	        }
+	    }
 
-		if (vacunacion != null) {
-			for (String vacuna : vacunacion) {
-				newPaciente.agregarVacuna(vacuna);
-			}
-		}
+	    if (vacunacion != null) {
+	        for (String vacuna : vacunacion) {
+	            nuevoPaciente.agregarVacuna(vacuna);
+	        }
+	    }
 
-		pacientes.add(newPaciente);
-		return true;
+	    pacientes.add(nuevoPaciente);
 	}
 
 	public void editarPaciente(Paciente paciente,
-			String nuevoNombre,
-			String nuevoPrimerApellido,
-			String nuevoSegundoApellido,
-			String nuevaDireccion,
-			Boolean nuevoEstadoEmbarazo,
-			LocalDate nuevaFechaCitologia,
-			List<String> nuevasEnfermedadesCronicas,
-			List<String> nuevasVacunas) {
+	        String nuevoNombre,
+	        String nuevoPrimerApellido,
+	        String nuevoSegundoApellido,
+	        String nuevaDireccion,
+	        Boolean nuevoEstadoEmbarazo,
+	        LocalDate nuevaFechaCitologia,
+	        List<String> nuevasEnfermedadesCronicas,
+	        List<String> nuevasVacunas) {
 
-		if (nuevoNombre != null && !nuevoNombre.isEmpty()) {
-			paciente.setNombre(nuevoNombre);
-		}
+	    // Validar campos actualizados antes de aplicarlos
+	    ValidadorPaciente.validarEdicionPaciente(
+	        nuevoNombre, nuevoPrimerApellido, nuevoSegundoApellido,
+	        paciente.getCI(), nuevaDireccion, nuevoEstadoEmbarazo, nuevaFechaCitologia
+	    );
 
-		if (nuevoPrimerApellido != null && !nuevoPrimerApellido.isEmpty()) {
-			paciente.setPrimerApellido(nuevoPrimerApellido);
-		}
+	    if (nuevoNombre != null && !nuevoNombre.isEmpty()) {
+	        paciente.setNombre(nuevoNombre);
+	    }
 
-		if (nuevoSegundoApellido != null && !nuevoSegundoApellido.isEmpty()) {
-			paciente.setSegundoApellido(nuevoSegundoApellido);
-		}
+	    if (nuevoPrimerApellido != null && !nuevoPrimerApellido.isEmpty()) {
+	        paciente.setPrimerApellido(nuevoPrimerApellido);
+	    }
 
-		if (nuevaDireccion != null && !nuevaDireccion.isEmpty()) {
-			paciente.setDireccion(nuevaDireccion);
-		}
+	    if (nuevoSegundoApellido != null && !nuevoSegundoApellido.isEmpty()) {
+	        paciente.setSegundoApellido(nuevoSegundoApellido);
+	    }
 
-		// Si es una mujer, se permite editar embarazo y fecha de revisión
-		if (paciente instanceof Mujer) {
-			if (nuevoEstadoEmbarazo != null) {
-				((Mujer) paciente).setEmbarazada(nuevoEstadoEmbarazo);
-			}
+	    if (nuevaDireccion != null && !nuevaDireccion.isEmpty()) {
+	        paciente.setDireccion(nuevaDireccion);
+	    }
 
-			if (nuevaFechaCitologia != null) {
-				((Mujer) paciente).setFechaUltimaRevision(nuevaFechaCitologia);
-			}
-		}
+	    if (paciente instanceof Mujer) {
+	        Mujer mujer = (Mujer) paciente;
 
-		// Reemplazar enfermedades crónicas si la lista no es nula
-		if (nuevasEnfermedadesCronicas != null) {
-			paciente.setEnfermedadesCronicas(nuevasEnfermedadesCronicas);
-		}
+	        if (nuevoEstadoEmbarazo != null) {
+	            mujer.setEmbarazada(nuevoEstadoEmbarazo);
+	        }
 
-		// Reemplazar lista de vacunas
-		if (nuevasVacunas != null) {
-			paciente.setVacunacion(new ArrayList<>(nuevasVacunas)); // Usa tu método con validación
-		}
+	        if (nuevaFechaCitologia != null) {
+	            mujer.setFechaUltimaRevision(nuevaFechaCitologia);
+	        }
+	    }
+
+	    if (nuevasEnfermedadesCronicas != null) {
+	        paciente.setEnfermedadesCronicas(nuevasEnfermedadesCronicas);
+	    }
+
+	    if (nuevasVacunas != null) {
+	        paciente.setVacunacion(new ArrayList<>(nuevasVacunas));
+	    }
 	}
 
 	public boolean eliminarPaciente(int id) {
-		boolean response = false;
-		Paciente pacienteAEliminar = getPacientePorId(id);
-		if (pacienteAEliminar != null) {
-			limpiarRastroPaciente(id);
-			pacientes.remove(getPacientePorId(id));
-			response = true;
-		}
-
-		return response;
+	    boolean response = false;
+	    Paciente pacienteAEliminar = getPacientePorId(id);
+	    if (pacienteAEliminar != null) {
+	        limpiarRastroPaciente(id);
+	        pacientes.remove(pacienteAEliminar);
+	        response = true;
+	    }
+	    return response;
 	}
 
 	// Medico
@@ -446,15 +454,21 @@ public class CMF {
 	}
 
 	public List<LocalDate> obtenerFechasDeHojasDeCargo() {
-		List<LocalDate> fechas = new ArrayList<>();
-		if (hojasCargoDiaria != null) {
-			for (HojaCargosDiaria hoja : hojasCargoDiaria) {
-				if (hoja != null && hoja.getFecha() != null && !fechas.contains(hoja.getFecha())) {
-					fechas.add(hoja.getFecha());
-				}
-			}
-		}
-		return fechas;
+	    List<LocalDate> fechas = new ArrayList<>();
+	    if (hojasCargoDiaria != null) {
+	        for (HojaCargosDiaria hoja : hojasCargoDiaria) {
+	            if (
+	                hoja != null &&
+	                hoja.getFecha() != null &&
+	                hoja.getVisitas() != null &&
+	                !hoja.getVisitas().isEmpty() &&
+	                !fechas.contains(hoja.getFecha())
+	            ) {
+	                fechas.add(hoja.getFecha());
+	            }
+	        }
+	    }
+	    return fechas;
 	}
 
 	// Registro General

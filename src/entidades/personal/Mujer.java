@@ -1,8 +1,8 @@
 package entidades.personal;
 
-import excepciones.Excepciones.IllegalDateException;
-
 import java.time.LocalDate;
+
+import excepciones.FechaInvalidaException;
 
 public class Mujer extends Paciente {
     private LocalDate fechaUltimaRevision;
@@ -24,11 +24,11 @@ public class Mujer extends Paciente {
     public void setFechaUltimaRevision(LocalDate fechaUltimaRevision) {
         if (fechaUltimaRevision != null) {
             if (fechaUltimaRevision.isAfter(LocalDate.now())) {
-                throw new IllegalDateException("Fecha de revisi\u00F3n no puede ser futura");
+                throw new FechaInvalidaException("Fecha de revisi\u00F3n no puede ser futura");
             }
 
             if (fechaUltimaRevision.getYear() < 1900) {
-                throw new IllegalDateException("Fecha de revisi\u00F3n no puede ser anterior a 1900");
+                throw new FechaInvalidaException("Fecha de revisi\u00F3n no puede ser anterior a 1900");
             }
         }
         this.fechaUltimaRevision = fechaUltimaRevision;

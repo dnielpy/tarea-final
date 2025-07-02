@@ -25,6 +25,7 @@ import frontend.panelesPrincipales.VentanaReportes;
 import frontend.panelesPrincipales.VentanaVisitas;
 import frontend.ui.botones.*;
 import frontend.ui.dialogs.*;
+import frontend.ui.dialogs.InfoDialog.Estado;
 
 import javax.swing.SwingConstants;
 
@@ -34,6 +35,7 @@ import entidades.personal.Medico;
 import entidades.personal.PersonalSanitario;
 import runner.Runner;
 import util.ConstantesFrontend;
+import util.UtilSonido;
 
 import java.awt.CardLayout;
 import java.awt.event.ActionListener;
@@ -42,6 +44,10 @@ import java.awt.event.MouseAdapter;
 
 public class Principal extends JFrame implements MouseListener, ConstantesFrontend {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JLabel imagenUsuario;
 	private JLabel cartelRol;
 	private JLabel cartelUsuario;
@@ -75,6 +81,8 @@ public class Principal extends JFrame implements MouseListener, ConstantesFronte
         contentPane.setLayout(null);
         
         inicializarComponentes();
+        
+        UtilSonido.reproducir("sonidos/ventana.wav");
         
         cargarUsuario();
         // Solicitar foco después de que todo esté visible
@@ -228,10 +236,8 @@ public class Principal extends JFrame implements MouseListener, ConstantesFronte
             cartelUsuario.setText(nombre);
         } else {
             System.err.println("Error: Usuario en sesión es null");
-            new InfoDialog(
-                    this,
-                    "Error",
-                    "No se ha iniciado sesión correctamente.\nLa aplicación se cerrará.").setVisible(true);
+            new InfoDialog(this, "Error", "No se ha iniciado sesión correctamente.\nLa aplicación se cerrará.", 
+                    Estado.ERROR).setVisible(true);
             System.exit(1);
         }
     }
@@ -251,15 +257,13 @@ public class Principal extends JFrame implements MouseListener, ConstantesFronte
     }
 
     public void cerrarSesion() {
-        QuestionDialog dialogo = new QuestionDialog(
-                this,
-                "Confirmar cierre de sesi\u00F3n",
+        QuestionDialog dialogo = new QuestionDialog(this, "Confirmar cierre de sesi\u00F3n",
                 "\u00BFSeguro que desea cerrar su sesi\u00F3n?");
         dialogo.setVisible(true);
 
         if (dialogo.esConfirmado()) {
             dispose(); // Cierra la ventana
-            Runner.login();
+            Runner.logout();
         }
     }
 

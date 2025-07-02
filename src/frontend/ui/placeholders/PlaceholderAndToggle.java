@@ -31,7 +31,11 @@ import frontend.ui.botones.ImageButtonLabel;
 
 public class PlaceholderAndToggle extends JPanel implements ConstantesFrontend {
 
-    private final JPasswordField passwordField;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private final JPasswordField passwordField;
     private final ImageButtonLabel toggleEye;
 
     private String placeholder;

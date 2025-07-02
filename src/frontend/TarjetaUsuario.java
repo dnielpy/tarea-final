@@ -13,6 +13,8 @@ import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 
 import util.ConstantesFrontend;
+import util.UtilFecha;
+import util.UtilSonido;
 import entidades.personal.Enfermera;
 import entidades.personal.PersonalSanitario;
 import frontend.ui.placeholders.PlaceholderTextField;
@@ -20,6 +22,10 @@ import frontend.ui.placeholders.PlaceholderTextField.InputFormat;
 
 public class TarjetaUsuario extends JDialog implements ConstantesFrontend {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private PlaceholderTextField campoId;
 	private PlaceholderTextField campoFechaInicio;
 	private PlaceholderTextField campoCI;
@@ -44,6 +50,7 @@ public class TarjetaUsuario extends JDialog implements ConstantesFrontend {
 		
 		this.usuario = usuario;
 		iniciarComponentes(foto);
+		UtilSonido.reproducir("sonidos/ventana.wav");
 		cargarDatos();
 	}
 	
@@ -187,7 +194,7 @@ public class TarjetaUsuario extends JDialog implements ConstantesFrontend {
 		campoNombre.setText(usuario.getNombreYApellidos());
 		campoRol.setText(usuario.getUser().getRole().toString().toLowerCase());
 		campoUsuario.setText(usuario.getUser().getUserName());
-		campoFechaInicio.setText(usuario.getFechaInicioCMFFormateada());
+		campoFechaInicio.setText(UtilFecha.formatearLargoEsp(usuario.getFechaInicioCMF()));
 		
 		if (usuario instanceof Enfermera) {
 			campoLicenciatura.setText(((Enfermera)usuario).getLicenciatura() ? "Tiene" : "No tiene");

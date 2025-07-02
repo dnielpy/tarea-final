@@ -17,7 +17,11 @@ import entidades.CMF;
 
 public class ReportePorcentajeGenero extends JPanel {
 
-    private CMF cmf;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private CMF cmf;
     private DefaultPieDataset datasetPorcientoGenero;
     private PiePlot plotPorcentajeGenero;
     private ChartPanel chartPanel;

@@ -6,22 +6,27 @@ import java.util.List;
 import javax.swing.SwingConstants;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableColumn;
 
 import entidades.registros.Analisis;
 
+import java.awt.Component;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-
 import javax.swing.*;
+
+import util.UtilFecha;
 
 public class AnalisisTableModel extends AbstractTableModel {
 
-    private List<Analisis> analisisList;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private List<Analisis> analisisList;
     private boolean mostrarFechaOrientado;
     private boolean mostrarFechaResultado;
     private boolean mostrarResultados;
     private boolean mostrarEstado;
-    private final DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("dd/MMM/yyyy");
 
     public AnalisisTableModel(List<Analisis> lista) {
         if (lista == null) {
@@ -137,10 +142,49 @@ public class AnalisisTableModel extends AbstractTableModel {
 
     @Override
     public Class<?> getColumnClass(int columnIndex) {
-        Class<?> tipo = String.class;
+        Class<?> tipo = Object.class;
+        int indice = 0;
 
-        if (columnIndex == 0) {
-            tipo = Integer.class;
+        if (columnIndex == indice) {
+            tipo = Integer.class; // ID Análisis
+        }
+        indice++;
+
+        if (columnIndex == indice) {
+            tipo = Integer.class; // ID Visita
+        }
+        indice++;
+
+        if (columnIndex == indice) {
+            tipo = String.class; // Tipo
+        }
+        indice++;
+
+        if (mostrarFechaOrientado) {
+            if (columnIndex == indice) {
+                tipo = LocalDate.class; // Fecha Orientado
+            }
+            indice++;
+        }
+
+        if (mostrarEstado) {
+            if (columnIndex == indice) {
+                tipo = String.class; // Estado
+            }
+            indice++;
+        }
+
+        if (mostrarFechaResultado) {
+            if (columnIndex == indice) {
+                tipo = LocalDate.class; // Fecha Resultado
+            }
+            indice++;
+        }
+
+        if (mostrarResultados) {
+            if (columnIndex == indice) {
+                tipo = String.class; // Resultados
+            }
         }
 
         return tipo;
@@ -181,7 +225,7 @@ public class AnalisisTableModel extends AbstractTableModel {
 
             if (mostrarFechaOrientado) {
                 if (columnIndex == indice) {
-                    valor = formatearFecha(a.getFechaOrientado());
+                    valor = a.getFechaOrientado();
                 }
                 indice++;
             }
@@ -195,14 +239,14 @@ public class AnalisisTableModel extends AbstractTableModel {
 
             if (mostrarFechaResultado) {
                 if (columnIndex == indice) {
-                    valor = (a.getFechaResultado() == null) ? "Pendiente" : formatearFecha(a.getFechaResultado());
+                    valor = (a.getFechaResultado() == null) ? "Pendiente" : a.getFechaResultado();
                 }
                 indice++;
             }
 
             if (mostrarResultados) {
                 if (columnIndex == indice) {
-                    valor = (a.getResultados() != null) ? a.getResultados() : "";
+                    valor = (a.getResultados() != null) ? a.getResultados() : "Pendiente";
                 }
             }
         }
@@ -212,7 +256,7 @@ public class AnalisisTableModel extends AbstractTableModel {
     private String formatearFecha(LocalDate fecha) {
         String texto = "";
         if (fecha != null) {
-            texto = fecha.format(formatoFecha);
+            texto = UtilFecha.formatearCorto(fecha);
         }
         return texto;
     }
@@ -246,17 +290,76 @@ public class AnalisisTableModel extends AbstractTableModel {
         }
     }
 
-    public void aplicarCentrado(JTable table) {
-        DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
-        renderer.setHorizontalAlignment(SwingConstants.CENTER);
-        renderer.setVerticalAlignment(SwingConstants.CENTER);
+    public void aplicarEstilosCeldas(JTable table) {
+        DefaultTableCellRenderer centrado = new DefaultTableCellRenderer();
+        centrado.setHorizontalAlignment(SwingConstants.CENTER);
+        centrado.setVerticalAlignment(SwingConstants.CENTER);
 
-        int columnas = getColumnCount();
-        int i = 0;
+        DefaultTableCellRenderer izquierdaConMargen = new DefaultTableCellRenderer() {
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
 
-        while (i < columnas) {
-            table.getColumnModel().getColumn(i).setCellRenderer(renderer);
-            i++;
+			@Override
+            public Component getTableCellRendererComponent(JTable table, Object value,
+                    boolean isSelected, boolean hasFocus, int row, int column) {
+
+                Component componente = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                this.setHorizontalAlignment(SwingConstants.LEFT);
+                this.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
+                return componente;
+            }
+        };
+
+        DefaultTableCellRenderer fechaRenderer = new DefaultTableCellRenderer() {
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
+            protected void setValue(Object value) {
+                String texto = "";
+                if (value instanceof LocalDate) {
+                    texto = formatearFecha((LocalDate) value);
+                }
+                this.setText(texto);
+            }
+
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value,
+                    boolean isSelected, boolean hasFocus, int row, int column) {
+
+                Component componente = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                this.setHorizontalAlignment(SwingConstants.LEFT);
+                this.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
+                return componente;
+            }
+        };
+
+        int totalColumnas = this.getColumnCount();
+        int indice = 0;
+
+        while (indice < totalColumnas) {
+            Class<?> tipoColumna = this.getColumnClass(indice);
+            TableColumn columna = table.getColumnModel().getColumn(indice);
+            boolean esEntero = tipoColumna == Integer.class;
+            boolean esFecha = tipoColumna == LocalDate.class;
+
+            if (esEntero) {
+                columna.setCellRenderer(centrado);
+            }
+
+            if (!esEntero && esFecha) {
+                columna.setCellRenderer(fechaRenderer);
+            }
+
+            if (!esEntero && !esFecha) {
+                columna.setCellRenderer(izquierdaConMargen);
+            }
+
+            indice++;
         }
     }
 }

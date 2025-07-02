@@ -8,7 +8,11 @@ import java.awt.*;
 
 public class PanelResumen extends JPanel implements ConstantesFrontend {
 
-    private JLabel cartelCantidad;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JLabel cartelCantidad;
     private JProgressBar barraProgreso;
     private JLabel cartelTitulo;
     private JLabel cartelImagen;

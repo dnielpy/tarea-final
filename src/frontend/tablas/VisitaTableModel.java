@@ -8,11 +8,16 @@ import javax.swing.SwingConstants;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import util.UtilFecha;
 import entidades.registros.Visita;
 
 public class VisitaTableModel extends AbstractTableModel {
 
-    private List<Visita> visitas;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private List<Visita> visitas;
     private boolean mostrarFecha;
     private boolean mostrarHistoriaClinica;
     private boolean mostrarIdVisita;
@@ -157,7 +162,7 @@ public class VisitaTableModel extends AbstractTableModel {
 
             if (!colAsignado && mostrarFecha) {
                 if (columnIndex == col) {
-                    valor = visita.getFechaFormateada();
+                    valor = UtilFecha.formatearCorto(visita.getFecha());
                     colAsignado = true;
                 }
             }

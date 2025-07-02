@@ -10,6 +10,10 @@ import util.ConstantesFrontend;
 
 public class BotonMenu extends JButton implements ConstantesFrontend {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private boolean esActivo;
 	
 	// Constructor

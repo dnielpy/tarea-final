@@ -2,12 +2,15 @@ package frontend.tablas;
 
 import javax.swing.table.AbstractTableModel;
 
-import entidades.CMF;
 import entidades.personal.Paciente;
 import java.util.List;
 
 public class PacienteTableModel extends AbstractTableModel {
-    private List<Paciente> pacientes;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private List<Paciente> pacientes;
     private String[] columnNames = { "Nombre", "Género", "CI", "H. Clínica", "Edad" };
 
     public PacienteTableModel(List<Paciente> pacientes) {
@@ -56,21 +59,4 @@ public class PacienteTableModel extends AbstractTableModel {
         return (value != null) ? value.getClass() : Object.class;
     }
 
-    public void eliminarPacientePorId(int id) {
-        int index = -1;
-
-        CMF cmf = CMF.getInstance();
-
-        for (int i = 0; i < pacientes.size(); i++) {
-            if (pacientes.get(i).getHistoriaClinica().getId() == id && index == -1) {
-                index = i;
-            }
-        }
-
-        if (index != -1) {
-            fireTableRowsDeleted(index, index);
-            cmf.eliminarPaciente(id);
-            // pacientes.remove(index);
-        }
-    }
 }

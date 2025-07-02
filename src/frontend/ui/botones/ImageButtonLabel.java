@@ -7,7 +7,11 @@ import java.awt.event.*;
 
 public class ImageButtonLabel extends JLabel {
 
-    private float alpha = 1.0f;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private float alpha = 1.0f;
 
     public ImageButtonLabel(ImageIcon icon) {
         super(icon);

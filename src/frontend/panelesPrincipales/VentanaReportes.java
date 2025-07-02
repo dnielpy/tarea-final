@@ -1,14 +1,9 @@
 package frontend.panelesPrincipales;
 
-import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
-import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.GridLayout;
-import java.awt.Image;
-import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -17,8 +12,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import javax.swing.ImageIcon;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
@@ -28,7 +21,7 @@ import javax.swing.SwingUtilities;
 import util.ConstantesFrontend;
 import util.HTMLGenerator;
 import entidades.CMF;
-import frontend.formularios.FormularioAnalisis;
+import frontend.AcercaDialog;
 import frontend.panelesReportes.ReporteCantVisitasEnUnMes;
 import frontend.panelesReportes.ReporteEmbarazadasEnRiesgo;
 import frontend.panelesReportes.ReportePorcentajeGenero;
@@ -36,9 +29,14 @@ import frontend.panelesReportes.ReporteRangoEdades;
 import frontend.ui.botones.BotonReporte;
 import frontend.ui.botones.ImageButtonLabel;
 import frontend.ui.dialogs.InfoDialog;
+import frontend.ui.dialogs.InfoDialog.Estado;
 
 public class VentanaReportes extends JPanel implements MouseListener, ConstantesFrontend {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JPanel panelContenedor;
 	private JPanel panelEncabezado;
 	private JLabel cartelEncabezado;
@@ -157,7 +155,7 @@ public class VentanaReportes extends JPanel implements MouseListener, Constantes
 		botonAboutUs.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				mostrarVentanaAboutUs();
+				mostrarVentanaAcercaDe();
 			}
 		});
 	}
@@ -211,71 +209,19 @@ public class VentanaReportes extends JPanel implements MouseListener, Constantes
 	    try (FileWriter writer = new FileWriter("reporte_cmf.html")) {
 	        writer.write(html);     
 	        Window parentWindow = SwingUtilities.getWindowAncestor(this);
-	        InfoDialog dialog = new InfoDialog(parentWindow, "Éxito", "Reporte generado exitosamente:\nreporte_cmf.html");
+	        InfoDialog dialog = new InfoDialog(parentWindow, "Éxito", "Reporte generado exitosamente:\nreporte_cmf.html", Estado.EXITO);
 	        dialog.setVisible(true);
 	    } catch (IOException ex) {
 	        Window parentWindow = SwingUtilities.getWindowAncestor(this);
-	        InfoDialog dialog = new InfoDialog(parentWindow, "Error", "Error al generar el reporte:\n" + ex.getMessage());
+	        InfoDialog dialog = new InfoDialog(parentWindow, "Error", "Error al generar el reporte:\n" + ex.getMessage(), Estado.ERROR);
 	        dialog.setVisible(true);
 	    }
 	}
 
-	private void mostrarVentanaAboutUs() {
-		Window parentWindow = SwingUtilities.getWindowAncestor(this);
-		JDialog ventanaAboutUs = new JDialog(parentWindow, "Acerca de nosotros", ModalityType.APPLICATION_MODAL);
-		ventanaAboutUs.setIconImage(Toolkit.getDefaultToolkit().getImage(FormularioAnalisis.class.getResource("/fotos/Logo peque.png")));
-		ventanaAboutUs.setSize(796, 673); // Match the size of other project windows
-		ventanaAboutUs.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		ventanaAboutUs.getContentPane().setLayout(new BorderLayout());
-
-		// Texto principal sobre el repositorio
-		JLabel textoRepo = new JLabel("<html><div style='text-align: center;'>"
-				+ "Este proyecto fue desarrollado como parte de la tarea final de la asignatura "
-				+ "<b>Diseño de Programación Orientada a Objetos</b>. Al momento de su entrega, "
-				+ "el repositorio estará disponible públicamente y abierto a contribuciones de la comunidad. "
-				+ "Se invita a los usuarios a realizar forks, sugerir mejoras y proponer cambios. "
-				+ "</div></html>", SwingConstants.CENTER);
-		textoRepo.setFont(new Font("Arial", Font.PLAIN, 16));
-		ventanaAboutUs.getContentPane().add(textoRepo, BorderLayout.NORTH);
-
-		// Panel central con los códigos QR y sus descripciones
-		JPanel panelCentral = new JPanel(new GridLayout(2, 2, 10, 10));
-		panelCentral.setBackground(Color.WHITE);
-
-		// Primer QR: Repositorio del proyecto
-		ImageIcon iconoRepo = new ImageIcon(getClass().getResource("/fotos/uDX0l6.jpg"));
-		Image imagenRepoEscalada = iconoRepo.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH); // Aumentado a
-																											// 200x200
-		JLabel imagenRepo = new JLabel(new ImageIcon(imagenRepoEscalada));
-		imagenRepo.setHorizontalAlignment(SwingConstants.CENTER);
-		panelCentral.add(imagenRepo);
-
-		JLabel textoRepoQR = new JLabel("<html><div style='text-align: left;'>"
-				+ "<b>Repositorio del Proyecto:</b><br>"
-				+ "Escanee este código QR para acceder al repositorio del proyecto y contribuir con mejoras."
-				+ "</div></html>", SwingConstants.LEFT);
-		textoRepoQR.setFont(new Font("Arial", Font.PLAIN, 14));
-		panelCentral.add(textoRepoQR);
-
-		// Segundo QR: Documentación del proyecto
-		ImageIcon iconoDoc = new ImageIcon(getClass().getResource("/fotos/web.jpg"));
-		Image imagenDocEscalada = iconoDoc.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH); // Aumentado a
-																										// 200x200
-		JLabel imagenDoc = new JLabel(new ImageIcon(imagenDocEscalada));
-		imagenDoc.setHorizontalAlignment(SwingConstants.CENTER);
-		panelCentral.add(imagenDoc);
-
-		JLabel textoDocQR = new JLabel("<html><div style='text-align: left;'>"
-				+ "<b>Documentación del Proyecto:</b><br>"
-				+ "Escanee este código QR para acceder a la documentación completa del proyecto."
-				+ "</div></html>", SwingConstants.LEFT);
-		textoDocQR.setFont(new Font("Arial", Font.PLAIN, 16));
-		panelCentral.add(textoDocQR);
-
-		ventanaAboutUs.getContentPane().add(panelCentral, BorderLayout.CENTER);
-
-		// Mostrar la ventana
-		ventanaAboutUs.setLocationRelativeTo(null);
-		ventanaAboutUs.setVisible(true);
+	private void mostrarVentanaAcercaDe() {
+	    Window parentWindow = SwingUtilities.getWindowAncestor(this);
+	    AcercaDialog aboutDialog = new AcercaDialog(parentWindow);
+	    aboutDialog.mostrar();
 	}
+	
 }

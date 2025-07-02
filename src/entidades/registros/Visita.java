@@ -1,7 +1,6 @@
 package entidades.registros;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -67,14 +66,6 @@ public class Visita {
             throw new IllegalArgumentException("Fecha no puede ser futura");
         }
         this.fecha = fecha;
-    }
-
-    public String getFechaFormateada() {
-        if (fecha == null) {
-            return "";
-        }
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MMM/yyyy");
-        return fecha.format(formatter);
     }
 
     // Diagnóstico

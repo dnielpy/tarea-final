@@ -21,7 +21,11 @@ import entidades.CMF;
 
 public class ReporteRangoEdades extends JPanel implements ConstantesFrontend {
 
-    private CMF cmf;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private CMF cmf;
     private DefaultCategoryDataset dataset;
     private ChartPanel panelGrafica;
 

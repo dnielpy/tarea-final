@@ -13,7 +13,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,13 +27,14 @@ import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import util.ConstantesAnalisis;
 import util.ConstantesEspecialidades;
 import util.ConstantesFrontend;
+import util.UtilFecha;
+import util.UtilSonido;
 import entidades.CMF;
 import entidades.personal.Paciente;
 import entidades.personal.Usuario;
@@ -44,6 +44,7 @@ import frontend.ui.ScrollPaneModerno;
 import frontend.ui.botones.BotonBlanco;
 import frontend.ui.botones.ImageButtonLabel;
 import frontend.ui.dialogs.InfoDialog;
+import frontend.ui.dialogs.InfoDialog.Estado;
 import frontend.ui.dialogs.QuestionDialog;
 import frontend.ui.dialogs.SelectorDialog;
 import frontend.ui.placeholders.PlaceholderTextField;
@@ -51,7 +52,11 @@ import frontend.ui.placeholders.PlaceholderTextField.InputFormat;
 
 public class FormularioVisitas extends JDialog implements ConstantesFrontend {
 
-    private CMF cmf;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private CMF cmf;
     private Usuario usuarioActual;
     private Visita visita;
 
@@ -90,24 +95,12 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
         CREACION
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                FormularioVisitas dialogo = new FormularioVisitas(null);
-                dialogo.setLocationRelativeTo(null);
-                dialogo.setModal(true);
-                dialogo.setVisible(true);
-            }
-        });
-    }
-
     public FormularioVisitas(Window ancestor) {
         super(ancestor, ModalityType.APPLICATION_MODAL);
         initComponents();
         setModoActual(ModoFormulario.CREACION);
-        // Poner fecha actual en modo creaci\u00F3n por defecto sin visita
-        campoFecha.setText(LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MMM/yyyy")));
+        // Poner fecha actual en modo creacion por defecto sin visita
+        campoFecha.setText(UtilFecha.formatearCorto(LocalDate.now()));
     }
 
     /**
@@ -171,7 +164,7 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
         panelRegistroVisita.setBackground(Color.WHITE);
 
         textDiagnostico = new JTextArea();
-        textDiagnostico.setLineWrap(true); // Importante para evitar scroll horizontal en JTextArea
+        textDiagnostico.setLineWrap(true); 
         textDiagnostico.setWrapStyleWord(true);
         textDiagnostico.setFont(new Font("Arial", Font.PLAIN, 16));
         ScrollPaneModerno diagnosticoScrollPane = new ScrollPaneModerno(textDiagnostico);
@@ -210,7 +203,7 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
                         modeloEspecialidades.addElement(seleccion);
                     } else {
                         new InfoDialog(FormularioVisitas.this, "Informaci\u00F3n",
-                                "La especialidad ya fue a\u00F1adida.")
+                                "La especialidad ya fue a\u00F1adida.", Estado.INFORMACION)
                                 .setVisible(true);
                     }
                 }
@@ -268,7 +261,7 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
                         modeloAnalisis.addElement(seleccion);
                     } else {
                         new InfoDialog(FormularioVisitas.this, "Informaci\u00F3n",
-                                "El an\u00E1lisis ya fue a\u00F1adido.")
+                                "El an\u00E1lisis ya fue a\u00F1adido.", Estado.INFORMACION)
                                 .setVisible(true);
                     }
                 }
@@ -379,15 +372,14 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
 
         JLabel cartelFecha = new JLabel("Fecha:");
         cartelFecha.setFont(new Font("Arial", Font.PLAIN, 16));
-        cartelFecha.setBounds(469, 27, 59, 19);
+        cartelFecha.setBounds(437, 27, 48, 19);
         panelPersonal.add(cartelFecha);
 
         campoFecha = new PlaceholderTextField();
         campoFecha.setEditable(false);
         campoFecha.setInputFormat(InputFormat.ANY);
         campoFecha.setFont(new Font("Arial", Font.PLAIN, 16));
-        campoFecha.setCharacterLimit(11);
-        campoFecha.setBounds(521, 24, 149, 25);
+        campoFecha.setBounds(492, 24, 178, 25);
         panelPersonal.add(campoFecha);
 
         campoDireccion = new PlaceholderTextField();
@@ -528,6 +520,8 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
         panelGris.setBounds(0, 120, 816, 322);
         getContentPane().add(panelGris);
         panelGris.setLayout(null);
+        
+        UtilSonido.reproducir("sonidos/ventana.wav");
     }
 
     private boolean esMedico() {
@@ -572,7 +566,7 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
     public void agregarNuevaVisita() {
         boolean accesoPermitido = esMedico();
         if (!accesoPermitido) {
-            new InfoDialog(this, "Acceso denegado", "Solo el m\u00E9dico puede agregar visitas.").setVisible(true);
+            new InfoDialog(this, "Acceso denegado", "Solo el m\u00E9dico puede agregar visitas.", Estado.WARNING).setVisible(true);
         } else {
             try {
                 String ci = barraBuscarPacienteCI.getText().trim();
@@ -612,14 +606,14 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
                         cmf.agregarAnalisisAVisita(nuevaVisita.getId(), analisis); // Método para agregar análisis a la
                                                                                    // visita
                     } catch (IllegalArgumentException ex) {
-                        new InfoDialog(this, "Error al agregar análisis", ex.getMessage()).setVisible(true);
+                        new InfoDialog(this, "Error al agregar análisis", ex.getMessage(), Estado.ERROR).setVisible(true);
                     }
                 }
 
-                new InfoDialog(this, "Visita Agregada", "Visita guardada exitosamente.").setVisible(true);
+                new InfoDialog(this, "Visita Agregada", "Visita guardada exitosamente.", Estado.EXITO).setVisible(true);
                 mostrarVisitaGuardada();
             } catch (Exception ex) {
-                new InfoDialog(this, "Error", ex.getMessage()).setVisible(true);
+                new InfoDialog(this, "Error", ex.getMessage(), Estado.ERROR).setVisible(true);
             }
         }
     }
@@ -628,7 +622,7 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
     public void guardarEdicionVisita(Visita visitaExistente) {
         boolean accesoPermitido = esMedico();
         if (!accesoPermitido) {
-            new InfoDialog(this, "Acceso denegado", "Solo el m\u00E9dico puede guardar cambios.").setVisible(true);
+            new InfoDialog(this, "Acceso denegado", "Solo el m\u00E9dico puede guardar cambios.", Estado.WARNING).setVisible(true);
         } else {
             try {
                 boolean visitaValida = (visitaExistente != null);
@@ -668,15 +662,15 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
                     throw new IllegalStateException("No se pudo editar la visita.");
                 }
 
-                new InfoDialog(this, "Visita Guardada", "Visita editada exitosamente.").setVisible(true);
+                new InfoDialog(this, "Visita Guardada", "Visita editada exitosamente.", Estado.EXITO).setVisible(true);
                 mostrarVisitaGuardada();
             } catch (NumberFormatException ex) {
-                new InfoDialog(this, "Error", "El campo 'H. Clínica' debe contener un n\u00FAmero v\u00E1lido.")
+                new InfoDialog(this, "Error", "El campo 'H. Clínica' debe contener un n\u00FAmero v\u00E1lido.", Estado.ERROR)
                         .setVisible(true);
             } catch (IllegalArgumentException ex) {
-                new InfoDialog(this, "Error", ex.getMessage()).setVisible(true);
+                new InfoDialog(this, "Error", ex.getMessage(), Estado.ERROR).setVisible(true);
             } catch (Exception ex) {
-                new InfoDialog(this, "Error inesperado", "Error al guardar la visita: " + ex.getMessage())
+                new InfoDialog(this, "Error inesperado", "Error al guardar la visita: " + ex.getMessage(), Estado.ERROR)
                         .setVisible(true);
             }
         }
@@ -798,7 +792,7 @@ public class FormularioVisitas extends JDialog implements ConstantesFrontend {
             Paciente pacienteEncontrado = cmf.getPacientePorId(visita.getPacienteHistoriaClinicaID());
             cargarDatosPaciente(pacienteEncontrado);
 
-            campoFecha.setText(visita.getFecha().format(DateTimeFormatter.ofPattern("dd/MMM/yyyy")));
+            campoFecha.setText(UtilFecha.formatearLargoEsp(visita.getFecha()));
             campoDireccion.setText(visita.getDireccion());
             textDiagnostico.setText(visita.getDiagnostico());
             textTratamiento.setText(visita.getTratamiento());

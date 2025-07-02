@@ -14,7 +14,11 @@ import java.awt.event.*;
 
 public class BotonBlanco extends JButton implements MouseListener, FocusListener, ConstantesFrontend {
 
-    private Color colorNormal = COLOR_GRIS_CLARO;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private Color colorNormal = COLOR_GRIS_CLARO;
     private Color colorHover = COLOR_GRIS_CURSOR;
     private Color colorTextoNormal = Color.BLACK;
     private Color colorTextoFocus = COLOR_AZUL;

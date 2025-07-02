@@ -1,16 +1,15 @@
 package entidades.personal;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Locale;
 import java.util.Objects;
+
+import excepciones.FechaInvalidaException;
 
 public abstract class PersonalSanitario extends Persona {
 
     protected Usuario user;
     protected int identificador;
     protected LocalDate fechaInicioCMF;
-    protected static final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("d 'de' MMMM 'de' yyyy", new Locale("es", "ES"));
 
     // Constructor
     public PersonalSanitario(String nombre, String primerApellido, String segundoApellido, int identificador, String ci,
@@ -46,15 +45,11 @@ public abstract class PersonalSanitario extends Persona {
     public LocalDate getFechaInicioCMF() {
         return fechaInicioCMF;
     }
-
-    public String getFechaInicioCMFFormateada() { 
-        return fechaInicioCMF == null ? null : fechaInicioCMF.format(dateFormat);
-    }
   
     public void setFechaInicioCMF(LocalDate fecha) {
         Objects.requireNonNull(fecha, "La fecha de inicio no puede ser nula");
         if (fecha.isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException("La fecha de inicio no puede ser futura");
+            throw new FechaInvalidaException("La fecha de inicio no puede ser futura");
         }
         this.fechaInicioCMF = fecha;
     }

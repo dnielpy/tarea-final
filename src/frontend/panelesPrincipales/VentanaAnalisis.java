@@ -26,7 +26,11 @@ import frontend.ui.placeholders.BuscadorTabla;
 
 public class VentanaAnalisis extends JPanel implements ConstantesFrontend {
 
-    private CMF cmf;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private CMF cmf;
     private JTable table;
     private AnalisisTableModel model;
     private TableRowSorter<AnalisisTableModel> sorter; 
@@ -76,6 +80,7 @@ public class VentanaAnalisis extends JPanel implements ConstantesFrontend {
 
         table = TablaPersonalizada.crearTablaPersonalizada(model);
         table.setRowSorter(sorter); 
+        model.aplicarEstilosCeldas(table);
 
         JScrollPane scrollPane = TablaPersonalizada.envolverEnScroll(table, 0, 30, 700, 405);
 

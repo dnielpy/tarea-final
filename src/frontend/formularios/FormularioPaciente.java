@@ -1,7 +1,6 @@
 package frontend.formularios;
 
 import java.awt.Color;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Point;
 import java.awt.SystemColor;
@@ -11,12 +10,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Locale;
 
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
@@ -33,8 +30,13 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import service.Validations;
+import util.CIUtil;
+import util.ConstantesEnfermedades;
 import util.ConstantesFrontend;
+import util.ConstantesVacunas;
+import util.UtilFecha;
+import util.UtilSonido;
+import util.UtilString;
 
 import com.toedter.calendar.JDateChooser;
 
@@ -43,16 +45,25 @@ import entidades.personal.Mujer;
 import entidades.personal.Paciente;
 import entidades.personal.Usuario;
 import entidades.personal.Usuario.TipoDeRol;
+import excepciones.EmbarazoInvalidoException;
+import excepciones.FechaInvalidaException;
+import frontend.ui.ScrollPaneModerno;
 import frontend.ui.botones.BotonBlanco;
 import frontend.ui.botones.ImageButtonLabel;
 import frontend.ui.dialogs.InfoDialog;
+import frontend.ui.dialogs.InfoDialog.Estado;
 import frontend.ui.dialogs.QuestionDialog;
+import frontend.ui.dialogs.SelectorDialog;
 import frontend.ui.dialogs.TextDialog;
 import frontend.ui.placeholders.PlaceholderTextField;
 import frontend.ui.placeholders.PlaceholderTextField.InputFormat;
 
 public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JPanel panelGris;
 	private JPanel panelAzul;
@@ -101,20 +112,6 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 		VISUALIZACION,
 		EDICION,
 		CREACION
-	}
-
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					FormularioPaciente frame = new FormularioPaciente(null, CMF.getInstance().getPacientes().get(1),
-							ModoFormulario.VISUALIZACION);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
 	}
 
 	public FormularioPaciente(Window ancestro) {
@@ -263,14 +260,21 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 			}
 
 			private void manejarCambio() {
-				final String ci = campoCI.getText().trim();
-				if (ci.length() >= 6) {
-					actualizarEdad();
-				} else {
-					edadCalculada = false;
-					campoEdad.setText("");
-				}
-				calcularGenero();
+			    final String ci = campoCI.getText().trim();
+
+			    if (ci.length() >= 6) {
+			        actualizarEdad();
+			    } else {
+			        edadCalculada = false;
+			        campoEdad.setText("");
+			    }
+
+			    if (ci.length() >= 10) { // Solo calcular género si hay 10+ caracteres
+			        calcularGenero();
+			    } else {
+			        campoGenero.setText("");  // Limpiar si es menor que 10
+			        actualizarGenero(false);  // Desactivar controles dependientes
+			    }
 			}
 		});
 
@@ -344,9 +348,8 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 		cartelEnfermedadesCronicas.setFont(new Font("Arial", Font.PLAIN, 16));
 		panelAgrupador2.add(cartelEnfermedadesCronicas);
 
-		JScrollPane scrollPaneEnfermedades = new JScrollPane();
+		ScrollPaneModerno scrollPaneEnfermedades = new ScrollPaneModerno(listaEnfermedades);
 		scrollPaneEnfermedades.setBounds(40, 91, 240, 122);
-		scrollPaneEnfermedades.setBorder(BORDE_COMPONENTE);
 		scrollPaneEnfermedades.setFocusable(false);
 		panelAgrupador2.add(scrollPaneEnfermedades);
 
@@ -398,10 +401,9 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 		cartelVacunas.setFont(new Font("Arial", Font.PLAIN, 16));
 		panelAgrupador2.add(cartelVacunas);
 
-		JScrollPane scrollPaneVacunas = new JScrollPane();
-		scrollPaneVacunas.setFocusable(false);
+		ScrollPaneModerno scrollPaneVacunas = new ScrollPaneModerno(listaVacunas);
 		scrollPaneVacunas.setBounds(308, 91, 240, 122);
-		scrollPaneVacunas.setBorder(BORDE_COMPONENTE);
+		scrollPaneVacunas.setFocusable(false);
 		panelAgrupador2.add(scrollPaneVacunas);
 
 		listModelVacunas = new DefaultListModel<>();
@@ -549,6 +551,8 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 		});
 		botonEditar.setToolTipText("Clic para editar los datos del formulario");
 		botonEditar.setFont(new Font("Arial", Font.PLAIN, 18));
+		
+		UtilSonido.reproducir("sonidos/ventana.wav");
 	}
 
 	public void pedirConfirmacion() {
@@ -595,23 +599,19 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 
 	    boolean esMujer = paciente instanceof Mujer;
 
-	    // Mostrar componentes relevantes para mostrar información
 	    cartelUltimaPrueba.setVisible(esMujer);
 	    cartelFecha.setVisible(esMujer);
 	    cartelEmbarazada.setVisible(esMujer && ((Mujer) paciente).isEmbarazada());
-
-	    // Fecha y checkbox para editar solo se manejan en activarEdicion()
 
 	    if (esMujer) {
 	        Mujer mujer = (Mujer) paciente;
 	        LocalDate fecha = mujer.getFechaUltimaRevision();
 
-	        if (fecha != null) {
-	            Date fechaConvertida = Date.from(fecha.atStartOfDay(ZoneId.systemDefault()).toInstant());
+	        Date fechaConvertida = UtilFecha.convertirALegacyDate(fecha);
+	        if (fechaConvertida != null) {
 	            fechaUltimaPrueba.setDate(fechaConvertida);
-
-	            SimpleDateFormat formato = new SimpleDateFormat("d 'de' MMMM 'de' yyyy", new Locale("es", "ES"));
-	            cartelFecha.setText(formato.format(fechaConvertida));
+	            String textoFecha = UtilFecha.formatearLargoEsp(fecha);
+	            cartelFecha.setText(textoFecha);
 	        } else {
 	            cartelFecha.setText("Nunca realizada");
 	        }
@@ -634,55 +634,126 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 	}
 
 	protected void agregarEnfermedadCronica() {
-		TextDialog dialogo = new TextDialog((JDialog) this,
-				"Agregar enfermedad cr\u00F3nica",
-				"Introduzca una enfermedad cr\u00F3nica para agregar");
-		dialogo.setVisible(true);
+	    SelectorDialog selector = new SelectorDialog(this,
+	            "Seleccionar enfermedad crónica",
+	            "Seleccione una enfermedad crónica para agregar:",
+	            ConstantesEnfermedades.ENFERMEDADES);
+	    selector.setVisible(true);
 
-		if (dialogo.isConfirmado()) {
-			String texto = dialogo.getTextoIngresado();
-			if (!texto.isEmpty()) {
-				listModelEnfermedades.addElement(texto);
-			}
-		}
+	    if (selector.esConfirmado()) {
+	        String seleccion = selector.getSeleccionado();
+
+	        boolean yaExiste = false;
+	        int i = 0;
+	        while (i < listModelEnfermedades.size()) {
+	            String existente = listModelEnfermedades.get(i);
+	            if (existente.equals(seleccion)) {
+	                yaExiste = true;
+	            }
+	            i++;
+	        }
+
+	        if (yaExiste) {
+	            new InfoDialog(this,
+	                    "Ya añadida",
+	                    "La enfermedad \"" + seleccion + "\" ya está en la lista.",
+	                    Estado.WARNING).setVisible(true);
+	        } else {
+	            listModelEnfermedades.addElement(seleccion);
+	        }
+	    }
 	}
 
 	protected void agregarVacuna() {
-		TextDialog dialogo = new TextDialog((JDialog) this,
-				"Agregar vacuna aplicada",
-				"Introduzca una vacuna aplicada para agregar");
-		dialogo.setVisible(true);
+	    SelectorDialog selector = new SelectorDialog(this,
+	            "Seleccionar vacuna aplicada",
+	            "Seleccione una vacuna aplicada para agregar:",
+	            ConstantesVacunas.VACUNAS);
+	    selector.setVisible(true);
 
-		if (dialogo.isConfirmado()) {
-			String texto = dialogo.getTextoIngresado();
-			if (!texto.isEmpty()) {
-				listModelVacunas.addElement(texto);
-			}
-		}
+	    if (selector.esConfirmado()) {
+	        String seleccion = selector.getSeleccionado();
+
+	        boolean yaExiste = false;
+	        int i = 0;
+	        while (i < listModelVacunas.size()) {
+	            String existente = listModelVacunas.get(i);
+	            if (existente.equals(seleccion)) {
+	                yaExiste = true;
+	            }
+	            i++;
+	        }
+
+	        if (yaExiste) {
+	            new InfoDialog(this,
+	                    "Ya añadida",
+	                    "La vacuna \"" + seleccion + "\" ya está en la lista.",
+	                    Estado.WARNING).setVisible(true);
+	        } else {
+	            listModelVacunas.addElement(seleccion);
+	        }
+	    }
 	}
 
 	private void eliminarEnfermedadesSeleccionadas() {
-		int[] indices = listaEnfermedades.getSelectedIndices();
-		for (int i = indices.length - 1; i >= 0; i--) {
-			listModelEnfermedades.remove(indices[i]);
-		}
+	    Window parent = SwingUtilities.getWindowAncestor(this);
+	    int[] indices = listaEnfermedades.getSelectedIndices();
+	    boolean tieneSeleccion = indices != null && indices.length > 0;
+	    boolean confirmado = false;
+
+	    if (!tieneSeleccion) {
+	        InfoDialog info = new InfoDialog(parent, "Atención", "No hay ninguna enfermedad seleccionada para eliminar.", Estado.WARNING);
+	        info.setVisible(true);
+	    } else {
+	        QuestionDialog pregunta = new QuestionDialog(parent, "Confirmar borrado", "¿Está seguro que desea borrar la(s) enfermedad(es) seleccionada(s)?");
+	        pregunta.setVisible(true);
+	        confirmado = pregunta.esConfirmado();
+	    }
+
+	    if (confirmado) {
+	        for (int i = indices.length - 1; i >= 0; i--) {
+	            listModelEnfermedades.remove(indices[i]);
+	        }
+	        InfoDialog info = new InfoDialog(parent, "Éxito", "Enfermedad(es) eliminada(s) correctamente.", Estado.EXITO);
+	        info.setVisible(true);
+	    }
 	}
 
 	private void eliminarVacunasSeleccionadas() {
-		int[] indices = listaVacunas.getSelectedIndices();
-		for (int i = indices.length - 1; i >= 0; i--) {
-			listModelVacunas.remove(indices[i]);
-		}
+	    Window parent = SwingUtilities.getWindowAncestor(this);
+	    int[] indices = listaVacunas.getSelectedIndices();
+	    boolean tieneSeleccion = indices != null && indices.length > 0;
+	    boolean confirmado = false;
+
+	    if (!tieneSeleccion) {
+	        InfoDialog info = new InfoDialog(parent, "Atención", "No hay ninguna vacuna seleccionada para eliminar.", Estado.WARNING);
+	        info.setVisible(true);
+	    } else {
+	        QuestionDialog pregunta = new QuestionDialog(parent, "Confirmar borrado", "¿Está seguro que desea borrar la(s) vacuna(s) seleccionada(s)?");
+	        pregunta.setVisible(true);
+	        confirmado = pregunta.esConfirmado();
+	    }
+
+	    if (confirmado) {
+	        for (int i = indices.length - 1; i >= 0; i--) {
+	            listModelVacunas.remove(indices[i]);
+	        }
+	        InfoDialog info = new InfoDialog(parent, "Éxito", "Vacuna(s) eliminada(s) correctamente.", Estado.EXITO);
+	        info.setVisible(true);
+	    }
 	}
 
 	private void calcularGenero() {
-		String ci = campoCI.getText();
-		if (ci.length() >= 10 && Character.isDigit(ci.charAt(9))) {
-			int digito = Character.getNumericValue(ci.charAt(9));
-			boolean femenino = digito % 2 != 0;
-			campoGenero.setText(femenino ? "Femenino" : "Masculino");
-			actualizarGenero(femenino);
-		}
+	    String ci = campoCI.getText();
+	    if (ci.length() >= 10 && Character.isDigit(ci.charAt(9))) {
+	        int digito = Character.getNumericValue(ci.charAt(9));
+	        boolean femenino = digito % 2 != 0;
+	        campoGenero.setText(femenino ? "Femenino" : "Masculino");
+	        actualizarGenero(femenino);
+	    } else {
+	        campoGenero.setText("");
+	        actualizarGenero(false);
+	    }
 	}
 
 	private void actualizarGenero(boolean activo) {
@@ -702,10 +773,10 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 	private void actualizarEdad() {
 		String ci = campoCI.getText();
 		if (ci.length() >= 6 && !edadCalculada) {
-			int edad = Validations.getYearsFromString(ci);
+			int edad = UtilFecha.obtenerAniosDesdeString(ci.substring(0, 6));
 			if (edad == -1) {
 				campoEdad.setText("inválida");
-				new InfoDialog(this, "Error", "La fecha de nacimiento es inválida.").setVisible(true);
+				new InfoDialog(this, "Error", "La fecha de nacimiento es inválida.", Estado.ERROR).setVisible(true);
 			} else {
 				campoEdad.setText(String.valueOf(edad));
 				edadCalculada = true;
@@ -714,9 +785,9 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 	}
 
 	private String[] obtenerDatosBasicos() {
-		String nombre = Validations.capitalize(campoNombre.getText().trim());
-		String primerApellido = Validations.capitalize(campoPrimerApellido.getText().trim());
-		String segundoApellido = Validations.capitalize(campoSegundoApellido.getText().trim());
+		String nombre = UtilString.capitalizarNombre(campoNombre.getText().trim());
+		String primerApellido = UtilString.capitalizarNombre(campoPrimerApellido.getText().trim());
+		String segundoApellido = UtilString.capitalizarNombre(campoSegundoApellido.getText().trim());
 		String ci = campoCI.getText().trim();
 		String direccion = campoDireccion.getText().trim();
 
@@ -728,16 +799,18 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 	}
 
 	private boolean validarEmbarazo(String ci, boolean embarazada) {
-		if (!Validations.isFemale(ci) && embarazada) {
+		if (!CIUtil.esMujer(ci) && embarazada) {
 			throw new IllegalArgumentException("Un paciente masculino no puede estar embarazado.");
 		}
 		return embarazada;
 	}
 
 	private LocalDate obtenerFechaUltimaPrueba() {
-		Date fecha = fechaUltimaPrueba.getDate();
-
-		return fecha.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+	    LocalDate resultado = null;
+	    if (fechaUltimaPrueba != null && fechaUltimaPrueba.getDate() != null) {
+	        resultado = UtilFecha.convertirALocalDate(fechaUltimaPrueba.getDate());
+	    }
+	    return resultado;
 	}
 
 	private ArrayList<String> obtenerListaEnfermedades() {
@@ -757,56 +830,45 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 	}
 
 	public void agregarPaciente() {
-		CMF cmf = CMF.getInstance();
+	    CMF cmf = CMF.getInstance();
 
-		try {
-			String[] datos = obtenerDatosBasicos(); // nombre, primerApellido, segundoApellido, ci, direccion
-			boolean embarazada = validarEmbarazo(datos[3], checkEmbarazada.isSelected());
-			LocalDate fechaUltima;
+	    try {
+	        String[] datos = obtenerDatosBasicos(); // nombre, primerApellido, segundoApellido, ci, direccion
+	        boolean embarazada = validarEmbarazo(datos[3], checkEmbarazada.isSelected());
+	        LocalDate fechaUltima = obtenerFechaUltimaPrueba();
 
-			if (paciente instanceof Mujer && ((Mujer) paciente).getFechaUltimaRevision() != null) {
-				fechaUltima = ((Mujer) paciente).getFechaUltimaRevision();
-			} else if (fechaUltimaPrueba == null || fechaUltimaPrueba.getDate() == null) {
-				fechaUltima = null;
-			} else {
-				fechaUltima = obtenerFechaUltimaPrueba();
-			}
-			if (fechaUltima != null && fechaUltima.isAfter(LocalDate.now())) {
-				throw new IllegalArgumentException("La fecha de la \u00FAltima prueba no puede ser futura.");
-			}
+	        if (cmf.isCiRepited(datos[3])) {
+	            throw new IllegalArgumentException("El CI proporcionado ya est\u00E1 registrado.");
+	        }
 
-			ArrayList<String> enfermedades = obtenerListaEnfermedades();
-			ArrayList<String> vacunas = obtenerListaVacunas();
+	        ArrayList<String> enfermedades = obtenerListaEnfermedades();
+	        ArrayList<String> vacunas = obtenerListaVacunas();
 
-			if (cmf.isCiRepited(datos[3])) {
-				throw new IllegalArgumentException("El CI proporcionado ya est\u00E1 registrado.");
-			}
+	        cmf.agregarPaciente(
+	            datos[0], datos[1], datos[2],
+	            enfermedades, vacunas,
+	            datos[3], embarazada, fechaUltima, datos[4]
+	        );
 
-			boolean agregado = cmf.agregarPaciente(
-					datos[0], datos[1], datos[2], enfermedades, vacunas,
-					datos[3], embarazada, fechaUltima, datos[4]);
+	        new InfoDialog(SwingUtilities.getWindowAncestor(contentPane),
+	                "\u00C9xito",
+	                "Paciente agregado exitosamente.",
+	                Estado.EXITO).setVisible(true);
+	        dispose();
 
-			if (agregado) {
-				new InfoDialog(SwingUtilities.getWindowAncestor(contentPane),
-						"\u00C9xito",
-						"Paciente agregado exitosamente.").setVisible(true);
-				dispose();
-			} else {
-				new InfoDialog(SwingUtilities.getWindowAncestor(contentPane),
-						"Error",
-						"No se pudo agregar el paciente.").setVisible(true);
-			}
-		} catch (IllegalArgumentException ex) {
-			new InfoDialog(SwingUtilities.getWindowAncestor(contentPane),
-					"Error",
-					ex.getMessage()).setVisible(true);
-		} catch (Exception ex) {
-			new InfoDialog(SwingUtilities.getWindowAncestor(contentPane),
-					"Error",
-					"Ocurri\u00F3 un error inesperado: " + ex.getMessage()).setVisible(true);
-		}
+	    } catch (IllegalArgumentException | FechaInvalidaException | EmbarazoInvalidoException ex) {
+	        new InfoDialog(SwingUtilities.getWindowAncestor(contentPane),
+	                "Error",
+	                ex.getMessage(),
+	                Estado.ERROR).setVisible(true);
+	    } catch (Exception ex) {
+	        new InfoDialog(SwingUtilities.getWindowAncestor(contentPane),
+	                "Error",
+	                "Ocurri\u00F3 un error inesperado: " + ex.getMessage(),
+	                Estado.ERROR).setVisible(true);
+	    }
 	}
-	
+
 	private void guardarEdicionPaciente() {
 	    try {
 	        String[] datos = obtenerDatosBasicos(); // nombre, primerApellido, segundoApellido, ci, direccion
@@ -818,13 +880,7 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 
 	        if (paciente instanceof Mujer) {
 	            estadoEmbarazo = validarEmbarazo(datos[3], checkEmbarazada.isSelected());
-
-	            if (fechaUltimaPrueba != null && fechaUltimaPrueba.getDate() != null) {
-	                fechaCitologia = obtenerFechaUltimaPrueba();
-	                if (fechaCitologia.isAfter(LocalDate.now())) {
-	                    throw new IllegalArgumentException("La fecha de la última prueba no puede ser futura.");
-	                }
-	            }
+	            fechaCitologia = obtenerFechaUltimaPrueba();
 	        }
 
 	        CMF.getInstance().editarPaciente(
@@ -841,16 +897,21 @@ public class FormularioPaciente extends JDialog implements ConstantesFrontend {
 
 	        new InfoDialog(FormularioPaciente.this,
 	            "Éxito",
-	            "Paciente actualizado exitosamente.").setVisible(true);
+	            "Paciente actualizado exitosamente.",
+	            Estado.EXITO).setVisible(true);
 
 	        setModoActual(ModoFormulario.VISUALIZACION);
 
-	    } catch (IllegalArgumentException ex) {
-	        new InfoDialog(FormularioPaciente.this, "Error", ex.getMessage()).setVisible(true);
+	    } catch (IllegalArgumentException | FechaInvalidaException | EmbarazoInvalidoException ex) {
+	        new InfoDialog(FormularioPaciente.this,
+	                "Error",
+	                ex.getMessage(),
+	                Estado.ERROR).setVisible(true);
 	    } catch (Exception ex) {
 	        new InfoDialog(FormularioPaciente.this,
-	            "Error",
-	            "Ocurrió un error inesperado: " + ex.getMessage()).setVisible(true);
+	                "Error",
+	                "Ocurrió un error inesperado: " + ex.getMessage(),
+	                Estado.ERROR).setVisible(true);
 	    }
 	}
 
